@@ -2,11 +2,14 @@
 
 namespace App\Exceptions;
 
+use App\Traits\obtenerMensaje;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Auth\AuthenticationException;
 use Throwable;
 
 class Handler extends ExceptionHandler
 {
+    use obtenerMensaje;
     /**
      * A list of exception types with their corresponding custom log levels.
      *
@@ -44,5 +47,15 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+    }
+    
+    public function unauthenticated($request, AuthenticationException $exception)
+    {
+        
+        if ($request->wantsJson()) {
+            return response()->json($this->getMensaje(100), 401);
+        }
+    
+        return redirect()->guest(route('login'));
     }
 }

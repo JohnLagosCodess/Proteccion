@@ -11,7 +11,7 @@
         "http-interop/http-factory-guzzle": "^1.2",
         "jeroennoten/laravel-adminlte": "^3.9",
         "laravel/framework": "^10.0",
-        "laravel/sanctum": "^3.2",
+        "laravel/sanctum": "^3.3",
         "laravel/scout": "^10.11",
         "laravel/tinker": "^2.8",
         "laravelcollective/html": "^6.4",

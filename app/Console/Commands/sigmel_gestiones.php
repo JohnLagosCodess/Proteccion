@@ -32,25 +32,27 @@ class sigmel_gestiones extends Command
     protected $description = 'Automatizar gestiones comunes y/o repetitivas dentro del proceeso de sigmel';
 
     protected $registarServicios = [
-        "EliminarEvento" => \App\Services\EliminarEventos::class
+        "EliminarEvento" => \App\Services\EliminarEventos::class,
+        "api_tokens" => \App\Services\api_tokens::class,
+        "registrar_dane" => \App\Services\registrar_dane::class
     ];
 
-    public function __construct(Consola $ServiceBus)
+    public function __construct(Consola $consola)
     {
         parent::__construct();
 
-        $this->servicebus = $ServiceBus;
+        $this->servicebus = $consola;
 
         foreach ($this->registarServicios as $nombre => $servicio) {
             $this->servicebus->registrarServicioConsola($nombre, $servicio);
 
-            $opciones = $this->servicebus->agregarParametros($nombre);
-            foreach ($opciones as $atributo => $comando) {
-                foreach ($comando as $nombre => $descripcion) {
-                    $this->addOption($nombre, null, InputOption::VALUE_OPTIONAL, $descripcion);
-                }
-            }
-        }
+             $opciones = $this->servicebus->agregarParametros($nombre);
+             foreach ($opciones as $atributo => $comando) {
+                 foreach ($comando as $nombre => $descripcion) {
+                     $this->addOption($nombre, null, InputOption::VALUE_OPTIONAL, $descripcion);
+                 }
+             }
+         }
     }
 
     /**
@@ -84,7 +86,6 @@ class sigmel_gestiones extends Command
         }
 
         try {
-            //Invoca al servicio registrado por el usuario
             $resultado = $this->servicebus->despacharConsola($nombre_servicio, $opciones);
 
             if($this->format == "string"){
@@ -112,10 +113,6 @@ class sigmel_gestiones extends Command
         return $opciones;
     }
 
-    /**
-     *  Dibuja el resultado a mostrar en la interfaz
-     * 
-    */ 
     protected function dibujarTabla(array $resultado)
     {
         // Crear una instancia de Table

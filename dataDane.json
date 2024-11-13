@@ -1,0 +1,5617 @@
+[
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.001,
+  "MUNICIPIO": "Medellin"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.002,
+  "MUNICIPIO": "Abejorral"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.004,
+  "MUNICIPIO": "Abriaqui"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.021,
+  "MUNICIPIO": "Alejandria"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.03,
+  "MUNICIPIO": "Amaga"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.031,
+  "MUNICIPIO": "Amalfi"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.034,
+  "MUNICIPIO": "Andes"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.036,
+  "MUNICIPIO": "Angelopolis"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.038,
+  "MUNICIPIO": "Angostura"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.04,
+  "MUNICIPIO": "Anori"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.832,
+  "MUNICIPIO": "Tunungua"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.044,
+  "MUNICIPIO": "Anza"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.045,
+  "MUNICIPIO": "Apartado"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.051,
+  "MUNICIPIO": "Arboletes"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.055,
+  "MUNICIPIO": "Argelia"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.059,
+  "MUNICIPIO": "Armenia"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.079,
+  "MUNICIPIO": "Barbosa"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.088,
+  "MUNICIPIO": "Bello"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.091,
+  "MUNICIPIO": "Betania"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.093,
+  "MUNICIPIO": "Betulia"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.101,
+  "MUNICIPIO": "Ciudad Bolivar"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.107,
+  "MUNICIPIO": "Briceño"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.113,
+  "MUNICIPIO": "Buritica"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.12,
+  "MUNICIPIO": "Caceres"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.125,
+  "MUNICIPIO": "Caicedo"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.129,
+  "MUNICIPIO": "Caldas"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.134,
+  "MUNICIPIO": "Campamento"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.138,
+  "MUNICIPIO": "Cañasgordas"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.142,
+  "MUNICIPIO": "Caracoli"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.145,
+  "MUNICIPIO": "Caramanta"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.147,
+  "MUNICIPIO": "Carepa"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.476,
+  "MUNICIPIO": "Motavita"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.15,
+  "MUNICIPIO": "Carolina"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.154,
+  "MUNICIPIO": "Caucasia"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.172,
+  "MUNICIPIO": "Chigorodo"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.19,
+  "MUNICIPIO": "Cisneros"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.197,
+  "MUNICIPIO": "Cocorna"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.206,
+  "MUNICIPIO": "Concepcion"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.209,
+  "MUNICIPIO": "Concordia"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.212,
+  "MUNICIPIO": "Copacabana"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.234,
+  "MUNICIPIO": "Dabeiba"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.237,
+  "MUNICIPIO": "Don Matias"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.24,
+  "MUNICIPIO": "Ebejico"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.25,
+  "MUNICIPIO": "El Bagre"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.264,
+  "MUNICIPIO": "Entrerrios"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.266,
+  "MUNICIPIO": "Envigado"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.282,
+  "MUNICIPIO": "Fredonia"
+ },
+ {
+  "DEPARTAMENTO": "Cordoba",
+  "DANE": 23.675,
+  "MUNICIPIO": "San Bernardo del Viento"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.306,
+  "MUNICIPIO": "Giraldo"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.308,
+  "MUNICIPIO": "Girardota"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.31,
+  "MUNICIPIO": "Gomez Plata"
+ },
+ {
+  "DEPARTAMENTO": "Choco",
+  "DANE": 27.361,
+  "MUNICIPIO": "Istmina"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.315,
+  "MUNICIPIO": "Guadalupe"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.318,
+  "MUNICIPIO": "Guarne"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.321,
+  "MUNICIPIO": "Guatape"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.347,
+  "MUNICIPIO": "Heliconia"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.353,
+  "MUNICIPIO": "Hispania"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.36,
+  "MUNICIPIO": "Itagui"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.361,
+  "MUNICIPIO": "Ituango"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.086,
+  "MUNICIPIO": "Belmira"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.368,
+  "MUNICIPIO": "Jerico"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.376,
+  "MUNICIPIO": "La Ceja"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.38,
+  "MUNICIPIO": "La Estrella"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.39,
+  "MUNICIPIO": "La Pintada"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.4,
+  "MUNICIPIO": "La Union"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.411,
+  "MUNICIPIO": "Liborina"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.425,
+  "MUNICIPIO": "Maceo"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.44,
+  "MUNICIPIO": "Marinilla"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.467,
+  "MUNICIPIO": "Montebello"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.475,
+  "MUNICIPIO": "Murindo"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.48,
+  "MUNICIPIO": "Mutata"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.483,
+  "MUNICIPIO": "Nariño"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.49,
+  "MUNICIPIO": "Necocli"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.495,
+  "MUNICIPIO": "Nechi"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.501,
+  "MUNICIPIO": "Olaya"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.541,
+  "MUNICIPIO": "Peñol"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.543,
+  "MUNICIPIO": "Peque"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.576,
+  "MUNICIPIO": "Pueblorrico"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.579,
+  "MUNICIPIO": "Puerto Berrio"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.585,
+  "MUNICIPIO": "Puerto Nare"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.591,
+  "MUNICIPIO": "Puerto Triunfo"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.604,
+  "MUNICIPIO": "Remedios"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.607,
+  "MUNICIPIO": "Retiro"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.615,
+  "MUNICIPIO": "Rionegro"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.628,
+  "MUNICIPIO": "Sabanalarga"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.631,
+  "MUNICIPIO": "Sabaneta"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.642,
+  "MUNICIPIO": "Salgar"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.189,
+  "MUNICIPIO": "Cienega"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.699,
+  "MUNICIPIO": "Santacruz"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.652,
+  "MUNICIPIO": "San Francisco"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.656,
+  "MUNICIPIO": "San Jeronimo"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.575,
+  "MUNICIPIO": "Puerto Wilches"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.573,
+  "MUNICIPIO": "Puerto Parra"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.66,
+  "MUNICIPIO": "San Luis"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.664,
+  "MUNICIPIO": "San Pedro"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.667,
+  "MUNICIPIO": "San Rafael"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.67,
+  "MUNICIPIO": "San Roque"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.674,
+  "MUNICIPIO": "San Vicente"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.679,
+  "MUNICIPIO": "Santa Barbara"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.69,
+  "MUNICIPIO": "Santo Domingo"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.697,
+  "MUNICIPIO": "El Santuario"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.736,
+  "MUNICIPIO": "Segovia"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.761,
+  "MUNICIPIO": "Sopetran"
+ },
+ {
+  "DEPARTAMENTO": "Meta",
+  "DANE": 50.37,
+  "MUNICIPIO": "Uribe"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.789,
+  "MUNICIPIO": "Tamesis"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.79,
+  "MUNICIPIO": "Taraza"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.792,
+  "MUNICIPIO": "Tarso"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.809,
+  "MUNICIPIO": "Titiribi"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.819,
+  "MUNICIPIO": "Toledo"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.837,
+  "MUNICIPIO": "Turbo"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.842,
+  "MUNICIPIO": "Uramita"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.847,
+  "MUNICIPIO": "Urrao"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.854,
+  "MUNICIPIO": "Valdivia"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.856,
+  "MUNICIPIO": "Valparaiso"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.858,
+  "MUNICIPIO": "Vegachi"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.861,
+  "MUNICIPIO": "Venecia"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.885,
+  "MUNICIPIO": "Yali"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.887,
+  "MUNICIPIO": "Yarumal"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.89,
+  "MUNICIPIO": "Yolombo"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.893,
+  "MUNICIPIO": "Yondo"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.895,
+  "MUNICIPIO": "Zaragoza"
+ },
+ {
+  "DEPARTAMENTO": "Atlantico",
+  "DANE": 8.001,
+  "MUNICIPIO": "Barranquilla"
+ },
+ {
+  "DEPARTAMENTO": "Atlantico",
+  "DANE": 8.078,
+  "MUNICIPIO": "Baranoa"
+ },
+ {
+  "DEPARTAMENTO": "Atlantico",
+  "DANE": 8.141,
+  "MUNICIPIO": "Candelaria"
+ },
+ {
+  "DEPARTAMENTO": "Atlantico",
+  "DANE": 8.296,
+  "MUNICIPIO": "Galapa"
+ },
+ {
+  "DEPARTAMENTO": "Atlantico",
+  "DANE": 8.421,
+  "MUNICIPIO": "Luruaco"
+ },
+ {
+  "DEPARTAMENTO": "Atlantico",
+  "DANE": 8.433,
+  "MUNICIPIO": "Malambo"
+ },
+ {
+  "DEPARTAMENTO": "Atlantico",
+  "DANE": 8.436,
+  "MUNICIPIO": "Manati"
+ },
+ {
+  "DEPARTAMENTO": "Atlantico",
+  "DANE": 8.549,
+  "MUNICIPIO": "Piojo"
+ },
+ {
+  "DEPARTAMENTO": "Atlantico",
+  "DANE": 8.558,
+  "MUNICIPIO": "Polonuevo"
+ },
+ {
+  "DEPARTAMENTO": "Atlantico",
+  "DANE": 8.634,
+  "MUNICIPIO": "Sabanagrande"
+ },
+ {
+  "DEPARTAMENTO": "Atlantico",
+  "DANE": 8.638,
+  "MUNICIPIO": "Sabanalarga"
+ },
+ {
+  "DEPARTAMENTO": "Atlantico",
+  "DANE": 8.675,
+  "MUNICIPIO": "Santa Lucia"
+ },
+ {
+  "DEPARTAMENTO": "Atlantico",
+  "DANE": 8.685,
+  "MUNICIPIO": "Santo Tomas"
+ },
+ {
+  "DEPARTAMENTO": "Atlantico",
+  "DANE": 8.758,
+  "MUNICIPIO": "Soledad"
+ },
+ {
+  "DEPARTAMENTO": "Atlantico",
+  "DANE": 8.77,
+  "MUNICIPIO": "Suan"
+ },
+ {
+  "DEPARTAMENTO": "Atlantico",
+  "DANE": 8.832,
+  "MUNICIPIO": "Tubara"
+ },
+ {
+  "DEPARTAMENTO": "Atlantico",
+  "DANE": 8.849,
+  "MUNICIPIO": "Usiacuri"
+ },
+ {
+  "DEPARTAMENTO": "Bolivar",
+  "DANE": 13.006,
+  "MUNICIPIO": "Achi"
+ },
+ {
+  "DEPARTAMENTO": "Bolivar",
+  "DANE": 13.042,
+  "MUNICIPIO": "Arenal"
+ },
+ {
+  "DEPARTAMENTO": "Bolivar",
+  "DANE": 13.052,
+  "MUNICIPIO": "Arjona"
+ },
+ {
+  "DEPARTAMENTO": "Bolivar",
+  "DANE": 13.062,
+  "MUNICIPIO": "Arroyohondo"
+ },
+ {
+  "DEPARTAMENTO": "Bolivar",
+  "DANE": 13.14,
+  "MUNICIPIO": "Calamar"
+ },
+ {
+  "DEPARTAMENTO": "Bolivar",
+  "DANE": 13.16,
+  "MUNICIPIO": "Cantagallo"
+ },
+ {
+  "DEPARTAMENTO": "Bolivar",
+  "DANE": 13.188,
+  "MUNICIPIO": "Cicuco"
+ },
+ {
+  "DEPARTAMENTO": "Bolivar",
+  "DANE": 13.212,
+  "MUNICIPIO": "Cordoba"
+ },
+ {
+  "DEPARTAMENTO": "Bolivar",
+  "DANE": 13.222,
+  "MUNICIPIO": "Clemencia"
+ },
+ {
+  "DEPARTAMENTO": "Bolivar",
+  "DANE": 13.248,
+  "MUNICIPIO": "El Guamo"
+ },
+ {
+  "DEPARTAMENTO": "Bolivar",
+  "DANE": 13.43,
+  "MUNICIPIO": "Magangue"
+ },
+ {
+  "DEPARTAMENTO": "Bolivar",
+  "DANE": 13.433,
+  "MUNICIPIO": "Mahates"
+ },
+ {
+  "DEPARTAMENTO": "Bolivar",
+  "DANE": 13.44,
+  "MUNICIPIO": "Margarita"
+ },
+ {
+  "DEPARTAMENTO": "Bolivar",
+  "DANE": 13.458,
+  "MUNICIPIO": "Montecristo"
+ },
+ {
+  "DEPARTAMENTO": "Bolivar",
+  "DANE": 13.468,
+  "MUNICIPIO": "Mompos"
+ },
+ {
+  "DEPARTAMENTO": "Bolivar",
+  "DANE": 13.473,
+  "MUNICIPIO": "Morales"
+ },
+ {
+  "DEPARTAMENTO": "Bolivar",
+  "DANE": 13.49,
+  "MUNICIPIO": "Norosi"
+ },
+ {
+  "DEPARTAMENTO": "Bolivar",
+  "DANE": 13.549,
+  "MUNICIPIO": "Pinillos"
+ },
+ {
+  "DEPARTAMENTO": "Bolivar",
+  "DANE": 13.58,
+  "MUNICIPIO": "Regidor"
+ },
+ {
+  "DEPARTAMENTO": "Bolivar",
+  "DANE": 13.6,
+  "MUNICIPIO": "Rio Viejo"
+ },
+ {
+  "DEPARTAMENTO": "Bolivar",
+  "DANE": 13.647,
+  "MUNICIPIO": "San Estanislao"
+ },
+ {
+  "DEPARTAMENTO": "Bolivar",
+  "DANE": 13.65,
+  "MUNICIPIO": "San Fernando"
+ },
+ {
+  "DEPARTAMENTO": "Bolivar",
+  "DANE": 13.657,
+  "MUNICIPIO": "San Juan Nepomuceno"
+ },
+ {
+  "DEPARTAMENTO": "Bolivar",
+  "DANE": 13.673,
+  "MUNICIPIO": "Santa Catalina"
+ },
+ {
+  "DEPARTAMENTO": "Bolivar",
+  "DANE": 13.683,
+  "MUNICIPIO": "Santa Rosa"
+ },
+ {
+  "DEPARTAMENTO": "Bolivar",
+  "DANE": 13.744,
+  "MUNICIPIO": "Simiti"
+ },
+ {
+  "DEPARTAMENTO": "Bolivar",
+  "DANE": 13.76,
+  "MUNICIPIO": "Soplaviento"
+ },
+ {
+  "DEPARTAMENTO": "Bolivar",
+  "DANE": 13.78,
+  "MUNICIPIO": "Talaigua Nuevo"
+ },
+ {
+  "DEPARTAMENTO": "Bolivar",
+  "DANE": 13.81,
+  "MUNICIPIO": "Tiquisio"
+ },
+ {
+  "DEPARTAMENTO": "Bolivar",
+  "DANE": 13.836,
+  "MUNICIPIO": "Turbaco"
+ },
+ {
+  "DEPARTAMENTO": "Bolivar",
+  "DANE": 13.838,
+  "MUNICIPIO": "Turbana"
+ },
+ {
+  "DEPARTAMENTO": "Bolivar",
+  "DANE": 13.873,
+  "MUNICIPIO": "Villanueva"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.001,
+  "MUNICIPIO": "Tunja"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.022,
+  "MUNICIPIO": "Almeida"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.047,
+  "MUNICIPIO": "Aquitania"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.051,
+  "MUNICIPIO": "Arcabuco"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.09,
+  "MUNICIPIO": "Berbeo"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.092,
+  "MUNICIPIO": "Beteitiva"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.097,
+  "MUNICIPIO": "Boavita"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.104,
+  "MUNICIPIO": "Boyaca"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.106,
+  "MUNICIPIO": "Briceño"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.109,
+  "MUNICIPIO": "Buena Vista"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.114,
+  "MUNICIPIO": "Busbanza"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.131,
+  "MUNICIPIO": "Caldas"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.135,
+  "MUNICIPIO": "Campohermoso"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.162,
+  "MUNICIPIO": "Cerinza"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.172,
+  "MUNICIPIO": "Chinavita"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.176,
+  "MUNICIPIO": "Chiquinquira"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.18,
+  "MUNICIPIO": "Chiscas"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.183,
+  "MUNICIPIO": "Chita"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.185,
+  "MUNICIPIO": "Chitaraque"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.187,
+  "MUNICIPIO": "Chivata"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.204,
+  "MUNICIPIO": "Combita"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.212,
+  "MUNICIPIO": "Coper"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.215,
+  "MUNICIPIO": "Corrales"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.218,
+  "MUNICIPIO": "Covarachia"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.223,
+  "MUNICIPIO": "Cubara"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.224,
+  "MUNICIPIO": "Cucaita"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.226,
+  "MUNICIPIO": "Cuitiva"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.232,
+  "MUNICIPIO": "Chiquiza"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.236,
+  "MUNICIPIO": "Chivor"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.238,
+  "MUNICIPIO": "Duitama"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.244,
+  "MUNICIPIO": "El Cocuy"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.248,
+  "MUNICIPIO": "El Espino"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.272,
+  "MUNICIPIO": "Firavitoba"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.276,
+  "MUNICIPIO": "Floresta"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.293,
+  "MUNICIPIO": "Gachantiva"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.296,
+  "MUNICIPIO": "Gameza"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.299,
+  "MUNICIPIO": "Garagoa"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.317,
+  "MUNICIPIO": "Guacamayas"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.322,
+  "MUNICIPIO": "Guateque"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.325,
+  "MUNICIPIO": "Guayata"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.332,
+  "MUNICIPIO": "Güican"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.362,
+  "MUNICIPIO": "Iza"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.367,
+  "MUNICIPIO": "Jenesano"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.368,
+  "MUNICIPIO": "Jerico"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.377,
+  "MUNICIPIO": "Labranzagrande"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.38,
+  "MUNICIPIO": "La Capilla"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.401,
+  "MUNICIPIO": "La Victoria"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.425,
+  "MUNICIPIO": "Macanal"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.442,
+  "MUNICIPIO": "Maripi"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.455,
+  "MUNICIPIO": "Miraflores"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.464,
+  "MUNICIPIO": "Mongua"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.466,
+  "MUNICIPIO": "Mongui"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.469,
+  "MUNICIPIO": "Moniquira"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.48,
+  "MUNICIPIO": "Muzo"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.491,
+  "MUNICIPIO": "Nobsa"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.494,
+  "MUNICIPIO": "Nuevo Colon"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.5,
+  "MUNICIPIO": "Oicata"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.507,
+  "MUNICIPIO": "Otanche"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.511,
+  "MUNICIPIO": "Pachavita"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.514,
+  "MUNICIPIO": "Paez"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.516,
+  "MUNICIPIO": "Paipa"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.518,
+  "MUNICIPIO": "Pajarito"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.522,
+  "MUNICIPIO": "Panqueba"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.531,
+  "MUNICIPIO": "Pauna"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.533,
+  "MUNICIPIO": "Paya"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.542,
+  "MUNICIPIO": "Pesca"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.55,
+  "MUNICIPIO": "Pisba"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.572,
+  "MUNICIPIO": "Puerto Boyaca"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.58,
+  "MUNICIPIO": "Quipama"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.599,
+  "MUNICIPIO": "Ramiriqui"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.6,
+  "MUNICIPIO": "Raquira"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.621,
+  "MUNICIPIO": "Rondon"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.632,
+  "MUNICIPIO": "Saboya"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.638,
+  "MUNICIPIO": "Sachica"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.646,
+  "MUNICIPIO": "Samaca"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.66,
+  "MUNICIPIO": "San Eduardo"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.673,
+  "MUNICIPIO": "San Mateo"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.686,
+  "MUNICIPIO": "Santana"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.69,
+  "MUNICIPIO": "Santa Maria"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.696,
+  "MUNICIPIO": "Santa Sofia"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.72,
+  "MUNICIPIO": "Sativanorte"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.723,
+  "MUNICIPIO": "Sativasur"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.74,
+  "MUNICIPIO": "Siachoque"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.753,
+  "MUNICIPIO": "Soata"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.755,
+  "MUNICIPIO": "Socota"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.757,
+  "MUNICIPIO": "Socha"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.759,
+  "MUNICIPIO": "Sogamoso"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.761,
+  "MUNICIPIO": "Somondoco"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.762,
+  "MUNICIPIO": "Sora"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.763,
+  "MUNICIPIO": "Sotaquira"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.764,
+  "MUNICIPIO": "Soraca"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.774,
+  "MUNICIPIO": "Susacon"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.776,
+  "MUNICIPIO": "Sutamarchan"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.778,
+  "MUNICIPIO": "Sutatenza"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.79,
+  "MUNICIPIO": "Tasco"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.798,
+  "MUNICIPIO": "Tenza"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.804,
+  "MUNICIPIO": "Tibana"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.808,
+  "MUNICIPIO": "Tinjaca"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.81,
+  "MUNICIPIO": "Tipacoque"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.814,
+  "MUNICIPIO": "Toca"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.82,
+  "MUNICIPIO": "Topaga"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.822,
+  "MUNICIPIO": "Tota"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.835,
+  "MUNICIPIO": "Turmeque"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.839,
+  "MUNICIPIO": "Tutaza"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.842,
+  "MUNICIPIO": "Umbita"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.861,
+  "MUNICIPIO": "Ventaquemada"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.879,
+  "MUNICIPIO": "Viracacha"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.897,
+  "MUNICIPIO": "Zetaquira"
+ },
+ {
+  "DEPARTAMENTO": "Caldas",
+  "DANE": 17.001,
+  "MUNICIPIO": "Manizales"
+ },
+ {
+  "DEPARTAMENTO": "Caldas",
+  "DANE": 17.013,
+  "MUNICIPIO": "Aguadas"
+ },
+ {
+  "DEPARTAMENTO": "Caldas",
+  "DANE": 17.042,
+  "MUNICIPIO": "Anserma"
+ },
+ {
+  "DEPARTAMENTO": "Caldas",
+  "DANE": 17.05,
+  "MUNICIPIO": "Aranzazu"
+ },
+ {
+  "DEPARTAMENTO": "Caldas",
+  "DANE": 17.088,
+  "MUNICIPIO": "Belalcazar"
+ },
+ {
+  "DEPARTAMENTO": "Caldas",
+  "DANE": 17.174,
+  "MUNICIPIO": "Chinchina"
+ },
+ {
+  "DEPARTAMENTO": "Caldas",
+  "DANE": 17.272,
+  "MUNICIPIO": "Filadelfia"
+ },
+ {
+  "DEPARTAMENTO": "Caldas",
+  "DANE": 17.38,
+  "MUNICIPIO": "La Dorada"
+ },
+ {
+  "DEPARTAMENTO": "Caldas",
+  "DANE": 17.388,
+  "MUNICIPIO": "La Merced"
+ },
+ {
+  "DEPARTAMENTO": "Caldas",
+  "DANE": 17.433,
+  "MUNICIPIO": "Manzanares"
+ },
+ {
+  "DEPARTAMENTO": "Caldas",
+  "DANE": 17.442,
+  "MUNICIPIO": "Marmato"
+ },
+ {
+  "DEPARTAMENTO": "Caldas",
+  "DANE": 17.446,
+  "MUNICIPIO": "Marulanda"
+ },
+ {
+  "DEPARTAMENTO": "Caldas",
+  "DANE": 17.486,
+  "MUNICIPIO": "Neira"
+ },
+ {
+  "DEPARTAMENTO": "Caldas",
+  "DANE": 17.495,
+  "MUNICIPIO": "Norcasia"
+ },
+ {
+  "DEPARTAMENTO": "Caldas",
+  "DANE": 17.513,
+  "MUNICIPIO": "Pacora"
+ },
+ {
+  "DEPARTAMENTO": "Caldas",
+  "DANE": 17.524,
+  "MUNICIPIO": "Palestina"
+ },
+ {
+  "DEPARTAMENTO": "Caldas",
+  "DANE": 17.541,
+  "MUNICIPIO": "Pensilvania"
+ },
+ {
+  "DEPARTAMENTO": "Caldas",
+  "DANE": 17.614,
+  "MUNICIPIO": "Riosucio"
+ },
+ {
+  "DEPARTAMENTO": "Caldas",
+  "DANE": 17.616,
+  "MUNICIPIO": "Risaralda"
+ },
+ {
+  "DEPARTAMENTO": "Caldas",
+  "DANE": 17.653,
+  "MUNICIPIO": "Salamina"
+ },
+ {
+  "DEPARTAMENTO": "Caldas",
+  "DANE": 17.662,
+  "MUNICIPIO": "Samana"
+ },
+ {
+  "DEPARTAMENTO": "Caldas",
+  "DANE": 17.665,
+  "MUNICIPIO": "San Jose"
+ },
+ {
+  "DEPARTAMENTO": "Caldas",
+  "DANE": 17.777,
+  "MUNICIPIO": "Supia"
+ },
+ {
+  "DEPARTAMENTO": "Caldas",
+  "DANE": 17.867,
+  "MUNICIPIO": "Victoria"
+ },
+ {
+  "DEPARTAMENTO": "Caldas",
+  "DANE": 17.873,
+  "MUNICIPIO": "Villamaria"
+ },
+ {
+  "DEPARTAMENTO": "Caldas",
+  "DANE": 17.877,
+  "MUNICIPIO": "Viterbo"
+ },
+ {
+  "DEPARTAMENTO": "Caqueta",
+  "DANE": 18.001,
+  "MUNICIPIO": "Florencia"
+ },
+ {
+  "DEPARTAMENTO": "Caqueta",
+  "DANE": 18.029,
+  "MUNICIPIO": "Albania"
+ },
+ {
+  "DEPARTAMENTO": "Caqueta",
+  "DANE": 18.205,
+  "MUNICIPIO": "Curillo"
+ },
+ {
+  "DEPARTAMENTO": "Caqueta",
+  "DANE": 18.247,
+  "MUNICIPIO": "El Doncello"
+ },
+ {
+  "DEPARTAMENTO": "Caqueta",
+  "DANE": 18.256,
+  "MUNICIPIO": "El Paujil"
+ },
+ {
+  "DEPARTAMENTO": "Caqueta",
+  "DANE": 18.479,
+  "MUNICIPIO": "Morelia"
+ },
+ {
+  "DEPARTAMENTO": "Caqueta",
+  "DANE": 18.592,
+  "MUNICIPIO": "Puerto Rico"
+ },
+ {
+  "DEPARTAMENTO": "Caqueta",
+  "DANE": 18.756,
+  "MUNICIPIO": "Solano"
+ },
+ {
+  "DEPARTAMENTO": "Caqueta",
+  "DANE": 18.785,
+  "MUNICIPIO": "Solita"
+ },
+ {
+  "DEPARTAMENTO": "Caqueta",
+  "DANE": 18.86,
+  "MUNICIPIO": "Valparaiso"
+ },
+ {
+  "DEPARTAMENTO": "Cauca",
+  "DANE": 19.001,
+  "MUNICIPIO": "Popayan"
+ },
+ {
+  "DEPARTAMENTO": "Cauca",
+  "DANE": 19.022,
+  "MUNICIPIO": "Almaguer"
+ },
+ {
+  "DEPARTAMENTO": "Cauca",
+  "DANE": 19.05,
+  "MUNICIPIO": "Argelia"
+ },
+ {
+  "DEPARTAMENTO": "Cauca",
+  "DANE": 19.075,
+  "MUNICIPIO": "Balboa"
+ },
+ {
+  "DEPARTAMENTO": "Cauca",
+  "DANE": 19.1,
+  "MUNICIPIO": "Bolivar"
+ },
+ {
+  "DEPARTAMENTO": "Cauca",
+  "DANE": 19.11,
+  "MUNICIPIO": "Buenos Aires"
+ },
+ {
+  "DEPARTAMENTO": "Cauca",
+  "DANE": 19.13,
+  "MUNICIPIO": "Cajibio"
+ },
+ {
+  "DEPARTAMENTO": "Cauca",
+  "DANE": 19.137,
+  "MUNICIPIO": "Caldono"
+ },
+ {
+  "DEPARTAMENTO": "Cauca",
+  "DANE": 19.142,
+  "MUNICIPIO": "Caloto"
+ },
+ {
+  "DEPARTAMENTO": "Cauca",
+  "DANE": 19.212,
+  "MUNICIPIO": "Corinto"
+ },
+ {
+  "DEPARTAMENTO": "Cauca",
+  "DANE": 19.256,
+  "MUNICIPIO": "El Tambo"
+ },
+ {
+  "DEPARTAMENTO": "Cauca",
+  "DANE": 19.29,
+  "MUNICIPIO": "Florencia"
+ },
+ {
+  "DEPARTAMENTO": "Cauca",
+  "DANE": 19.3,
+  "MUNICIPIO": "Guachene"
+ },
+ {
+  "DEPARTAMENTO": "Cauca",
+  "DANE": 19.318,
+  "MUNICIPIO": "Guapi"
+ },
+ {
+  "DEPARTAMENTO": "Cauca",
+  "DANE": 19.355,
+  "MUNICIPIO": "Inza"
+ },
+ {
+  "DEPARTAMENTO": "Cauca",
+  "DANE": 19.364,
+  "MUNICIPIO": "Jambalo"
+ },
+ {
+  "DEPARTAMENTO": "Cauca",
+  "DANE": 19.392,
+  "MUNICIPIO": "La Sierra"
+ },
+ {
+  "DEPARTAMENTO": "Cauca",
+  "DANE": 19.397,
+  "MUNICIPIO": "La Vega"
+ },
+ {
+  "DEPARTAMENTO": "Cauca",
+  "DANE": 19.418,
+  "MUNICIPIO": "Lopez"
+ },
+ {
+  "DEPARTAMENTO": "Cauca",
+  "DANE": 19.45,
+  "MUNICIPIO": "Mercaderes"
+ },
+ {
+  "DEPARTAMENTO": "Cauca",
+  "DANE": 19.455,
+  "MUNICIPIO": "Miranda"
+ },
+ {
+  "DEPARTAMENTO": "Cauca",
+  "DANE": 19.473,
+  "MUNICIPIO": "Morales"
+ },
+ {
+  "DEPARTAMENTO": "Cauca",
+  "DANE": 19.513,
+  "MUNICIPIO": "Padilla"
+ },
+ {
+  "DEPARTAMENTO": "Cauca",
+  "DANE": 19.532,
+  "MUNICIPIO": "Patia"
+ },
+ {
+  "DEPARTAMENTO": "Cauca",
+  "DANE": 19.533,
+  "MUNICIPIO": "Piamonte"
+ },
+ {
+  "DEPARTAMENTO": "Cauca",
+  "DANE": 19.548,
+  "MUNICIPIO": "Piendamo"
+ },
+ {
+  "DEPARTAMENTO": "Cauca",
+  "DANE": 19.573,
+  "MUNICIPIO": "Puerto Tejada"
+ },
+ {
+  "DEPARTAMENTO": "Cauca",
+  "DANE": 19.585,
+  "MUNICIPIO": "Purace"
+ },
+ {
+  "DEPARTAMENTO": "Cauca",
+  "DANE": 19.622,
+  "MUNICIPIO": "Rosas"
+ },
+ {
+  "DEPARTAMENTO": "Cauca",
+  "DANE": 19.701,
+  "MUNICIPIO": "Santa Rosa"
+ },
+ {
+  "DEPARTAMENTO": "Cauca",
+  "DANE": 19.743,
+  "MUNICIPIO": "Silvia"
+ },
+ {
+  "DEPARTAMENTO": "Cauca",
+  "DANE": 19.76,
+  "MUNICIPIO": "Sotara"
+ },
+ {
+  "DEPARTAMENTO": "Cauca",
+  "DANE": 19.78,
+  "MUNICIPIO": "Suarez"
+ },
+ {
+  "DEPARTAMENTO": "Cauca",
+  "DANE": 19.785,
+  "MUNICIPIO": "Sucre"
+ },
+ {
+  "DEPARTAMENTO": "Cauca",
+  "DANE": 19.807,
+  "MUNICIPIO": "Timbio"
+ },
+ {
+  "DEPARTAMENTO": "Cauca",
+  "DANE": 19.809,
+  "MUNICIPIO": "Timbiqui"
+ },
+ {
+  "DEPARTAMENTO": "Cauca",
+  "DANE": 19.821,
+  "MUNICIPIO": "Toribio"
+ },
+ {
+  "DEPARTAMENTO": "Cauca",
+  "DANE": 19.824,
+  "MUNICIPIO": "Totoro"
+ },
+ {
+  "DEPARTAMENTO": "Cauca",
+  "DANE": 19.845,
+  "MUNICIPIO": "Villa Rica"
+ },
+ {
+  "DEPARTAMENTO": "Cesar",
+  "DANE": 20.001,
+  "MUNICIPIO": "Valledupar"
+ },
+ {
+  "DEPARTAMENTO": "Cesar",
+  "DANE": 20.011,
+  "MUNICIPIO": "Aguachica"
+ },
+ {
+  "DEPARTAMENTO": "Cesar",
+  "DANE": 20.013,
+  "MUNICIPIO": "Agustin Codazzi"
+ },
+ {
+  "DEPARTAMENTO": "Cesar",
+  "DANE": 20.032,
+  "MUNICIPIO": "Astrea"
+ },
+ {
+  "DEPARTAMENTO": "Cesar",
+  "DANE": 20.045,
+  "MUNICIPIO": "Becerril"
+ },
+ {
+  "DEPARTAMENTO": "Cesar",
+  "DANE": 20.06,
+  "MUNICIPIO": "Bosconia"
+ },
+ {
+  "DEPARTAMENTO": "Cesar",
+  "DANE": 20.175,
+  "MUNICIPIO": "Chimichagua"
+ },
+ {
+  "DEPARTAMENTO": "Cesar",
+  "DANE": 20.178,
+  "MUNICIPIO": "Chiriguana"
+ },
+ {
+  "DEPARTAMENTO": "Cesar",
+  "DANE": 20.228,
+  "MUNICIPIO": "Curumani"
+ },
+ {
+  "DEPARTAMENTO": "Cesar",
+  "DANE": 20.238,
+  "MUNICIPIO": "El Copey"
+ },
+ {
+  "DEPARTAMENTO": "Cesar",
+  "DANE": 20.25,
+  "MUNICIPIO": "El Paso"
+ },
+ {
+  "DEPARTAMENTO": "Cesar",
+  "DANE": 20.295,
+  "MUNICIPIO": "Gamarra"
+ },
+ {
+  "DEPARTAMENTO": "Cesar",
+  "DANE": 20.31,
+  "MUNICIPIO": "Gonzalez"
+ },
+ {
+  "DEPARTAMENTO": "Cesar",
+  "DANE": 20.383,
+  "MUNICIPIO": "La Gloria"
+ },
+ {
+  "DEPARTAMENTO": "Cesar",
+  "DANE": 20.443,
+  "MUNICIPIO": "Manaure"
+ },
+ {
+  "DEPARTAMENTO": "Cesar",
+  "DANE": 20.517,
+  "MUNICIPIO": "Pailitas"
+ },
+ {
+  "DEPARTAMENTO": "Cesar",
+  "DANE": 20.55,
+  "MUNICIPIO": "Pelaya"
+ },
+ {
+  "DEPARTAMENTO": "Cesar",
+  "DANE": 20.57,
+  "MUNICIPIO": "Pueblo Bello"
+ },
+ {
+  "DEPARTAMENTO": "Cesar",
+  "DANE": 20.621,
+  "MUNICIPIO": "La Paz"
+ },
+ {
+  "DEPARTAMENTO": "Cesar",
+  "DANE": 20.71,
+  "MUNICIPIO": "San Alberto"
+ },
+ {
+  "DEPARTAMENTO": "Cesar",
+  "DANE": 20.75,
+  "MUNICIPIO": "San Diego"
+ },
+ {
+  "DEPARTAMENTO": "Cesar",
+  "DANE": 20.77,
+  "MUNICIPIO": "San Martin"
+ },
+ {
+  "DEPARTAMENTO": "Cesar",
+  "DANE": 20.787,
+  "MUNICIPIO": "Tamalameque"
+ },
+ {
+  "DEPARTAMENTO": "Cordoba",
+  "DANE": 23.001,
+  "MUNICIPIO": "Monteria"
+ },
+ {
+  "DEPARTAMENTO": "Cordoba",
+  "DANE": 23.068,
+  "MUNICIPIO": "Ayapel"
+ },
+ {
+  "DEPARTAMENTO": "Cordoba",
+  "DANE": 23.079,
+  "MUNICIPIO": "Buenavista"
+ },
+ {
+  "DEPARTAMENTO": "Cordoba",
+  "DANE": 23.09,
+  "MUNICIPIO": "Canalete"
+ },
+ {
+  "DEPARTAMENTO": "Cordoba",
+  "DANE": 23.162,
+  "MUNICIPIO": "Cerete"
+ },
+ {
+  "DEPARTAMENTO": "Cordoba",
+  "DANE": 23.168,
+  "MUNICIPIO": "Chima"
+ },
+ {
+  "DEPARTAMENTO": "Cordoba",
+  "DANE": 23.182,
+  "MUNICIPIO": "Chinu"
+ },
+ {
+  "DEPARTAMENTO": "Cordoba",
+  "DANE": 23.3,
+  "MUNICIPIO": "Cotorra"
+ },
+ {
+  "DEPARTAMENTO": "Cordoba",
+  "DANE": 23.417,
+  "MUNICIPIO": "Lorica"
+ },
+ {
+  "DEPARTAMENTO": "Cordoba",
+  "DANE": 23.419,
+  "MUNICIPIO": "Los Cordobas"
+ },
+ {
+  "DEPARTAMENTO": "Cordoba",
+  "DANE": 23.464,
+  "MUNICIPIO": "Momil"
+ },
+ {
+  "DEPARTAMENTO": "Cordoba",
+  "DANE": 23.5,
+  "MUNICIPIO": "Moñitos"
+ },
+ {
+  "DEPARTAMENTO": "Cordoba",
+  "DANE": 23.555,
+  "MUNICIPIO": "Planeta Rica"
+ },
+ {
+  "DEPARTAMENTO": "Cordoba",
+  "DANE": 23.57,
+  "MUNICIPIO": "Pueblo Nuevo"
+ },
+ {
+  "DEPARTAMENTO": "Cordoba",
+  "DANE": 23.574,
+  "MUNICIPIO": "Puerto Escondido"
+ },
+ {
+  "DEPARTAMENTO": "Cordoba",
+  "DANE": 23.586,
+  "MUNICIPIO": "Purisima"
+ },
+ {
+  "DEPARTAMENTO": "Cordoba",
+  "DANE": 23.66,
+  "MUNICIPIO": "Sahagun"
+ },
+ {
+  "DEPARTAMENTO": "Cordoba",
+  "DANE": 23.67,
+  "MUNICIPIO": "San Andres Sotavento"
+ },
+ {
+  "DEPARTAMENTO": "Cordoba",
+  "DANE": 23.672,
+  "MUNICIPIO": "San Antero"
+ },
+ {
+  "DEPARTAMENTO": "Cordoba",
+  "DANE": 23.686,
+  "MUNICIPIO": "San Pelayo"
+ },
+ {
+  "DEPARTAMENTO": "Cordoba",
+  "DANE": 23.807,
+  "MUNICIPIO": "Tierralta"
+ },
+ {
+  "DEPARTAMENTO": "Cordoba",
+  "DANE": 23.815,
+  "MUNICIPIO": "Tuchin"
+ },
+ {
+  "DEPARTAMENTO": "Cordoba",
+  "DANE": 23.855,
+  "MUNICIPIO": "Valencia"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.035,
+  "MUNICIPIO": "Anapoima"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.053,
+  "MUNICIPIO": "Arbelaez"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.086,
+  "MUNICIPIO": "Beltran"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.095,
+  "MUNICIPIO": "Bituima"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.099,
+  "MUNICIPIO": "Bojaca"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.12,
+  "MUNICIPIO": "Cabrera"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.123,
+  "MUNICIPIO": "Cachipay"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.126,
+  "MUNICIPIO": "Cajica"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.148,
+  "MUNICIPIO": "Caparrapi"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.151,
+  "MUNICIPIO": "Caqueza"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.168,
+  "MUNICIPIO": "Chaguani"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.178,
+  "MUNICIPIO": "Chipaque"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.181,
+  "MUNICIPIO": "Choachi"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.183,
+  "MUNICIPIO": "Choconta"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.2,
+  "MUNICIPIO": "Cogua"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.214,
+  "MUNICIPIO": "Cota"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.224,
+  "MUNICIPIO": "Cucunuba"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.245,
+  "MUNICIPIO": "El Colegio"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.26,
+  "MUNICIPIO": "El Rosal"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.279,
+  "MUNICIPIO": "Fomeque"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.281,
+  "MUNICIPIO": "Fosca"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.286,
+  "MUNICIPIO": "Funza"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.288,
+  "MUNICIPIO": "Fuquene"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.293,
+  "MUNICIPIO": "Gachala"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.295,
+  "MUNICIPIO": "Gachancipa"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.297,
+  "MUNICIPIO": "Gacheta"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.307,
+  "MUNICIPIO": "Girardot"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.312,
+  "MUNICIPIO": "Granada"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.317,
+  "MUNICIPIO": "Guacheta"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.32,
+  "MUNICIPIO": "Guaduas"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.322,
+  "MUNICIPIO": "Guasca"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.324,
+  "MUNICIPIO": "Guataqui"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.326,
+  "MUNICIPIO": "Guatavita"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.335,
+  "MUNICIPIO": "Guayabetal"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.339,
+  "MUNICIPIO": "Gutierrez"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.368,
+  "MUNICIPIO": "Jerusalen"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.372,
+  "MUNICIPIO": "Junin"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.377,
+  "MUNICIPIO": "La Calera"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.386,
+  "MUNICIPIO": "La Mesa"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.394,
+  "MUNICIPIO": "La Palma"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.398,
+  "MUNICIPIO": "La Peña"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.402,
+  "MUNICIPIO": "La Vega"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.407,
+  "MUNICIPIO": "Lenguazaque"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.426,
+  "MUNICIPIO": "Macheta"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.43,
+  "MUNICIPIO": "Madrid"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.436,
+  "MUNICIPIO": "Manta"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.438,
+  "MUNICIPIO": "Medina"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.473,
+  "MUNICIPIO": "Mosquera"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.483,
+  "MUNICIPIO": "Nariño"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.486,
+  "MUNICIPIO": "Nemocon"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.488,
+  "MUNICIPIO": "Nilo"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.489,
+  "MUNICIPIO": "Nimaima"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.491,
+  "MUNICIPIO": "Nocaima"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.506,
+  "MUNICIPIO": "Venecia"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.513,
+  "MUNICIPIO": "Pacho"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.518,
+  "MUNICIPIO": "Paime"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.524,
+  "MUNICIPIO": "Pandi"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.53,
+  "MUNICIPIO": "Paratebueno"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.535,
+  "MUNICIPIO": "Pasca"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.572,
+  "MUNICIPIO": "Puerto Salgar"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.58,
+  "MUNICIPIO": "Puli"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.592,
+  "MUNICIPIO": "Quebradanegra"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.594,
+  "MUNICIPIO": "Quetame"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.596,
+  "MUNICIPIO": "Quipile"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.599,
+  "MUNICIPIO": "Apulo"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.612,
+  "MUNICIPIO": "Ricaurte"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.649,
+  "MUNICIPIO": "San Bernardo"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.653,
+  "MUNICIPIO": "San Cayetano"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.658,
+  "MUNICIPIO": "San Francisco"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.736,
+  "MUNICIPIO": "Sesquile"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.74,
+  "MUNICIPIO": "Sibate"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.743,
+  "MUNICIPIO": "Silvania"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.745,
+  "MUNICIPIO": "Simijaca"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.754,
+  "MUNICIPIO": "Soacha"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.769,
+  "MUNICIPIO": "Subachoque"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.772,
+  "MUNICIPIO": "Suesca"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.777,
+  "MUNICIPIO": "Supata"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.779,
+  "MUNICIPIO": "Susa"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.781,
+  "MUNICIPIO": "Sutatausa"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.785,
+  "MUNICIPIO": "Tabio"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.793,
+  "MUNICIPIO": "Tausa"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.797,
+  "MUNICIPIO": "Tena"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.799,
+  "MUNICIPIO": "Tenjo"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.805,
+  "MUNICIPIO": "Tibacuy"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.807,
+  "MUNICIPIO": "Tibirita"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.815,
+  "MUNICIPIO": "Tocaima"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.817,
+  "MUNICIPIO": "Tocancipa"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.823,
+  "MUNICIPIO": "Topaipi"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.839,
+  "MUNICIPIO": "Ubala"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.841,
+  "MUNICIPIO": "Ubaque"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.845,
+  "MUNICIPIO": "Une"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.851,
+  "MUNICIPIO": "utica"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.867,
+  "MUNICIPIO": "Viani"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.871,
+  "MUNICIPIO": "Villagomez"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.873,
+  "MUNICIPIO": "Villapinzon"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.875,
+  "MUNICIPIO": "Villeta"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.878,
+  "MUNICIPIO": "Viota"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.898,
+  "MUNICIPIO": "Zipacon"
+ },
+ {
+  "DEPARTAMENTO": "Choco",
+  "DANE": 27.001,
+  "MUNICIPIO": "Quibdo"
+ },
+ {
+  "DEPARTAMENTO": "Choco",
+  "DANE": 27.006,
+  "MUNICIPIO": "Acandi"
+ },
+ {
+  "DEPARTAMENTO": "Choco",
+  "DANE": 27.025,
+  "MUNICIPIO": "Alto Baudo"
+ },
+ {
+  "DEPARTAMENTO": "Choco",
+  "DANE": 27.05,
+  "MUNICIPIO": "Atrato"
+ },
+ {
+  "DEPARTAMENTO": "Choco",
+  "DANE": 27.073,
+  "MUNICIPIO": "Bagado"
+ },
+ {
+  "DEPARTAMENTO": "Choco",
+  "DANE": 27.075,
+  "MUNICIPIO": "Bahia Solano"
+ },
+ {
+  "DEPARTAMENTO": "Choco",
+  "DANE": 27.077,
+  "MUNICIPIO": "Bajo Baudo"
+ },
+ {
+  "DEPARTAMENTO": "Choco",
+  "DANE": 27.099,
+  "MUNICIPIO": "Bojaya"
+ },
+ {
+  "DEPARTAMENTO": "Choco",
+  "DANE": 27.16,
+  "MUNICIPIO": "Certegui"
+ },
+ {
+  "DEPARTAMENTO": "Choco",
+  "DANE": 27.205,
+  "MUNICIPIO": "Condoto"
+ },
+ {
+  "DEPARTAMENTO": "Choco",
+  "DANE": 27.372,
+  "MUNICIPIO": "Jurado"
+ },
+ {
+  "DEPARTAMENTO": "Choco",
+  "DANE": 27.413,
+  "MUNICIPIO": "Lloro"
+ },
+ {
+  "DEPARTAMENTO": "Choco",
+  "DANE": 27.425,
+  "MUNICIPIO": "Medio Atrato"
+ },
+ {
+  "DEPARTAMENTO": "Choco",
+  "DANE": 27.43,
+  "MUNICIPIO": "Medio Baudo"
+ },
+ {
+  "DEPARTAMENTO": "Choco",
+  "DANE": 27.45,
+  "MUNICIPIO": "Medio San Juan"
+ },
+ {
+  "DEPARTAMENTO": "Choco",
+  "DANE": 27.491,
+  "MUNICIPIO": "Novita"
+ },
+ {
+  "DEPARTAMENTO": "Choco",
+  "DANE": 27.495,
+  "MUNICIPIO": "Nuqui"
+ },
+ {
+  "DEPARTAMENTO": "Choco",
+  "DANE": 27.58,
+  "MUNICIPIO": "Rio Iro"
+ },
+ {
+  "DEPARTAMENTO": "Choco",
+  "DANE": 27.6,
+  "MUNICIPIO": "Rio Quito"
+ },
+ {
+  "DEPARTAMENTO": "Choco",
+  "DANE": 27.615,
+  "MUNICIPIO": "Riosucio"
+ },
+ {
+  "DEPARTAMENTO": "Choco",
+  "DANE": 27.745,
+  "MUNICIPIO": "Sipi"
+ },
+ {
+  "DEPARTAMENTO": "Choco",
+  "DANE": 27.8,
+  "MUNICIPIO": "Unguia"
+ },
+ {
+  "DEPARTAMENTO": "Huila",
+  "DANE": 41.001,
+  "MUNICIPIO": "Neiva"
+ },
+ {
+  "DEPARTAMENTO": "Huila",
+  "DANE": 41.006,
+  "MUNICIPIO": "Acevedo"
+ },
+ {
+  "DEPARTAMENTO": "Huila",
+  "DANE": 41.013,
+  "MUNICIPIO": "Agrado"
+ },
+ {
+  "DEPARTAMENTO": "Huila",
+  "DANE": 41.016,
+  "MUNICIPIO": "Aipe"
+ },
+ {
+  "DEPARTAMENTO": "Huila",
+  "DANE": 41.02,
+  "MUNICIPIO": "Algeciras"
+ },
+ {
+  "DEPARTAMENTO": "Huila",
+  "DANE": 41.026,
+  "MUNICIPIO": "Altamira"
+ },
+ {
+  "DEPARTAMENTO": "Huila",
+  "DANE": 41.078,
+  "MUNICIPIO": "Baraya"
+ },
+ {
+  "DEPARTAMENTO": "Huila",
+  "DANE": 41.132,
+  "MUNICIPIO": "Campoalegre"
+ },
+ {
+  "DEPARTAMENTO": "Huila",
+  "DANE": 41.206,
+  "MUNICIPIO": "Colombia"
+ },
+ {
+  "DEPARTAMENTO": "Huila",
+  "DANE": 41.244,
+  "MUNICIPIO": "Elias"
+ },
+ {
+  "DEPARTAMENTO": "Huila",
+  "DANE": 41.298,
+  "MUNICIPIO": "Garzon"
+ },
+ {
+  "DEPARTAMENTO": "Huila",
+  "DANE": 41.306,
+  "MUNICIPIO": "Gigante"
+ },
+ {
+  "DEPARTAMENTO": "Huila",
+  "DANE": 41.319,
+  "MUNICIPIO": "Guadalupe"
+ },
+ {
+  "DEPARTAMENTO": "Huila",
+  "DANE": 41.349,
+  "MUNICIPIO": "Hobo"
+ },
+ {
+  "DEPARTAMENTO": "Huila",
+  "DANE": 41.357,
+  "MUNICIPIO": "Iquira"
+ },
+ {
+  "DEPARTAMENTO": "Huila",
+  "DANE": 41.359,
+  "MUNICIPIO": "Isnos"
+ },
+ {
+  "DEPARTAMENTO": "Huila",
+  "DANE": 41.378,
+  "MUNICIPIO": "La Argentina"
+ },
+ {
+  "DEPARTAMENTO": "Huila",
+  "DANE": 41.396,
+  "MUNICIPIO": "La Plata"
+ },
+ {
+  "DEPARTAMENTO": "Huila",
+  "DANE": 41.483,
+  "MUNICIPIO": "Nataga"
+ },
+ {
+  "DEPARTAMENTO": "Huila",
+  "DANE": 41.503,
+  "MUNICIPIO": "Oporapa"
+ },
+ {
+  "DEPARTAMENTO": "Huila",
+  "DANE": 41.518,
+  "MUNICIPIO": "Paicol"
+ },
+ {
+  "DEPARTAMENTO": "Huila",
+  "DANE": 41.524,
+  "MUNICIPIO": "Palermo"
+ },
+ {
+  "DEPARTAMENTO": "Huila",
+  "DANE": 41.53,
+  "MUNICIPIO": "Palestina"
+ },
+ {
+  "DEPARTAMENTO": "Huila",
+  "DANE": 41.548,
+  "MUNICIPIO": "Pital"
+ },
+ {
+  "DEPARTAMENTO": "Huila",
+  "DANE": 41.551,
+  "MUNICIPIO": "Pitalito"
+ },
+ {
+  "DEPARTAMENTO": "Huila",
+  "DANE": 41.615,
+  "MUNICIPIO": "Rivera"
+ },
+ {
+  "DEPARTAMENTO": "Huila",
+  "DANE": 41.66,
+  "MUNICIPIO": "Saladoblanco"
+ },
+ {
+  "DEPARTAMENTO": "Huila",
+  "DANE": 41.676,
+  "MUNICIPIO": "Santa Maria"
+ },
+ {
+  "DEPARTAMENTO": "Huila",
+  "DANE": 41.77,
+  "MUNICIPIO": "Suaza"
+ },
+ {
+  "DEPARTAMENTO": "Huila",
+  "DANE": 41.791,
+  "MUNICIPIO": "Tarqui"
+ },
+ {
+  "DEPARTAMENTO": "Huila",
+  "DANE": 41.797,
+  "MUNICIPIO": "Tesalia"
+ },
+ {
+  "DEPARTAMENTO": "Huila",
+  "DANE": 41.799,
+  "MUNICIPIO": "Tello"
+ },
+ {
+  "DEPARTAMENTO": "Huila",
+  "DANE": 41.801,
+  "MUNICIPIO": "Teruel"
+ },
+ {
+  "DEPARTAMENTO": "Huila",
+  "DANE": 41.807,
+  "MUNICIPIO": "Timana"
+ },
+ {
+  "DEPARTAMENTO": "Huila",
+  "DANE": 41.872,
+  "MUNICIPIO": "Villavieja"
+ },
+ {
+  "DEPARTAMENTO": "Huila",
+  "DANE": 41.885,
+  "MUNICIPIO": "Yaguara"
+ },
+ {
+  "DEPARTAMENTO": "La Guajira",
+  "DANE": 44.001,
+  "MUNICIPIO": "Riohacha"
+ },
+ {
+  "DEPARTAMENTO": "La Guajira",
+  "DANE": 44.035,
+  "MUNICIPIO": "Albania"
+ },
+ {
+  "DEPARTAMENTO": "La Guajira",
+  "DANE": 44.078,
+  "MUNICIPIO": "Barrancas"
+ },
+ {
+  "DEPARTAMENTO": "La Guajira",
+  "DANE": 44.09,
+  "MUNICIPIO": "Dibula"
+ },
+ {
+  "DEPARTAMENTO": "La Guajira",
+  "DANE": 44.098,
+  "MUNICIPIO": "Distraccion"
+ },
+ {
+  "DEPARTAMENTO": "La Guajira",
+  "DANE": 44.11,
+  "MUNICIPIO": "El Molino"
+ },
+ {
+  "DEPARTAMENTO": "La Guajira",
+  "DANE": 44.279,
+  "MUNICIPIO": "Fonseca"
+ },
+ {
+  "DEPARTAMENTO": "La Guajira",
+  "DANE": 44.378,
+  "MUNICIPIO": "Hatonuevo"
+ },
+ {
+  "DEPARTAMENTO": "La Guajira",
+  "DANE": 44.43,
+  "MUNICIPIO": "Maicao"
+ },
+ {
+  "DEPARTAMENTO": "La Guajira",
+  "DANE": 44.56,
+  "MUNICIPIO": "Manaure"
+ },
+ {
+  "DEPARTAMENTO": "La Guajira",
+  "DANE": 44.847,
+  "MUNICIPIO": "Uribia"
+ },
+ {
+  "DEPARTAMENTO": "La Guajira",
+  "DANE": 44.855,
+  "MUNICIPIO": "Urumita"
+ },
+ {
+  "DEPARTAMENTO": "La Guajira",
+  "DANE": 44.874,
+  "MUNICIPIO": "Villanueva"
+ },
+ {
+  "DEPARTAMENTO": "Magdalena",
+  "DANE": 47.001,
+  "MUNICIPIO": "Santa Marta"
+ },
+ {
+  "DEPARTAMENTO": "Magdalena",
+  "DANE": 47.03,
+  "MUNICIPIO": "Algarrobo"
+ },
+ {
+  "DEPARTAMENTO": "Magdalena",
+  "DANE": 47.053,
+  "MUNICIPIO": "Aracataca"
+ },
+ {
+  "DEPARTAMENTO": "Magdalena",
+  "DANE": 47.058,
+  "MUNICIPIO": "Ariguani"
+ },
+ {
+  "DEPARTAMENTO": "Magdalena",
+  "DANE": 47.161,
+  "MUNICIPIO": "Cerro San Antonio"
+ },
+ {
+  "DEPARTAMENTO": "Magdalena",
+  "DANE": 47.17,
+  "MUNICIPIO": "Chivolo"
+ },
+ {
+  "DEPARTAMENTO": "Magdalena",
+  "DANE": 47.205,
+  "MUNICIPIO": "Concordia"
+ },
+ {
+  "DEPARTAMENTO": "Magdalena",
+  "DANE": 47.245,
+  "MUNICIPIO": "El Banco"
+ },
+ {
+  "DEPARTAMENTO": "Magdalena",
+  "DANE": 47.258,
+  "MUNICIPIO": "El Piñon"
+ },
+ {
+  "DEPARTAMENTO": "Magdalena",
+  "DANE": 47.268,
+  "MUNICIPIO": "El Reten"
+ },
+ {
+  "DEPARTAMENTO": "Magdalena",
+  "DANE": 47.288,
+  "MUNICIPIO": "Fundacion"
+ },
+ {
+  "DEPARTAMENTO": "Magdalena",
+  "DANE": 47.318,
+  "MUNICIPIO": "Guamal"
+ },
+ {
+  "DEPARTAMENTO": "Magdalena",
+  "DANE": 47.46,
+  "MUNICIPIO": "Nueva Granada"
+ },
+ {
+  "DEPARTAMENTO": "Magdalena",
+  "DANE": 47.541,
+  "MUNICIPIO": "Pedraza"
+ },
+ {
+  "DEPARTAMENTO": "Magdalena",
+  "DANE": 47.551,
+  "MUNICIPIO": "Pivijay"
+ },
+ {
+  "DEPARTAMENTO": "Magdalena",
+  "DANE": 47.555,
+  "MUNICIPIO": "Plato"
+ },
+ {
+  "DEPARTAMENTO": "Magdalena",
+  "DANE": 47.605,
+  "MUNICIPIO": "Remolino"
+ },
+ {
+  "DEPARTAMENTO": "Magdalena",
+  "DANE": 47.675,
+  "MUNICIPIO": "Salamina"
+ },
+ {
+  "DEPARTAMENTO": "Magdalena",
+  "DANE": 47.703,
+  "MUNICIPIO": "San Zenon"
+ },
+ {
+  "DEPARTAMENTO": "Magdalena",
+  "DANE": 47.707,
+  "MUNICIPIO": "Santa Ana"
+ },
+ {
+  "DEPARTAMENTO": "Magdalena",
+  "DANE": 47.745,
+  "MUNICIPIO": "Sitionuevo"
+ },
+ {
+  "DEPARTAMENTO": "Magdalena",
+  "DANE": 47.798,
+  "MUNICIPIO": "Tenerife"
+ },
+ {
+  "DEPARTAMENTO": "Magdalena",
+  "DANE": 47.96,
+  "MUNICIPIO": "Zapayan"
+ },
+ {
+  "DEPARTAMENTO": "Magdalena",
+  "DANE": 47.98,
+  "MUNICIPIO": "Zona Bananera"
+ },
+ {
+  "DEPARTAMENTO": "Meta",
+  "DANE": 50.001,
+  "MUNICIPIO": "Villavicencio"
+ },
+ {
+  "DEPARTAMENTO": "Meta",
+  "DANE": 50.006,
+  "MUNICIPIO": "Acacias"
+ },
+ {
+  "DEPARTAMENTO": "Meta",
+  "DANE": 50.124,
+  "MUNICIPIO": "Cabuyaro"
+ },
+ {
+  "DEPARTAMENTO": "Meta",
+  "DANE": 50.223,
+  "MUNICIPIO": "Cubarral"
+ },
+ {
+  "DEPARTAMENTO": "Meta",
+  "DANE": 50.226,
+  "MUNICIPIO": "Cumaral"
+ },
+ {
+  "DEPARTAMENTO": "Meta",
+  "DANE": 50.245,
+  "MUNICIPIO": "El Calvario"
+ },
+ {
+  "DEPARTAMENTO": "Meta",
+  "DANE": 50.251,
+  "MUNICIPIO": "El Castillo"
+ },
+ {
+  "DEPARTAMENTO": "Meta",
+  "DANE": 50.27,
+  "MUNICIPIO": "El Dorado"
+ },
+ {
+  "DEPARTAMENTO": "Meta",
+  "DANE": 50.313,
+  "MUNICIPIO": "Granada"
+ },
+ {
+  "DEPARTAMENTO": "Meta",
+  "DANE": 50.318,
+  "MUNICIPIO": "Guamal"
+ },
+ {
+  "DEPARTAMENTO": "Meta",
+  "DANE": 50.325,
+  "MUNICIPIO": "Mapiripan"
+ },
+ {
+  "DEPARTAMENTO": "Meta",
+  "DANE": 50.33,
+  "MUNICIPIO": "Mesetas"
+ },
+ {
+  "DEPARTAMENTO": "Meta",
+  "DANE": 50.35,
+  "MUNICIPIO": "La Macarena"
+ },
+ {
+  "DEPARTAMENTO": "Meta",
+  "DANE": 50.4,
+  "MUNICIPIO": "Lejanias"
+ },
+ {
+  "DEPARTAMENTO": "Meta",
+  "DANE": 50.45,
+  "MUNICIPIO": "Puerto Concordia"
+ },
+ {
+  "DEPARTAMENTO": "Meta",
+  "DANE": 50.568,
+  "MUNICIPIO": "Puerto Gaitan"
+ },
+ {
+  "DEPARTAMENTO": "Meta",
+  "DANE": 50.573,
+  "MUNICIPIO": "Puerto Lopez"
+ },
+ {
+  "DEPARTAMENTO": "Meta",
+  "DANE": 50.577,
+  "MUNICIPIO": "Puerto Lleras"
+ },
+ {
+  "DEPARTAMENTO": "Meta",
+  "DANE": 50.59,
+  "MUNICIPIO": "Puerto Rico"
+ },
+ {
+  "DEPARTAMENTO": "Meta",
+  "DANE": 50.606,
+  "MUNICIPIO": "Restrepo"
+ },
+ {
+  "DEPARTAMENTO": "Meta",
+  "DANE": 50.686,
+  "MUNICIPIO": "San Juanito"
+ },
+ {
+  "DEPARTAMENTO": "Meta",
+  "DANE": 50.689,
+  "MUNICIPIO": "San Martin"
+ },
+ {
+  "DEPARTAMENTO": "Meta",
+  "DANE": 50.711,
+  "MUNICIPIO": "Vista Hermosa"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.001,
+  "MUNICIPIO": "Pasto"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.019,
+  "MUNICIPIO": "Alban"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.022,
+  "MUNICIPIO": "Aldana"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.036,
+  "MUNICIPIO": "Ancuya"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.079,
+  "MUNICIPIO": "Barbacoas"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.203,
+  "MUNICIPIO": "Colon"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.207,
+  "MUNICIPIO": "Consaca"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.21,
+  "MUNICIPIO": "Contadero"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.215,
+  "MUNICIPIO": "Cordoba"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.224,
+  "MUNICIPIO": "Cuaspud"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.227,
+  "MUNICIPIO": "Cumbal"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.233,
+  "MUNICIPIO": "Cumbitara"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.25,
+  "MUNICIPIO": "El Charco"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.254,
+  "MUNICIPIO": "El Peñol"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.256,
+  "MUNICIPIO": "El Rosario"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.26,
+  "MUNICIPIO": "El Tambo"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.287,
+  "MUNICIPIO": "Funes"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.317,
+  "MUNICIPIO": "Guachucal"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.32,
+  "MUNICIPIO": "Guaitarilla"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.323,
+  "MUNICIPIO": "Gualmatan"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.352,
+  "MUNICIPIO": "Iles"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.354,
+  "MUNICIPIO": "Imues"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.356,
+  "MUNICIPIO": "Ipiales"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.378,
+  "MUNICIPIO": "La Cruz"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.381,
+  "MUNICIPIO": "La Florida"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.385,
+  "MUNICIPIO": "La Llanada"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.39,
+  "MUNICIPIO": "La Tola"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.399,
+  "MUNICIPIO": "La Union"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.405,
+  "MUNICIPIO": "Leiva"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.411,
+  "MUNICIPIO": "Linares"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.418,
+  "MUNICIPIO": "Los Andes"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.427,
+  "MUNICIPIO": "Magüi"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.435,
+  "MUNICIPIO": "Mallama"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.473,
+  "MUNICIPIO": "Mosquera"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.48,
+  "MUNICIPIO": "Nariño"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.49,
+  "MUNICIPIO": "Olaya Herrera"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.506,
+  "MUNICIPIO": "Ospina"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.52,
+  "MUNICIPIO": "Francisco Pizarro"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.54,
+  "MUNICIPIO": "Policarpa"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.56,
+  "MUNICIPIO": "Potosi"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.565,
+  "MUNICIPIO": "Providencia"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.573,
+  "MUNICIPIO": "Puerres"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.585,
+  "MUNICIPIO": "Pupiales"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.612,
+  "MUNICIPIO": "Ricaurte"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.621,
+  "MUNICIPIO": "Roberto Payan"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.678,
+  "MUNICIPIO": "Samaniego"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.683,
+  "MUNICIPIO": "Sandona"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.685,
+  "MUNICIPIO": "San Bernardo"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.687,
+  "MUNICIPIO": "San Lorenzo"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.693,
+  "MUNICIPIO": "San Pablo"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.696,
+  "MUNICIPIO": "Santa Barbara"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.72,
+  "MUNICIPIO": "Sapuyes"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.786,
+  "MUNICIPIO": "Taminango"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.788,
+  "MUNICIPIO": "Tangua"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.838,
+  "MUNICIPIO": "Tuquerres"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.885,
+  "MUNICIPIO": "Yacuanquer"
+ },
+ {
+  "DEPARTAMENTO": "Quindio",
+  "DANE": 63.001,
+  "MUNICIPIO": "Armenia"
+ },
+ {
+  "DEPARTAMENTO": "Quindio",
+  "DANE": 63.111,
+  "MUNICIPIO": "Buenavista"
+ },
+ {
+  "DEPARTAMENTO": "Quindio",
+  "DANE": 63.19,
+  "MUNICIPIO": "Circasia"
+ },
+ {
+  "DEPARTAMENTO": "Quindio",
+  "DANE": 63.212,
+  "MUNICIPIO": "Cordoba"
+ },
+ {
+  "DEPARTAMENTO": "Quindio",
+  "DANE": 63.272,
+  "MUNICIPIO": "Filandia"
+ },
+ {
+  "DEPARTAMENTO": "Quindio",
+  "DANE": 63.401,
+  "MUNICIPIO": "La Tebaida"
+ },
+ {
+  "DEPARTAMENTO": "Quindio",
+  "DANE": 63.47,
+  "MUNICIPIO": "Montenegro"
+ },
+ {
+  "DEPARTAMENTO": "Quindio",
+  "DANE": 63.548,
+  "MUNICIPIO": "Pijao"
+ },
+ {
+  "DEPARTAMENTO": "Quindio",
+  "DANE": 63.594,
+  "MUNICIPIO": "Quimbaya"
+ },
+ {
+  "DEPARTAMENTO": "Quindio",
+  "DANE": 63.69,
+  "MUNICIPIO": "Salento"
+ },
+ {
+  "DEPARTAMENTO": "Risaralda",
+  "DANE": 66.001,
+  "MUNICIPIO": "Pereira"
+ },
+ {
+  "DEPARTAMENTO": "Risaralda",
+  "DANE": 66.045,
+  "MUNICIPIO": "Apia"
+ },
+ {
+  "DEPARTAMENTO": "Risaralda",
+  "DANE": 66.075,
+  "MUNICIPIO": "Balboa"
+ },
+ {
+  "DEPARTAMENTO": "Risaralda",
+  "DANE": 66.17,
+  "MUNICIPIO": "Dosquebradas"
+ },
+ {
+  "DEPARTAMENTO": "Risaralda",
+  "DANE": 66.318,
+  "MUNICIPIO": "Guatica"
+ },
+ {
+  "DEPARTAMENTO": "Risaralda",
+  "DANE": 66.383,
+  "MUNICIPIO": "La Celia"
+ },
+ {
+  "DEPARTAMENTO": "Risaralda",
+  "DANE": 66.4,
+  "MUNICIPIO": "La Virginia"
+ },
+ {
+  "DEPARTAMENTO": "Risaralda",
+  "DANE": 66.44,
+  "MUNICIPIO": "Marsella"
+ },
+ {
+  "DEPARTAMENTO": "Risaralda",
+  "DANE": 66.456,
+  "MUNICIPIO": "Mistrato"
+ },
+ {
+  "DEPARTAMENTO": "Risaralda",
+  "DANE": 66.572,
+  "MUNICIPIO": "Pueblo Rico"
+ },
+ {
+  "DEPARTAMENTO": "Risaralda",
+  "DANE": 66.594,
+  "MUNICIPIO": "Quinchia"
+ },
+ {
+  "DEPARTAMENTO": "Risaralda",
+  "DANE": 66.687,
+  "MUNICIPIO": "Santuario"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.001,
+  "MUNICIPIO": "Bucaramanga"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.013,
+  "MUNICIPIO": "Aguada"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.02,
+  "MUNICIPIO": "Albania"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.051,
+  "MUNICIPIO": "Aratoca"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.077,
+  "MUNICIPIO": "Barbosa"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.079,
+  "MUNICIPIO": "Barichara"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.081,
+  "MUNICIPIO": "Barrancabermeja"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.092,
+  "MUNICIPIO": "Betulia"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.101,
+  "MUNICIPIO": "Bolivar"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.121,
+  "MUNICIPIO": "Cabrera"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.132,
+  "MUNICIPIO": "California"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.152,
+  "MUNICIPIO": "Carcasi"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.16,
+  "MUNICIPIO": "Cepita"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.162,
+  "MUNICIPIO": "Cerrito"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.167,
+  "MUNICIPIO": "Charala"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.169,
+  "MUNICIPIO": "Charta"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.179,
+  "MUNICIPIO": "Chipata"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.19,
+  "MUNICIPIO": "Cimitarra"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.207,
+  "MUNICIPIO": "Concepcion"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.209,
+  "MUNICIPIO": "Confines"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.211,
+  "MUNICIPIO": "Contratacion"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.217,
+  "MUNICIPIO": "Coromoro"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.229,
+  "MUNICIPIO": "Curiti"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.245,
+  "MUNICIPIO": "El Guacamayo"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.255,
+  "MUNICIPIO": "El Playon"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.264,
+  "MUNICIPIO": "Encino"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.266,
+  "MUNICIPIO": "Enciso"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.271,
+  "MUNICIPIO": "Florian"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.276,
+  "MUNICIPIO": "Floridablanca"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.296,
+  "MUNICIPIO": "Galan"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.298,
+  "MUNICIPIO": "Gambita"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.307,
+  "MUNICIPIO": "Giron"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.318,
+  "MUNICIPIO": "Guaca"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.32,
+  "MUNICIPIO": "Guadalupe"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.322,
+  "MUNICIPIO": "Guapota"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.324,
+  "MUNICIPIO": "Guavata"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.327,
+  "MUNICIPIO": "Güepsa"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.368,
+  "MUNICIPIO": "Jesus Maria"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.37,
+  "MUNICIPIO": "Jordan"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.377,
+  "MUNICIPIO": "La Belleza"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.385,
+  "MUNICIPIO": "Landazuri"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.397,
+  "MUNICIPIO": "La Paz"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.406,
+  "MUNICIPIO": "Lebrija"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.418,
+  "MUNICIPIO": "Los Santos"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.425,
+  "MUNICIPIO": "Macaravita"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.432,
+  "MUNICIPIO": "Malaga"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.444,
+  "MUNICIPIO": "Matanza"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.464,
+  "MUNICIPIO": "Mogotes"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.468,
+  "MUNICIPIO": "Molagavita"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.498,
+  "MUNICIPIO": "Ocamonte"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.5,
+  "MUNICIPIO": "Oiba"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.502,
+  "MUNICIPIO": "Onzaga"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.522,
+  "MUNICIPIO": "Palmar"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.533,
+  "MUNICIPIO": "Paramo"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.547,
+  "MUNICIPIO": "Piedecuesta"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.549,
+  "MUNICIPIO": "Pinchote"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.572,
+  "MUNICIPIO": "Puente Nacional"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.615,
+  "MUNICIPIO": "Rionegro"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.669,
+  "MUNICIPIO": "San Andres"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.679,
+  "MUNICIPIO": "San Gil"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.682,
+  "MUNICIPIO": "San Joaquin"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.686,
+  "MUNICIPIO": "San Miguel"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.705,
+  "MUNICIPIO": "Santa Barbara"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.745,
+  "MUNICIPIO": "Simacota"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.755,
+  "MUNICIPIO": "Socorro"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.77,
+  "MUNICIPIO": "Suaita"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.773,
+  "MUNICIPIO": "Sucre"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.78,
+  "MUNICIPIO": "Surata"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.82,
+  "MUNICIPIO": "Tona"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.861,
+  "MUNICIPIO": "Velez"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.867,
+  "MUNICIPIO": "Vetas"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.872,
+  "MUNICIPIO": "Villanueva"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.895,
+  "MUNICIPIO": "Zapatoca"
+ },
+ {
+  "DEPARTAMENTO": "Sucre",
+  "DANE": 70.001,
+  "MUNICIPIO": "Sincelejo"
+ },
+ {
+  "DEPARTAMENTO": "Sucre",
+  "DANE": 70.11,
+  "MUNICIPIO": "Buenavista"
+ },
+ {
+  "DEPARTAMENTO": "Sucre",
+  "DANE": 70.124,
+  "MUNICIPIO": "Caimito"
+ },
+ {
+  "DEPARTAMENTO": "Sucre",
+  "DANE": 70.204,
+  "MUNICIPIO": "Coloso"
+ },
+ {
+  "DEPARTAMENTO": "Sucre",
+  "DANE": 70.221,
+  "MUNICIPIO": "Coveñas"
+ },
+ {
+  "DEPARTAMENTO": "Sucre",
+  "DANE": 70.23,
+  "MUNICIPIO": "Chalan"
+ },
+ {
+  "DEPARTAMENTO": "Sucre",
+  "DANE": 70.233,
+  "MUNICIPIO": "El Roble"
+ },
+ {
+  "DEPARTAMENTO": "Sucre",
+  "DANE": 70.235,
+  "MUNICIPIO": "Galeras"
+ },
+ {
+  "DEPARTAMENTO": "Sucre",
+  "DANE": 70.265,
+  "MUNICIPIO": "Guaranda"
+ },
+ {
+  "DEPARTAMENTO": "Sucre",
+  "DANE": 70.4,
+  "MUNICIPIO": "La Union"
+ },
+ {
+  "DEPARTAMENTO": "Sucre",
+  "DANE": 70.418,
+  "MUNICIPIO": "Los Palmitos"
+ },
+ {
+  "DEPARTAMENTO": "Sucre",
+  "DANE": 70.429,
+  "MUNICIPIO": "Majagual"
+ },
+ {
+  "DEPARTAMENTO": "Sucre",
+  "DANE": 70.473,
+  "MUNICIPIO": "Morroa"
+ },
+ {
+  "DEPARTAMENTO": "Sucre",
+  "DANE": 70.508,
+  "MUNICIPIO": "Ovejas"
+ },
+ {
+  "DEPARTAMENTO": "Sucre",
+  "DANE": 70.523,
+  "MUNICIPIO": "Palmito"
+ },
+ {
+  "DEPARTAMENTO": "Sucre",
+  "DANE": 70.678,
+  "MUNICIPIO": "San Benito Abad"
+ },
+ {
+  "DEPARTAMENTO": "Sucre",
+  "DANE": 70.708,
+  "MUNICIPIO": "San Marcos"
+ },
+ {
+  "DEPARTAMENTO": "Sucre",
+  "DANE": 70.713,
+  "MUNICIPIO": "San Onofre"
+ },
+ {
+  "DEPARTAMENTO": "Sucre",
+  "DANE": 70.717,
+  "MUNICIPIO": "San Pedro"
+ },
+ {
+  "DEPARTAMENTO": "Sucre",
+  "DANE": 70.771,
+  "MUNICIPIO": "Sucre"
+ },
+ {
+  "DEPARTAMENTO": "Sucre",
+  "DANE": 70.823,
+  "MUNICIPIO": "Tolu Viejo"
+ },
+ {
+  "DEPARTAMENTO": "Tolima",
+  "DANE": 73.024,
+  "MUNICIPIO": "Alpujarra"
+ },
+ {
+  "DEPARTAMENTO": "Tolima",
+  "DANE": 73.026,
+  "MUNICIPIO": "Alvarado"
+ },
+ {
+  "DEPARTAMENTO": "Tolima",
+  "DANE": 73.03,
+  "MUNICIPIO": "Ambalema"
+ },
+ {
+  "DEPARTAMENTO": "Tolima",
+  "DANE": 73.055,
+  "MUNICIPIO": "Armero"
+ },
+ {
+  "DEPARTAMENTO": "Tolima",
+  "DANE": 73.067,
+  "MUNICIPIO": "Ataco"
+ },
+ {
+  "DEPARTAMENTO": "Tolima",
+  "DANE": 73.124,
+  "MUNICIPIO": "Cajamarca"
+ },
+ {
+  "DEPARTAMENTO": "Tolima",
+  "DANE": 73.168,
+  "MUNICIPIO": "Chaparral"
+ },
+ {
+  "DEPARTAMENTO": "Tolima",
+  "DANE": 73.2,
+  "MUNICIPIO": "Coello"
+ },
+ {
+  "DEPARTAMENTO": "Tolima",
+  "DANE": 73.217,
+  "MUNICIPIO": "Coyaima"
+ },
+ {
+  "DEPARTAMENTO": "Tolima",
+  "DANE": 73.226,
+  "MUNICIPIO": "Cunday"
+ },
+ {
+  "DEPARTAMENTO": "Tolima",
+  "DANE": 73.236,
+  "MUNICIPIO": "Dolores"
+ },
+ {
+  "DEPARTAMENTO": "Tolima",
+  "DANE": 73.268,
+  "MUNICIPIO": "Espinal"
+ },
+ {
+  "DEPARTAMENTO": "Tolima",
+  "DANE": 73.27,
+  "MUNICIPIO": "Falan"
+ },
+ {
+  "DEPARTAMENTO": "Tolima",
+  "DANE": 73.275,
+  "MUNICIPIO": "Flandes"
+ },
+ {
+  "DEPARTAMENTO": "Tolima",
+  "DANE": 73.283,
+  "MUNICIPIO": "Fresno"
+ },
+ {
+  "DEPARTAMENTO": "Tolima",
+  "DANE": 73.319,
+  "MUNICIPIO": "Guamo"
+ },
+ {
+  "DEPARTAMENTO": "Tolima",
+  "DANE": 73.347,
+  "MUNICIPIO": "Herveo"
+ },
+ {
+  "DEPARTAMENTO": "Tolima",
+  "DANE": 73.349,
+  "MUNICIPIO": "Honda"
+ },
+ {
+  "DEPARTAMENTO": "Tolima",
+  "DANE": 73.352,
+  "MUNICIPIO": "Icononzo"
+ },
+ {
+  "DEPARTAMENTO": "Tolima",
+  "DANE": 73.443,
+  "MUNICIPIO": "Mariquita"
+ },
+ {
+  "DEPARTAMENTO": "Tolima",
+  "DANE": 73.449,
+  "MUNICIPIO": "Melgar"
+ },
+ {
+  "DEPARTAMENTO": "Tolima",
+  "DANE": 73.461,
+  "MUNICIPIO": "Murillo"
+ },
+ {
+  "DEPARTAMENTO": "Tolima",
+  "DANE": 73.483,
+  "MUNICIPIO": "Natagaima"
+ },
+ {
+  "DEPARTAMENTO": "Tolima",
+  "DANE": 73.504,
+  "MUNICIPIO": "Ortega"
+ },
+ {
+  "DEPARTAMENTO": "Tolima",
+  "DANE": 73.52,
+  "MUNICIPIO": "Palocabildo"
+ },
+ {
+  "DEPARTAMENTO": "Tolima",
+  "DANE": 73.547,
+  "MUNICIPIO": "Piedras"
+ },
+ {
+  "DEPARTAMENTO": "Tolima",
+  "DANE": 73.555,
+  "MUNICIPIO": "Planadas"
+ },
+ {
+  "DEPARTAMENTO": "Tolima",
+  "DANE": 73.563,
+  "MUNICIPIO": "Prado"
+ },
+ {
+  "DEPARTAMENTO": "Tolima",
+  "DANE": 73.585,
+  "MUNICIPIO": "Purificacion"
+ },
+ {
+  "DEPARTAMENTO": "Tolima",
+  "DANE": 73.616,
+  "MUNICIPIO": "Rio Blanco"
+ },
+ {
+  "DEPARTAMENTO": "Tolima",
+  "DANE": 73.622,
+  "MUNICIPIO": "Roncesvalles"
+ },
+ {
+  "DEPARTAMENTO": "Tolima",
+  "DANE": 73.624,
+  "MUNICIPIO": "Rovira"
+ },
+ {
+  "DEPARTAMENTO": "Tolima",
+  "DANE": 73.671,
+  "MUNICIPIO": "Saldaña"
+ },
+ {
+  "DEPARTAMENTO": "Tolima",
+  "DANE": 73.686,
+  "MUNICIPIO": "Santa Isabel"
+ },
+ {
+  "DEPARTAMENTO": "Tolima",
+  "DANE": 73.861,
+  "MUNICIPIO": "Venadillo"
+ },
+ {
+  "DEPARTAMENTO": "Tolima",
+  "DANE": 73.87,
+  "MUNICIPIO": "Villahermosa"
+ },
+ {
+  "DEPARTAMENTO": "Tolima",
+  "DANE": 73.873,
+  "MUNICIPIO": "Villarrica"
+ },
+ {
+  "DEPARTAMENTO": "Arauca",
+  "DANE": 81.065,
+  "MUNICIPIO": "Arauquita"
+ },
+ {
+  "DEPARTAMENTO": "Arauca",
+  "DANE": 81.22,
+  "MUNICIPIO": "Cravo Norte"
+ },
+ {
+  "DEPARTAMENTO": "Arauca",
+  "DANE": 81.3,
+  "MUNICIPIO": "Fortul"
+ },
+ {
+  "DEPARTAMENTO": "Arauca",
+  "DANE": 81.591,
+  "MUNICIPIO": "Puerto Rondon"
+ },
+ {
+  "DEPARTAMENTO": "Arauca",
+  "DANE": 81.736,
+  "MUNICIPIO": "Saravena"
+ },
+ {
+  "DEPARTAMENTO": "Arauca",
+  "DANE": 81.794,
+  "MUNICIPIO": "Tame"
+ },
+ {
+  "DEPARTAMENTO": "Arauca",
+  "DANE": 81.001,
+  "MUNICIPIO": "Arauca"
+ },
+ {
+  "DEPARTAMENTO": "Casanare",
+  "DANE": 85.001,
+  "MUNICIPIO": "Yopal"
+ },
+ {
+  "DEPARTAMENTO": "Casanare",
+  "DANE": 85.01,
+  "MUNICIPIO": "Aguazul"
+ },
+ {
+  "DEPARTAMENTO": "Casanare",
+  "DANE": 85.015,
+  "MUNICIPIO": "Chameza"
+ },
+ {
+  "DEPARTAMENTO": "Casanare",
+  "DANE": 85.125,
+  "MUNICIPIO": "Hato Corozal"
+ },
+ {
+  "DEPARTAMENTO": "Casanare",
+  "DANE": 85.136,
+  "MUNICIPIO": "La Salina"
+ },
+ {
+  "DEPARTAMENTO": "Casanare",
+  "DANE": 85.162,
+  "MUNICIPIO": "Monterrey"
+ },
+ {
+  "DEPARTAMENTO": "Casanare",
+  "DANE": 85.263,
+  "MUNICIPIO": "Pore"
+ },
+ {
+  "DEPARTAMENTO": "Casanare",
+  "DANE": 85.279,
+  "MUNICIPIO": "Recetor"
+ },
+ {
+  "DEPARTAMENTO": "Casanare",
+  "DANE": 85.3,
+  "MUNICIPIO": "Sabanalarga"
+ },
+ {
+  "DEPARTAMENTO": "Casanare",
+  "DANE": 85.315,
+  "MUNICIPIO": "Sacama"
+ },
+ {
+  "DEPARTAMENTO": "Casanare",
+  "DANE": 85.41,
+  "MUNICIPIO": "Tauramena"
+ },
+ {
+  "DEPARTAMENTO": "Casanare",
+  "DANE": 85.43,
+  "MUNICIPIO": "Trinidad"
+ },
+ {
+  "DEPARTAMENTO": "Casanare",
+  "DANE": 85.44,
+  "MUNICIPIO": "Villanueva"
+ },
+ {
+  "DEPARTAMENTO": "Putumayo",
+  "DANE": 86.001,
+  "MUNICIPIO": "Mocoa"
+ },
+ {
+  "DEPARTAMENTO": "Putumayo",
+  "DANE": 86.219,
+  "MUNICIPIO": "Colon"
+ },
+ {
+  "DEPARTAMENTO": "Putumayo",
+  "DANE": 86.32,
+  "MUNICIPIO": "Orito"
+ },
+ {
+  "DEPARTAMENTO": "Putumayo",
+  "DANE": 86.569,
+  "MUNICIPIO": "Puerto Caicedo"
+ },
+ {
+  "DEPARTAMENTO": "Putumayo",
+  "DANE": 86.571,
+  "MUNICIPIO": "Puerto Guzman"
+ },
+ {
+  "DEPARTAMENTO": "Putumayo",
+  "DANE": 86.573,
+  "MUNICIPIO": "Leguizamo"
+ },
+ {
+  "DEPARTAMENTO": "Putumayo",
+  "DANE": 86.749,
+  "MUNICIPIO": "Sibundoy"
+ },
+ {
+  "DEPARTAMENTO": "Putumayo",
+  "DANE": 86.755,
+  "MUNICIPIO": "San Francisco"
+ },
+ {
+  "DEPARTAMENTO": "Putumayo",
+  "DANE": 86.757,
+  "MUNICIPIO": "San Miguel"
+ },
+ {
+  "DEPARTAMENTO": "Putumayo",
+  "DANE": 86.76,
+  "MUNICIPIO": "Santiago"
+ },
+ {
+  "DEPARTAMENTO": "Amazonas",
+  "DANE": 91.001,
+  "MUNICIPIO": "Leticia"
+ },
+ {
+  "DEPARTAMENTO": "Amazonas",
+  "DANE": 91.263,
+  "MUNICIPIO": "El Encanto"
+ },
+ {
+  "DEPARTAMENTO": "Amazonas",
+  "DANE": 91.405,
+  "MUNICIPIO": "La Chorrera"
+ },
+ {
+  "DEPARTAMENTO": "Amazonas",
+  "DANE": 91.407,
+  "MUNICIPIO": "La Pedrera"
+ },
+ {
+  "DEPARTAMENTO": "Amazonas",
+  "DANE": 91.43,
+  "MUNICIPIO": "La Victoria"
+ },
+ {
+  "DEPARTAMENTO": "Amazonas",
+  "DANE": 91.536,
+  "MUNICIPIO": "Puerto Arica"
+ },
+ {
+  "DEPARTAMENTO": "Amazonas",
+  "DANE": 91.54,
+  "MUNICIPIO": "Puerto Nariño"
+ },
+ {
+  "DEPARTAMENTO": "Amazonas",
+  "DANE": 91.669,
+  "MUNICIPIO": "Puerto Santander"
+ },
+ {
+  "DEPARTAMENTO": "Amazonas",
+  "DANE": 91.798,
+  "MUNICIPIO": "Tarapaca"
+ },
+ {
+  "DEPARTAMENTO": "Guainia",
+  "DANE": 94.001,
+  "MUNICIPIO": "Inirida"
+ },
+ {
+  "DEPARTAMENTO": "Guainia",
+  "DANE": 94.343,
+  "MUNICIPIO": "Barranco Minas"
+ },
+ {
+  "DEPARTAMENTO": "Guainia",
+  "DANE": 94.663,
+  "MUNICIPIO": "Mapiripana"
+ },
+ {
+  "DEPARTAMENTO": "Guainia",
+  "DANE": 94.883,
+  "MUNICIPIO": "San Felipe"
+ },
+ {
+  "DEPARTAMENTO": "Guainia",
+  "DANE": 94.884,
+  "MUNICIPIO": "Puerto Colombia"
+ },
+ {
+  "DEPARTAMENTO": "Guainia",
+  "DANE": 94.885,
+  "MUNICIPIO": "La Guadalupe"
+ },
+ {
+  "DEPARTAMENTO": "Guainia",
+  "DANE": 94.886,
+  "MUNICIPIO": "Cacahual"
+ },
+ {
+  "DEPARTAMENTO": "Guainia",
+  "DANE": 94.887,
+  "MUNICIPIO": "Pana Pana"
+ },
+ {
+  "DEPARTAMENTO": "Vaupes",
+  "DANE": 97.001,
+  "MUNICIPIO": "Mitu"
+ },
+ {
+  "DEPARTAMENTO": "Vaupes",
+  "DANE": 97.161,
+  "MUNICIPIO": "Caruru"
+ },
+ {
+  "DEPARTAMENTO": "Vaupes",
+  "DANE": 97.666,
+  "MUNICIPIO": "Taraira"
+ },
+ {
+  "DEPARTAMENTO": "Vaupes",
+  "DANE": 97.777,
+  "MUNICIPIO": "Papunahua"
+ },
+ {
+  "DEPARTAMENTO": "Vaupes",
+  "DANE": 97.889,
+  "MUNICIPIO": "Yavarate"
+ },
+ {
+  "DEPARTAMENTO": "Vaupes",
+  "DANE": 97.511,
+  "MUNICIPIO": "Pacoa"
+ },
+ {
+  "DEPARTAMENTO": "Guainia",
+  "DANE": 94.888,
+  "MUNICIPIO": "Morichal"
+ },
+ {
+  "DEPARTAMENTO": "Vichada",
+  "DANE": 99.001,
+  "MUNICIPIO": "Puerto Carreño"
+ },
+ {
+  "DEPARTAMENTO": "Vichada",
+  "DANE": 99.524,
+  "MUNICIPIO": "La Primavera"
+ },
+ {
+  "DEPARTAMENTO": "Vichada",
+  "DANE": 99.624,
+  "MUNICIPIO": "Santa Rosalia"
+ },
+ {
+  "DEPARTAMENTO": "Vichada",
+  "DANE": 99.773,
+  "MUNICIPIO": "Cumaribo"
+ },
+ {
+  "DEPARTAMENTO": "Caqueta",
+  "DANE": 18.61,
+  "MUNICIPIO": "San Jose del Fragua"
+ },
+ {
+  "DEPARTAMENTO": "Meta",
+  "DANE": 50.11,
+  "MUNICIPIO": "Barranca de Upia"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.524,
+  "MUNICIPIO": "Palmas del Socorro"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.662,
+  "MUNICIPIO": "San Juan de Rio Seco"
+ },
+ {
+  "DEPARTAMENTO": "Atlantico",
+  "DANE": 8.372,
+  "MUNICIPIO": "Juan de Acosta"
+ },
+ {
+  "DEPARTAMENTO": "Meta",
+  "DANE": 50.287,
+  "MUNICIPIO": "Fuente de Oro"
+ },
+ {
+  "DEPARTAMENTO": "Casanare",
+  "DANE": 85.325,
+  "MUNICIPIO": "San Luis de Gaceno"
+ },
+ {
+  "DEPARTAMENTO": "Choco",
+  "DANE": 27.25,
+  "MUNICIPIO": "El Litoral del San Juan"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.843,
+  "MUNICIPIO": "Villa de San Diego de Ubate"
+ },
+ {
+  "DEPARTAMENTO": "Bolivar",
+  "DANE": 13.074,
+  "MUNICIPIO": "Barranco de Loba"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.816,
+  "MUNICIPIO": "Togüi"
+ },
+ {
+  "DEPARTAMENTO": "Bolivar",
+  "DANE": 13.688,
+  "MUNICIPIO": "Santa Rosa del Sur"
+ },
+ {
+  "DEPARTAMENTO": "Choco",
+  "DANE": 27.135,
+  "MUNICIPIO": "El Canton del San Pablo"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.407,
+  "MUNICIPIO": "Villa de Leyva"
+ },
+ {
+  "DEPARTAMENTO": "Magdalena",
+  "DANE": 47.692,
+  "MUNICIPIO": "San Sebastian de Buenavista"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.537,
+  "MUNICIPIO": "Paz de Rio"
+ },
+ {
+  "DEPARTAMENTO": "Bolivar",
+  "DANE": 13.3,
+  "MUNICIPIO": "Hatillo de Loba"
+ },
+ {
+  "DEPARTAMENTO": "Magdalena",
+  "DANE": 47.66,
+  "MUNICIPIO": "Sabanas de San Angel"
+ },
+ {
+  "DEPARTAMENTO": "Guaviare",
+  "DANE": 95.015,
+  "MUNICIPIO": "Calamar"
+ },
+ {
+  "DEPARTAMENTO": "Cesar",
+  "DANE": 20.614,
+  "MUNICIPIO": "Rio de Oro"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.665,
+  "MUNICIPIO": "San Pedro de Uraba"
+ },
+ {
+  "DEPARTAMENTO": "Guaviare",
+  "DANE": 95.001,
+  "MUNICIPIO": "San Jose del Guaviare"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.693,
+  "MUNICIPIO": "Santa Rosa de Viterbo"
+ },
+ {
+  "DEPARTAMENTO": "Cauca",
+  "DANE": 19.698,
+  "MUNICIPIO": "Santander de Quilichao"
+ },
+ {
+  "DEPARTAMENTO": "Guaviare",
+  "DANE": 95.2,
+  "MUNICIPIO": "Miraflores"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.042,
+  "MUNICIPIO": "Santafe de Antioquia"
+ },
+ {
+  "DEPARTAMENTO": "Meta",
+  "DANE": 50.68,
+  "MUNICIPIO": "San Carlos de Guaroa"
+ },
+ {
+  "DEPARTAMENTO": "Atlantico",
+  "DANE": 8.52,
+  "MUNICIPIO": "Palmar de Varela"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.686,
+  "MUNICIPIO": "Santa Rosa de Osos"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.647,
+  "MUNICIPIO": "San Andres de Cuerquia"
+ },
+ {
+  "DEPARTAMENTO": "Tolima",
+  "DANE": 73.854,
+  "MUNICIPIO": "Valle de San Juan"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.689,
+  "MUNICIPIO": "San Vicente de Chucuri"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.684,
+  "MUNICIPIO": "San Jose de Miranda"
+ },
+ {
+  "DEPARTAMENTO": "Archipielago de San Andres, Providencia y Santa Catalina",
+  "DANE": 88.564,
+  "MUNICIPIO": "Providencia"
+ },
+ {
+  "DEPARTAMENTO": "Risaralda",
+  "DANE": 66.682,
+  "MUNICIPIO": "Santa Rosa de Cabal"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.328,
+  "MUNICIPIO": "Guayabal de Siquima"
+ },
+ {
+  "DEPARTAMENTO": "Caqueta",
+  "DANE": 18.094,
+  "MUNICIPIO": "Belen de Los Andaquies"
+ },
+ {
+  "DEPARTAMENTO": "Casanare",
+  "DANE": 85.25,
+  "MUNICIPIO": "Paz de Ariporo"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.72,
+  "MUNICIPIO": "Santa Helena del Opon"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.681,
+  "MUNICIPIO": "San Pablo de Borbur"
+ },
+ {
+  "DEPARTAMENTO": "La Guajira",
+  "DANE": 44.42,
+  "MUNICIPIO": "La Jagua del Pilar"
+ },
+ {
+  "DEPARTAMENTO": "Cesar",
+  "DANE": 20.4,
+  "MUNICIPIO": "La Jagua de Ibirico"
+ },
+ {
+  "DEPARTAMENTO": "Sucre",
+  "DANE": 70.742,
+  "MUNICIPIO": "San Luis de Since"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.667,
+  "MUNICIPIO": "San Luis de Gaceno"
+ },
+ {
+  "DEPARTAMENTO": "Bolivar",
+  "DANE": 13.244,
+  "MUNICIPIO": "El Carmen de Bolivar"
+ },
+ {
+  "DEPARTAMENTO": "Choco",
+  "DANE": 27.245,
+  "MUNICIPIO": "El Carmen de Atrato"
+ },
+ {
+  "DEPARTAMENTO": "Sucre",
+  "DANE": 70.702,
+  "MUNICIPIO": "San Juan de Betulia"
+ },
+ {
+  "DEPARTAMENTO": "Magdalena",
+  "DANE": 47.545,
+  "MUNICIPIO": "Pijiño del Carmen"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.873,
+  "MUNICIPIO": "Vigia del Fuerte"
+ },
+ {
+  "DEPARTAMENTO": "Bolivar",
+  "DANE": 13.667,
+  "MUNICIPIO": "San Martin de Loba"
+ },
+ {
+  "DEPARTAMENTO": "Bolivar",
+  "DANE": 13.03,
+  "MUNICIPIO": "Altos del Rosario"
+ },
+ {
+  "DEPARTAMENTO": "Tolima",
+  "DANE": 73.148,
+  "MUNICIPIO": "Carmen de Apicala"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.645,
+  "MUNICIPIO": "San Antonio del Tequendama"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.655,
+  "MUNICIPIO": "Sabana de Torres"
+ },
+ {
+  "DEPARTAMENTO": "Guaviare",
+  "DANE": 95.025,
+  "MUNICIPIO": "El Retorno"
+ },
+ {
+  "DEPARTAMENTO": "Cordoba",
+  "DANE": 23.682,
+  "MUNICIPIO": "San Jose de Ure"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.694,
+  "MUNICIPIO": "San Pedro de Cartago"
+ },
+ {
+  "DEPARTAMENTO": "Atlantico",
+  "DANE": 8.137,
+  "MUNICIPIO": "Campo de La Cruz"
+ },
+ {
+  "DEPARTAMENTO": "Meta",
+  "DANE": 50.683,
+  "MUNICIPIO": "San Juan de Arama"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.658,
+  "MUNICIPIO": "San Jose de La Montaña"
+ },
+ {
+  "DEPARTAMENTO": "Caqueta",
+  "DANE": 18.15,
+  "MUNICIPIO": "Cartagena del Chaira"
+ },
+ {
+  "DEPARTAMENTO": "Choco",
+  "DANE": 27.66,
+  "MUNICIPIO": "San Jose del Palmar"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.001,
+  "MUNICIPIO": "Agua de Dios"
+ },
+ {
+  "DEPARTAMENTO": "Bolivar",
+  "DANE": 13.655,
+  "MUNICIPIO": "San Jacinto del Cauca"
+ },
+ {
+  "DEPARTAMENTO": "Huila",
+  "DANE": 41.668,
+  "MUNICIPIO": "San Agustin"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.258,
+  "MUNICIPIO": "El Tablon de Gomez"
+ },
+ {
+  "DEPARTAMENTO": "Archipielago de San Andres, Providencia y Santa Catalina",
+  "DANE": 88.001,
+  "MUNICIPIO": "San Andres"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.664,
+  "MUNICIPIO": "San Jose de Pare"
+ },
+ {
+  "DEPARTAMENTO": "Putumayo",
+  "DANE": 86.865,
+  "MUNICIPIO": "Valle de Guamez"
+ },
+ {
+  "DEPARTAMENTO": "Bolivar",
+  "DANE": 13.67,
+  "MUNICIPIO": "San Pablo de Borbur"
+ },
+ {
+  "DEPARTAMENTO": "Sucre",
+  "DANE": 70.82,
+  "MUNICIPIO": "Santiago de Tolu"
+ },
+ {
+  "DEPARTAMENTO": "Bogota D.C.",
+  "DANE": 11.001,
+  "MUNICIPIO": "Bogota D.C."
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.154,
+  "MUNICIPIO": "Carmen de Carupa"
+ },
+ {
+  "DEPARTAMENTO": "Cordoba",
+  "DANE": 23.189,
+  "MUNICIPIO": "Cienaga de Oro"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.659,
+  "MUNICIPIO": "San Juan de Uraba"
+ },
+ {
+  "DEPARTAMENTO": "La Guajira",
+  "DANE": 44.65,
+  "MUNICIPIO": "San Juan del Cesar"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.235,
+  "MUNICIPIO": "El Carmen de Chucuri"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.148,
+  "MUNICIPIO": "El Carmen de Viboral"
+ },
+ {
+  "DEPARTAMENTO": "Risaralda",
+  "DANE": 66.088,
+  "MUNICIPIO": "Belen de Umbria"
+ },
+ {
+  "DEPARTAMENTO": "Choco",
+  "DANE": 27.086,
+  "MUNICIPIO": "Belen de Bajira"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.855,
+  "MUNICIPIO": "Valle de San Jose"
+ },
+ {
+  "DEPARTAMENTO": "Tolima",
+  "DANE": 73.678,
+  "MUNICIPIO": "San Luis"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.676,
+  "MUNICIPIO": "San Miguel de Sema"
+ },
+ {
+  "DEPARTAMENTO": "Tolima",
+  "DANE": 73.675,
+  "MUNICIPIO": "San Antonio"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.673,
+  "MUNICIPIO": "San Benito"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.862,
+  "MUNICIPIO": "Vergara"
+ },
+ {
+  "DEPARTAMENTO": "Cordoba",
+  "DANE": 23.678,
+  "MUNICIPIO": "San Carlos"
+ },
+ {
+  "DEPARTAMENTO": "Amazonas",
+  "DANE": 91.53,
+  "MUNICIPIO": "Puerto Alegria"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.344,
+  "MUNICIPIO": "Hato"
+ },
+ {
+  "DEPARTAMENTO": "Bolivar",
+  "DANE": 13.654,
+  "MUNICIPIO": "San Jacinto"
+ },
+ {
+  "DEPARTAMENTO": "Cauca",
+  "DANE": 19.693,
+  "MUNICIPIO": "San Sebastian"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.649,
+  "MUNICIPIO": "San Carlos"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.837,
+  "MUNICIPIO": "Tuta"
+ },
+ {
+  "DEPARTAMENTO": "Norte de Santander",
+  "DANE": 54.743,
+  "MUNICIPIO": "Silos"
+ },
+ {
+  "DEPARTAMENTO": "Norte de Santander",
+  "DANE": 54.125,
+  "MUNICIPIO": "Cacota"
+ },
+ {
+  "DEPARTAMENTO": "Valle del Cauca",
+  "DANE": 76.25,
+  "MUNICIPIO": "El Dovio"
+ },
+ {
+  "DEPARTAMENTO": "Norte de Santander",
+  "DANE": 54.82,
+  "MUNICIPIO": "Toledo"
+ },
+ {
+  "DEPARTAMENTO": "Valle del Cauca",
+  "DANE": 76.622,
+  "MUNICIPIO": "Roldanillo"
+ },
+ {
+  "DEPARTAMENTO": "Norte de Santander",
+  "DANE": 54.48,
+  "MUNICIPIO": "Mutiscua"
+ },
+ {
+  "DEPARTAMENTO": "Valle del Cauca",
+  "DANE": 76.054,
+  "MUNICIPIO": "Argelia"
+ },
+ {
+  "DEPARTAMENTO": "Norte de Santander",
+  "DANE": 54.261,
+  "MUNICIPIO": "El Zulia"
+ },
+ {
+  "DEPARTAMENTO": "Norte de Santander",
+  "DANE": 54.66,
+  "MUNICIPIO": "Salazar"
+ },
+ {
+  "DEPARTAMENTO": "Valle del Cauca",
+  "DANE": 76.736,
+  "MUNICIPIO": "Sevilla"
+ },
+ {
+  "DEPARTAMENTO": "Valle del Cauca",
+  "DANE": 76.895,
+  "MUNICIPIO": "Zarzal"
+ },
+ {
+  "DEPARTAMENTO": "Norte de Santander",
+  "DANE": 54.223,
+  "MUNICIPIO": "Cucutilla"
+ },
+ {
+  "DEPARTAMENTO": "Valle del Cauca",
+  "DANE": 76.248,
+  "MUNICIPIO": "El Cerrito"
+ },
+ {
+  "DEPARTAMENTO": "Valle del Cauca",
+  "DANE": 76.147,
+  "MUNICIPIO": "Cartago"
+ },
+ {
+  "DEPARTAMENTO": "Valle del Cauca",
+  "DANE": 76.122,
+  "MUNICIPIO": "Caicedonia"
+ },
+ {
+  "DEPARTAMENTO": "Norte de Santander",
+  "DANE": 54.553,
+  "MUNICIPIO": "Puerto Santander"
+ },
+ {
+  "DEPARTAMENTO": "Norte de Santander",
+  "DANE": 54.313,
+  "MUNICIPIO": "Gramalote"
+ },
+ {
+  "DEPARTAMENTO": "Valle del Cauca",
+  "DANE": 76.246,
+  "MUNICIPIO": "El Cairo"
+ },
+ {
+  "DEPARTAMENTO": "Norte de Santander",
+  "DANE": 54.25,
+  "MUNICIPIO": "El Tarra"
+ },
+ {
+  "DEPARTAMENTO": "Valle del Cauca",
+  "DANE": 76.4,
+  "MUNICIPIO": "La Union"
+ },
+ {
+  "DEPARTAMENTO": "Valle del Cauca",
+  "DANE": 76.606,
+  "MUNICIPIO": "Restrepo"
+ },
+ {
+  "DEPARTAMENTO": "Norte de Santander",
+  "DANE": 54.8,
+  "MUNICIPIO": "Teorama"
+ },
+ {
+  "DEPARTAMENTO": "Valle del Cauca",
+  "DANE": 76.233,
+  "MUNICIPIO": "Dagua"
+ },
+ {
+  "DEPARTAMENTO": "Norte de Santander",
+  "DANE": 54.051,
+  "MUNICIPIO": "Arboledas"
+ },
+ {
+  "DEPARTAMENTO": "Valle del Cauca",
+  "DANE": 76.318,
+  "MUNICIPIO": "Guacari"
+ },
+ {
+  "DEPARTAMENTO": "Norte de Santander",
+  "DANE": 54.418,
+  "MUNICIPIO": "Lourdes"
+ },
+ {
+  "DEPARTAMENTO": "Valle del Cauca",
+  "DANE": 76.041,
+  "MUNICIPIO": "Ansermanuevo"
+ },
+ {
+  "DEPARTAMENTO": "Norte de Santander",
+  "DANE": 54.099,
+  "MUNICIPIO": "Bochalema"
+ },
+ {
+  "DEPARTAMENTO": "Valle del Cauca",
+  "DANE": 76.113,
+  "MUNICIPIO": "Bugalagrande"
+ },
+ {
+  "DEPARTAMENTO": "Norte de Santander",
+  "DANE": 54.206,
+  "MUNICIPIO": "Convencion"
+ },
+ {
+  "DEPARTAMENTO": "Norte de Santander",
+  "DANE": 54.344,
+  "MUNICIPIO": "Hacari"
+ },
+ {
+  "DEPARTAMENTO": "Valle del Cauca",
+  "DANE": 76.403,
+  "MUNICIPIO": "La Victoria"
+ },
+ {
+  "DEPARTAMENTO": "Norte de Santander",
+  "DANE": 54.347,
+  "MUNICIPIO": "Herran"
+ },
+ {
+  "DEPARTAMENTO": "Valle del Cauca",
+  "DANE": 76.306,
+  "MUNICIPIO": "Ginebra"
+ },
+ {
+  "DEPARTAMENTO": "Valle del Cauca",
+  "DANE": 76.892,
+  "MUNICIPIO": "Yumbo"
+ },
+ {
+  "DEPARTAMENTO": "Valle del Cauca",
+  "DANE": 76.497,
+  "MUNICIPIO": "Obando"
+ },
+ {
+  "DEPARTAMENTO": "Norte de Santander",
+  "DANE": 54.81,
+  "MUNICIPIO": "Tibu"
+ },
+ {
+  "DEPARTAMENTO": "Norte de Santander",
+  "DANE": 54.673,
+  "MUNICIPIO": "San Cayetano"
+ },
+ {
+  "DEPARTAMENTO": "Norte de Santander",
+  "DANE": 54.67,
+  "MUNICIPIO": "San Calixto"
+ },
+ {
+  "DEPARTAMENTO": "Valle del Cauca",
+  "DANE": 76.1,
+  "MUNICIPIO": "Bolivar"
+ },
+ {
+  "DEPARTAMENTO": "Norte de Santander",
+  "DANE": 54.398,
+  "MUNICIPIO": "La Playa"
+ },
+ {
+  "DEPARTAMENTO": "Valle del Cauca",
+  "DANE": 76.001,
+  "MUNICIPIO": "Cali"
+ },
+ {
+  "DEPARTAMENTO": "Valle del Cauca",
+  "DANE": 76.67,
+  "MUNICIPIO": "San Pedro"
+ },
+ {
+  "DEPARTAMENTO": "Valle del Cauca",
+  "DANE": 76.111,
+  "MUNICIPIO": "Guadalajara de Buga"
+ },
+ {
+  "DEPARTAMENTO": "Norte de Santander",
+  "DANE": 54.172,
+  "MUNICIPIO": "Chinacota"
+ },
+ {
+  "DEPARTAMENTO": "Norte de Santander",
+  "DANE": 54.599,
+  "MUNICIPIO": "Ragonvalia"
+ },
+ {
+  "DEPARTAMENTO": "Norte de Santander",
+  "DANE": 54.385,
+  "MUNICIPIO": "La Esperanza"
+ },
+ {
+  "DEPARTAMENTO": "Norte de Santander",
+  "DANE": 54.874,
+  "MUNICIPIO": "Villa del Rosario"
+ },
+ {
+  "DEPARTAMENTO": "Norte de Santander",
+  "DANE": 54.174,
+  "MUNICIPIO": "Chitaga"
+ },
+ {
+  "DEPARTAMENTO": "Valle del Cauca",
+  "DANE": 76.126,
+  "MUNICIPIO": "Calima"
+ },
+ {
+  "DEPARTAMENTO": "Norte de Santander",
+  "DANE": 54.72,
+  "MUNICIPIO": "Sardinata"
+ },
+ {
+  "DEPARTAMENTO": "Valle del Cauca",
+  "DANE": 76.036,
+  "MUNICIPIO": "Andalucia"
+ },
+ {
+  "DEPARTAMENTO": "Valle del Cauca",
+  "DANE": 76.563,
+  "MUNICIPIO": "Pradera"
+ },
+ {
+  "DEPARTAMENTO": "Norte de Santander",
+  "DANE": 54.003,
+  "MUNICIPIO": "Abrego"
+ },
+ {
+  "DEPARTAMENTO": "Norte de Santander",
+  "DANE": 54.405,
+  "MUNICIPIO": "Los Patios"
+ },
+ {
+  "DEPARTAMENTO": "Norte de Santander",
+  "DANE": 54.498,
+  "MUNICIPIO": "Ocaña"
+ },
+ {
+  "DEPARTAMENTO": "Norte de Santander",
+  "DANE": 54.109,
+  "MUNICIPIO": "Bucarasica"
+ },
+ {
+  "DEPARTAMENTO": "Valle del Cauca",
+  "DANE": 76.89,
+  "MUNICIPIO": "Yotoco"
+ },
+ {
+  "DEPARTAMENTO": "Valle del Cauca",
+  "DANE": 76.52,
+  "MUNICIPIO": "Palmira"
+ },
+ {
+  "DEPARTAMENTO": "Valle del Cauca",
+  "DANE": 76.616,
+  "MUNICIPIO": "Riofrio"
+ },
+ {
+  "DEPARTAMENTO": "Norte de Santander",
+  "DANE": 54.68,
+  "MUNICIPIO": "Santiago"
+ },
+ {
+  "DEPARTAMENTO": "Valle del Cauca",
+  "DANE": 76.02,
+  "MUNICIPIO": "Alcala"
+ },
+ {
+  "DEPARTAMENTO": "Valle del Cauca",
+  "DANE": 76.863,
+  "MUNICIPIO": "Versalles"
+ },
+ {
+  "DEPARTAMENTO": "Norte de Santander",
+  "DANE": 54.377,
+  "MUNICIPIO": "Labateca"
+ },
+ {
+  "DEPARTAMENTO": "Norte de Santander",
+  "DANE": 54.128,
+  "MUNICIPIO": "Cachira"
+ },
+ {
+  "DEPARTAMENTO": "Norte de Santander",
+  "DANE": 54.871,
+  "MUNICIPIO": "Villa Caro"
+ },
+ {
+  "DEPARTAMENTO": "Norte de Santander",
+  "DANE": 54.239,
+  "MUNICIPIO": "Durania"
+ },
+ {
+  "DEPARTAMENTO": "Valle del Cauca",
+  "DANE": 76.243,
+  "MUNICIPIO": "El aguila"
+ },
+ {
+  "DEPARTAMENTO": "Valle del Cauca",
+  "DANE": 76.823,
+  "MUNICIPIO": "Toro"
+ },
+ {
+  "DEPARTAMENTO": "Valle del Cauca",
+  "DANE": 76.13,
+  "MUNICIPIO": "Candelaria"
+ },
+ {
+  "DEPARTAMENTO": "Valle del Cauca",
+  "DANE": 76.377,
+  "MUNICIPIO": "La Cumbre"
+ },
+ {
+  "DEPARTAMENTO": "Valle del Cauca",
+  "DANE": 76.845,
+  "MUNICIPIO": "Ulloa"
+ },
+ {
+  "DEPARTAMENTO": "Valle del Cauca",
+  "DANE": 76.828,
+  "MUNICIPIO": "Trujillo"
+ },
+ {
+  "DEPARTAMENTO": "Valle del Cauca",
+  "DANE": 76.869,
+  "MUNICIPIO": "Vijes"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.176,
+  "MUNICIPIO": "Chima"
+ },
+ {
+  "DEPARTAMENTO": "Sucre",
+  "DANE": 70.67,
+  "MUNICIPIO": "Sampues"
+ },
+ {
+  "DEPARTAMENTO": "Casanare",
+  "DANE": 85.225,
+  "MUNICIPIO": "Nunchia"
+ },
+ {
+  "DEPARTAMENTO": "Norte de Santander",
+  "DANE": 54.518,
+  "MUNICIPIO": "Pamplona"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.019,
+  "MUNICIPIO": "Alban"
+ },
+ {
+  "DEPARTAMENTO": "Cordoba",
+  "DANE": 23.466,
+  "MUNICIPIO": "Montelibano"
+ },
+ {
+  "DEPARTAMENTO": "Putumayo",
+  "DANE": 86.568,
+  "MUNICIPIO": "Puerto Asis"
+ },
+ {
+  "DEPARTAMENTO": "Sucre",
+  "DANE": 70.215,
+  "MUNICIPIO": "Corozal"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.11,
+  "MUNICIPIO": "Buesaco"
+ },
+ {
+  "DEPARTAMENTO": "Casanare",
+  "DANE": 85.139,
+  "MUNICIPIO": "Mani"
+ },
+ {
+  "DEPARTAMENTO": "Bolivar",
+  "DANE": 13.268,
+  "MUNICIPIO": "El Peñon"
+ },
+ {
+  "DEPARTAMENTO": "Valle del Cauca",
+  "DANE": 76.834,
+  "MUNICIPIO": "Tulua"
+ },
+ {
+  "DEPARTAMENTO": "Tolima",
+  "DANE": 73.152,
+  "MUNICIPIO": "Casabianca"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.04,
+  "MUNICIPIO": "Anolaima"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.175,
+  "MUNICIPIO": "Chia"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.835,
+  "MUNICIPIO": "San Andres de Tumaco"
+ },
+ {
+  "DEPARTAMENTO": "Caqueta",
+  "DANE": 18.46,
+  "MUNICIPIO": "Milan"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.147,
+  "MUNICIPIO": "Capitanejo"
+ },
+ {
+  "DEPARTAMENTO": "Tolima",
+  "DANE": 73.043,
+  "MUNICIPIO": "Anzoategui"
+ },
+ {
+  "DEPARTAMENTO": "Valle del Cauca",
+  "DANE": 76.275,
+  "MUNICIPIO": "Florida"
+ },
+ {
+  "DEPARTAMENTO": "Atlantico",
+  "DANE": 8.606,
+  "MUNICIPIO": "Repelon"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.284,
+  "MUNICIPIO": "Frontino"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.258,
+  "MUNICIPIO": "El Peñon"
+ },
+ {
+  "DEPARTAMENTO": "Norte de Santander",
+  "DANE": 54.52,
+  "MUNICIPIO": "Pamplonita"
+ },
+ {
+  "DEPARTAMENTO": "Amazonas",
+  "DANE": 91.46,
+  "MUNICIPIO": "Miriti Parana"
+ },
+ {
+  "DEPARTAMENTO": "Casanare",
+  "DANE": 85.4,
+  "MUNICIPIO": "Tamara"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.806,
+  "MUNICIPIO": "Tibasosa"
+ },
+ {
+  "DEPARTAMENTO": "Cauca",
+  "DANE": 19.517,
+  "MUNICIPIO": "Paez"
+ },
+ {
+  "DEPARTAMENTO": "Tolima",
+  "DANE": 73.001,
+  "MUNICIPIO": "Ibague"
+ },
+ {
+  "DEPARTAMENTO": "Atlantico",
+  "DANE": 8.573,
+  "MUNICIPIO": "Puerto Colombia"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.083,
+  "MUNICIPIO": "Belen"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.758,
+  "MUNICIPIO": "Sopo"
+ },
+ {
+  "DEPARTAMENTO": "Choco",
+  "DANE": 27.15,
+  "MUNICIPIO": "Carmen del Darien"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.299,
+  "MUNICIPIO": "Gama"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.718,
+  "MUNICIPIO": "Sasaima"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.24,
+  "MUNICIPIO": "Chachagüi"
+ },
+ {
+  "DEPARTAMENTO": "Norte de Santander",
+  "DANE": 54.001,
+  "MUNICIPIO": "Cucuta"
+ },
+ {
+  "DEPARTAMENTO": "Bolivar",
+  "DANE": 13.001,
+  "MUNICIPIO": "Cartagena"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.313,
+  "MUNICIPIO": "Granada"
+ },
+ {
+  "DEPARTAMENTO": "Magdalena",
+  "DANE": 47.72,
+  "MUNICIPIO": "Santa Barbara de Pinto"
+ },
+ {
+  "DEPARTAMENTO": "Bolivar",
+  "DANE": 13.442,
+  "MUNICIPIO": "Maria la Baja"
+ },
+ {
+  "DEPARTAMENTO": "Caqueta",
+  "DANE": 18.41,
+  "MUNICIPIO": "La Montañita"
+ },
+ {
+  "DEPARTAMENTO": "Caqueta",
+  "DANE": 18.753,
+  "MUNICIPIO": "San Vicente del Caguan"
+ },
+ {
+  "DEPARTAMENTO": "Santander",
+  "DANE": 68.25,
+  "MUNICIPIO": "El Peñon"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.364,
+  "MUNICIPIO": "Jardin"
+ },
+ {
+  "DEPARTAMENTO": "Valle del Cauca",
+  "DANE": 76.364,
+  "MUNICIPIO": "Jamundi"
+ },
+ {
+  "DEPARTAMENTO": "Choco",
+  "DANE": 27.787,
+  "MUNICIPIO": "Tado"
+ },
+ {
+  "DEPARTAMENTO": "Casanare",
+  "DANE": 85.23,
+  "MUNICIPIO": "Orocue"
+ },
+ {
+  "DEPARTAMENTO": "Tolima",
+  "DANE": 73.411,
+  "MUNICIPIO": "Libano"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.885,
+  "MUNICIPIO": "Yacopi"
+ },
+ {
+  "DEPARTAMENTO": "Quindio",
+  "DANE": 63.13,
+  "MUNICIPIO": "Calarca"
+ },
+ {
+  "DEPARTAMENTO": "Antioquia",
+  "DANE": 5.756,
+  "MUNICIPIO": "Sonson"
+ },
+ {
+  "DEPARTAMENTO": "Norte de Santander",
+  "DANE": 54.245,
+  "MUNICIPIO": "El Carmen"
+ },
+ {
+  "DEPARTAMENTO": "Tolima",
+  "DANE": 73.408,
+  "MUNICIPIO": "Lerida"
+ },
+ {
+  "DEPARTAMENTO": "Cordoba",
+  "DANE": 23.35,
+  "MUNICIPIO": "La Apartada"
+ },
+ {
+  "DEPARTAMENTO": "Bolivar",
+  "DANE": 13.62,
+  "MUNICIPIO": "San Cristobal"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.29,
+  "MUNICIPIO": "Fusagasuga"
+ },
+ {
+  "DEPARTAMENTO": "Bolivar",
+  "DANE": 13.894,
+  "MUNICIPIO": "Zambrano"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.403,
+  "MUNICIPIO": "La Uvita"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.899,
+  "MUNICIPIO": "Zipaquira"
+ },
+ {
+  "DEPARTAMENTO": "Quindio",
+  "DANE": 63.302,
+  "MUNICIPIO": "Genova"
+ },
+ {
+  "DEPARTAMENTO": "Tolima",
+  "DANE": 73.77,
+  "MUNICIPIO": "Suarez"
+ },
+ {
+  "DEPARTAMENTO": "Meta",
+  "DANE": 50.15,
+  "MUNICIPIO": "Castilla la Nueva"
+ },
+ {
+  "DEPARTAMENTO": "Boyaca",
+  "DANE": 15.087,
+  "MUNICIPIO": "Belen"
+ },
+ {
+  "DEPARTAMENTO": "Choco",
+  "DANE": 27.81,
+  "MUNICIPIO": "Union Panamericana"
+ },
+ {
+  "DEPARTAMENTO": "Magdalena",
+  "DANE": 47.57,
+  "MUNICIPIO": "Pueblo Viejo"
+ },
+ {
+  "DEPARTAMENTO": "Putumayo",
+  "DANE": 86.885,
+  "MUNICIPIO": "Villagarzon"
+ },
+ {
+  "DEPARTAMENTO": "Cundinamarca",
+  "DANE": 25.269,
+  "MUNICIPIO": "Facatativa"
+ },
+ {
+  "DEPARTAMENTO": "Cordoba",
+  "DANE": 23.58,
+  "MUNICIPIO": "Puerto Libertador"
+ },
+ {
+  "DEPARTAMENTO": "Caldas",
+  "DANE": 17.444,
+  "MUNICIPIO": "Marquetalia"
+ },
+ {
+  "DEPARTAMENTO": "Nariño",
+  "DANE": 52.051,
+  "MUNICIPIO": "Arboleda"
+ },
+ {
+  "DEPARTAMENTO": "Valle del Cauca",
+  "DANE": 76.109,
+  "MUNICIPIO": "Buenaventura"
+ },
+ {
+  "DEPARTAMENTO": "Magdalena",
+  "DANE": 47.189,
+  "MUNICIPIO": "Cienaga"
+ },
+ {
+  "DEPARTAMENTO": "Atlantico",
+  "DANE": 8.56,
+  "MUNICIPIO": "Ponedera"
+ }
+]
