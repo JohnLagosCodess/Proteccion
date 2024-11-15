@@ -3357,6 +3357,14 @@ class CalificacionPCLController extends Controller
         }
         elseif($request->tipo_documento_descarga_califi_editar == "Formato_B_Revision_pension"){
 
+            if(!empty($informacion_afiliado)){
+                if($informacion_afiliado[0]->Apoderado === 'Si'){
+                    $Nombre_destinatario = $informacion_afiliado[0]->Nombre_apoderado;
+                    $N_identificacion_apoderado = 
+                    dd($informacion_afiliado);
+
+                }
+            }
 
             //QRCode con redireccionamiento a la pagina de actualizar datos de Protección
             $codigoQR = QrCode::size(200)->generate('https://actdatos.proteccion.com/');

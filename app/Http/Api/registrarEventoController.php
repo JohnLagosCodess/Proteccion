@@ -211,6 +211,10 @@ class registrarEventoController extends Controller
             }
         }
 
+        $get_municipi = function($dane){
+            sigmel_lista_departamentos_municipios::on('sigmel_gestiones')->select('Id_municipios','Id_departamento')->where()->firts();
+        };
+
         $n_evento = generarNumeroEvento();
 
         sigmel_numero_orden_eventos::on('sigmel_gestiones')
