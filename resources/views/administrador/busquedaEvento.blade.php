@@ -139,6 +139,8 @@
                                     <th>Resultado</th>
                                     <th>Profesional actual</th>
                                     <th>Estado</th>
+                                    <th>Activador</th>
+                                    <th>N° de radicado HC</th>
                                     <th>Fecha radicación</th>
                                     <th>Fecha registro</th>
                                     <th>Fecha de Notificación</th>

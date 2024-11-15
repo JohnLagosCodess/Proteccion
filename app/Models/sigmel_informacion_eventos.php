@@ -20,6 +20,8 @@ class sigmel_informacion_eventos extends Model
     'F_evento',
     'F_radicacion',
     'N_siniestro',
+    'Activador',
+    'N_Radicado_HC',
     'Nombre_usuario',
     'F_registro'];
 

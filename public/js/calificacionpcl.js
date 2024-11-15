@@ -2712,20 +2712,15 @@ $(document).ready(function(){
             $("#firmarcomunicado_editar").prop('checked', true);
 
         }else if (opc_seleccionada == "Formato_B_Revision_pension") {
-            $("#asunto_editar").val("NOTIFICACIÓN RESULTADO REVISIÓN PENSIONAL");
-            var texto_insertar = "<p>Reciba un cordial saludo, </p>"+
-            "<p>Agradecemos la respuesta que hemos recibido a nuestra solicitud de actualización de historia clínica con "+ 
-            "el fin de revisar sus condiciones de salud.</p>"+
-            "<p>De la revisión que ha realizado el Grupo Interdisciplinario de Calificación de Invalidez de <b>Seguros de Vida "+
-            "Alfa S.A.</b>, hemos definido que Usted actualmente mantiene las condiciones para continuar con el beneficio "+
-            "de pensión por invalidez sobre el cual esta compañía aseguradora ha venido pagando la mesada pensional "+
-            "en virtud del contrato de Renta Vitalicia Inmediata suscrito por encargo de la Administradora de Fondos de "+
-            "Pensiones <b>Porvenir S.A.</b></p>"+
-            "<p>En forma sucinta, la revisión de invalidez, se fundamenta en: </p>"+
-            "<p>Cualquier inquietud o consulta al respecto, le invitamos a comunicarse a nuestras líneas de atención al "+
-            "cliente en Bogotá (601) 3 07 70 32 o a la línea nacional gratuita 01 8000 122 532, de lunes a viernes, de "+
-            "8:00 a. m. a 8:00 p. m. - sábados de 8:00 a.m. a 12 m., o escríbanos a "+
-            "«servicioalcliente@segurosalfa.com.co» o a la dirección <b>Carrera 10 # 18-36, piso 4, Edificio José María Córdoba, Bogotá D.C.</b></p>";
+            $("#asunto_editar").val("RATIFICACIÓN DEL ESTADO DE INVALIDEZ");
+            var texto_insertar = "<p>Aprecido(a) {{$nombre_afiliado}}, </p>"+
+            "<p>En <b>PROTECCIÓN</b> estamos para guiarle y acompañarle en cada momento de su vida. Como es de su conocimiento y de acuerdo con lo establecido "+ 
+            "en el artículo 44 de la Ley 100 de 1993, esta Administradora solicitó copia de su historia clínica con el fin de revisar el estado de su invalidez.</p>"+
+            "<p>Una vez revisada la documentación allegada, tenemos que <b>persisten</b> los diagnósticos que dieron lugar a la invalidez decretada en su oportunidad, sin que ocurran "+
+            "cambios significativos en su estado de salud, en consecuencia, queremos informarle que Protección continuará con el reconocimiento de la pensión de invalidez y, "+
+            "por ende, continuará con el pago de su mesada pensional.</p>"+
+            "<p>Le agradecemos la confianza depositada en nosotros durante estos años y le recordamos que cuenta con nuestra asesoría. Ante cualquier duda, puede comunicarse "+
+            "a nuestra Línea de Servicio: Bogotá: 744 44 64, Medellín y Cali: 510 90 99 Barranquilla: 319 79 99, Cartagena: 642 49 99 y desde el resto del país: 01 8000 52 8000.</p>";
             $('#cuerpo_comunicado_editar').summernote('code', texto_insertar);
 
             // Auto selección de la opción Afiliado (Destinatario Principal)
@@ -3581,20 +3576,15 @@ $(document).ready(function(){
             $("#firmarcomunicado").prop('checked', true);
 
         }else if (opc_seleccionada == "Formato_B_Revision_pension") {
-            $("#asunto").val("NOTIFICACIÓN RESULTADO REVISIÓN PENSIONAL");
-            var texto_insertar = "<p>Reciba un cordial saludo, </p>"+
-            "<p>Agradecemos la respuesta que hemos recibido a nuestra solicitud de actualización de historia clínica con "+ 
-            "el fin de revisar sus condiciones de salud.</p>"+
-            "<p>De la revisión que ha realizado el Grupo Interdisciplinario de Calificación de Invalidez de <b>Seguros de Vida "+
-            "Alfa S.A.</b>, hemos definido que Usted actualmente mantiene las condiciones para continuar con el beneficio "+
-            "de pensión por invalidez sobre el cual esta compañía aseguradora ha venido pagando la mesada pensional "+
-            "en virtud del contrato de Renta Vitalicia Inmediata suscrito por encargo de la Administradora de Fondos de "+
-            "Pensiones <b>Porvenir S.A.</b></p>"+
-            "<p>En forma sucinta, la revisión de invalidez, se fundamenta en: </p>"+
-            "<p>Cualquier inquietud o consulta al respecto, le invitamos a comunicarse a nuestras líneas de atención al "+
-            "cliente en Bogotá (601) 3 07 70 32 o a la línea nacional gratuita 01 8000 122 532, de lunes a viernes, de "+
-            "8:00 a. m. a 8:00 p. m. - sábados de 8:00 a.m. a 12 m., o escríbanos a "+
-            "«servicioalcliente@segurosalfa.com.co» o a la dirección <b>Carrera 10 # 18-36, piso 4, Edificio José María Córdoba, Bogotá D.C.</b></p>";
+            $("#asunto").val("RATIFICACIÓN DEL ESTADO DE INVALIDEZ");
+            var texto_insertar = "<p>Aprecido(a) {{$nombre_afiliado}}, </p>"+
+            "<p>En <b>PROTECCIÓN</b> estamos para guiarle y acompañarle en cada momento de su vida. Como es de su conocimiento y de acuerdo con lo establecido "+ 
+            "en el artículo 44 de la Ley 100 de 1993, esta Administradora solicitó copia de su historia clínica con el fin de revisar el estado de su invalidez.</p>"+
+            "<p>Una vez revisada la documentación allegada, tenemos que <b>persisten</b> los diagnósticos que dieron lugar a la invalidez decretada en su oportunidad, sin que ocurran "+
+            "cambios significativos en su estado de salud, en consecuencia, queremos informarle que Protección continuará con el reconocimiento de la pensión de invalidez y, "+
+            "por ende, continuará con el pago de su mesada pensional.</p>"+
+            "<p>Le agradecemos la confianza depositada en nosotros durante estos años y le recordamos que cuenta con nuestra asesoría. Ante cualquier duda, puede comunicarse "+
+            "a nuestra Línea de Servicio: Bogotá: 744 44 64, Medellín y Cali: 510 90 99 Barranquilla: 319 79 99, Cartagena: 642 49 99 y desde el resto del país: 01 8000 52 8000.</p>";
             $('#cuerpo_comunicado').summernote('code', texto_insertar);
             // $('#btn_insertar_Detalle_calificacion').removeClass('d-none');
 

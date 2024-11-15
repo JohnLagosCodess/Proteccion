@@ -7437,6 +7437,7 @@
                                             <button class="btn btn-sm btn-secondary mb-2" id="btn_insertar_Nombre_afiliado">Nombre afiliado</button>
                                             <button class="btn btn-sm btn-secondary mb-2" id="btn_insertar_porPcl">% PCL</button>
                                             <button class="btn btn-sm btn-secondary mb-2" id="btn_insertar_F_estructuracion">Fecha de estructuracion</button>
+                                            <button class="btn btn-sm btn-secondary mb-2" id="btn_insertar_Tipo_Evento">Tipo Evento</button>
                                             <button class="btn btn-sm btn-secondary mb-2" id="btn_insertar_Origen">Origen</button>
                                             @if(!empty($array_comite_interdisciplinario[0]->Cuerpo_comunicado))
                                                 <input type="hidden" id="rellenar_textarea" value="llenar">
@@ -7651,7 +7652,7 @@
                                             @if(!empty($array_comite_interdisciplinario[0]->Ciudad))
                                                 <input type="text" class="form-control" name="ciudad" id="ciudad" value="{{$array_comite_interdisciplinario[0]->Ciudad}}">                                                
                                             @else
-                                                <input type="text" class="form-control" name="ciudad" id="ciudad" value="Bogotá D.C">                                                
+                                                <input type="text" class="form-control" name="ciudad" id="ciudad" value="Medellín">                                                
                                             @endif
                                         </div>
                                     </div>   

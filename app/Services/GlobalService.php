@@ -485,4 +485,21 @@ class GlobalService
     
         return $resultado;
     }
+    /**
+        * Retorna información del afiliado.
+        * 
+        * @param string $n_identificacion Necesario para determinar el afiliado al que se hace referencia.
+        *
+        * @param string $id_evento Necesario para saber a que evento en especifico hace referencia, ya que un afiliado puede estar enlazado a varios eventos.
+        *
+        * @return Collection | null Devuelve una colección con la información y si no devuelve null
+    */
+    public function retornarInformaciónAfiliado($n_identificacion, $id_evento){
+        return DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_afiliado_eventos as siae')
+            ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm', 'siae.Id_departamento', '=', 'sldm.Id_departamento')
+            ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm2', 'siae.Id_municipio', '=', 'sldm2.Id_municipios')
+            ->select('siae.*','sldm.Nombre_departamento as Nombre_ciudad', 'sldm2.Nombre_municipio')
+            ->where([['siae.Nro_identificacion', $n_identificacion],['siae.ID_evento', $id_evento]])
+            ->get();
+    }
 }

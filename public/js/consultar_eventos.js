@@ -196,7 +196,7 @@ $(document).ready(function () {
                                 //data[i]['agregar_nuevo_proceso'] = ""; 
                             /*}*/
                         }                        
-
+                        
                         $.each(data, function(index, value){
                             llenar_informacion_evento(data, index, value);
                         });
@@ -344,6 +344,8 @@ $(document).ready(function () {
                 {"data":"Resultado"},
                 {"data":"Nombre_profesional"},
                 {"data":"Nombre_estado"},
+                {"data":"Activador"},
+                {"data":"N_radicado_hc"},
                 {"data":"F_radicacion"},
                 {"data":"F_registro"},
                 {"data":"F_notificacion"},

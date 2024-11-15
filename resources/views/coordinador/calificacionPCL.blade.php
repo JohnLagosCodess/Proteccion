@@ -678,7 +678,7 @@
                                         <div class="col-3">
                                             <div class="form-group">
                                                 <label for="ciudad_comunicado">Ciudad <span style="color: red;">(*)</span></label>
-                                                <input class="form-control" type="text" name="ciudad_comunicado" id="ciudad" value="Bogotá D.C." required>
+                                                <input class="form-control" type="text" name="ciudad_comunicado" id="ciudad" value="Medellín" required>
                                                 <input hidden="hidden" type="text" class="form-control" name="Id_evento" id="Id_evento" value="{{$array_datos_calificacionPcl[0]->ID_evento}}">
                                                     <input hidden="hidden" type="text" class="form-control" name="Id_asignacion" id="Id_asignacion" value="{{$array_datos_calificacionPcl[0]->Id_Asignacion}}">
                                                     <input hidden="hidden" type="text" class="form-control" name="Id_procesos" id="Id_procesos" value="{{$array_datos_calificacionPcl[0]->Id_proceso}}">

@@ -4179,7 +4179,7 @@ $(document).ready(function(){
                         data: datos_generar_oficios,
                         success: function(pdfResponse) {
                             // la respuesta de generarPdfDictamenPcl
-                            console.log('PDF generado');
+                            // console.log('PDF generado');
                         },
                         error: function(xhr) {
                             console.error('Error al generar el PDF', xhr);
@@ -4215,7 +4215,7 @@ $(document).ready(function(){
                         data: datos_generar_oficios,
                         success: function(pdfResponse) {
                             // la respuesta de generarPdfDictamenPcl
-                            console.log('PDF generado');
+                            // console.log('PDF generado');
                         },
                         error: function(xhr) {
                             console.error('Error al generar el PDF', xhr);
@@ -4439,35 +4439,48 @@ $(document).ready(function(){
     // Retornar el texto por defecto en el asunto y cuerpo del comunicado
 
     var oficioremisoriopcl = $('#oficiopcl');
+    var porcentaje_pcl_Obstenta = $("#porcentaje_pcl").val();      
+    // Validar porcentaje de pcl para el valor de la variable en el cuerpo del comunicado        
+    if (porcentaje_pcl_Obstenta < 50) {
+        var Obsenta_No = "<b> NO </b>";        
+    } else {
+        var Obsenta_No = ' ';                
+    }
     oficioremisoriopcl.change(function(){
         if ($(this).prop('checked')) {
-            $("#Asunto").val("Calificación de Pérdida de Capacidad Laboral al Fondo de Pensiones Porvenir S.A.");
-            var texto_insertar = "<p>Hola, ¡{{$Nombre_afiliado}}! </p>"+
-            "<p>En Seguros de Vida Alfa S.A. siempre buscamos la protección y satisfacción de nuestros clientes. De acuerdo con tu solicitud de  "+ 
-            "calificación de pérdida de capacidad laboral (PCL) en la <b>AFP Porvenir S.A.</b>, te informamos que el historial médico ha sido revisado y "+
-            "calificado por el grupo interdisciplinario de calificación de <b>Seguros de Vida Alfa S.A.</b>(1).</p>"+
-            "<p>De acuerdo con los parámetros establecidos en el Manual Único para la Calificación de la Perdida de la Capacidad Laboral y "+
-            "Ocupacional (2) se ha determinado una (PCL) de {{$PorcentajePcl_dp}}  y fecha de estructuración {{$F_estructuracionPcl_dp}} Origen {{$OrigenPcl_dp}}.</p>"+
-            "<p>Si tu calificación es igual o superior al 50%, podrás iniciar los trámites ante la AFP Porvenir (3) para acceder a la prestación "+
-            "económica correspondiente, previo el cumplimiento de los requisitos legales para acceder a la pensión de invalidez (4). Si este es tu "+
-            "caso, podrás iniciar tu solicitud pensional a través de a página web www.porvenir.com.co o llamando a la línea de atención al cliente "+
-            "de Porvenir 018000510800, con el fin de solicitar una cita para la radicación de la documentación.</p>"+
-            "<p>En caso de que no te encuentres de acuerdo con la calificación emitida por Seguros de Vida Alfa S.A., cuentas con diez (10) días "+
-            "hábiles siguientes a partir de la fecha de recibida la notificación para manifestar tu inconformidad frente a resultado. Esta manifestación se debe realizar por escrito y debe estar dirigida a Seguros de Vida Alfa S.A. en donde expreses sobre cuál o cuáles de los siguientes aspectos te encuentras en desacuerdo: <br><br>- Pérdida de capacidad laboral <br> - Origen <br>  - Fecha de estructuración <br><br> La carta debe ser remitida por medio de correo certificado a la dirección <strong>Carrera 10 # 18-36, piso 4, edificio José María Córdoba en "+
-            "Bogotá o a inconformidad@segurosalfa.com.co.</strong> Ten presente que el comunicado debe venir firmado por ti, relacionando los datos de localización. Posterior a la revisión de tu carta, procederemos a remitir tu expediente a la respectiva Junta Regional de Calificación de Invalidez para obtener una segunda calificación."+
-            "<p> Una vez realizada la solicitud, a más tardar en (15) quince días hábiles recibirás por parte de Seguros de Vida Alfa S.A. una comunicación donde te informaremos el estado del proceso. </p>"
-            //"manifestación se debe realizar por escrito y debe estar dirigida a Seguros de Vida Alfa S.A. en donde expreses sobre cuál o cuáles de"+
-            //"los siguientes aspectos te encuentras en desacuerdo: </p>"+
-            //"<p>- Pérdida de capacidad laboral</p>"+
-            //"<p>- Origen</p>"+
-            //"<p>- Fecha de estructuración</p>"+
-            //"<p>La carta debe ser remitida por medio de correo certificado a la dirección Carrera 10 # 18-36, piso 4 edificio José María Córdoba en "+
-            //"Bogotá o a inconformidad@segurosalfa.com.co. Ten presente que el comunicado debe venir firmado por ti, relacionando los datos de "+
-            //"localizaci ón. Posterior a la revisión de tu carta, procederemos a remitir tu expediente a la respectiva Junta Regional de "+
-            //"Calificación de Invalidez para obtener una segunda calificación.</p>"+
-            //"<p>Una vez realizada la solicitud, a más tardar en (15) quince días hábiles recibirás por parte de Seguros de Vida Alfa S.A. una "+
-            //"comunicación donde te informaremos el estado del proceso.</p>"
-            ;
+            $("#Asunto").val("NOTIFICACIÓN SOBRE CALIFICACIÓN DE PÉRDIDA DE CAPACIDAD LABORAL");
+            var texto_insertar = "<p>Apreciado(a) {{$Nombre_afiliado}} </p>"+
+            "<p>En <b>PROTECCIÓN</b> estamos para guiarle y acompañarle en cada momento de su vida. De acuerdo "+ 
+            "con su solicitud de calificación de pérdida de capacidad laboral (PCL), le informamos que el "+
+            "historial médico ha sido revisado y calificado por nuestro grupo interdisciplinario de calificación.</p>"+
+            "<p>Según los parámetros establecidos en el Manual Único para la Calificación de la Pérdida de la "+
+            "Capacidad Laboral y Ocupacional los resultados fueron los siguientes:</p>"+
+            "<table class='tabla_cuerpo'>" +
+            "<tr>" +
+            "<th>Porcentaje de pérdida de capacidad laboral</th>" +
+            "<th>Origen</th>" +
+            "<th>Fecha de estructuración </th>" +
+            "</tr>" +
+            "<tr>" +
+            "<td>{{$PorcentajePcl_dp}}</td>" +
+            "<td>{{$TipoEvento_dp}} {{$OrigenPcl_dp}}</td>" +
+            "<td>{{$F_estructuracionPcl_dp}}</td>" +
+            "</tr>" +
+            "</table>"+
+            "<p>Considerando el resultado de su calificación, usted"+ Obsenta_No +"ostenta la calidad de inválido. "+ 
+            "Recuerda que <span class='cursiva_cuerpo'>“Se considera inválida la persona que, por cualquier causa de origen no profesional, no provocada intencionalmente, hubiere perdido el 50% o más de su capacidad laboral”</span> "+
+            "(Artículo 38, Ley 100 de 1993).</p>"+
+            "<p>En caso de encontrarse en desacuerdo con la presente calificación, usted cuenta con el derecho "+
+            "de interponer el recurso de apelación por escrito ante <b>PROTECCIÓN</b> al email "+
+            "documentos.calificacion@proteccion.com.co con los fundamentos que motivan su solicitud, dentro de los diez (10) días hábiles posteriores a esta notificación.</p>"+
+            "<p>Si esto pasara, el caso y la documentación serían entregados a la Junta Regional de Calificación para una nueva evaluación. Estas Juntas son entidades gubernamentales independientes por "+
+            "lo que sus médicos son los responsables de asignar la cita para valoración, brindar información del trámite, emitir y notificar el dictamen en términos de ley.</p>"+
+            "<p>* Dando cumplimiento al Artículo 41 de la Ley 100 de 1993, modificado por el Artículo 142 del Decreto Ley 019 de 2012, En caso de no recibir respuesta en este tiempo, se entenderá que está  "+
+            "de acuerdo (Dictamen en firme) y se finalizará su solicitud de calificación de pérdida de capacidad laboral.</p>"+
+            "<p>Para los casos en los que la pérdida de capacidad laboral del afiliado está entre el 45,00% y 49,99% Protección remitirá automáticamente el expediente a la Junta Regional. Si usted quiere presentar "+
+            "un recurso de apelación adicional, puede hacerlo por escrito</p>"+
+            "<p>Le agradecemos la confianza depositada en nosotros durante estos años y le recordamos que cuenta con nuestra asesoría. Ante cualquier duda, puede comunicarse a nuestra Línea de Servicio: "+
+            "Bogotá: 744 44 64, Medellín y Cali: 510 90 99 Barranquilla: 319 79 99, Cartagena: 642 49 99 y resto del país: 01 8000 52 8000.</p>";
             //console.log(texto_insertar);
             $('#cuerpo_comunicado').summernote('code', texto_insertar);
 
@@ -4476,6 +4489,7 @@ $(document).ready(function(){
             $("#btn_insertar_porPcl").prop('disabled', false);
             $("#btn_insertar_F_estructuracion").prop('disabled', false);
             $("#btn_insertar_Origen").prop('disabled', false);
+            $("#btn_insertar_Tipo_Evento").prop('disabled', false);
 
             // Selección automática de las copias a partes interesadas: Empleador, Eps, Arl, Afp, Afp conocimiento
             $("#empleador").prop('checked', true);
@@ -4505,6 +4519,7 @@ $(document).ready(function(){
             $("#btn_insertar_porPcl").prop('disabled', true);
             $("#btn_insertar_F_estructuracion").prop('disabled', true);
             $("#btn_insertar_Origen").prop('disabled', true);
+            $("#btn_insertar_Tipo_Evento").prop('disabled', true);
 
             // Deselección automática de las copias a partes interesadas: Empleador, Eps, Arl, Afp, Afp conocimiento
             $("#empleador").prop('checked', false);
@@ -4563,6 +4578,7 @@ $(document).ready(function(){
             $("#btn_insertar_porPcl").prop('disabled', false);
             $("#btn_insertar_F_estructuracion").prop('disabled', false);
             $("#btn_insertar_Origen").prop('disabled', false);
+            $("#btn_insertar_Tipo_Evento").prop('disabled', false);
 
             // Selección automática de las copias a partes interesadas: Empleador, Eps, Arl, Afp, Afp conocimiento
             $("#empleador").prop('checked', true);
@@ -4592,6 +4608,7 @@ $(document).ready(function(){
             $("#btn_insertar_porPcl").prop('disabled', true);
             $("#btn_insertar_F_estructuracion").prop('disabled', true);
             $("#btn_insertar_Origen").prop('disabled', true);
+            $("#btn_insertar_Tipo_Evento").prop('disabled', true);
 
             // Deselección automática de las copias a partes interesadas: Empleador, Eps, Arl, Afp, Afp conocimiento
             $("#empleador").prop('checked', false);
@@ -4640,6 +4657,13 @@ $(document).ready(function(){
 
         var etiqueta_nombreCIE10 = "{{$OrigenPcl_dp}}";
         $('#cuerpo_comunicado').summernote('editor.insertText', etiqueta_nombreCIE10);
+    });
+
+    $("#btn_insertar_Tipo_Evento").click(function(e){
+        e.preventDefault();
+
+        var etiqueta_tipo_evento = "{{$TipoEvento_dp}}";
+        $('#cuerpo_comunicado').summernote('editor.insertText', etiqueta_tipo_evento);
     });
 
     // Funcionalidad para insertar las etiquetas de diagnosticos cie10 y origen Notificacion calificacion cero
@@ -4720,6 +4744,7 @@ $(document).ready(function(){
         $("#btn_insertar_Nombre_afiliado").prop('disabled', true);
         $("#btn_insertar_porPcl").prop('disabled', true);
         $("#btn_insertar_F_estructuracion").prop('disabled', true);
+        $("#btn_insertar_Tipo_Evento").prop('disabled', true);
         $("#btn_insertar_Origen").prop('disabled', true);
         $(".note-editable").attr("contenteditable", false);
         $("#firmar").prop('disabled', true);

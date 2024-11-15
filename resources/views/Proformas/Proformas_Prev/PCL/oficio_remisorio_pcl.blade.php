@@ -96,10 +96,19 @@
         .negrita{
             font-weight: bold;
         }
-        .fuente_todo_texto{
-            font-family: sans-serif;
+        
+        @font-face {
+            font-family: 'Microsoft New Tai Lue';
+            src: url('/storage/fonts/microsoft-new-tai-lue-2.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        .fuente_todo_texto {
+            font-family: 'Microsoft New Tai Lue', sans-serif;
             font-size: 12px;
-        }        
+        }   
+
         .paddingTexto{
             margin: 0;
             padding: 0;
@@ -112,6 +121,23 @@
             width: 100%;
             margin-left: -3.5px;
         }
+        .tabla_cuerpo {
+            font-family: sans-serif;
+            text-align: center;
+            width: 100%;
+            table-layout: fixed; 
+            border-collapse: collapse;
+        }
+
+        .tabla_cuerpo, .tabla_cuerpo td, .tabla_cuerpo th {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+
+        .cursiva_cuerpo {
+            font-style: italic;
+        }
+
         section{
             text-align: justify;
         }
@@ -132,12 +158,10 @@
             margin: 0;
             padding: 0;
         }
-        .tabla_cuerpo, .tabla_cuerpo td, .tabla_cuerpo th {
-            border: 1px solid black;
-            border-collapse: collapse;
-        } 
+        
         .copias{
             font-size: 10px;
+            font-style: italic;
         }
         .derecha{
             float:right;
@@ -202,11 +226,11 @@
             <tbody>
                 <tr>
                     <td style="width:100%; display:table; justify-content: space-between;">
-                        <p class="fuente_todo_texto paddingTexto derecha"><span class="negrita">{{$Ciudad_correspondencia}} {{$F_correspondecia}}</span></p>
+                        <p class="fuente_todo_texto paddingTexto derecha"><span class="negrita">{{$Ciudad_correspondencia}}, {{$F_correspondecia}}</span></p>
                         <div>
                             <div class="fuente_todo_texto paddingTexto">
-                                <span class="negrita">Señores:</span><br>
-                                {{$Nombre_afiliado}}
+                                <span>Señor(a)</span><br>
+                                <b>{{$Nombre_afiliado}}</b>
                             </div>
                             <div class="fuente_todo_texto paddingTexto">{{$Email_afiliado_noti}}</div>
                             <div class="fuente_todo_texto paddingTexto">{{$direccion_destinatario_principal}}</div>
@@ -222,14 +246,32 @@
             <tbody>
                 <tr>
                     <td class="fuente_todo_texto">
-                        <span class="negrita">Asunto: {{$Asunto_correspondencia}}</span><br> 
-                        <div style="margin-left: 3cm;">
-                            <span class="negrita">Ramo:</span> Previsionales<br>                        
-                            {{$T_documento_noti.' '.$NroIden_afiliado_noti}}<br>
-                            <span class="negrita">Siniestro: </span>{{$N_siniestro}}
-                        </div>
+                        <span class="negrita derecha">Asunto: {{$Asunto_correspondencia}}</span><br>
                     </td>
                 </tr>
+                @if ($Tipo_afiliado == 26 || $Tipo_afiliado == 28 || $Tipo_afiliado == 29)
+                    <tr>
+                        <td class="fuente_todo_texto">
+                            <span class="derecha">Afiliado(a) <b>{{$Nombre_afiliado_noti}} {{$T_documento_noti}}. {{$NroIden_afiliado_noti}}</b></span>
+                        </td>
+                    </tr>
+                @elseif ($Tipo_afiliado == 27)
+                    <tr>
+                        <td class="fuente_todo_texto">
+                            <span class="derecha">Beneficiario(a) <b>{{$Nombre_afiliado_noti}} {{$T_documento_noti}}. {{$NroIden_afiliado_noti}}</b></span>
+                        </td>
+                    </tr>
+                    <tr></tr>
+                    <tr></tr>
+                    <tr></tr>
+                    <tr></tr>
+                    <tr></tr>
+                    <tr>
+                        <td class="fuente_todo_texto">
+                            <span class="derecha">Afiliado(a) <b>{{$Nombre_afiliado_noti_benefi}} {{$T_documento_notibenefi}}. {{$NroIden_afiliado_notibenefi}}</b></span>
+                        </td>
+                    </tr>
+                @endif
             </tbody>
         </table>
         <section class="fuente_todo_texto">            
@@ -238,12 +280,15 @@
                 $patron2 = '/\{\{\$PorcentajePcl_dp\}\}/'; 
                 $patron3 = '/\{\{\$F_estructuracionPcl_dp\}\}/'; 
                 $patron4 = '/\{\{\$OrigenPcl_dp\}\}/'; 
+                $patron5 = '/\{\{\$TipoEvento_dp\}\}/'; 
                 if (preg_match($patron1, $Cuerpo_comunicado_correspondencia) && preg_match($patron2, $Cuerpo_comunicado_correspondencia) 
-                    && preg_match($patron3, $Cuerpo_comunicado_correspondencia) && preg_match($patron4, $Cuerpo_comunicado_correspondencia)) {                    
+                    && preg_match($patron3, $Cuerpo_comunicado_correspondencia) && preg_match($patron4, $Cuerpo_comunicado_correspondencia)
+                    && preg_match($patron5, $Cuerpo_comunicado_correspondencia)) {                    
                     $texto_modificado = str_replace('{{$Nombre_afiliado}}', $Nombre_afiliado, $Cuerpo_comunicado_correspondencia);
                     $texto_modificado = str_replace('{{$PorcentajePcl_dp}}', '<b>'.$PorcentajePcl_dp.'%'.'</b>', $texto_modificado);
                     $texto_modificado = str_replace('{{$F_estructuracionPcl_dp}}', '<b>'.date("d/m/Y", strtotime($F_estructuracionPcl_dp)).'</b>', $texto_modificado);
-                    $texto_modificado = str_replace('{{$OrigenPcl_dp}}', '<b>'.mb_strtoupper($OrigenPcl_dp).'</b>', $texto_modificado);
+                    $texto_modificado = str_replace('{{$TipoEvento_dp}}', '<b>'.$TipoEvento_dp.'</b>', $texto_modificado);
+                    $texto_modificado = str_replace('{{$OrigenPcl_dp}}', '<b>'.$OrigenPcl_dp.'</b>', $texto_modificado);
                     $Cuerpo_comunicado_correspondencia = $texto_modificado;
                 } else {
                     $Cuerpo_comunicado_correspondencia = "";
@@ -251,43 +296,16 @@
                 print_r($Cuerpo_comunicado_correspondencia);
             ?>
         </section>
-        <section class="fuente_todo_texto">
-            Para nosotros es un gusto servirle,
-            <br>
+        <section class="fuente_todo_texto">            
             Cordialmente,
-            <div class="firma">
-                <?=$Firma_cliente?>
-            </div>
-            <div class="fuente_todo_texto">
-                Departamento de medicina laboral 
-                <br>
-                Convenio Seguro de Vida Alfa
-                <br>
-                Seguro Alfa S.A. y Seguro de Vida Alfa S.A.
-            </div>
+            <br><br>
+            <b>PROTECCIÓN S.A.</b>                        
             {{-- <div class="fuente_todo_texto">
                 <b>Anexos:</b> {{$Anexos_correspondecia}}
                 <br>
                 <b>Elaboró:</b> {{$Elaboro_correspondecia}}
             </div> --}}
-        </section>  
-        <p class="fuente_todo_texto" style="text-align: justify;">
-            1 Según lo establecido en el Artículo 52 de la Ley 962 de 2005. <br>
-            2 Decreto 1507 de 2014 <br>
-            3 De acuerdo con lo establecido en el Artículo 38 de la Ley 100 de 1993 <br>
-            4 Requisitos legales para acceder a la pensión por invalidez (Artículo 39 de la Ley 100 de 1993)
-        </p>
-        <p class="fuente_todo_texto" style="text-align: justify; font-size:11px">
-            A través del Defensor del Consumidor Financiero, como vocero de los clientes, podrán ser atendidas las peticiones o requerimientos 
-            referentes a los productos o servicios prestados por las Compañías, los cuales deberán ser radicados utilizando alguno de los medios 
-            señalados a continuación: Correo electrónico: <br><a href="mailto:defensordelconsumidorfinanciero@segurosalfa.com.co">defensordelconsumidorfinanciero@segurosalfa.com.co</a>, dirección física: AV. CL. 26 59-15 locales 6 y 7, 
-            dirección de correspondencia CRA. 10 # 18-36 Piso 4, Edificio José María Córdoba o vía fax al conmutador 743 53 33 Ext 14454 
-            Fax: 743 53 33 Ext. 14440.
-        </p>            
-        <p class="fuente_todo_texto" style="text-align: justify;">
-            * Para una adecuada apertura y visualización de los archivos anexos, se recomienda que sean 
-            descargados en un equipo de cómputo, no desde celulares.
-        </p>
+        </section>        
         <br>
         <section class="fuente_todo_texto">
             <table class="tabla1" style="text-align: justify;">                               
@@ -368,13 +386,52 @@
             <span class="fuente_cuadro_inferior"><span class="negrita">{{$T_documento_noti}} {{$NroIden_afiliado_noti}}</span></span><br>
             <span class="fuente_cuadro_inferior"><span class="negrita">Siniestro: {{$N_siniestro}}</span></span><br>
         </div>
-
+        <br>
+        <section>
+            <div class="fuente_todo_texto">
+                Para nosotros es importante saber si recibiste esta notificación para poder continuar 
+                con tu proceso. Firma esta carta y envíala al correo documentos.calificacion@proteccion.com.co.
+            </div>
+        </section>
+        <br>
+        <section>
+            <div class="fuente_todo_texto">
+                <b>Los siguientes campos son obligatorios, diligenciar fecha de firma en formato numérico (23/01/2000).</b>
+            </div>
+        </section>
+        <br>
+        <section>
+            <div class="fuente_todo_texto">
+                <b>Fecha de firma:</b> Día____ Mes____ Año_____
+            </div>
+        </section>
+        <br>
+        <section>
+            <div class="fuente_todo_texto">
+                <b>Nombre del afiliado:</b> _____________________________________________
+            </div>
+        </section>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <section>
+            <div class="fuente_todo_texto" style="text-align: center;">
+                ______________________________________                
+            </div>
+        </section>
+        <section>
+            <div class="fuente_todo_texto" style="text-align: center;">
+                <b>Firma y cédula del afiliado</b>
+            </div>
+        </section>
     </div>
     <script type="text/php">
         if ( isset($pdf) ) {
             $pdf->page_script('
                 $font = $fontMetrics->get_font("Arial, Helvetica, sans-serif", "normal");
-                $pdf->text(485, 50, "Página $PAGE_NUM de $PAGE_COUNT", $font, 9);
+                $pdf->text(45, 50, "Página $PAGE_NUM de $PAGE_COUNT", $font, 9);
             ');
         }
 	</script>

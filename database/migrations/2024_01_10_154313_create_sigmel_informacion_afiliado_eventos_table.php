@@ -44,6 +44,8 @@ return new class extends Migration
             $table->integer('Tipo_documento_benefi')->nullable();
             $table->string('Nro_identificacion_benefi', 25)->nullable();
             $table->text('Direccion_benefi')->nullable();
+            $table->text('Email_benefi')->nullable();
+            $table->text('Telefono_benefi')->nullable();
             $table->integer('Id_departamento_benefi')->nullable();
             $table->integer('Id_municipio_benefi')->nullable();
             $table->text('Medio_notificacion')->nullable();

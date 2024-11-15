@@ -81,7 +81,7 @@ return [
         ],
         'log_api' => [
             'driver' => 'daily',
-            'path' => storage_path('logs/seguimiento_juntas.log'),
+            'path' => storage_path('logs/log_api.log'),
             'level' => env('LOG_LEVEL', 'debug'),
             'days' => 10,
             'replace_placeholders' => true,

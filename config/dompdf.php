@@ -186,7 +186,13 @@ return array(
          * Used if no suitable fonts can be found. This must exist in the font folder.
          * @var string
          */
-        "default_font" => "serif",
+        "default_font" => "Microsoft New Tai Lue",
+
+        'fonts' => [
+            'Microsoft New Tai Lue' => [
+                'R' => 'microsoft-new-tai-lue-2.ttf',  // Regular
+            ]
+        ],
 
         /**
          * Image DPI setting

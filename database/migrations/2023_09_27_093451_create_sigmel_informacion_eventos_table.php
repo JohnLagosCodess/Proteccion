@@ -20,6 +20,8 @@ return new class extends Migration
             $table->date('F_evento')->nullable();
             $table->date('F_radicacion');
             $table->string('N_siniestro', 25)->nullable();
+            $table->integer('Activador');
+            $table->text('N_Radicado_HC');
             $table->text('Nombre_usuario');
             $table->date('F_registro');
         });

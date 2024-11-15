@@ -19,8 +19,21 @@ $(document).ready(function(){
         allowClear: false
     });
 
+    /* INICIALIZACIÓN DEL SELECT2 DE LISTADO DE Activador  */
+    $(".activador").select2({
+        placeholder: "Seleccione una opción",
+        allowClear: false
+    });
+
     /* INICIALIZACIÓN DEL SELECT2 DE LISTADO DE TIPO DE DOCUMENTO */
     $(".tipo_documento").select2({
+        placeholder: "Seleccione una opción",
+        allowClear: false
+    });
+
+    /* INICIALIZACIÓN DEL SELECT2 DE LISTADO DE TIPO DE DOCUMENTO APODERADO */
+    $(".tipo_doc_apoderado").select2({
+        width: "100%",
         placeholder: "Seleccione una opción",
         allowClear: false
     });
@@ -81,6 +94,21 @@ $(document).ready(function(){
         placeholder: "Seleccione una opción",
         allowClear: false
     });
+
+    /* INICIALIZACIÓN DEL SELECT2 DE LISTADO DE DEPARTAMENOS (Información del apoderado o reclamante) */
+    $(".departamento_apoderado").select2({
+        width: "100%",
+        placeholder: "Seleccione una opción",
+        allowClear: false
+    });
+
+    /* INICIALIZACIÓN DEL SELECT2 DE LISTADO DE MUNCIPIOS (Información del apoderado o reclamante) */
+    $(".ciudad_apoderado").select2({
+        width: "100%",
+        placeholder: "Seleccione una opción",
+        allowClear: false
+    });
+
 
     /* INICIALIZACIÓN DEL SELECT2 DE LISTADO DE TIPOS DE AFILIADO */
     $(".tipo_afiliado").select2({
@@ -297,6 +325,27 @@ $(document).ready(function(){
             }
         }
     });
+
+    // Listado activador
+    let datos_lista_activador = {
+        '_token': token,
+        'parametro' : "lista_activador"
+    };
+    $.ajax({
+        type:'POST',
+        url:'/cargarselectores',
+        data: datos_lista_activador,
+        success:function(data) {
+            // console.log(data);
+            $('#activador').empty();
+            $('#activador').append('<option value="" selected>Seleccione</option>');
+            let claves = Object.keys(data);
+            for (let i = 0; i < claves.length; i++) {
+                $('#activador').append('<option value="'+data[claves[i]]["Id_Parametro"]+'">'+data[claves[i]]["Nombre_parametro"]+'</option>');
+            }
+        }
+    });
+
     // listado tipos de documento
     let datos_lista_tipo_documento = {
         '_token': token,
@@ -316,6 +365,27 @@ $(document).ready(function(){
             }
         }
     });
+
+    // Listado tipos de documento apoderado
+    let datos_lista_tipo_documento_apoderado = {
+        '_token': token,
+        'parametro' : "lista_tipo_documento"
+    };
+    $.ajax({
+        type:'POST',
+        url:'/cargarselectores',
+        data: datos_lista_tipo_documento_apoderado,
+        success:function(data) {
+            // console.log(data);
+            $('#tipo_doc_apoderado').empty();
+            $('#tipo_doc_apoderado').append('<option value="" selected>Seleccione</option>');
+            let claves = Object.keys(data);
+            for (let i = 0; i < claves.length; i++) {
+                $('#tipo_doc_apoderado').append('<option value="'+data[claves[i]]["Id_Parametro"]+'">'+data[claves[i]]["Nombre_parametro"]+'</option>');
+            }
+        }
+    });
+
     // listado tipos de documento beneficiario
     let datos_lista_tipo_documento_benefi = {
         '_token': token,
@@ -499,6 +569,52 @@ $(document).ready(function(){
         });
     });
 
+
+    //  listado Departamentos (Información del apoderado o reclamante)
+    let datos_lista_departamentos_apoderado = {
+        '_token': token,
+        'parametro' : "departamentos_apoderado"
+    };
+    $.ajax({
+        type:'POST',
+        url:'/cargarselectores',
+        data: datos_lista_departamentos_apoderado,
+        success:function(data) {
+            // console.log(data);
+            $('#departamento_apoderado').empty();
+            $('#departamento_apoderado').append('<option value="" selected>Seleccione</option>');
+            let claves = Object.keys(data);
+            for (let i = 0; i < claves.length; i++) {
+                $('#departamento_apoderado').append('<option value="'+data[claves[i]]["Id_departamento"]+'">'+data[claves[i]]["Nombre_departamento"]+'</option>');
+            }
+        }
+    });
+
+    // listado municipios dependiendo del departamentos (Información del apoderado o reclamante)
+    $('#departamento_apoderado').change(function(){
+        $('#ciudad_apoderado').prop('disabled', false);
+        let id_departamento_apoderado = $(this).val();
+        let datos_lista_municipios_apoderado = {
+            '_token': token,
+            'parametro' : "municipios_apoderado",
+            'id_departamento_apoderado': id_departamento_apoderado
+        };
+        $.ajax({
+            type:'POST',
+            url:'/cargarselectores',
+            data: datos_lista_municipios_apoderado,
+            success:function(data) {
+                // console.log(data);
+                $('#ciudad_apoderado').empty();
+                $('#ciudad_apoderado').append('<option value="" selected>Seleccione</option>');
+                let claves = Object.keys(data);
+                for (let i = 0; i < claves.length; i++) {
+                    $('#ciudad_apoderado').append('<option value="'+data[claves[i]]["Id_municipios"]+'">'+data[claves[i]]["Nombre_municipio"]+'</option>');
+                }
+            }
+        });
+    });
+
     // listado tipo de afiliado
     let datos_lista_tipo_afiliado = {
         '_token': token,
@@ -518,6 +634,7 @@ $(document).ready(function(){
             }
         }
     });
+
     // lista eps
     let datos_lista_eps = {
         '_token': token,
@@ -1185,7 +1302,20 @@ $(document).ready(function(){
     });
 
 
-    /* Validación opción Otro/¿Cuál? del selector Tipo de afiliado y campos de afiliado o beneficario */
+    /*  creamos un array con los ids de la seección Información del Afiliado 
+        cuando el tipo de afiliado es Beneficiario 
+    */
+    var ids_seccion_info_afiliado = ['afi_tipo_documento', 
+        'afi_nro_identificacion', 
+        'afi_nombre_afiliado',
+        'afi_email_afiliado',
+        'afi_telefono_afiliado',
+        'afi_direccion_info_afiliado', 
+        'afi_departamento_info_afiliado',
+        'afi_municipio_info_afiliado'
+    ];
+
+    /* Validaciones del selector Tipo de afiliado y campos de afiliado o beneficario */
     $('#tipo_afiliado').change(function(){
         let opt_otro_afiliado = $('#tipo_afiliado option:selected').text();
         if (opt_otro_afiliado === "Otro/ ¿Cuál?") {
@@ -1195,20 +1325,36 @@ $(document).ready(function(){
             $(".columna_identificacion_afi_beni").addClass('d-none');
             $(".columna_tipo_documen_afi_beni").addClass('d-none');
             $(".columna_nombre_afi_beni").addClass('d-none');
+            $(".columna_email_afi_beni").addClass('d-none');
+            $(".columna_telefono_afi_beni").addClass('d-none');
             $(".columna_direccion_afi_beni").addClass('d-none');
             $(".columna_depar_afi_beni").addClass('d-none');
             $(".afi_columna_municipio_info_afiliado").addClass('d-none');
             $(".nom_afiliado").removeClass('d-none');
             // $('#otro_tipo_afiliado').prop('required', true);
+
+            /* Quitamos el required a los ids de la seección Información del Afiliado */
+            ids_seccion_info_afiliado.forEach(id => {
+                $('#' + id).prop('required', false);
+            });
+
         } else if (opt_otro_afiliado === "Beneficiario") { 
             $(".nom_afiliado").addClass('d-none');
             $(".nom_beneficiario").removeClass('d-none');
             $(".columna_identificacion_afi_beni").removeClass('d-none');
             $(".columna_tipo_documen_afi_beni").removeClass('d-none');
             $(".columna_nombre_afi_beni").removeClass('d-none');
+            $(".columna_email_afi_beni").removeClass('d-none');
+            $(".columna_telefono_afi_beni").removeClass('d-none');
             $(".columna_direccion_afi_beni").removeClass('d-none');
             $(".columna_depar_afi_beni").removeClass('d-none');
             $(".afi_columna_municipio_info_afiliado").removeClass('d-none');
+
+            /* Agregamos el required a los ids de la seección Información del Afiliado */
+            ids_seccion_info_afiliado.forEach(id => {
+                $('#' + id).prop('required', true);
+            });
+
         } else {
             $(".columna_otro_tipo_afiliado").slideUp('slow');
             $(".nom_beneficiario").addClass('d-none');
@@ -1216,13 +1362,20 @@ $(document).ready(function(){
             $(".columna_identificacion_afi_beni").addClass('d-none');
             $(".columna_tipo_documen_afi_beni").addClass('d-none');
             $(".columna_nombre_afi_beni").addClass('d-none');
+            $(".columna_email_afi_beni").addClass('d-none');
+            $(".columna_telefono_afi_beni").addClass('d-none');
             $(".columna_direccion_afi_beni").addClass('d-none');
             $(".columna_depar_afi_beni").addClass('d-none');
             $(".afi_columna_municipio_info_afiliado").addClass('d-none');
             $(".nom_afiliado").removeClass('d-none');
             // $('#otro_nivel_escolar').prop('required', false);
+
+            /* Quitamos el required a los ids de la seección Información del Afiliado */
+            ids_seccion_info_afiliado.forEach(id => {
+                $('#' + id).prop('required', false);
+            });
+
         }
-        // Campos del  formulario a mostrar
     });
 
     /* Validación opción Otro/¿Cual? del selector EPS */
@@ -1238,22 +1391,52 @@ $(document).ready(function(){
         }
     });
 
+    /*  creamos un array con los ids de la seección Información del apoderado o reclamante 
+        cuando el Apoderado es Si
+    */
+    var ids_seccion_info_apoderado_reclamante = ['tipo_doc_apoderado',
+        'nro_identificacion_apoderado',
+        'nombre_apoderado',
+        'email_apoderado',
+        'telefono_apoderado',
+        'direccion_apoderado',
+        'departamento_apoderado',
+        'ciudad_apoderado'
+    ];
+
     /* Validación opción Si del selector Apoderado */
     $('#apoderado').change(function(){
         let opt_apoderado = $('#apoderado').val();
         if (opt_apoderado === "Si") {
-            $(".columna_nombre_apoderado").removeClass('d-none');
-            $(".columna_nombre_apoderado").slideDown('slow');
-            // $('#nombre_apoderado').prop('required', true);
+            
+            $(".columna_tipo_doc_apoderado").removeClass('d-none');
             $(".columna_identificacion_apoderado").removeClass('d-none');
-            $(".columna_identificacion_apoderado").slideDown('slow');
-            // $('#nro_identificacion_apoderado').prop('required', true);
+            $(".columna_nombre_apoderado").removeClass('d-none');
+            $(".columna_email_apoderado").removeClass('d-none');
+            $(".columna_telefono_apoderado").removeClass('d-none');
+            $(".columna_direccion_apoderado").removeClass('d-none');
+            $(".columna_departamento_apoderado").removeClass('d-none');
+            $(".columna_ciudad_apoderado").removeClass('d-none');
+
+            /* Agregamos el required a los ids de la seección Información del apoderado o reclamante */
+            ids_seccion_info_apoderado_reclamante.forEach(id => {
+                $('#' + id).prop('required', true);
+            });
 
         } else {
-            $(".columna_nombre_apoderado").slideUp('slow');
-            // $('#nombre_apoderado').prop('required', true);
-            $(".columna_identificacion_apoderado").slideUp('slow');
-            // $('#nro_identificacion_apoderado').prop('required', true);
+            $(".columna_tipo_doc_apoderado").addClass('d-none');
+            $(".columna_identificacion_apoderado").addClass('d-none');
+            $(".columna_nombre_apoderado").addClass('d-none');
+            $(".columna_email_apoderado").addClass('d-none');
+            $(".columna_telefono_apoderado").addClass('d-none');
+            $(".columna_direccion_apoderado").addClass('d-none');
+            $(".columna_departamento_apoderado").addClass('d-none');
+            $(".columna_ciudad_apoderado").addClass('d-none');
+
+            /* Quitamos el required a los ids de la seección Información del apoderado o reclamante */
+            ids_seccion_info_apoderado_reclamante.forEach(id => {
+                $('#' + id).prop('required', false);
+            });
         }
     });
 
@@ -1413,24 +1596,37 @@ $(document).ready(function(){
                         $('#eps').val(data[claves_info_afiliado[i]]["Id_eps"]).change();
                         $('#afp').val(data[claves_info_afiliado[i]]["Id_afp"]).change();
                         $('#arl_info_afiliado').val(data[claves_info_afiliado[i]]["Id_arl"]).change();
-                        $('#apoderado').val(data[claves_info_afiliado[i]]["Apoderado"]).change();
-                        if (data[claves_info_afiliado[i]]["Apoderado"] == 'Si') {
-                            $('.columna_nombre_apoderado').removeClass('d-none');
-                            $('.columna_identificacion_apoderado').removeClass('d-none');
-                            $('#nombre_apoderado').val(data[claves_info_afiliado[i]]["Nombre_apoderado"]);
-                            $('#nro_identificacion_apoderado').val(data[claves_info_afiliado[i]]["Nro_identificacion_apoderado"]);
-                        }else{
-                            $('.columna_nombre_apoderado').addClass('d-none');
-                            $('.columna_identificacion_apoderado').addClass('d-none');
-                        }
-                        $('#afi_nombre_afiliado').val(data[claves_info_afiliado[i]]["Nombre_afiliado_benefi"]);
-                        $('#afi_direccion_info_afiliado').val(data[claves_info_afiliado[i]]["Direccion_benefi"]);
-                        $('#afi_nro_identificacion').val(data[claves_info_afiliado[i]]["Nro_identificacion_benefi"]);
                         $('#afi_tipo_documento').val(data[claves_info_afiliado[i]]["Tipo_documento_benefi"]).change();
+                        $('#afi_nro_identificacion').val(data[claves_info_afiliado[i]]["Nro_identificacion_benefi"]);
+                        $('#afi_nombre_afiliado').val(data[claves_info_afiliado[i]]["Nombre_afiliado_benefi"]);
+                        $('#afi_email_afiliado').val(data[claves_info_afiliado[i]]["Email_benefi"]);
+                        $('#afi_telefono_afiliado').val(data[claves_info_afiliado[i]]["Telefono_benefi"]);
+                        $('#afi_direccion_info_afiliado').val(data[claves_info_afiliado[i]]["Direccion_benefi"]);
                         $('#afi_departamento_info_afiliado').val(data[claves_info_afiliado[i]]["Id_departamento_benefi"]).change();
                         setTimeout(function(){
                             $('#afi_municipio_info_afiliado').val(data[claves_info_afiliado[i]]["Id_municipio_benefi"]).change().prop('disabled', false);
                         }, 100);
+
+                        $('#apoderado').val(data[claves_info_afiliado[i]]["Apoderado"]).change();
+                        if (data[claves_info_afiliado[i]]["Apoderado"] == 'Si') {
+
+                            $('#tipo_doc_apoderado').val(data[claves_info_afiliado[i]]["Tipo_documento_apoderado"]).change();
+                            $('#nro_identificacion_apoderado').val(data[claves_info_afiliado[i]]["Nro_identificacion_apoderado"]);
+                            $('#nombre_apoderado').val(data[claves_info_afiliado[i]]["Nombre_apoderado"]);
+                            $('#email_apoderado').val(data[claves_info_afiliado[i]]["Email_apoderado"]);
+                            $('#telefono_apoderado').val(data[claves_info_afiliado[i]]["Telefono_apoderado"]);
+                            $('#direccion_apoderado').val(data[claves_info_afiliado[i]]["Direccion_apoderado"]);
+                            $('#departamento_apoderado').val(data[claves_info_afiliado[i]]["Id_departamento_apoderado"]).change();
+                            setTimeout(function(){
+                                $('#ciudad_apoderado').val(data[claves_info_afiliado[i]]["Id_municipio_apoderado"]).change().prop('disabled', false);
+                            }, 100)
+
+                        }else{
+                            $('.columna_nombre_apoderado').addClass('d-none');
+                            $('.columna_identificacion_apoderado').addClass('d-none');
+                        }
+
+
                         $('#activo').val(data[claves_info_afiliado[i]]["Activo"]).change();
                         $('#medio_notificacion_afiliado').val(data[claves_info_afiliado[i]]["Medio_notificacion"]).change();
                     }
@@ -1458,14 +1654,22 @@ $(document).ready(function(){
                     $('#apoderado').val('').change();
                     $('.columna_nombre_apoderado').addClass('d-none');
                     $('.columna_identificacion_apoderado').addClass('d-none');
-                    $('#nombre_apoderado').val('');
-                    $('#afi_nombre_afiliado').val('');
-                    $('#afi_direccion_info_afiliado').val('');
-                    $('#afi_nro_identificacion').val('');
                     $('#afi_tipo_documento').val('').change();
+                    $('#afi_nro_identificacion').val('');
+                    $('#afi_nombre_afiliado').val('');
+                    $('#afi_email_afiliado').val('');
+                    $('#afi_telefono_afiliado').val('');
+                    $('#afi_direccion_info_afiliado').val('');
                     $('#afi_departamento_info_afiliado').val('').change();
                     $('#afi_municipio_info_afiliado').val('').change().prop('disabled', true);
+                    $('#tipo_doc_apoderado').val('').change();
                     $('#nro_identificacion_apoderado').val('');
+                    $('#nombre_apoderado').val('');
+                    $('#email_apoderado').val('');
+                    $('#telefono_apoderado').val('');
+                    $('#direccion_apoderado').val('');
+                    $('#departamento_apoderado').val('').change();
+                    $('#ciudad_apoderado').val('').change();
                     $('#activo').val('').change();
                     $('#medio_notificacion_afiliado').val('').change();
                 }

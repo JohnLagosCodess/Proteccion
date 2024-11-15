@@ -465,43 +465,6 @@
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div class="col-3 si_no_apoderado">
-                                                    <div class="form-group">
-                                                        <label for="apoderado" class="col-form-label">Apoderado</label>
-                                                        <select class="apoderado custom-select" name="apoderado" id="apoderado">
-                                                            <option value="{{$array_datos_info_afiliados[0]->Apoderado}}">{{$array_datos_info_afiliados[0]->Apoderado}}</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <?php 
-                                                $apoderados = $array_datos_info_afiliados[0]->Apoderado;
-                                                if($apoderados == 'Si' ): ?>
-                                                    <div class="col-3 columna_nombre_apoderado">
-                                                        <div class="form-group">
-                                                            <label for="nombre_apoderado" class="col-form-label">Nombre del apoderado</label>
-                                                            <input type="text" class="nombre_apoderado form-control" name="nombre_apoderado" id="nombre_apoderado" value="{{$array_datos_info_afiliados[0]->Nombre_apoderado}}">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-3 columna_identificacion_apoderado">
-                                                        <div class="form-group">
-                                                            <label for="nro_identificacion_apoderado" class="col-form-label">N° identificación apoderado</label>
-                                                            <input type="text" class="nro_identificacion_apoderado form-control" name="nro_identificacion_apoderado" id="nro_identificacion_apoderado" value="{{$array_datos_info_afiliados[0]->Nro_identificacion_apoderado}}">
-                                                        </div>
-                                                    </div>
-                                                <?php elseif ($apoderados == 'No' ): ?> 
-                                                    <div class="col-3 columna_nombre_apoderado d-none">
-                                                        <div class="form-group">
-                                                            <label for="nombre_apoderado" class="col-form-label">Nombre del apoderado</label>
-                                                            <input type="text" class="nombre_apoderado form-control" name="nombre_apoderado" id="nombre_apoderado" value="{{$array_datos_info_afiliados[0]->Nombre_apoderado}}">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-3 columna_identificacion_apoderado d-none">
-                                                        <div class="form-group">
-                                                            <label for="nro_identificacion_apoderado" class="col-form-label">N° identificación apoderado</label>
-                                                            <input type="text" class="nro_identificacion_apoderado form-control" name="nro_identificacion_apoderado" id="nro_identificacion_apoderado" value="{{$array_datos_info_afiliados[0]->Nro_identificacion_apoderado}}">
-                                                        </div>
-                                                    </div>
-                                                <?php endif ?>                                                                                                
                                                 <div class="col-3">
                                                     <div class="form-group">
                                                         <label for="activo" class="col-form-label">Activo <span style="color:red;">(*)</span></label>
@@ -533,11 +496,18 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-3 columna_identificacion_afi_beni d-none">
+                                                <div class="col-3 si_no_apoderado">
                                                     <div class="form-group">
-                                                        <label for="afi_nro_identificacion" class="col-form-label">N° de identificación afiliado<span style="color:red;">(*)</span></label>
-                                                        <input type="text" class="afi_nro_identificacion form-control" name="afi_nro_identificacion" id="afi_nro_identificacion" value="{{$array_datos_info_afiliados[0]->Nro_identificacion_benefi}}">
+                                                        <label for="apoderado" class="col-form-label">Apoderado</label>
+                                                        <select class="apoderado custom-select" name="apoderado" id="apoderado">
+                                                            <option value="{{$array_datos_info_afiliados[0]->Apoderado}}">{{$array_datos_info_afiliados[0]->Apoderado}}</option>
+                                                        </select>
                                                     </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-12 columna_identificacion_afi_beni d-none text-center">
+                                                    <p style="font-weight: bold;">Información del Afiliado</p>
                                                 </div>
                                                 <div class="col-3 columna_tipo_documen_afi_beni d-none">
                                                     <div class="form-group" style="display:flex; flex-direction:column;">
@@ -545,6 +515,12 @@
                                                         <select class="afi_tipo_documento custom-select" name="afi_tipo_documento" id="afi_tipo_documento">
                                                             <option value="{{$array_datos_info_afiliados[0]->Tipo_documento_benefi}}" selected>{{$array_datos_info_afiliados[0]->Nombre_documento_benefi}}</option>
                                                         </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-3 columna_identificacion_afi_beni d-none">
+                                                    <div class="form-group">
+                                                        <label for="afi_nro_identificacion" class="col-form-label">N° de identificación afiliado<span style="color:red;">(*)</span></label>
+                                                        <input type="text" class="afi_nro_identificacion form-control" name="afi_nro_identificacion" id="afi_nro_identificacion" value="{{$array_datos_info_afiliados[0]->Nro_identificacion_benefi}}">
                                                     </div>
                                                 </div>
                                                 <div class="col-3 afi_otro_documento d-none">
@@ -557,6 +533,21 @@
                                                     <div class="form-group">
                                                         <label for="afi_nombre_afiliado" class="col-form-label">Nombre afiliado<span style="color:red;">(*)</span></label>
                                                         <input type="text" class="afi_nombre_afiliado form-control" name="afi_nombre_afiliado" id="afi_nombre_afiliado" value="{{$array_datos_info_afiliados[0]->Nombre_afiliado_benefi}}">
+                                                    </div>
+                                                </div>
+                                                <div class="col-3 columna_email_afi_beni d-none">
+                                                    <div class="form-group">
+                                                        <label for="afi_email_afiliado" class="col-form-label">Email afiliado <span style="color:red;">(*)</span></label>
+                                                        <input type="email" class="afi_email_afiliado form-control" list="opciones_email_afi_beni" id="afi_email_afiliado" name="afi_email_afiliado" placeholder="Selecciona o escribe..." value="{{$array_datos_info_afiliados[0]->Email_benefi}}">
+                                                        <datalist id="opciones_email_afi_beni">
+                                                            <option value="sin@correo.com">
+                                                        </datalist>
+                                                    </div>
+                                                </div>
+                                                <div class="col-3 columna_telefono_afi_beni d-none">
+                                                    <div class="form-group">
+                                                        <label for="afi_telefono_afiliado" class="col-form-label">Teléfono afiliado <span style="color:red;">(*)</span></label>
+                                                        <input type="text" class="form-control" name="afi_telefono_afiliado" id="afi_telefono_afiliado" maxlength="20" value="{{$array_datos_info_afiliados[0]->Telefono_benefi}}">
                                                     </div>
                                                 </div>
                                                 <div class="col-3 columna_direccion_afi_beni d-none">
@@ -588,8 +579,92 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="row">
+                                                <?php 
+                                                $apoderados = $array_datos_info_afiliados[0]->Apoderado;
+                                                if($apoderados == 'Si' ): ?>
+                                                    <div class="col-12 columna_nombre_apoderado text-center">
+                                                        <p style="font-weight: bold;">Información del apoderado o reclamante</p>
+                                                    </div>
+                                                    <div class="col-3 columna_tipo_doc_apoderado d-none">
+                                                        <div class="form-group">
+                                                            <label for="tipo_doc_apoderado" class="col-form-label">Tipo de documento apoderado <span style="color:red;">(*)</span></label>
+                                                            <select class="tipo_doc_apoderado custom-select" name="tipo_doc_apoderado" id="tipo_doc_apoderado">
+                                                                <option value="{{$array_datos_info_afiliados[0]->Tipo_documento_apoderado}}" selected>{{$array_datos_info_afiliados[0]->Nombre_documento_apoderado}}</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-3 columna_identificacion_apoderado d-none">
+                                                        <div class="form-group">
+                                                            <label for="nro_identificacion_apoderado" class="col-form-label">N° identificación apoderado <span style="color:red;">(*)</span></label>
+                                                            <input type="text" class="nro_identificacion_apoderado form-control" name="nro_identificacion_apoderado" id="nro_identificacion_apoderado" value="{{$array_datos_info_afiliados[0]->Nro_identificacion_apoderado}}">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-3 columna_nombre_apoderado d-none">
+                                                        <div class="form-group">
+                                                            <label for="nombre_apoderado" class="col-form-label">Nombre del apoderado <span style="color:red;">(*)</span></label>
+                                                            <input type="text" class="nombre_apoderado form-control" name="nombre_apoderado" id="nombre_apoderado" value="{{$array_datos_info_afiliados[0]->Nombre_apoderado}}">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-3 columna_email_apoderado d-none">
+                                                        <div class="form-group">
+                                                            <label for="email_apoderado" class="col-form-label">Email apoderado <span style="color:red;">(*)</span></label>
+                                                            <input type="email" class="email_apoderado form-control" list="opciones_email_apoderado" id="email_apoderado" name="email_apoderado" placeholder="Selecciona o escribe..." value="{{$array_datos_info_afiliados[0]->Email_apoderado}}">
+                                                            <datalist id="opciones_email_apoderado">
+                                                                <option value="sin@correo.com">
+                                                            </datalist>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-3 columna_telefono_apoderado d-none">
+                                                        <div class="form-group">
+                                                            <label for="telefono_apoderado" class="col-form-label">Teléfono apoderado <span style="color:red;">(*)</span></label>
+                                                            <input type="text" class="form-control" name="telefono_apoderado" id="telefono_apoderado" value="{{$array_datos_info_afiliados[0]->Telefono_apoderado}}">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-3 columna_direccion_apoderado d-none">
+                                                        <div class="form-group">
+                                                            <label for="direccion_apoderado" class="col-form-label">Dirección apoderado <span style="color:red;">(*)</span></label>
+                                                            <input type="text" class="form-control" name="direccion_apoderado" id="direccion_apoderado" value="{{$array_datos_info_afiliados[0]->Direccion_apoderado}}">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-3 columna_departamento_apoderado d-none">
+                                                        <div class="form-group">
+                                                            <label for="departamento_apoderado" class="col-form-label">Departamento apoderado <span style="color:red;">(*)</span></label>
+                                                            <select class="departamento_apoderado custom-select" name="departamento_apoderado" id="departamento_apoderado">
+                                                                <option value="{{$array_datos_info_afiliados[0]->Id_departamento_apoderado}}" selected>{{$array_datos_info_afiliados[0]->Nombre_departamento_apoderado}}</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-3 columna_ciudad_apoderado d-none">
+                                                        <div class="form-group">
+                                                            <label for="ciudad_apoderado" class="col-form-label">Ciudad apoderado <span style="color:red;">(*)</span></label>
+                                                            <select class="ciudad_apoderado custom-select" name="ciudad_apoderado" id="ciudad_apoderado" disabled>
+                                                                <option value="{{$array_datos_info_afiliados[0]->Id_municipio_apoderado}}" selected>{{$array_datos_info_afiliados[0]->Nombre_municipio_apoderado}}</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                <?php elseif ($apoderados == 'No' ): ?>
+                                                    <div class="col-12 columna_nombre_apoderado d-none text-center">
+                                                        <p style="font-weight: bold;">Información del apoderado o reclamante</p>
+                                                    </div>
+                                                    <div class="col-3 columna_nombre_apoderado d-none">
+                                                        <div class="form-group">
+                                                            <label for="nombre_apoderado" class="col-form-label">Nombre del apoderado</label>
+                                                            <input type="text" class="nombre_apoderado form-control" name="nombre_apoderado" id="nombre_apoderado">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-3 columna_identificacion_apoderado d-none">
+                                                        <div class="form-group">
+                                                            <label for="nro_identificacion_apoderado" class="col-form-label">N° identificación apoderado</label>
+                                                            <input type="text" class="nro_identificacion_apoderado form-control" name="nro_identificacion_apoderado" id="nro_identificacion_apoderado">
+                                                        </div>
+                                                    </div>
+                                                <?php endif ?>         
+
+
+
+                                            </div>
                                         </div>
-                                        
                                     </div>
                                 </div>
                             </div>

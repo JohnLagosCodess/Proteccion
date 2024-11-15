@@ -5,40 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
-    
     <style>
         @page{
-            margin: 3cm 1.3cm 2.5cm 1.3cm;
+            margin: 2.5cm 1.3cm 2.5cm 1.3cm;
         }
         #header {
             position: fixed; 
-            top: -3cm;
+            /* esta ligado con el primer valor del margin */
+            top: -2.2cm;
             left: 0cm;
             width: 100%;
-            text-align: right; 
+            /* height: 100px; */
+            text-align: center; 
+            /* background: green; */
         }
         .codigo_qr{
-            position: absolute;
-            top: 5px; 
-            left: 5px; 
             max-width: 90px; 
             max-height: 70px; 
         }
         .logo_header{
-            position: absolute;
-            /* max-width: 40%; */
-            width: 150px;
+            max-width: 30%;
             height: auto;
-            left: 498px;
-            max-height: 80px; 
-        }
+            max-height: 60px; 
+        } 
         .tabla_header{
             width: 100%;
             font-family: sans-serif;
             font-size: 13px;
             text-align: center;            
         }
-
         .tabla_header td {
             border: none;
         }        
@@ -54,13 +49,14 @@
             justify-content: flex-end;
             align-items: center; 
         }
-        #footer .page{
-            text-align: center;
-        }
+        /* #footer .page{
+            text-align: right;
+        } */
 
         .footer_image{
             max-width: 100%;
-            max-height: 80%;
+            width: 100%;
+            max-height: 100;
             margin-bottom: -5px;
         }
         .footer_content {
@@ -68,7 +64,7 @@
             text-align: center;
         }
 
-        #footer .page:after { content: counter(page, upper-decimal); } 
+        /* #footer .page:after { content: counter(page, upper-decimal); }  */
 
         #footer2 { 
             position: fixed; 
@@ -154,14 +150,11 @@
     </style>
 </head>
 <body>
-    <div id="header">    
+    <div id="header">
         <table class="tabla_header">
             <tbody>
                 <tr>
-                    {{-- <td>
-                        <img src="data:image/png;base64,{{ base64_encode($codigoQR) }}" class="codigo_qr" alt="Código QR">
-                    </td> --}}
-                    <td>
+                    <td style="width:100%; text-align: right; margin-right: 30px;">
                         <?php if($logo_header == "Sin logo"): ?>
                             <p>No logo</p>
                         <?php else: ?>
@@ -172,12 +165,12 @@
                                 $imagenBase64_header = base64_encode($imagenData_header);
                             ?>
                             <img src="data:image/png;base64,{{ $imagenBase64_header }}" class="logo_header">
-                        <?php endif ?>                   
+                        <?php endif ?>  
                     </td>
                 </tr>
             </tbody>
-        </table>            
-    </div>
+        </table>
+    </div> 
     <div id="footer">        
         <?php if($footer == null): ?>
             <div style="text-align:center;">
@@ -190,10 +183,11 @@
                 $footer_data = file_get_contents($footer_path);
                 $footer_base64 = base64_encode($footer_data);
             ?>
-            <div class="footer_content">
-                <span style="color: #3C3C3C; margin-top:2px;">{{$nombre}} - {{$tipo_identificacion}} {{$num_identificacion}} - Siniestro: {{$N_siniestro}} </span>
-                <br>
-                <img src="data:image/png;base64,{{ $footer_base64 }}" class="footer_image">
+            <div class="footer_content" style="text-align:center;">
+                <span style="position: absolute; width: 100%; text-align:center; top: 10px; left:0px; color:#4D4D4D; font-weight:bold; font-size: 11px;">
+                    {{$nombre}} - {{$tipo_identificacion}} {{$num_identificacion}} - SINIESTRO: {{$N_siniestro}} 
+                </span>
+                <img src="data:image/png;base64,{{ $footer_base64 }}" class="footer_image" style="display: block;">
             </div>
         <?php endif ?>
     </div>
@@ -210,7 +204,7 @@
             <tbody>
                 <tr>
                     <td style="width:100%; display:table; justify-content: space-between;">
-                        <p class="fuente_todo_texto paddingTexto derecha"><span class="negrita">{{$ciudad}} {{$fecha}}</span></p>
+                        <p class="fuente_todo_texto paddingTexto derecha"><span class="negrita">{{$ciudad}}, {{$fecha}}</span></p>
                         <div>
                             <div class="fuente_todo_texto paddingTexto">
                                 <span class="negrita">Señor(a): </span><br>
@@ -230,7 +224,7 @@
             <tbody>
                 <tr>
                     <td class="fuente_todo_texto">
-                        <div style="margin-left: 3cm;"> 
+                        <div style="float:right;"> 
                             <span class="negrita">Asunto: {{$asunto}}</span><br> 
                             <span class="negrita">Ramo:</span> Previsionales<br>                        
                             {{$tipo_identificacion.' '.$num_identificacion}}<br>
@@ -240,43 +234,27 @@
                 </tr>
             </tbody>
         </table>
-        <section class="fuente_todo_texto">            
+        <section class="fuente_todo_texto" style="clear: both;"> 
+            <br>           
             <?php
-                if (!empty($cuerpo)) {                    
-                    $texto_modificado = $cuerpo;
+                $patron1 = '/\{\{\$nombre_afiliado\}\}/';
+                if (!empty($cuerpo) && preg_match($patron1, $cuerpo)) {                    
+                    $texto_modificado = str_replace('{{$nombre_afiliado}}', $Nombre_afiliado, $cuerpo);;
                     $cuerpo = $texto_modificado;
                 } else {
                     $cuerpo = "";
                 }                
                 print_r($cuerpo);
-                // $patron1 = '/\{\{\$Detalle_calificacion_Fbdp\}\}/';
-                // if (preg_match($patron1, $Cuerpo_comunicado_correspondencia)) {                    
-                //     $texto_modificado = str_replace('{{$Detalle_calificacion_Fbdp}}', $Detalle_calificacion_Fbdp, $Cuerpo_comunicado_correspondencia);
-                //     $Cuerpo_comunicado_correspondencia = $texto_modificado;
-                // } else {
-                //     $Cuerpo_comunicado_correspondencia = "";
-                // }                
-                // print_r($Cuerpo_comunicado_correspondencia);
             ?>
         </section>
+        <br>
         <section class="fuente_todo_texto">
             Cordialmente,
-            <div class="firma">
-                <?=$Firma_cliente?>
-            </div>
-        </section>   
-        <p class="fuente_todo_texto" style="text-align: justify;">
-            Departamento de medicina laboral <br>
-            Convenio Seguro de Vida Alfa <br>
-            Seguro Alfa S.A. y Seguro de Vida Alfa S.A.
-        </p>
-        {{-- <section>        
-            <div class="fuente_todo_texto">                
-                <b>Anexos:</b> {{$Anexos}}
-                <br>
-                <b>Elaboró:</b> {{$nombre_usuario}}
-            </div>
-        </section>           --}}
+            <br>
+            <br>
+            <strong>PROTECCIÓN S.A.</strong>
+        </section>  
+        <br><br> 
         <section class="fuente_todo_texto">
             <table class="tabla1" style="text-align: justify;">                               
                 @if (count($Agregar_copia) == 0)
@@ -353,13 +331,22 @@
             <span class="fuente_cuadro_inferior"><span class="negrita">{{$tipo_identificacion.' '.$num_identificacion}}</span></span><br>
             <span class="fuente_cuadro_inferior"><span class="negrita">Siniestro: {{$N_siniestro}}</span></span><br>
         </div>   
-            
+        <br>
+        <section>
+            <p class="fuente_todo_texto">Le invitamos a actualizar sus datos.</p>
+            <p class="fuente_todo_texto">Al autorizar sus datos, accedes a la oferta que tenemos para usted y para la construcción de su futuro a través del ahorro.</p>
+            <p class="fuente_todo_texto">Actualízalos en el siguiente QR:</p>
+        </section>
+        <br>
+        <div style="text-align:center;">
+            <img src="data:image/png;base64,{{ base64_encode($codigoQR) }}" alt="Código QR" >
+        </div>
     </div>
     <script type="text/php">
         if ( isset($pdf) ) {
             $pdf->page_script('
-                $font = $fontMetrics->get_font("Arial, Helvetica, sans-serif", "normal");
-                $pdf->text(485, 60, "Página $PAGE_NUM de $PAGE_COUNT", $font, 9);
+                $font = $fontMetrics->get_font("microsoft-new-tai-lue", "normal");
+                $pdf->text(530, 825, "Página $PAGE_NUM de $PAGE_COUNT", $font, 9);
             ');
         }
 	</script>

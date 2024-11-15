@@ -1748,6 +1748,20 @@ class AdministradorController extends Controller
             return response()->json($info_lista_tipo_eventos);
         }
 
+        /* TRAER LISTADO ACTIVADOR */
+        if($parametro == "lista_activador"){
+            $listado_tipo_activador = sigmel_lista_parametros::on('sigmel_gestiones')
+            ->select('Id_Parametro','Nombre_parametro')
+            ->where([
+                ['Tipo_lista', '=', 'Activador'],
+                ['Estado', '=', 'activo']
+            ])
+            ->get();
+
+            $info_listado_tipo_activador = json_decode(json_encode($listado_tipo_activador, true));
+            return response()->json($info_listado_tipo_activador);
+        }
+
         /* TRAER LISTADO DE TIPOS DE DOCUMENTO */
         if ($parametro == "lista_tipo_documento") {
             
@@ -1833,6 +1847,19 @@ class AdministradorController extends Controller
             return response()->json($info_lista_departamentos_info_afiliado);
         }
 
+        /* TRAER LISTADO DEPARTAMENTOS (Información del apoderado o reclamante) */
+        if ($parametro == "departamentos_apoderado") {
+            
+            $listado_departamentos_apoderado = sigmel_lista_departamentos_municipios::on('sigmel_gestiones')
+                ->select('Id_departamento', 'Nombre_departamento')
+                ->where('Estado', 'activo')
+                ->groupBy('Nombre_departamento')
+                ->get();
+            
+            $info_listado_departamentos_apoderado = json_decode(json_encode($listado_departamentos_apoderado, true));
+            return response()->json($info_listado_departamentos_apoderado);
+        }
+
         /* TRAER LISTADO MUNCIPIOS (INFORMACIÓN DE AFILIADO) */
         if($parametro == "municipios_info_afiliado"){
             $listado_municipios_info_afiliado = sigmel_lista_departamentos_municipios::on('sigmel_gestiones')
@@ -1845,6 +1872,20 @@ class AdministradorController extends Controller
 
             $info_lista_municpios_info_afiliado = json_decode(json_encode($listado_municipios_info_afiliado, true));
             return response()->json($info_lista_municpios_info_afiliado);
+        }
+
+        /* TRAER LISTADO MUNCIPIOS (Información del apoderado o reclamante) */
+        if($parametro == "municipios_apoderado"){
+            $listado_municipios_apoderado = sigmel_lista_departamentos_municipios::on('sigmel_gestiones')
+                ->select('Id_municipios', 'Nombre_municipio')
+                ->where([
+                    ['Id_departamento', '=', $request->id_departamento_apoderado],
+                    ['Estado', '=', 'activo']
+                ])
+                ->get();
+
+            $info_listado_municipios_apoderado = json_decode(json_encode($listado_municipios_apoderado, true));
+            return response()->json($info_listado_municipios_apoderado);
         }
         
         /* TRAER LISTADO DE TIPOS DE AFILIADO */
@@ -3184,6 +3225,8 @@ class AdministradorController extends Controller
             'F_evento' => $request->fecha_evento,
             'F_radicacion' => $request->fecha_radicacion,
             'N_siniestro' => $request->n_siniestro,
+            'Activador' => $request->activador,
+            'N_Radicado_HC' => $request->n_radicado_hc,
             'Nombre_usuario' => $nombre_usuario,
             'F_registro' => $date
         ];
@@ -3250,11 +3293,25 @@ class AdministradorController extends Controller
         // Evaluamos si selecciona la opción Si del selector Apoderado
         if ($request->apoderado == 'Si') {
             
-            $nombre_apoderado = $request->nombre_apoderado;
+            $tipo_doc_apoderado = $request->tipo_doc_apoderado;
             $nro_identificacion_apoderado = $request->nro_identificacion_apoderado;
+            $nombre_apoderado = $request->nombre_apoderado;
+            $email_apoderado = $request->email_apoderado;
+            $telefono_apoderado = $request->telefono_apoderado;
+            $direccion_apoderado = $request->direccion_apoderado;
+            $departamento_apoderado = $request->departamento_apoderado;
+            $ciudad_apoderado = $request->ciudad_apoderado;
+
+
         } else {
-            $nombre_apoderado = "";
+            $tipo_doc_apoderado = "";
             $nro_identificacion_apoderado = "";
+            $nombre_apoderado = "";
+            $email_apoderado = "";
+            $telefono_apoderado = "";
+            $direccion_apoderado = "";
+            $departamento_apoderado = "";
+            $ciudad_apoderado = "";
         }
         
         // Evaluamos si selecciona la opción de Exterior del selector Departamentos (Información afiliado)
@@ -3369,8 +3426,14 @@ class AdministradorController extends Controller
             'Estado_civil' => $estado_civil,
             'Nivel_escolar' => $nivel_escolar,
             'Apoderado'=> $request->apoderado,
-            'Nombre_apoderado' => $nombre_apoderado,
+            'Tipo_documento_apoderado' => $tipo_doc_apoderado,
             'Nro_identificacion_apoderado' => $nro_identificacion_apoderado,
+            'Nombre_apoderado' => $nombre_apoderado,
+            'Email_apoderado' => $email_apoderado,
+            'Telefono_apoderado' => $telefono_apoderado,
+            'Direccion_apoderado' => $direccion_apoderado,
+            'Id_departamento_apoderado' => $departamento_apoderado,
+            'Id_municipio_apoderado' => $ciudad_apoderado,
             'Id_dominancia' => $request->dominancia,
             'Direccion' => $request->direccion_info_afiliado,
             'Id_departamento' => $request->departamento_info_afiliado,
@@ -3383,6 +3446,8 @@ class AdministradorController extends Controller
             'Id_arl' => $id_arl,
             'Nombre_afiliado_benefi' => $request->afi_nombre_afiliado,
             'Direccion_benefi' => $request->afi_direccion_info_afiliado,
+            'Email_benefi' => $request->afi_email_afiliado,
+            'Telefono_benefi' => $request->afi_telefono_afiliado,
             'Nro_identificacion_benefi' => $request->afi_nro_identificacion,
             'Tipo_documento_benefi' => $request->afi_tipo_documento,
             'Id_departamento_benefi' => $request->afi_departamento_info_afiliado,
@@ -3867,14 +3932,22 @@ class AdministradorController extends Controller
             'siae.Id_arl',
             'slarl.Nombre_arl',
             'siae.Apoderado',
-            'siae.Nombre_apoderado',
+            'siae.Tipo_documento_apoderado',
             'siae.Nro_identificacion_apoderado',
+            'siae.Nombre_apoderado',
+            'siae.Email_apoderado',
+            'siae.Telefono_apoderado',
+            'siae.Direccion_apoderado',
+            'siae.Id_departamento_apoderado',
+            'siae.Id_municipio_apoderado',
             'siae.Activo',
             'siae.Medio_notificacion',
-            'siae.Nombre_afiliado_benefi',
             'siae.Tipo_documento_benefi',
             'slp_tipo_doc_benefi.Nombre_parametro as Nombre_documento_benefi',
             'siae.Nro_identificacion_benefi',
+            'siae.Nombre_afiliado_benefi',
+            'siae.Email_benefi',
+            'siae.Telefono_benefi',
             'siae.Direccion_benefi',
             'siae.Id_departamento_benefi',
             'siae.Id_municipio_benefi',
@@ -3977,6 +4050,7 @@ class AdministradorController extends Controller
         $array_datos_info_afiliados =DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_afiliado_eventos as siae')
         ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slp_tipo_doc', 'siae.Tipo_documento', '=', 'slp_tipo_doc.Id_Parametro')
         ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slp_tipo_doc_benefi', 'siae.Tipo_documento_benefi', '=', 'slp_tipo_doc_benefi.Id_Parametro')
+        ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slp_tipo_doc_apoderado', 'siae.Tipo_documento_apoderado', '=', 'slp_tipo_doc_apoderado.Id_Parametro')
         ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slp_tipo_genero', 'siae.Genero', '=', 'slp_tipo_genero.Id_Parametro')
         ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slp_estado_civil', 'siae.Estado_civil', '=', 'slp_estado_civil.Id_Parametro')
         ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slp_nivel_escolar', 'siae.Nivel_escolar', '=', 'slp_nivel_escolar.Id_Parametro')
@@ -3985,6 +4059,8 @@ class AdministradorController extends Controller
         ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm1', 'sldm1.Id_municipios', '=', 'siae.Id_municipio')
         ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm_benefi', 'sldm_benefi.Id_departamento', '=', 'siae.Id_departamento_benefi')
         ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm1_benefi', 'sldm1_benefi.Id_municipios', '=', 'siae.Id_municipio_benefi')
+        ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm_apoderado', 'sldm_apoderado.Id_departamento', '=', 'siae.Id_departamento_apoderado')
+        ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm1_apoderado', 'sldm1_apoderado.Id_municipios', '=', 'siae.Id_municipio_apoderado')
         ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slp_tipo_afiliado', 'siae.Tipo_afiliado', '=', 'slp_tipo_afiliado.Id_Parametro')
         ->leftJoin('sigmel_gestiones.sigmel_informacion_entidades as sle', 'sle.Id_Entidad', '=', 'siae.Id_eps')
         ->leftJoin('sigmel_gestiones.sigmel_informacion_entidades as sle1', 'sle1.Id_Entidad', '=', 'siae.Id_afp')
@@ -3997,10 +4073,12 @@ class AdministradorController extends Controller
         'sld.Id_dominancia', 'sld.Nombre_dominancia as Dominancia', 'siae.Id_departamento', 'sldm.Nombre_departamento',
         'siae.Id_municipio', 'sldm1.Nombre_municipio', 'siae.Ocupacion', 'siae.Tipo_afiliado', 'slp_tipo_afiliado.Nombre_parametro as Nombre_tipo_afiliado',
         'siae.Ibc', 'siae.Id_eps', 'sle.Nombre_entidad as Nombre_eps', 'siae.Id_afp', 'sle1.Nombre_entidad as Nombre_afp', 'siae.Id_arl', 'sle2.Nombre_entidad as Nombre_arl',
-        'siae.Entidad_conocimiento', 'siae.Id_afp_entidad_conocimiento', 'sle3.Nombre_entidad as Nombre_afp_conocimiento', 
-        'siae.Apoderado', 'siae.Nombre_apoderado', 'siae.Nro_identificacion_apoderado', 'siae.Activo', 'siae.Medio_notificacion','siae.Nombre_afiliado_benefi','Nro_identificacion_benefi',
-        'siae.Direccion_benefi','siae.Tipo_documento_benefi','siae.Id_departamento_benefi','siae.Id_municipio_benefi','slp_tipo_doc_benefi.Nombre_parametro as Nombre_documento_benefi',
-        'sldm_benefi.Nombre_departamento as Nombre_departamento_benefi', 'sldm1_benefi.Nombre_municipio as Nombre_municipio_benefi')
+        'siae.Entidad_conocimiento', 'siae.Id_afp_entidad_conocimiento', 'sle3.Nombre_entidad as Nombre_afp_conocimiento',
+        'siae.Tipo_documento_apoderado','slp_tipo_doc_apoderado.Nombre_parametro as Nombre_documento_apoderado',
+        'siae.Apoderado', 'siae.Nombre_apoderado','siae.Nro_identificacion_apoderado', 'siae.Email_apoderado','siae.Telefono_apoderado', 'siae.Direccion_apoderado', 'siae.Id_departamento_apoderado', 'siae.Id_municipio_apoderado', 
+        'sldm_apoderado.Nombre_departamento as Nombre_departamento_apoderado', 'sldm1_apoderado.Nombre_municipio as Nombre_municipio_apoderado',
+        'siae.Activo', 'siae.Medio_notificacion','siae.Nombre_afiliado_benefi','Nro_identificacion_benefi', 
+        'siae.Email_benefi','siae.Telefono_benefi','siae.Direccion_benefi','siae.Tipo_documento_benefi','siae.Id_departamento_benefi','siae.Id_municipio_benefi','slp_tipo_doc_benefi.Nombre_parametro as Nombre_documento_benefi','sldm_benefi.Nombre_departamento as Nombre_departamento_benefi', 'sldm1_benefi.Nombre_municipio as Nombre_municipio_benefi')
         ->where([['siae.ID_evento','=',$newIdEvento]])
         ->orderBy('siae.F_registro', 'desc')
         ->limit(1)
@@ -4050,7 +4128,7 @@ class AdministradorController extends Controller
         ->limit(1)
         ->get(); */          
 
-        $arraylistado_documentos = DB::select('CALL psrvistadocumentos(?,?)',array($newIdEvento, 0)); 
+        $arraylistado_documentos = DB::select('CALL psrvistadocumentos(?,?,?)',array($newIdEvento, 0, 0)); 
         
         return view('administrador.gestionInicialEdicion', compact('user', 'array_datos_info_evento', 'array_datos_info_afiliados',
         'array_datos_info_laboral', 'array_datos_info_pericial', 'arraylistado_documentos', 'Id_servicio'));
@@ -4702,7 +4780,7 @@ class AdministradorController extends Controller
         ->limit(1)
         ->get(); */          
 
-        $arraylistado_documentos = DB::select('CALL psrvistadocumentos(?,?)',array($newIdEvento, 0)); 
+        $arraylistado_documentos = DB::select('CALL psrvistadocumentos(?,?,?)',array($newIdEvento, 0,0)); 
         
         // return view('administrador.gestionInicialEdicion', compact('user', 'array_datos_info_evento', 'array_datos_info_afiliados',
         // 'array_datos_info_laboral', 'array_datos_info_pericial', 'arraylistado_documentos'))->with('evento_actualizado', 'Evento actualizado Sactifactoriamente');
@@ -5956,7 +6034,7 @@ class AdministradorController extends Controller
 
         $id_evento = $request->id_evento;
 
-        $arraylistado_documentos = DB::select('CALL psrvistadocumentos(?,?)',array($id_evento, 0));         
+        $arraylistado_documentos = DB::select('CALL psrvistadocumentos(?,?,?)',array($id_evento, 0,0));         
         return response()->json($arraylistado_documentos);
     }
 

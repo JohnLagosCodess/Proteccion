@@ -45,6 +45,8 @@ class sigmel_informacion_afiliado_eventos extends Model
     'Tipo_documento_benefi',
     'Nro_identificacion_benefi',
     'Direccion_benefi',
+    'Email_benefi',
+    'Telefono_benefi',
     'Id_departamento_benefi',
     'Id_municipio_benefi',
     'Medio_notificacion',
