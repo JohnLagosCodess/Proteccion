@@ -175,7 +175,7 @@
         
     </div>
 
-    @include('modals.alertaBuscador');
+    @include('modals.alertaBuscador')
 @stop
 @section('js')
     <script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>

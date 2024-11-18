@@ -1352,8 +1352,14 @@
                                         <input type="number" class="form-control" name="anexos" id="anexos">                                                
                                     @endif
                                 </div>
-                            </div>    
-                            <div class="col-5">
+                            </div>
+                            <div class="col-2">
+                                <div class="form-group">
+                                    <label for="forma_envio">Forma de Envío</label>
+                                    <select class="custom-select forma_envio" name="forma_envio" id="forma_envio"></select>
+                                </div>
+                            </div>
+                            <div class="col-3">
                                 <div class="form-group">
                                     <label for="elaboro">Elaboró</label>
                                     @if(!empty($array_comite_interdisciplinario[0]->Elaboro))
@@ -1363,7 +1369,7 @@
                                     @endif
                                 </div>
                             </div>
-                            <div class="col-5">
+                            <div class="col-4">
                                 <div class="form-group">
                                     <label for="reviso">Revisó<span style="color: red;">(*)</span></label>
                                     @if (!empty($array_comite_interdisciplinario[0]->Reviso))
@@ -1377,9 +1383,10 @@
                                         </select>                                                
                                     @endif                                            
                                 </div>
-                            </div>  
-                            <div class="col-1">
-                                <div class="form-group">
+                            </div>
+                            <div class="col-2">
+                                <div class="form-group" style="display:flex; align-items:center; justify-content:center;">
+                                    <br><br>
                                     <div class="custom-control custom-checkbox">
                                         @if (!empty($array_comite_interdisciplinario[0]->Firmar))
                                             <input class="dependencia_justificacion custom-control-input" type="checkbox" id="firmar" name="firmar" value="Firmar" checked>
@@ -1389,25 +1396,21 @@
                                         <label for="firmar" class="custom-control-label">Firmar</label>
                                     </div>
                                 </div>
-                            </div>  
+                            </div>
                             <div class="col-4">
                                 <div class="form-group">
                                     <label for="ciudad">Ciudad</label>
                                     @if(!empty($array_comite_interdisciplinario[0]->Ciudad))
                                         <input type="text" class="form-control" name="ciudad" id="ciudad" value="{{$array_comite_interdisciplinario[0]->Ciudad}}">                                                
                                     @else
-                                        <input type="text" class="form-control" name="ciudad" id="ciudad" value="Bogotá D.C.">                                                
+                                        <input type="text" class="form-control" name="ciudad" id="ciudad" value="Medellín">                                                
                                     @endif
                                 </div>
-                            </div>   
+                            </div>
                             <div class="col-4">
                                 <div class="form-group">
                                     <label for="f_correspondencia">Fecha</label>
-                                    @if(!empty($array_comite_interdisciplinario[0]->F_correspondecia))
-                                        <input type="date" class="form-control" name="f_correspondencia" id="f_correspondencia" value="{{$array_comite_interdisciplinario[0]->F_correspondecia}}" disabled>
-                                    @else
-                                        <input type="date" class="form-control" name="f_correspondencia" id="f_correspondencia" value="{{now()->format('Y-m-d')}}" disabled>
-                                    @endif
+                                        <input type="date" class="form-control" name="f_correspondencia" id="f_correspondencia" value="<?php if(!empty($array_comite_interdisciplinario[0]->F_visado_comite)){echo $array_comite_interdisciplinario[0]->F_visado_comite;}?>" disabled>
                                 </div>
                             </div>  
                             <div class="col-4"> 
@@ -1419,7 +1422,7 @@
                                         <input type="text" class="form-control" name="radicado" id="radicado" value="{{$consecutivo}}" disabled> 
                                     @endif
                                 </div>
-                            </div>                                                                                      
+                            </div>
                         </div>                                
                         <div class="row">
                             <div class="col-12">

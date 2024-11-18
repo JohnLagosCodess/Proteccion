@@ -240,6 +240,25 @@
                                                     <input type="text" class="n_siniestro form-control" name="n_siniestro" id="n_siniestro" maxlength="25" value="{{$array_datos_info_evento[0]->N_siniestro}}">
                                                 </div>
                                             </div>
+                                            <div class="col-sm-3">
+                                                <div class="form-group">
+                                                    <label for="activador" class="col-form-label">Activador <span style="color:red;">(*)</span></label>
+                                                    <select class="custom-select activador" name="activador" id="activador" required>
+                                                        <?php if(!empty($array_datos_info_evento[0]->Activador)):?>
+                                                            <option value="{{$array_datos_info_evento[0]->Activador}}" selected>{{$array_datos_info_evento[0]->Nombre_activador}}</option>
+                                                        <?php else:?>
+                                                            <option value="">Seleccione una opción</option>
+                                                        <?php endif?>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <div class="form-group">
+                                                    <label for="n_radicado_hc" class="col-form-label">N° de radicado HC <span style="color:red;">(*)</span></label>
+                                                    {{-- {{$array_datos_info_evento[0]->N_Radicado_HC}} --}}
+                                                    <input type="text" class="form-control" name="n_radicado_hc" id="n_radicado_hc" value="<?php if(!empty($array_datos_info_evento[0]->N_Radicado_HC)){echo $array_datos_info_evento[0]->N_Radicado_HC;}?>" required>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -513,14 +532,16 @@
                                                     <div class="form-group" style="display:flex; flex-direction:column;">
                                                         <label for="afi_tipo_documento" class="col-form-label">Tipo de documento afiliado<span style="color:red;">(*)</span></label>
                                                         <select class="afi_tipo_documento custom-select" name="afi_tipo_documento" id="afi_tipo_documento">
-                                                            <option value="{{$array_datos_info_afiliados[0]->Tipo_documento_benefi}}" selected>{{$array_datos_info_afiliados[0]->Nombre_documento_benefi}}</option>
+                                                            <?php if(!empty($array_datos_info_afiliados[0]->Tipo_documento_benefi)):?>
+                                                                <option value="{{$array_datos_info_afiliados[0]->Tipo_documento_benefi}}" selected>{{$array_datos_info_afiliados[0]->Nombre_documento_benefi}}</option>
+                                                            <?php endif?>
                                                         </select>
                                                     </div>
                                                 </div>
                                                 <div class="col-3 columna_identificacion_afi_beni d-none">
                                                     <div class="form-group">
                                                         <label for="afi_nro_identificacion" class="col-form-label">N° de identificación afiliado<span style="color:red;">(*)</span></label>
-                                                        <input type="text" class="afi_nro_identificacion form-control" name="afi_nro_identificacion" id="afi_nro_identificacion" value="{{$array_datos_info_afiliados[0]->Nro_identificacion_benefi}}">
+                                                        <input type="text" class="afi_nro_identificacion form-control" name="afi_nro_identificacion" id="afi_nro_identificacion" value="<?php if(!empty($array_datos_info_afiliados[0]->Nro_identificacion_benefi)){echo $array_datos_info_afiliados[0]->Nro_identificacion_benefi;}?>">
                                                     </div>
                                                 </div>
                                                 <div class="col-3 afi_otro_documento d-none">
@@ -532,13 +553,13 @@
                                                 <div class="col-3 columna_nombre_afi_beni d-none">
                                                     <div class="form-group">
                                                         <label for="afi_nombre_afiliado" class="col-form-label">Nombre afiliado<span style="color:red;">(*)</span></label>
-                                                        <input type="text" class="afi_nombre_afiliado form-control" name="afi_nombre_afiliado" id="afi_nombre_afiliado" value="{{$array_datos_info_afiliados[0]->Nombre_afiliado_benefi}}">
+                                                        <input type="text" class="afi_nombre_afiliado form-control" name="afi_nombre_afiliado" id="afi_nombre_afiliado" value="<?php if(!empty($array_datos_info_afiliados[0]->Nombre_afiliado_benefi)){echo $array_datos_info_afiliados[0]->Nombre_afiliado_benefi;}?>">
                                                     </div>
                                                 </div>
                                                 <div class="col-3 columna_email_afi_beni d-none">
                                                     <div class="form-group">
                                                         <label for="afi_email_afiliado" class="col-form-label">Email afiliado <span style="color:red;">(*)</span></label>
-                                                        <input type="email" class="afi_email_afiliado form-control" list="opciones_email_afi_beni" id="afi_email_afiliado" name="afi_email_afiliado" placeholder="Selecciona o escribe..." value="{{$array_datos_info_afiliados[0]->Email_benefi}}">
+                                                        <input type="email" class="afi_email_afiliado form-control" list="opciones_email_afi_beni" id="afi_email_afiliado" name="afi_email_afiliado" placeholder="Selecciona o escribe..." value="<?php if(!empty($array_datos_info_afiliados[0]->Email_benefi)){echo $array_datos_info_afiliados[0]->Email_benefi;}?>">
                                                         <datalist id="opciones_email_afi_beni">
                                                             <option value="sin@correo.com">
                                                         </datalist>
@@ -547,20 +568,22 @@
                                                 <div class="col-3 columna_telefono_afi_beni d-none">
                                                     <div class="form-group">
                                                         <label for="afi_telefono_afiliado" class="col-form-label">Teléfono afiliado <span style="color:red;">(*)</span></label>
-                                                        <input type="text" class="form-control" name="afi_telefono_afiliado" id="afi_telefono_afiliado" maxlength="20" value="{{$array_datos_info_afiliados[0]->Telefono_benefi}}">
+                                                        <input type="text" class="form-control" name="afi_telefono_afiliado" id="afi_telefono_afiliado" maxlength="20" value="<?php if(!empty($array_datos_info_afiliados[0]->Telefono_benefi)){echo $array_datos_info_afiliados[0]->Telefono_benefi;}?>">
                                                     </div>
                                                 </div>
                                                 <div class="col-3 columna_direccion_afi_beni d-none">
                                                     <div class="form-group">
                                                         <label for="afi_direccion_info_afiliado" class="col-form-label">Dirección afiliado<span style="color:red;">(*)</span></label>
-                                                        <input type="text" class="afi_direccion_info_afiliado form-control" name="afi_direccion_info_afiliado" id="afi_direccion_info_afiliado" value="{{$array_datos_info_afiliados[0]->Direccion_benefi}}">
+                                                        <input type="text" class="afi_direccion_info_afiliado form-control" name="afi_direccion_info_afiliado" id="afi_direccion_info_afiliado" value="<?php if(!empty($array_datos_info_afiliados[0]->Direccion_benefi)){echo $array_datos_info_afiliados[0]->Direccion_benefi;}?>">
                                                     </div>
                                                 </div>
                                                 <div class="col-3 columna_depar_afi_beni d-none">
                                                     <div class="form-group" style="display:flex; flex-direction:column;">
                                                         <label for="afi_departamento_info_afiliado" class="col-form-label">Departamento afiliado<span style="color:red;">(*)</span></label>
                                                         <select class="afi_departamento_info_afiliado custom-select" name="afi_departamento_info_afiliado" id="afi_departamento_info_afiliado">
-                                                            <option value="{{$array_datos_info_afiliados[0]->Id_departamento_benefi}}" selected>{{$array_datos_info_afiliados[0]->Nombre_departamento_benefi}}</option>
+                                                            <?php if(!empty($array_datos_info_afiliados[0]->Id_departamento_benefi)):?>
+                                                                <option value="{{$array_datos_info_afiliados[0]->Id_departamento_benefi}}" selected>{{$array_datos_info_afiliados[0]->Nombre_departamento_benefi}}</option>
+                                                            <?php endif?>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -568,7 +591,9 @@
                                                     <div class="form-group" style="display:flex; flex-direction:column;">
                                                         <label for="afi_municipio_info_afiliado" class="col-form-label">Ciudad afiliado<span style="color:red;">(*)</span></label>
                                                         <select class="afi_municipio_info_afiliado custom-select" name="afi_municipio_info_afiliado" id="afi_municipio_info_afiliado" disabled>
-                                                            <option value="{{$array_datos_info_afiliados[0]->Id_municipio_benefi}}" selected>{{$array_datos_info_afiliados[0]->Nombre_municipio_benefi}}</option>
+                                                            <?php if(!empty($array_datos_info_afiliados[0]->Id_municipio_benefi)):?>
+                                                                <option value="{{$array_datos_info_afiliados[0]->Id_municipio_benefi}}" selected>{{$array_datos_info_afiliados[0]->Nombre_municipio_benefi}}</option>
+                                                            <?php endif?>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -590,26 +615,28 @@
                                                         <div class="form-group">
                                                             <label for="tipo_doc_apoderado" class="col-form-label">Tipo de documento apoderado <span style="color:red;">(*)</span></label>
                                                             <select class="tipo_doc_apoderado custom-select" name="tipo_doc_apoderado" id="tipo_doc_apoderado">
-                                                                <option value="{{$array_datos_info_afiliados[0]->Tipo_documento_apoderado}}" selected>{{$array_datos_info_afiliados[0]->Nombre_documento_apoderado}}</option>
+                                                                <?php if(!empty($array_datos_info_afiliados[0]->Tipo_documento_apoderado)):?>
+                                                                    <option value="{{$array_datos_info_afiliados[0]->Tipo_documento_apoderado}}" selected>{{$array_datos_info_afiliados[0]->Nombre_documento_apoderado}}</option>
+                                                                <?php endif?>
                                                             </select>
                                                         </div>
                                                     </div>
                                                     <div class="col-3 columna_identificacion_apoderado d-none">
                                                         <div class="form-group">
                                                             <label for="nro_identificacion_apoderado" class="col-form-label">N° identificación apoderado <span style="color:red;">(*)</span></label>
-                                                            <input type="text" class="nro_identificacion_apoderado form-control" name="nro_identificacion_apoderado" id="nro_identificacion_apoderado" value="{{$array_datos_info_afiliados[0]->Nro_identificacion_apoderado}}">
+                                                            <input type="text" class="nro_identificacion_apoderado form-control" name="nro_identificacion_apoderado" id="nro_identificacion_apoderado" value="<?php if(!empty($array_datos_info_afiliados[0]->Nro_identificacion_apoderado)){echo $array_datos_info_afiliados[0]->Nro_identificacion_apoderado;}?>">
                                                         </div>
                                                     </div>
                                                     <div class="col-3 columna_nombre_apoderado d-none">
                                                         <div class="form-group">
                                                             <label for="nombre_apoderado" class="col-form-label">Nombre del apoderado <span style="color:red;">(*)</span></label>
-                                                            <input type="text" class="nombre_apoderado form-control" name="nombre_apoderado" id="nombre_apoderado" value="{{$array_datos_info_afiliados[0]->Nombre_apoderado}}">
+                                                            <input type="text" class="nombre_apoderado form-control" name="nombre_apoderado" id="nombre_apoderado" value="<?php if(!empty($array_datos_info_afiliados[0]->Nombre_apoderado)){echo $array_datos_info_afiliados[0]->Nombre_apoderado;}?>">
                                                         </div>
                                                     </div>
                                                     <div class="col-3 columna_email_apoderado d-none">
                                                         <div class="form-group">
                                                             <label for="email_apoderado" class="col-form-label">Email apoderado <span style="color:red;">(*)</span></label>
-                                                            <input type="email" class="email_apoderado form-control" list="opciones_email_apoderado" id="email_apoderado" name="email_apoderado" placeholder="Selecciona o escribe..." value="{{$array_datos_info_afiliados[0]->Email_apoderado}}">
+                                                            <input type="email" class="email_apoderado form-control" list="opciones_email_apoderado" id="email_apoderado" name="email_apoderado" placeholder="Selecciona o escribe..." value="<?php if(!empty($array_datos_info_afiliados[0]->Email_apoderado)){echo $array_datos_info_afiliados[0]->Email_apoderado;}?>">
                                                             <datalist id="opciones_email_apoderado">
                                                                 <option value="sin@correo.com">
                                                             </datalist>
@@ -618,20 +645,22 @@
                                                     <div class="col-3 columna_telefono_apoderado d-none">
                                                         <div class="form-group">
                                                             <label for="telefono_apoderado" class="col-form-label">Teléfono apoderado <span style="color:red;">(*)</span></label>
-                                                            <input type="text" class="form-control" name="telefono_apoderado" id="telefono_apoderado" value="{{$array_datos_info_afiliados[0]->Telefono_apoderado}}">
+                                                            <input type="text" class="form-control" name="telefono_apoderado" id="telefono_apoderado" value="<?php if(!empty($array_datos_info_afiliados[0]->Telefono_apoderado)){echo $array_datos_info_afiliados[0]->Telefono_apoderado;}?>">
                                                         </div>
                                                     </div>
                                                     <div class="col-3 columna_direccion_apoderado d-none">
                                                         <div class="form-group">
                                                             <label for="direccion_apoderado" class="col-form-label">Dirección apoderado <span style="color:red;">(*)</span></label>
-                                                            <input type="text" class="form-control" name="direccion_apoderado" id="direccion_apoderado" value="{{$array_datos_info_afiliados[0]->Direccion_apoderado}}">
+                                                            <input type="text" class="form-control" name="direccion_apoderado" id="direccion_apoderado" value="<?php if(!empty($array_datos_info_afiliados[0]->Direccion_apoderado)){echo $array_datos_info_afiliados[0]->Direccion_apoderado;}?>">
                                                         </div>
                                                     </div>
                                                     <div class="col-3 columna_departamento_apoderado d-none">
                                                         <div class="form-group">
                                                             <label for="departamento_apoderado" class="col-form-label">Departamento apoderado <span style="color:red;">(*)</span></label>
                                                             <select class="departamento_apoderado custom-select" name="departamento_apoderado" id="departamento_apoderado">
-                                                                <option value="{{$array_datos_info_afiliados[0]->Id_departamento_apoderado}}" selected>{{$array_datos_info_afiliados[0]->Nombre_departamento_apoderado}}</option>
+                                                                <?php if(!empty($array_datos_info_afiliados[0]->Id_departamento_apoderado)):?>
+                                                                    <option value="{{$array_datos_info_afiliados[0]->Id_departamento_apoderado}}" selected>{{$array_datos_info_afiliados[0]->Nombre_departamento_apoderado}}</option>
+                                                                <?php endif?>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -639,7 +668,9 @@
                                                         <div class="form-group">
                                                             <label for="ciudad_apoderado" class="col-form-label">Ciudad apoderado <span style="color:red;">(*)</span></label>
                                                             <select class="ciudad_apoderado custom-select" name="ciudad_apoderado" id="ciudad_apoderado" disabled>
-                                                                <option value="{{$array_datos_info_afiliados[0]->Id_municipio_apoderado}}" selected>{{$array_datos_info_afiliados[0]->Nombre_municipio_apoderado}}</option>
+                                                                <?php if(!empty($array_datos_info_afiliados[0]->Id_municipio_apoderado)):?>
+                                                                    <option value="{{$array_datos_info_afiliados[0]->Id_municipio_apoderado}}" selected>{{$array_datos_info_afiliados[0]->Nombre_municipio_apoderado}}</option>
+                                                                <?php endif?>
                                                             </select>
                                                         </div>
                                                     </div>

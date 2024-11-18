@@ -64,18 +64,16 @@
             text-align: center;
         }
 
-        /* #footer .page:after { content: counter(page, upper-decimal); }  */
-
         #footer2 { 
             position: fixed; 
-            left: -20px; 
+            left: 20px; 
             right: 0px; 
             width: 0px; 
             height: 0px; 
             color:black; 
             background-color: white; 
             transform: rotate(0deg); 
-            top:300px;
+            top:450px;
         }
         .logo_footer{
             width: auto;
@@ -174,7 +172,7 @@
     <div id="footer">        
         <?php if($footer == null): ?>
             <div style="text-align:center;">
-                <span style="color: #3C3C3C; margin-top:2px;">{{$nombre}} - {{$tipo_identificacion}} {{$num_identificacion}} - Siniestro: {{$N_siniestro}} </span>
+                <span style="color: #4D4D4D; margin-top:2px;">{{$Nombre_destinatario}} - {{$T_documento_destinatario}} {{$N_documento_destinatario}} - Siniestro: {{$N_siniestro}} </span>
             </div>
         <?php else: ?>
             <?php 
@@ -185,7 +183,7 @@
             ?>
             <div class="footer_content" style="text-align:center;">
                 <span style="position: absolute; width: 100%; text-align:center; top: 10px; left:0px; color:#4D4D4D; font-weight:bold; font-size: 11px;">
-                    {{$nombre}} - {{$tipo_identificacion}} {{$num_identificacion}} - SINIESTRO: {{$N_siniestro}} 
+                    {{$Nombre_destinatario}} - {{$T_documento_destinatario}} {{$N_documento_destinatario}} - SINIESTRO: {{$N_siniestro}} 
                 </span>
                 <img src="data:image/png;base64,{{ $footer_base64 }}" class="footer_image" style="display: block;">
             </div>
@@ -208,12 +206,12 @@
                         <div>
                             <div class="fuente_todo_texto paddingTexto">
                                 <span class="negrita">Señor(a): </span><br>
-                                {{$nombre}}
+                                <span class="negrita">{{$Nombre_destinatario}}</span>
                             </div>
-                            <div class="fuente_todo_texto paddingTexto">{{$email_destinatario}}</div>
-                            <div class="fuente_todo_texto paddingTexto">{{$direccion}}</div>
-                            <div class="fuente_todo_texto paddingTexto">{{$telefono}}</div>
-                            <div class="fuente_todo_texto paddingTexto">{{$municipio.' - '.$departamento}}</div>
+                            <div class="fuente_todo_texto paddingTexto">{{$Email_destinatario}}</div>
+                            <div class="fuente_todo_texto paddingTexto">{{$Direccion_destinatario}}</div>
+                            <div class="fuente_todo_texto paddingTexto">{{$Telefono_destinatario}}</div>
+                            <div class="fuente_todo_texto paddingTexto">{{$Ciudad_destinatario.' - '.$Departamento_destinatario}}</div>
                         </div>   
                     </td>
                 </tr>
@@ -224,11 +222,15 @@
             <tbody>
                 <tr>
                     <td class="fuente_todo_texto">
-                        <div style="float:right;"> 
-                            <span class="negrita">Asunto: {{$asunto}}</span><br> 
-                            <span class="negrita">Ramo:</span> Previsionales<br>                        
-                            {{$tipo_identificacion.' '.$num_identificacion}}<br>
-                            <span class="negrita">Siniestro: </span>{{$N_siniestro}}
+                        <div style="float:right; text-align: right;"> 
+                            <span class="negrita">Asunto: {{$asunto}}</span><br>
+                            @if($Tipo_afiliado === 27)
+                                <span class="negrita">Beneficiario:</span> {{$Nombre_beneficiario}} {{$T_documento_beneficiario}} {{$N_documento_beneficiario}}<br>
+                                <span class="negrita">Afiliado:</span> {{$Nombre_afiliado}} {{$T_documento_afiliado}} {{$N_documento_afiliado}}<br>
+                            @endif
+                            @if($Tipo_afiliado === 26 || $Tipo_afiliado === 28 || $Tipo_afiliado === 29) 
+                                <span class="negrita">Afiliado:</span> {{$Nombre_afiliado}} {{$T_documento_afiliado}} {{$N_documento_afiliado}}<br>
+                            @endif
                         </div>
                     </td>
                 </tr>
@@ -239,7 +241,7 @@
             <?php
                 $patron1 = '/\{\{\$nombre_afiliado\}\}/';
                 if (!empty($cuerpo) && preg_match($patron1, $cuerpo)) {                    
-                    $texto_modificado = str_replace('{{$nombre_afiliado}}', $Nombre_afiliado, $cuerpo);;
+                    $texto_modificado = str_replace('{{$nombre_afiliado}}', $Nombre_destinatario, $cuerpo);;
                     $cuerpo = $texto_modificado;
                 } else {
                     $cuerpo = "";
@@ -247,14 +249,13 @@
                 print_r($cuerpo);
             ?>
         </section>
-        <br>
         <section class="fuente_todo_texto">
             Cordialmente,
             <br>
             <br>
             <strong>PROTECCIÓN S.A.</strong>
         </section>  
-        <br><br> 
+        <br>
         <section class="fuente_todo_texto">
             <table class="tabla1" style="text-align: justify;">                               
                 @if (count($Agregar_copia) == 0)
@@ -328,7 +329,7 @@
         <br>
         <div class="cuadro fuente_cuadro_inferior" style="margin: 0 auto">
             <span class="fuente_cuadro_inferior"><span class="negrita">Nro. Radicado: <br>{{$nro_radicado}}</span></span><br>
-            <span class="fuente_cuadro_inferior"><span class="negrita">{{$tipo_identificacion.' '.$num_identificacion}}</span></span><br>
+            <span class="fuente_cuadro_inferior"><span class="negrita">{{$T_documento_destinatario.' '.$N_documento_destinatario}}</span></span><br>
             <span class="fuente_cuadro_inferior"><span class="negrita">Siniestro: {{$N_siniestro}}</span></span><br>
         </div>   
         <br>

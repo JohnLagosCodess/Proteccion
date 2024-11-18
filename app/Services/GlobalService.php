@@ -486,7 +486,7 @@ class GlobalService
         return $resultado;
     }
     /**
-        * Retorna información del afiliado.
+        * Retorna información del afiliado, con  el fin de saber si es apoderado o no.
         * 
         * @param string $n_identificacion Necesario para determinar el afiliado al que se hace referencia.
         *
@@ -494,12 +494,58 @@ class GlobalService
         *
         * @return Collection | null Devuelve una colección con la información y si no devuelve null
     */
-    public function retornarInformaciónAfiliado($n_identificacion, $id_evento){
+    public function retornarInformacionTablaAfiliados($n_identificacion, $id_evento){
         return DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_afiliado_eventos as siae')
-            ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm', 'siae.Id_departamento', '=', 'sldm.Id_departamento')
-            ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm2', 'siae.Id_municipio', '=', 'sldm2.Id_municipios')
-            ->select('siae.*','sldm.Nombre_departamento as Nombre_ciudad', 'sldm2.Nombre_municipio')
+            ->select('siae.*')
             ->where([['siae.Nro_identificacion', $n_identificacion],['siae.ID_evento', $id_evento]])
             ->get();
+    }
+    /**
+        * Retorna información del afiliado, con  el fin de saber si es apoderado o no.
+        * 
+        * @param string $n_identificacion Necesario para determinar el afiliado al que se hace referencia.
+        *
+        * @param string $id_evento Necesario para saber a que evento en especifico hace referencia, ya que un afiliado puede estar enlazado a varios eventos.
+        *
+        * @param string $apoderado Bandera que nos indica si el afiliado cuenta con apoderado PBS080.
+        *
+        * @return Collection | null Devuelve una colección con la información y si no devuelve null
+    */
+    public function retornarInformacionAfiliados($n_identificacion, $id_evento, $apoderado=false, $beneficiario=false){
+        // Inicia la consulta base
+        $query = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_afiliado_eventos as siae');
+        //Si el afiliado cuenta con apoderado, traemos la información del apoderado
+        if ($apoderado) {
+            $query->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm', 'siae.Id_departamento_apoderado', '=', 'sldm.Id_departamento')
+                ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm2', 'siae.Id_municipio_apoderado', '=', 'sldm2.Id_municipios');
+        } else {
+            $query->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm', 'siae.Id_departamento', '=', 'sldm.Id_departamento')
+                ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm2', 'siae.Id_municipio', '=', 'sldm2.Id_municipios');
+        }
+        $query->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slp','siae.Tipo_documento_apoderado','slp.Id_Parametro')
+            ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slp2','siae.Tipo_documento','slp2.Id_Parametro')
+            ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slp3','siae.Tipo_documento_benefi','slp3.Id_Parametro')
+            ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm3','siae.Id_departamento_benefi','sldm3.Id_departamento')
+            ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm4','siae.Id_municipio_benefi','sldm4.Id_municipios')
+            ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm5', 'siae.Id_departamento', '=', 'sldm5.Id_departamento')
+            ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm6', 'siae.Id_municipio', '=', 'sldm6.Id_municipios');;
+        $query->select(
+            'siae.*',
+            'sldm.Nombre_departamento as Departamento_destinatario',
+            'sldm2.Nombre_municipio as Ciudad_destinatario',
+            'sldm3.Nombre_departamento as Departamento_afiliado', //Este es el departamento del afiliado cuando el tipo de afiliado es beneficiario
+            'sldm4.Nombre_municipio as Ciudad_afiliado', //Esta es la ciudad del afiliado cuando el tipo de afiliado es beneficiario
+            'sldm5.Nombre_departamento as Departamento_afiliado_sin_beneficiario', 
+            'sldm6.Nombre_municipio as Ciudad_afiliado_sin_beneficiario', 
+            'slp.Nombre_parametro as Tipo_de_identificacion_apoderado',
+            'slp2.Nombre_parametro as Tipo_de_identificacion_afiliado_beneficiario',
+            'slp3.Nombre_parametro as Tipo_de_identificacion_afiliado'
+        )
+        ->where([
+            ['siae.Nro_identificacion', $n_identificacion],
+            ['siae.ID_evento', $id_evento]
+        ]);
+
+        return $query->get();
     }
 }

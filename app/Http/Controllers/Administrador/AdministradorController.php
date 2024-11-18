@@ -4043,8 +4043,10 @@ class AdministradorController extends Controller
         ->leftJoin('sigmel_gestiones.sigmel_clientes as slc', 'sie.Cliente', '=', 'slc.Id_Cliente')
         ->leftJoin('sigmel_gestiones.sigmel_lista_tipo_clientes as sltc', 'sie.Tipo_cliente', '=', 'sltc.Id_TipoCliente')
         ->leftJoin('sigmel_gestiones.sigmel_lista_tipo_eventos as slte', 'sie.Tipo_evento', '=', 'slte.Id_Evento')
+        ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slp_activador', 'sie.Activador', '=', 'slp_activador.Id_Parametro')
         ->select('sie.Cliente', 'slc.Nombre_cliente', 'sie.Tipo_cliente', 'sltc.Nombre_tipo_cliente', 'sie.Tipo_evento',
-        'slte.Nombre_evento', 'sie.ID_evento', 'sie.F_evento', 'sie.F_radicacion', 'sie.N_siniestro')
+        'slte.Nombre_evento', 'sie.ID_evento', 'sie.F_evento', 'sie.F_radicacion', 'sie.N_siniestro',
+        'sie.Activador', 'slp_activador.Nombre_parametro as Nombre_activador', 'sie.N_Radicado_HC')
         ->where([['sie.ID_evento', '=', $newIdEvento]])->get();  
         
         $array_datos_info_afiliados =DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_afiliado_eventos as siae')
@@ -4700,8 +4702,10 @@ class AdministradorController extends Controller
         ->leftJoin('sigmel_gestiones.sigmel_clientes as slc', 'sie.Cliente', '=', 'slc.Id_Cliente')
         ->leftJoin('sigmel_gestiones.sigmel_lista_tipo_clientes as sltc', 'sie.Tipo_cliente', '=', 'sltc.Id_TipoCliente')
         ->leftJoin('sigmel_gestiones.sigmel_lista_tipo_eventos as slte', 'sie.Tipo_evento', '=', 'slte.Id_Evento')
+        ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slp_activador', 'sie.Activador', '=', 'slp_activador.Id_Parametro')
         ->select('sie.Cliente', 'slc.Nombre_cliente', 'sie.Tipo_cliente', 'sltc.Nombre_tipo_cliente', 'sie.Tipo_evento',
-        'slte.Nombre_evento', 'sie.ID_evento', 'sie.F_evento', 'sie.F_radicacion', 'sie.N_siniestro')
+        'slte.Nombre_evento', 'sie.ID_evento', 'sie.F_evento', 'sie.F_radicacion', 'sie.N_siniestro',
+        'sie.Activador', 'slp_activador.Nombre_parametro as Nombre_activador', 'sie.N_Radicado_HC')
         ->where([['sie.ID_evento', '=', $newIdEvento]])->get();  
         
         $array_datos_info_afiliados =DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_afiliado_eventos as siae')

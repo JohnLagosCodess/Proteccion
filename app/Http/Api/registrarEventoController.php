@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Traits\obtenerMensaje;
 use App\Models\sigmel_numero_orden_eventos;
 use App\Models\sigmel_clientes;
+use App\Models\sigmel_lista_departamentos_municipios;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
@@ -36,13 +37,14 @@ class registrarEventoController extends Controller
                 "validar" => ["nullable", 'string', 'max:20']
             ],
             'email_empresa' => [
-                "validar" => ["nullable", 'string', 'max:100']
+                "validar" => ["nullable", 'email', 'max:100']
             ],
             'direccion_empresa' => [
                 "validar" => ["nullable", 'string', 'max:200']
             ],
             'ciudad_empresa' => [
-                "validar" => ["nullable", 'string', 'max:20']
+                "validar" => ["nullable", 'string', 'max:20'],
+                "verificar_ciudad" => ""
             ],
             'm_notificacion_empresa' => [
                 "validar" => ["nullable", 'string', "in:1,2"],
@@ -76,7 +78,8 @@ class registrarEventoController extends Controller
                 "validar" => ["required", 'integer', 'digits_between:1,30']
             ],
             'ciudad_afiliado' => [
-                "validar" => ["required", 'integer', 'digits_between:1,10']
+                "validar" => ["required", 'integer', 'digits_between:1,10'],
+                "verificar_ciudad" => ""
             ],
             'n_identificacion_apoderado' => [
                 "validar" => ["nullable", 'string', 'max:25']
@@ -97,7 +100,8 @@ class registrarEventoController extends Controller
                 "validar" => ["nullable", 'integer', 'digits_between:1,30']
             ],
             'ciudad_apoderado' => [
-                "validar" => ["nullable", 'integer', 'digits_between:1,10']
+                "validar" => ["nullable", 'integer', 'digits_between:1,10'],
+                "verificar_ciudad" => ""
             ],
             'nit_eps' => [
                 "validar" => ['required', 'string']
@@ -117,12 +121,20 @@ class registrarEventoController extends Controller
             ]
         ],
         "Evento" => [
+            //"id_evento" =>[
+              //  "validar" => ['required', 'string']
+            //],
             'proceso' => [
                 "validar" => ['required', 'string', "in:1,2,3"]
             ],
             'servicio' => [
                 "validar" => ['required', 'string', "in:1,2,3,4,5,6,7,8,9"],
-                "remplazar" => "1:1,2:2,3:3,4:6,5:7,6:8,7:9,8:12,9:13"
+                "remplazar" => "1:1,2:2,3:3,4:6,5:7,6:8,7:9,8:12,9:13",
+                "validar_servicio" => [
+                    1 => [1,2,3],
+                    2 => [6,7,8,9],
+                    3 => [12,13]
+                ]
             ],
             'fecha_radicacion' => [
                 "validar" => ['required', 'date']
@@ -169,9 +181,32 @@ class registrarEventoController extends Controller
 
     private $estado_ejecucion;
 
+    private $msg_validacion;
+
+    private $tools;
+
+    private $uuid;
+
+    private $n_evento;
+
     public function __construct(Request $request)
     {
         $this->request = $request;
+
+        $this->uuid =  $request->header('x-request-id');
+
+        //Callback obtiene las entidades en funcion del tipo
+        $this->tools["get_municipio"] = function($dane){ 
+            return sigmel_lista_departamentos_municipios::on('sigmel_gestiones')->select('Id_municipios', 'Id_departamento')->where('codigo_dane', $dane)->first();
+        };
+
+        $this->tools["entidades_disponibles"] = function ($tipo_entidad) {
+            return sigmel_informacion_entidades::on('sigmel_gestiones')->select('Nit_entidad')->where('IdTipo_entidad', $tipo_entidad)->pluck('Nit_entidad')->toArray();
+        };
+
+        $this->tools["info_entidad"] = function ($nit_entidad) {
+            return sigmel_informacion_entidades::on('sigmel_gestiones')->select('Id_Entidad','Nombre_entidad')->where('Nit_entidad', $nit_entidad)->first();
+        };
     }
 
     /**
@@ -180,16 +215,19 @@ class registrarEventoController extends Controller
     public function registrar()
     {
         try {
-            $msj_validacion = $this->configurar_validaciones()->validar();
+            $this->configurar_validaciones()->validar();
 
             if ($this->estado_ejecucion == "Fallo") {
-                return response()->json($msj_validacion);
+                return response()->json($this->msg_validacion);
             }
 
             return response()->json($this->procesar_solicitud());
         } catch (\Throwable $th) {
 
-            Log::channel('log_api')->error("Error inesperado: " . $th->getMessage());
+            Log::channel('log_api')->error("Error inesperado: " . $th->getMessage(),[
+                "Archivo: " => $th->getFile(),
+                "Linea: " => $th->getLine()
+            ]);
             return response()->json($this->getMensaje(000));
         }
     }
@@ -203,40 +241,47 @@ class registrarEventoController extends Controller
         $this->ejecutar_validaciones = [];
 
         /**Dependiendo del input suministrado se ajustaran las validaciones para dicha seccion */
-        $seccion = ($this->request->tipo_afiliado == 2 || $this->request->apoderado == 1) ? "Afiliado" : (($this->request->tipo_empleado == 1) ? "Laboral" : null);
-        if ($seccion) {
-            $msj_validacion = $this->actualizar_validaciones($seccion)->validar();
-            if ($this->estado_ejecucion == "Fallo") {
-                return $msj_validacion;
-            }
+        $seccion = ($this->request->tipo_afiliado == 2 || $this->request->apoderado == 1) ? "Afiliado" : (($this->request->tipo_empleado == "Empleado Actual") ? "Laboral" : null);
+        $this->actualizar_validaciones($seccion)->validar();
+        
+        if ($this->estado_ejecucion == "Fallo") {
+            return $this->msg_validacion;
         }
 
-        $get_municipi = function($dane){
-            sigmel_lista_departamentos_municipios::on('sigmel_gestiones')->select('Id_municipios','Id_departamento')->where()->firts();
-        };
+        $this->n_evento = generarNumeroEvento();
 
-        $n_evento = generarNumeroEvento();
+       // sigmel_numero_orden_eventos::on('sigmel_gestiones')
+         // ->where([['Proceso', 'General_Evento'], ['Estado', 'activo']])->update(['Numero_orden' => $n_evento]);
 
-        sigmel_numero_orden_eventos::on('sigmel_gestiones')
-          ->where([['Proceso', 'General_Evento'], ['Estado', 'activo']])->update(['Numero_orden' => $n_evento]);
-
-        $this->registrar_evento($n_evento)->registrar_afiliado();
-        return "Todo bien $n_evento";   
+        $this->registrar_evento()->registrar_afiliado();
+        return "Todo bien $this->n_evento";   
 
     }
 
-    private function registrar_evento($n_evento){
+    private function verificar_ciudad($campo, $valores){
+        $municipio_existe = $this->tools["get_municipio"]($this->request->{$campo});
+        if(!empty($this->request->{$campo}) && is_null($municipio_existe)){
+            $this->estado_ejecucion = "Fallo";
+            $this->msg_validacion = $this->getMensaje(101, [
+                "campos_faltantes" => "La ciudad <{$this->request->$campo}> registrada para el campo $campo no fue encontrada"
+            ]);
+        }
+        
+        
+    }
+    private function registrar_evento(){
 
         $cliente = sigmel_clientes::on('sigmel_gestiones')->select('Id_cliente','Tipo_cliente')->first();
 
         $datos_info_evento = [
             'Cliente' => $cliente->Id_cliente,
             'Tipo_cliente' => $cliente->Tipo_cliente,
-            'ID_evento' => $n_evento,
+            'ID_evento' =>  $this->n_evento,
             'F_radicacion' => $this->request->fecha_radicacion,
             'Activador' => $this->request->activador,
             'N_Radicado_HC' => $this->request->radicado_hc,
-            'Nombre_usuario' => Auth::getName(),
+            "estado_evento" => "activo",
+            'Nombre_usuario' => Auth::user()->name,
             'F_registro' => date('y-m-d')
         ];
 
@@ -245,8 +290,14 @@ class registrarEventoController extends Controller
     }
 
     private function registrar_afiliado(){
+        $ciudad_afiliado = $this->tools["get_municipio"]($this->request->ciudad_afiliado);
+        $ciudad_apoderado = $this->tools["get_municipio"]($this->request->ciudad_apoderado);
+        $id_eps =  $this->tools["info_entidad"]($this->request->nit_eps);
+        $id_afp =  $this->tools["info_entidad"]($this->request->nit_afp);
+        $id_arl =  $this->tools["info_entidad"]($this->request->nit_arl);
+
         $datos_info_afiliado_evento = [
-            'ID_evento' => $n_evento,
+            'ID_evento' => $this->n_evento,
             'Nombre_afiliado' => $this->request->nombre_afiliado,
             'Tipo_documento' => $this->request->tipo_documento,
             'Nro_identificacion' => $this->request->n_identificacion,
@@ -260,31 +311,88 @@ class registrarEventoController extends Controller
             'Email_apoderado' => $this->request->email_apoderado,
             'Telefono_apoderado' => $this->request->telefono_apoderado,
             'Direccion_apoderado' => $this->request->direccion_apoderado,
-            'Id_departamento_apoderado' => ,
-            'Id_municipio_apoderado' =>,
-            'Id_dominancia' => $request->dominancia,
-            'Direccion' => $request->dirección_afiliado,
-            'Id_departamento' => ,
-            'Id_municipio' => ,
-            'Tipo_afiliado' => $tipo_afiliado,
-            'Id_eps' => ,
-            'Id_afp' => ,
-            'Id_arl' => ,
-            'Nombre_afiliado_benefi' => $request->nombre_afiliado,
-            'Direccion_benefi' => $request->dirección_afiliado,
-            'Email_benefi' => $request->email_afiliado,
-            'Telefono_benefi' => $request->telefono_celular,
-            'Nro_identificacion_benefi' => $request->n_identificacion,
-            'Tipo_documento_benefi' => $request->tipo_documento,
-            'Id_departamento_benefi' => ,
-            'Id_municipio_benefi' => ,
+            'Id_departamento_apoderado' => isset($ciudad_apoderado->Id_departamento) ? $ciudad_apoderado->Id_departamento : null,
+            'Id_municipio_apoderado' => isset($ciudad_apoderado->Id_municipios) ? $ciudad_apoderado->Id_municipios : null,          
+            'Direccion' => $this->request->dirección_afiliado,
+            'Id_departamento' => $ciudad_afiliado->Id_departamento,
+            'Id_municipio' => $ciudad_afiliado->Id_municipios,
+            'Tipo_afiliado' => $this->request->tipo_afiliado,
+            'Id_eps' => $id_eps->id_eps ,
+            'Id_afp' => $id_eps->id_afp ,
+            'Id_arl' => $id_eps->id_arl ,
+            'Nombre_afiliado_benefi' => $this->request->nombre_afiliado,
+            'Direccion_benefi' => $this->request->direccion_afiliado,
+            'Email_benefi' => $this->request->email_afiliado,
+            'Telefono_benefi' => $this->request->telefono_celular,
+            'Nro_identificacion_benefi' => $this->request->n_identificacion,
+            'Tipo_documento_benefi' => $this->request->tipo_documento,
+            'Id_departamento_benefi' => $ciudad_afiliado->Id_departamento,
+            'Id_municipio_benefi' =>  $ciudad_afiliado->Id_municipios,
             'Activo' => 'activo',
-            'Medio_notificacion' => $request->m_notificacion_afiliado,
-            'Nombre_usuario' => Auth::name(),
+            'Medio_notificacion' => $this->request->m_notificacion_afiliado,
+            'Nombre_usuario' => Auth::user()->name,
             'F_registro' => date('y-m-d')
         ];
 
         return $this;
+    }
+
+    private function registrar_info_laboral(){
+
+        $municipio_empresa = $this->tools["get_municipio"]($this->request->ciudad_empresa);
+
+        $datos_info_laboral_evento =[
+            'ID_evento' => $this->n_evento,
+            'Nro_identificacion' => $this->request->nro_identificacion,
+            'Tipo_empleado' => $this->request->tipo_empleado,
+            'Empresa' => $this->request->nombre_empresa,
+            'Nit_o_cc' => $this->request->nit_cc_empresa,
+            'Telefono_empresa' => $this->request->telefono_empresa,
+            'Email' => $this->request->email_empresa,
+            'Direccion' => $this->request->direccion_empresa,
+            'Id_departamento' => $municipio_empresa->Id_departamento,
+            'Id_municipio' => $municipio_empresa->Id_municipios,
+            'Medio_notificacion' => $this->request->m_notificacion_empresa,
+            'Nombre_usuario' => Auth::user()->name,
+            'F_registro' => date('y-m-d')
+        ];
+
+        return $this;
+    }
+
+    private function registrar_info_pericial(){
+
+        if ($this->request->solicitante == 1 || $this->request->solicitante == 2 || $this->request->solicitante == 3) {
+            $id_nombre_solicitante = $this->request->nombre_solicitante;
+            $nombre_entidad = sigmel_informacion_entidades::on('sigmel_gestiones')
+            ->select('Nombre_entidad')->where('Id_Entidad', $id_nombre_solicitante)->get();
+            $Nombre_solicitante = $nombre_entidad[0]->Nombre_entidad;
+        } elseif ($this->request->solicitante == 4 || $this->request->solicitante == 6 || $this->request->solicitante == 7) {
+            $id_nombre_solicitante = null;
+            $Nombre_solicitante = $this->request->otro_solicitante;
+        }else{
+            $id_nombre_solicitante = null;
+            $Nombre_solicitante = null;
+        }
+
+        $datos_info_pericial_evento = [
+            'ID_evento' => $this->n_evento,
+            'Id_motivo_solicitud' => $this->request->motivo_solicitud,
+            'Tipo_vinculacion' => $this->request->tipo_vinculacion,
+            'Regimen_salud' => $this->request->regimen_salud,
+            'Id_solicitante' => $this->request->solicitante,
+            'Id_nombre_solicitante' => $id_nombre_solicitante,
+            'Nombre_solicitante' => $Nombre_solicitante,
+            'Fuente_informacion' => $this->request->fuente_informacion,
+            'Nombre_usuario' => Auth::user()->name,
+            'F_registro' => date('y-m-d')
+        ];
+
+        return $this;
+    }
+
+    private function asignar_evento(){
+        
     }
 
     private function finalizar_registro(){}
@@ -318,11 +426,6 @@ class registrarEventoController extends Controller
      */
     private function configurar_validaciones()
     {
-        //Callback obtiene las entidades en funcion del tipo
-        $entidades_disponibles = function ($tipo_entidad) {
-            return sigmel_informacion_entidades::on('sigmel_gestiones')->select('Nit_entidad')->where('IdTipo_entidad', $tipo_entidad)->pluck('Nit_entidad')->toArray();
-        };
-
         foreach ($this->validaciones as $secciones => $campos) {
             foreach ($campos as $campo => $atributos) {
                 if (isset($atributos['validar'])) {
@@ -332,9 +435,9 @@ class registrarEventoController extends Controller
                         $this->ejecutar_validaciones[$campo] = $atributos['validar'];
 
                         $lista_entidades = match ($campo) {
-                            "nit_eps" =>  $entidades_disponibles(3),
-                            "nit_afp" =>  $entidades_disponibles(2),
-                            "nit_arl" =>  $entidades_disponibles(1),
+                            "nit_eps" =>   $this->tools["entidades_disponibles"](3),
+                            "nit_afp" =>   $this->tools["entidades_disponibles"](2),
+                            "nit_arl" =>   $this->tools["entidades_disponibles"](1),
                             default => null
                         };
                         $lista = implode(",", $lista_entidades);
@@ -355,12 +458,17 @@ class registrarEventoController extends Controller
      */
     private function validar()
     {
+        
         $validacion = Validator::make($this->request->all(), $this->ejecutar_validaciones);
         if ($validacion->fails()) {
             $this->estado_ejecucion = "Fallo";
-            return $this->getMensaje(101, [
+            $this->msg_validacion = $this->getMensaje(101, [
                 "campos_faltantes" => $validacion->errors()
             ]);
+
+        }else if(is_null($this->uuid)){
+            $this->estado_ejecucion = "Fallo";
+            $this->msg_validacion = $this->getMensaje(103);
         } else {
             foreach ($this->validaciones as $secciones => $campos) {
                 foreach ($campos as $campo => $atributos) {
@@ -380,12 +488,20 @@ class registrarEventoController extends Controller
         }
     }
 
+    private function validar_servicio($campo, $target){
+
+        if (isset($target[$this->request->proceso]) && 
+        !in_array($this->request->servicio, $target[$this->request->proceso])) {
+        
+        $this->estado_ejecucion = "Fallo";
+        $this->msg_validacion = $this->getMensaje(101, [
+            "campos_faltantes" => "El servicio seleccionado no corresponde al proceso {$this->request->proceso} seleccionado. Por favor verifique."
+        ]);
+    }
+    }
+
     private function remplazar($campo, $target)
     {
-
-        Log::channel('log_api')->error("Debug " . json_encode([
-            "param" => $target
-        ]));
         // Crear un array asociativo a partir de las opciones de reemplazo
         $opciones = [];
         foreach (explode(",", (string) $target) as $opcion) {

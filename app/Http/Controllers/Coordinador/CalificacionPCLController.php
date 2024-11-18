@@ -2748,8 +2748,6 @@ class CalificacionPCLController extends Controller
         $nombre_ciudad = $ciudad_info_comunicado[0]->Nombre_municipio;
         $reviso_lider = $reviso_info_lider[0]->name;
         $forma_envio = $forma_info_envio[0]->Nombre_parametro;
-        
-                     
         $Id_comunicado = $request->Id_comunicado_act;
         $ID_evento = $request->Id_evento_act;
         $Id_Asignacion = $request->Id_asignacion_act;
@@ -2774,7 +2772,7 @@ class CalificacionPCLController extends Controller
         $Nombre_usuario = $nombre_usuario;
         $F_registro = $date;
 
-        $informacion_afiliado = $this->globalService->retornarInformaciónAfiliado($N_identificacion,$ID_evento);
+        $informacionTablaAfiliados = $this->globalService->retornarInformacionTablaAfiliados($N_identificacion,$ID_evento);
 
         // Si la descarga se hace desde el Icono Descargar (Icono OJO)
         if ($request->bandera_descarga == 'IconoDescarga') {            
@@ -3356,16 +3354,72 @@ class CalificacionPCLController extends Controller
 
         }
         elseif($request->tipo_documento_descarga_califi_editar == "Formato_B_Revision_pension"){
-
-            if(!empty($informacion_afiliado)){
-                if($informacion_afiliado[0]->Apoderado === 'Si'){
-                    $Nombre_destinatario = $informacion_afiliado[0]->Nombre_apoderado;
-                    $N_identificacion_apoderado = 
-                    dd($informacion_afiliado);
+            //El destinatario principal de esta proforma es el Afiliado
+            //Validación de tipo de afiliado, y obtención de la información del destinatario principal
+            if(!empty($informacionTablaAfiliados)){
+                $tipo_afiliado = $informacionTablaAfiliados[0]->Tipo_afiliado;
+                $apoderado = $informacionTablaAfiliados[0]->Apoderado == "Si" ? true : false;
+                $informacion_afiliado = $this->globalService->retornarInformacionAfiliados($N_identificacion,$ID_evento,$apoderado);
+                if(!empty($informacion_afiliado)){
+                    //Datos fijos para cualquier tipo de destinatario
+                    $Ciudad_destinatario = $informacion_afiliado[0]->Ciudad_destinatario;
+                    $Departamento_destinatario = $informacion_afiliado[0]->Departamento_destinatario;
+                    //Destinatario principal, cuando cuenta con apoderado el destinatario principal sera este, de resto sera el afiliado
+                    if($apoderado){
+                        $Nombre_destinatario = $informacion_afiliado[0]->Nombre_apoderado;
+                        $T_documento_destinatario = $informacion_afiliado[0]->Tipo_de_identificacion_apoderado;
+                        $N_documento_destinatario = $informacion_afiliado[0]->Nro_identificacion_apoderado;
+                        $Direccion_destinatario = $informacion_afiliado[0]->Direccion_apoderado;
+                        $Telefono_destinatario = $informacion_afiliado[0]->Telefono_apoderado;
+                        $Email_destinatario = $informacion_afiliado[0]->Email_apoderado;
+                    }
+                    //Destinatario principal cuando el afiliado es beneficiario y cuando es cotizante o otros
+                    else if($tipo_afiliado === 27){
+                        $Nombre_destinatario = $informacion_afiliado[0]->Nombre_afiliado_benefi;
+                        $T_documento_destinatario = $informacion_afiliado[0]->Tipo_de_identificacion_afiliado;
+                        $N_documento_destinatario = $informacion_afiliado[0]->Nro_identificacion_benefi;
+                        $Direccion_destinatario = $informacion_afiliado[0]->Direccion_benefi;
+                        $Telefono_destinatario = $informacion_afiliado[0]->Telefono_benefi;
+                        $Email_destinatario = $informacion_afiliado[0]->Email_benefi;
+                    }
+                    else{
+                        $Nombre_destinatario = $informacion_afiliado[0]->Nombre_afiliado;
+                        $T_documento_destinatario = $informacion_afiliado[0]->Tipo_de_identificacion_afiliado_beneficiario;
+                        $N_documento_destinatario = $informacion_afiliado[0]->Nro_identificacion;
+                        $Direccion_destinatario = $informacion_afiliado[0]->Direccion;
+                        $Telefono_destinatario = $informacion_afiliado[0]->Telefono_contacto;
+                        $Email_destinatario = $informacion_afiliado[0]->Email;
+                    }
+                    //Información Beneficiario
+                    $Nombre_beneficiario = $informacion_afiliado[0]->Nombre_afiliado;
+                    $T_documento_beneficiario = $informacion_afiliado[0]->Tipo_de_identificacion_afiliado_beneficiario;
+                    $N_documento_beneficiario = $informacion_afiliado[0]->Nro_identificacion;
+                    $Direccion_beneficiario = $informacion_afiliado[0]->Direccion;
+                    $Telefono_beneficiario = $informacion_afiliado[0]->Telefono_contacto;
+                    $Email_beneficiario = $informacion_afiliado[0]->Email;
+                    //Información Afiliado
+                    if($tipo_afiliado === 27){
+                        $Nombre_afiliado = $informacion_afiliado[0]->Nombre_afiliado_benefi;
+                        $T_documento_afiliado = $informacion_afiliado[0]->Tipo_de_identificacion_afiliado;
+                        $N_documento_afiliado = $informacion_afiliado[0]->Nro_identificacion_benefi;
+                        $Direccion_afiliado = $informacion_afiliado[0]->Direccion_benefi;
+                        $Telefono_afiliado = $informacion_afiliado[0]->Telefono_benefi;
+                        $Email_afiliado = $informacion_afiliado[0]->Email_benefi;
+                        $Ciudad_afiliado = $informacion_afiliado[0]->Ciudad_afiliado;
+                        $Departamento_afiliado = $informacion_afiliado[0]->Departamento_afiliado;
+                    }else{
+                        $Nombre_afiliado = $informacion_afiliado[0]->Nombre_afiliado;
+                        $T_documento_afiliado = $informacion_afiliado[0]->Tipo_de_identificacion_afiliado_beneficiario;
+                        $N_documento_afiliado = $informacion_afiliado[0]->Nro_identificacion;
+                        $Direccion_afiliado = $informacion_afiliado[0]->Direccion;
+                        $Telefono_afiliado = $informacion_afiliado[0]->Telefono_contacto;
+                        $Email_afiliado = $informacion_afiliado[0]->Email;
+                        $Ciudad_afiliado = $informacion_afiliado[0]->Ciudad_afiliado_sin_beneficiario;
+                        $Departamento_afiliado = $informacion_afiliado[0]->Departamento_afiliado_sin_beneficiario;
+                    }
 
                 }
             }
-
             //QRCode con redireccionamiento a la pagina de actualizar datos de Protección
             $codigoQR = QrCode::size(200)->generate('https://actdatos.proteccion.com/');
 
@@ -3569,28 +3623,36 @@ class CalificacionPCLController extends Controller
                 'id_cliente' => $id_cliente,
                 'ciudad' => $request->ciudad_comunicado_act,
                 'fecha' => fechaFormateada($request->fecha_comunicado2_act),
-                'Nombre_afiliado' => $Nombre_afiliado,
-                'T_documento' => $T_documento,
-                'N_identificacion'  => $N_identificacion,  
-                'nombre' => $Nombre_destinatario,
-                'direccion' => $Direccion_destinatario,
-                'telefono' => $Telefono_destinatario,
-                'municipio' => $nombre_ciudad,
-                'departamento' => $nombre_departamento,
                 'nro_radicado' => $request->radicado2_act,
-                'tipo_identificacion' => $T_documento,
-                'num_identificacion' =>  $N_identificacion,
-                'nro_siniestro' => $ID_evento,
                 'asunto' => strtoupper($request->asunto_act),
                 'cuerpo' => $Cuerpo_comunicado, 
-                'fecha_evento' => $fecha_evento,
-                'Firma_cliente' => $Firma_cliente,
-                'nombre_usuario' => $nombre_usuario,
-                'Anexos' => $Anexos,
                 'Agregar_copia' => $Agregar_copias,
                 'footer' => $footer,
-                'email_destinatario' => $email_destinatario,
                 'codigoQR' => $codigoQR,
+                'Tipo_afiliado' => $tipo_afiliado,
+                'Apoderado' => $apoderado,
+                'Nombre_destinatario' => $Nombre_destinatario,
+                'T_documento_destinatario' => $T_documento_destinatario,
+                'N_documento_destinatario' => $N_documento_destinatario,
+                'Direccion_destinatario' => $Direccion_destinatario,
+                'Telefono_destinatario' => $Telefono_destinatario,
+                'Email_destinatario' => $Email_destinatario,
+                'Ciudad_destinatario' => $Ciudad_destinatario,
+                'Departamento_destinatario' => $Departamento_destinatario,
+                'Nombre_afiliado' => $Nombre_afiliado,
+                'T_documento_afiliado' => $T_documento_afiliado,
+                'N_documento_afiliado' => $N_documento_afiliado,
+                'Direccion_afiliado' => $Direccion_afiliado,
+                'Telefono_afiliado' => $Telefono_afiliado,
+                'Email_afiliado' => $Email_afiliado,
+                'Ciudad_afiliado' => $Ciudad_afiliado,
+                'Departamento_afiliado' => $Departamento_afiliado,
+                'Nombre_beneficiario' => $Nombre_beneficiario,
+                'T_documento_beneficiario' => $T_documento_beneficiario,
+                'N_documento_beneficiario' => $N_documento_beneficiario,
+                'Direccion_beneficiario' => $Direccion_beneficiario,
+                'Telefono_beneficiario' => $Telefono_beneficiario,
+                'Email_beneficiario' => $Email_beneficiario,
                 'N_siniestro' => $request->n_siniestro_proforma_editar,
             ];
             // Creación y guardado del pdf
@@ -3611,79 +3673,6 @@ class CalificacionPCLController extends Controller
 
             sigmel_informacion_comunicado_eventos::on('sigmel_gestiones')->where('Id_Comunicado', $Id_comunicado)
             ->update($actualizar_nombre_documento);
-
-            /* Inserción del registro de que fue descargado */
-            // // Extraemos el id del servicio asociado
-            // $dato_id_servicio = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_asignacion_eventos as siae')
-            // ->select('siae.Id_servicio')
-            // ->where([
-            //     ['siae.Id_Asignacion', $Id_Asignacion],
-            //     ['siae.ID_evento', $ID_evento],
-            //     ['siae.Id_proceso', $Id_proceso],
-            // ])->get();
-
-            // $Id_servicio = $dato_id_servicio[0]->Id_servicio;
-
-            // // Se pregunta por el nombre del documento si ya existe para evitar insertarlo más de una vez
-            // $verficar_documento = sigmel_registro_descarga_documentos::on('sigmel_gestiones')
-            // ->select('Nombre_documento')
-            // ->where([
-            //     ['Nombre_documento', $nombre_pdf],
-            // ])->get();
-            
-            // if(count($verficar_documento) == 0){
-
-            //     // Se valida si antes de insertar la info del doc de Formato_B_Revision_pension ya hay un documento de solicitud pcl
-            //     // tipo otro y/o Formato B
-            //     $nombre_docu_solicitud_pcl = "PCL_SOL_DOC_{$Id_comunicado}_{$Id_Asignacion}_{$N_identificacion}.pdf";
-            //     $nombre_docu_otro = "Comunicado_{$Id_comunicado}_{$N_radicado}.pdf";
-            //     $nombre_docu_solicitud_revision = "PCL_OFICIO_REV_{$Id_comunicado}_{$Id_Asignacion}_{$N_identificacion}.pdf";
-
-            //     $verificar_docu_otro = sigmel_registro_descarga_documentos::on('sigmel_gestiones')
-            //     ->select('Nombre_documento')
-            //     ->whereIN('Nombre_documento', [$nombre_docu_solicitud_pcl, $nombre_docu_otro, $nombre_docu_solicitud_revision]
-            //     )->get();
-
-            //     // Si no existe info del documento de solicitud pcl, tipo otro, Formato B 
-            //     // inserta la info del documento de Formato_B_Revision_pension, De lo contrario hace una actualización de la info
-            //     if (count($verificar_docu_otro) == 0) {
-            //         $info_descarga_documento = [
-            //             'Id_Asignacion' => $Id_Asignacion,
-            //             'Id_proceso' => $Id_proceso,
-            //             'Id_servicio' => $Id_servicio,
-            //             'ID_evento' => $ID_evento,
-            //             'Nombre_documento' => $nombre_pdf,
-            //             'N_radicado_documento' => $N_radicado,
-            //             'F_elaboracion_correspondencia' => $F_comunicado,
-            //             'F_descarga_documento' => $date,
-            //             'Nombre_usuario' => $nombre_usuario,
-            //         ];
-                    
-            //         sigmel_registro_descarga_documentos::on('sigmel_gestiones')->insert($info_descarga_documento);
-            //     }else{
-            //         $info_descarga_documento = [
-            //             'Id_Asignacion' => $Id_Asignacion,
-            //             'Id_proceso' => $Id_proceso,
-            //             'Id_servicio' => $Id_servicio,
-            //             'ID_evento' => $ID_evento,
-            //             'Nombre_documento' => $nombre_pdf,
-            //             'N_radicado_documento' => $N_radicado,
-            //             'F_elaboracion_correspondencia' => $F_comunicado,
-            //             'F_descarga_documento' => $date,
-            //             'Nombre_usuario' => $nombre_usuario,
-            //         ];
-                    
-            //         sigmel_registro_descarga_documentos::on('sigmel_gestiones')
-            //         ->where([
-            //             ['Id_Asignacion', $Id_Asignacion],
-            //             ['N_radicado_documento', $N_radicado],
-            //             ['ID_evento', $ID_evento]
-            //         ])
-            //         ->update($info_descarga_documento);
-            //     }
-            // }
-
-            // return $pdf->download($nombre_pdf);
 
             $datos = [
                 'indicativo' => $indicativo,
@@ -9654,10 +9643,16 @@ class CalificacionPCLController extends Controller
         ->leftJoin('sigmel_gestiones.sigmel_informacion_entidades as sient', 'sient.Id_Entidad', '=', 'siae.Id_arl')
         ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldepart', 'sldepart.Id_departamento', '=', 'sient.Id_Departamento')
         ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldmunic', 'sldmunic.Id_municipios', '=', 'sient.Id_Ciudad')
+        ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slparam', 'slparam.Id_Parametro', '=', 'siae.Tipo_documento_apoderado')
+        ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldeparta', 'sldeparta.Id_departamento', '=', 'siae.Id_departamento_apoderado')
+        ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldmunici', 'sldmunici.Id_municipios', '=', 'siae.Id_municipio_apoderado')
         ->select('siae.ID_evento', 'siae.Nombre_afiliado', 'siae.Tipo_documento', 'slp.Nombre_parametro as T_documento', 
         'siae.Nro_identificacion', 'siae.F_nacimiento', 'siae.Edad', 'siae.Genero', 'siae.Email', 'siae.Telefono_contacto', 
         'siae.Estado_civil', 'slpar.Nombre_parametro as Estado_civi', 'siae.Nivel_escolar', 'slpa.Nombre_parametro as Escolaridad', 
-        'siae.Apoderado', 'siae.Nombre_apoderado', 'siae.Nro_identificacion_apoderado', 'siae.Id_dominancia', 'siae.Direccion', 
+        'siae.Apoderado', 'siae.Nombre_apoderado', 'siae.Email_apoderado', 'siae.Telefono_apoderado', 'siae.Direccion_apoderado', 
+        'siae.Nro_identificacion_apoderado', 'siae.Tipo_documento_apoderado', 'slparam.Nombre_parametro as Tipo_documento_apodera',
+        'siae.Id_departamento_apoderado', 'sldeparta.Nombre_departamento as Nombre_departamento_apoderado', 'siae.Id_municipio_apoderado', 
+        'sldmunici.Nombre_municipio as Nombre_municipio_apoderado', 'siae.Id_dominancia', 'siae.Direccion', 
         'siae.Id_departamento', 'slde.Nombre_departamento as Nombre_departamento', 'siae.Id_municipio', 'sldm.Nombre_municipio as Nombre_municipio', 
         'siae.Ocupacion', 'siae.Tipo_afiliado', 'siae.Ibc', 'siae.Id_eps', 'sie.Nombre_entidad as Entidad_eps', 'sie.Direccion as Direccion_eps', 
         'sie.Telefonos as Telefono_eps', 'sie.Emails as Email_eps', 'sie.Id_Departamento', 'sldepa.Nombre_departamento as Nombre_departamento_eps', 'sie.Id_Ciudad', 
@@ -9670,31 +9665,57 @@ class CalificacionPCLController extends Controller
         'sldmunic.Nombre_municipio as Nombre_municipio_arl',
         'siae.Activo',
         'siae.Medio_notificacion', 'siae.Nombre_afiliado_benefi', 'siae.Tipo_documento_benefi', 'slpara.Nombre_parametro as Tipo_documento_benfi',         
-        'siae.Nro_identificacion_benefi', 'siae.Direccion_benefi', 'siae.Id_departamento_benefi', 
+        'siae.Nro_identificacion_benefi', 'siae.Telefono_benefi', 'siae.Email_benefi', 'siae.Direccion_benefi', 'siae.Id_departamento_benefi', 
         'sldep.Nombre_departamento as Nombre_departamento_benefi', 'siae.Id_municipio_benefi', 
         'sldmu.Nombre_municipio as Nombre_municipio_benefi', 'siae.Nombre_usuario', 'siae.F_registro', 'F_actualizacion')
         ->where([['ID_Evento',$ID_Evento_comuni_comite]])->limit(1)->get(); 
 
         $Tipo_afiliado = $array_datos_info_afiliado[0]->Tipo_afiliado;
+        $Apoderado = $array_datos_info_afiliado[0]->Apoderado;
         
-        $Nombre_afiliado_pie = $array_datos_info_afiliado[0]->Nombre_afiliado;
-        $Nombre_afiliado_noti = $array_datos_info_afiliado[0]->Nombre_afiliado;
-        $Direccion_afiliado_noti = $array_datos_info_afiliado[0]->Direccion;
-        $Telefono_afiliado_noti = $array_datos_info_afiliado[0]->Telefono_contacto;
-        $Departamento_afiliado_noti = $array_datos_info_afiliado[0]->Nombre_departamento;            
-        $Ciudad_afiliado_noti = $array_datos_info_afiliado[0]->Nombre_municipio;
-        $T_documento_noti = $array_datos_info_afiliado[0]->T_documento;            
-        $NroIden_afiliado_noti = $array_datos_info_afiliado[0]->Nro_identificacion;
-        $Email_afiliado_noti = $array_datos_info_afiliado[0]->Email;
+        if($Apoderado == 'Si'){
+            // Apoderado
+            $Nombre_afiliado_noti_apoderado = $array_datos_info_afiliado[0]->Nombre_apoderado;
+            $Direccion_afiliado_noti_apoderado = $array_datos_info_afiliado[0]->Direccion_apoderado;
+            $Telefono_afiliado_noti_apoderado = $array_datos_info_afiliado[0]->Telefono_apoderado;
+            $Departamento_afiliado_noti_apoderado = $array_datos_info_afiliado[0]->Nombre_departamento_apoderado;            
+            $Ciudad_afiliado_noti_apoderado = $array_datos_info_afiliado[0]->Nombre_municipio_apoderado;
+            $T_documento_noti_apoderado = $array_datos_info_afiliado[0]->Tipo_documento_apodera;            
+            $NroIden_afiliado_noti_apoderado = $array_datos_info_afiliado[0]->Nro_identificacion_apoderado;
+            $Email_afiliado_noti_apoderado = $array_datos_info_afiliado[0]->Email_apoderado;
+            // Afiliado
+            $Nombre_afiliado_pie = $array_datos_info_afiliado[0]->Nombre_afiliado;
+            $Nombre_afiliado_noti = $array_datos_info_afiliado[0]->Nombre_afiliado;
+            $Direccion_afiliado_noti = $array_datos_info_afiliado[0]->Direccion;
+            $Telefono_afiliado_noti = $array_datos_info_afiliado[0]->Telefono_contacto;
+            $Departamento_afiliado_noti = $array_datos_info_afiliado[0]->Nombre_departamento;            
+            $Ciudad_afiliado_noti = $array_datos_info_afiliado[0]->Nombre_municipio;
+            $T_documento_noti = $array_datos_info_afiliado[0]->T_documento;            
+            $NroIden_afiliado_noti = $array_datos_info_afiliado[0]->Nro_identificacion;
+            $Email_afiliado_noti = $array_datos_info_afiliado[0]->Email;
+
+        }else{
+
+            $Nombre_afiliado_pie = $array_datos_info_afiliado[0]->Nombre_afiliado;
+            $Nombre_afiliado_noti = $array_datos_info_afiliado[0]->Nombre_afiliado;
+            $Direccion_afiliado_noti = $array_datos_info_afiliado[0]->Direccion;
+            $Telefono_afiliado_noti = $array_datos_info_afiliado[0]->Telefono_contacto;
+            $Departamento_afiliado_noti = $array_datos_info_afiliado[0]->Nombre_departamento;            
+            $Ciudad_afiliado_noti = $array_datos_info_afiliado[0]->Nombre_municipio;
+            $T_documento_noti = $array_datos_info_afiliado[0]->T_documento;            
+            $NroIden_afiliado_noti = $array_datos_info_afiliado[0]->Nro_identificacion;
+            $Email_afiliado_noti = $array_datos_info_afiliado[0]->Email;
+        }
+        // Beneficiario
         // $Nombre_afiliado_pie = $array_datos_info_afiliado[0]->Nombre_afiliado_benefi;
         $Nombre_afiliado_noti_benefi = $array_datos_info_afiliado[0]->Nombre_afiliado_benefi;
-        // $Direccion_afiliado_notibenefi = $array_datos_info_afiliado[0]->Direccion_benefi;
-        // $Telefono_afiliado_notibenefi = '';
-        // $Departamento_afiliado_notibenefi = $array_datos_info_afiliado[0]->Nombre_departamento_benefi;            
-        // $Ciudad_afiliado_notibenefi = $array_datos_info_afiliado[0]->Nombre_municipio_benefi;
+        $Direccion_afiliado_notibenefi = $array_datos_info_afiliado[0]->Direccion_benefi;
+        $Telefono_afiliado_notibenefi = $array_datos_info_afiliado[0]->Telefono_benefi;
+        $Departamento_afiliado_notibenefi = $array_datos_info_afiliado[0]->Nombre_departamento_benefi;            
+        $Ciudad_afiliado_notibenefi = $array_datos_info_afiliado[0]->Nombre_municipio_benefi;
         $T_documento_notibenefi = $array_datos_info_afiliado[0]->Tipo_documento_benfi;            
         $NroIden_afiliado_notibenefi = $array_datos_info_afiliado[0]->Nro_identificacion_benefi;
-        // $Email_afiliado_notibenefi = '';
+        $Email_afiliado_notibenefi = $array_datos_info_afiliado[0]->Email_benefi;
         
 
         if (!empty($Copia_afiliado_correspondencia) && $Copia_afiliado_correspondencia == 'Afiliado') {
@@ -9973,11 +9994,28 @@ class CalificacionPCLController extends Controller
                 break;
             }
         }// En caso de que no: la info del destinatario principal se saca del afiliado
-        else {            
-            $nombre_destinatario_principal = $Nombre_afiliado_noti;
-            $direccion_destinatario_principal = $Direccion_afiliado_noti;
-            $telefono_destinatario_principal = $Telefono_afiliado_noti;
-            $ciudad_destinatario_principal = $Ciudad_afiliado_noti.'-'.$Departamento_afiliado_noti;
+        else {     
+            if($Apoderado == 'Si'){
+                $nombre_destinatario_principal = $Nombre_afiliado_noti_apoderado;
+                $direccion_destinatario_principal = $Direccion_afiliado_noti_apoderado;
+                $telefono_destinatario_principal = $Telefono_afiliado_noti_apoderado;
+                $ciudad_destinatario_principal = $Ciudad_afiliado_noti_apoderado.'-'.$Departamento_afiliado_noti_apoderado;
+                $Email_afiliado_noti = $Email_afiliado_noti_apoderado;
+            }else{       
+                if($Tipo_afiliado == 26 || $Tipo_afiliado == 28 || $Tipo_afiliado == 29){
+                    $nombre_destinatario_principal = $Nombre_afiliado_noti;
+                    $direccion_destinatario_principal = $Direccion_afiliado_noti;
+                    $telefono_destinatario_principal = $Telefono_afiliado_noti;
+                    $ciudad_destinatario_principal = $Ciudad_afiliado_noti.'-'.$Departamento_afiliado_noti;
+                    $Email_afiliado_noti = $Email_afiliado_noti;                    
+                }elseif ($Tipo_afiliado == 27){
+                    $nombre_destinatario_principal = $Nombre_afiliado_noti_benefi;
+                    $direccion_destinatario_principal = $Direccion_afiliado_notibenefi;
+                    $telefono_destinatario_principal = $Telefono_afiliado_notibenefi;
+                    $ciudad_destinatario_principal = $Ciudad_afiliado_notibenefi.'-'.$Departamento_afiliado_notibenefi;
+                    $Email_afiliado_noti = $Email_afiliado_notibenefi; 
+                }  
+            }
         }
 
         /* Extraemos los datos del footer */

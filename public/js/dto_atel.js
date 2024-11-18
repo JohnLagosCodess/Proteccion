@@ -82,6 +82,13 @@ $(document).ready(function(){
         allowClear:false
     });
 
+    $(".forma_envio").select2({
+        width: "100%",
+        placeholder:"Seleccione una opción",
+        allowClear:false
+    });
+
+
     $(".state_notificacion").select2({
         placeholder:"Seleccione una opción",
         allowClear:false
@@ -2510,16 +2517,31 @@ $(document).ready(function(){
     var entidad_conocimiento = $("#entidad_conocimiento").val();
     $('#oficio_origen').change(function(){
         if ($(this).prop('checked')) {
-            var asunto_insertar = "Dictamen presunto origen evento";
-            var texto_insertar = '<p>Respetados Señores.</p><p>En atención a la solicitud de emisión de dictamen sobre el presunto origen de la contingencia, le informamos que una vez estudiada la documentación del paciente por el Comité Interdisciplinario de Calificación de Pérdida de la Capacidad Laboral y Origen de Seguros de Vida ALFA S.A., experto en la materia, se considera que el presunto origen de la muerte del señor(a) {{$nombre_afiliado}}, es con ocasión de un {{$tipo_evento}} {{$origen_evento}}.</p><p>Para los efectos, se adjunta el dictamen que sustenta lo manifestado.</p><p>En caso de que no se encuentre de acuerdo con la calificación emitida por Seguros de Vida Alfa S.A., cuenta con diez (10) días hábiles siguientes a partir de la fecha de recibida la notificación para manifestar la inconformidad frente al resultado. Esta manifestación se debe realizar por escrito y debe estar dirigida a Seguros de Vida Alfa S.A. en donde se exprese sobre cuál o cuáles aspectos se encuentra en desacuerdo.</p><p>Cualquier inquietud o consulta al respecto, le invitamos a comunicarse a nuestras líneas de atención al cliente en Bogotá (601) 3077032 o a la línea nacional gratuita 01 8000 122 532, de lunes a viernes, de 8:00 a. m. a 8:00 p. m. - sábados de 8:00 a.m. a 12 m., o escríbanos a «servicioalcliente@segurosalfa.com.co»; o a la dirección Carrera 10 # 18-36, piso 4, Edificio José María Córdoba, Bogotá D.C.</p>';
-
+            var asunto_insertar = "NOTIFICACIÓN SOBRE CALIFICACIÓN DE ORIGEN";
+            var texto_insertar = '<p>En Protección estamos para guiarle y acompañarle en cada momento de su vida. En atención a la solicitud de emisión de dictamen sobre el presunto origen de la contingencia, le informamos que, una vez estudiada la documentación del paciente por nuestro Comité Interdisciplinario de Calificación de Pérdida de la Capacidad Laboral y Origen, experto en la materia, se considera que el presunto origen de la muerte del (la) señor(a) <b>{{$nombre_afiliado}}</b>, es con ocasión de:</p>\
+            <div style="display:flex;justify-content:center;">\
+                <table class="tabla_cuerpo" style="width:20% !important;">\
+                    <tr>\
+                        <th><b>ORIGEN</b></th>\
+                    </tr>\
+                    <tr>\
+                        <th><b>{{$tipo_evento}} {{$origen_evento}}</b></th>\
+                    </tr>\
+                </table>\
+            </div>\
+            <p>Para los efectos, se adjunta el dictamen que sustenta lo manifestado.</p>\
+            <p>Tenga presente que, en caso de encontrarse en desacuerdo con la presente calificación, usted cuenta con el derecho de interponer el recurso de apelación por escrito ante <b>PROTECCIÓN</b> al email documentos.calificacion@proteccion.com.co con los fundamentos que motivan su solicitud, dentro de los diez (10) días hábiles posteriores a esta notificación. </p>\
+            <p>Es importante que tenga en cuenta que, si presenta apelación, el caso será entregado a la Junta Regional de Calificación. Estas Juntas son entidades gubernamentales independientes por lo que sus médicos son los responsables de asignar la cita para valoración, brindar información del trámite, emitir y notificar el dictamen en términos de ley.</p>\
+            <p>Cualquier información adicional con gusto será suministrada en nuestra Línea de Servicio en Bogotá 7444464, en Medellín y Cali 5109099, en Barranquilla 3197999, en Cartagena 6424999 y desde el resto del país 018000528000.</p>';
+        
+            // {{$tipo_evento}} {{$origen_evento}}
             $("#Asunto").val(asunto_insertar);
             $("#cuerpo_comunicado").summernote('code', texto_insertar);
 
-            // Habilitación etiquetas
-            $("#btn_insertar_nombre_afiliado").prop('disabled', false);
-            $("#btn_insertar_tipo_evento").prop('disabled', false);
-            $("#btn_insertar_origen_evento").prop('disabled', false);
+            // Habilitación etiquetas MAURILLO
+            // $("#btn_insertar_nombre_afiliado").prop('disabled', false);
+            // $("#btn_insertar_tipo_evento").prop('disabled', false);
+            // $("#btn_insertar_origen_evento").prop('disabled', false);
 
             // Selección automática de las copias a partes interesadas: Benficiario, Empleador, EPS, ARL
             $("#beneficiario").prop('checked', true);

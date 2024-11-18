@@ -20,7 +20,7 @@
         .codigo_qr{
             position: absolute;
             top: 5px; 
-            left: 5px; 
+            left: 58px; 
             max-width: 90px; 
             max-height: 70px; 
         }
@@ -59,7 +59,8 @@
         }
         .footer_image{
             max-width: 100%;
-            max-height: 80%;
+            width: 100%;
+            max-height: 100;
             margin-bottom: -5px;
         }
         .footer_content {
@@ -71,14 +72,14 @@
 
         #footer2 { 
             position: fixed; 
-            left: -20px; 
+            left: 20px; 
             right: 0px; 
             width: 0px; 
             height: 0px; 
             color:black; 
             background-color: white; 
             transform: rotate(0deg); 
-            top:300px;
+            top:450px;
         }
         .logo_footer{
             width: auto;
@@ -167,6 +168,25 @@
             float:right;
         }
 
+        .page-break {
+            page-break-before: always;
+        }
+
+        .tabla_pagina3{
+            font-family: 'Microsoft New Tai Lue', sans-serif;
+            text-align: justify;
+            font-size: 10.6px;
+            width: 100%;
+            table-layout: fixed; 
+            border-collapse: collapse;
+        }
+
+        .qr_proteccion{
+            width: auto;
+            height: 150px;
+            padding-left: 30px;
+        }
+        
     </style>
 </head>
 <body>
@@ -197,7 +217,7 @@
     <div id="footer"> 
         <?php if($footer == null): ?>
             <div style="text-align:center;">
-                <span style="color: #3C3C3C; margin-top:2px;">{{$Nombre_afiliado}} - {{$T_documento_noti}} {{$NroIden_afiliado_noti}} - Siniestro: {{$N_siniestro}} </span>
+                <span style="color: #3C3C3C; margin-top:2px;">{{$Nombre_afiliado}} - {{$T_documento_noti}} {{$NroIden_afiliado_noti}} - SINIESTRO: {{$N_siniestro}} </span>
             </div>
         <?php else: ?>
             <?php 
@@ -206,10 +226,11 @@
                 $footer_data = file_get_contents($footer_path);
                 $footer_base64 = base64_encode($footer_data);
             ?>
-            <div class="footer_content">
-                <span style="color: #3C3C3C; margin-top:2px;">{{$Nombre_afiliado}} - {{$T_documento_noti}} {{$NroIden_afiliado_noti}} - Siniestro: {{$N_siniestro}} </span>
-                <br>
-                <img src="data:image/png;base64,{{ $footer_base64 }}" class="footer_image">
+            <div class="footer_content" style="text-align:center;">
+                <span style="position: absolute; width: 100%; text-align:center; top: 10px; left:0px; color:#4D4D4D; font-weight:bold; font-size: 11px;">
+                    {{$Nombre_afiliado}} - {{$T_documento_noti}} {{$NroIden_afiliado_noti}} - SINIESTRO: {{$N_siniestro}} 
+                </span>
+                <img src="data:image/png;base64,{{ $footer_base64 }}" class="footer_image" style="display: block;">
             </div>
         <?php endif ?>
     </div>
@@ -425,6 +446,128 @@
             <div class="fuente_todo_texto" style="text-align: center;">
                 <b>Firma y cédula del afiliado</b>
             </div>
+        </section>
+        <section class="page-break">
+            <table class="tabla_pagina3">                
+                <tr>
+                    <td colspan="11" style="padding:5px;">
+                        <p style="text-align: center;">
+                            <b>INFORMACIÓN IMPORTANTE</b>
+                        </p>
+                        <p>
+                            <b>¿Qué tuvimos en cuenta para realizar la calificación?</b>
+                            <ul>
+                                <li>La historia clínica que nos entregaste</li>
+                                <li>Resultados de exámenes médicos</li>
+                                <li>Información relacionada con tu estado de salud</li>
+                            </ul>
+                        </p>
+                        <p>
+                            <b>¿Cuál es el porcentaje que determina el estado de invalidez?</b><br>
+                            De acuerdo con la ley, la calidad de invalidez se determina si pierdes el 50% o más de capacidad laboral a raíz de una enfermedad 
+                            o accidente.
+                        </p>
+                        <p>
+                            <b>¿Si no estoy de acuerdo con el dictamen de calificación, qué debo hacer?</b><br>
+                            Si no estás de acuerdo con los resultados presentados, tienes la posibilidad de apelar esta calificación, en un plazo máximo de 
+                            10 días hábiles posteriores a esta notificación, debes enviarnos al email documentos.calificacion@proteccion.com.co la siguiente 
+                            documentación:
+                            <ol>
+                                <li>Una carta en la que expliques los hechos relacionados con tu caso y los motivos de tu inconformidad, debidamente firmada.</li>
+                                <li>Copia de esta notificación firmada.</li>
+                                <li>Copia de tu documento de identidad.</li>
+                                <li>Si tu apelación o la notificación del dictamen es firmada por una persona diferente a ti, deberás aportar copia de la cedula de 
+                                    la persona que firma y poder autenticado en notaria.
+                                </li>
+                            </ol>
+                        </p>
+                        <p>
+                            Nosotros nos encargaremos de remitir tu apelación, junto con los documentos que entregaste previamente para esta solicitud, a la 
+                            Junta Regional de Calificación.
+                        </p>
+                        <p>
+                            Ten en cuenta
+                            <ul>
+                                <li>El resultado de la calificación también se enviará a tu empleador, la EPS y la Aseguradora de Riesgos Laborales, ARL (si es necesario).</li>
+                                <li>Si tu caso lo requiere, esta notificación será enviada a otra Administradora de Fondos de Pensiones que pueda estar involucrada.</li>
+                                <li>Estas entidades por ser actores involucrados en tu caso también tienen la facultad de apelar si no están acuerdo con la calificación.</li>
+                            </ul>
+                        </p>
+                        <p>
+                            <b>¿Qué pasa si no hay una apelación en los próximos días hábiles?</b><br>
+                            Si tú ni ninguna de las entidades involucradas en tu caso presentan una apelación en el plazo fijado, se determinará la firmeza del dictamen, es 
+                            decir, que todos están de acuerdo con los resultados arrojados y deberás iniciar el proceso de radicación de la solicitud de prestación económica por invalidez.
+                        </p>
+                        <p>
+                            <b>¿Qué pasa si mi caso pasa a la Junta Regional de Calificación?</b><br>
+                            Es importante que tengas presente que las Juntas de Calificación son entidades gubernamentales independientes, por lo tanto, 
+                            Protección S.A no tiene facultades en esta parte del proceso. Los médicos de dichos organismos tienen las siguientes responsabilidades:
+                            <ul>
+                                <li>Asignar tu cita de valoración</li>
+                                <li>Brindar información relacionada con tu proceso</li>
+                                <li>Emitir y notificarte el dictamen.</li>
+                            </ul>
+                        </p>
+                        <p>
+                            De igual manera, puedes contactarte directamente con ellos para conocer cómo avanza tu proceso de calificación. 
+                        </p>
+                        <p>
+                            Te agradecemos la confianza depositada en nosotros durante estos años y te reiteramos nuestro deseo de seguir acompañándote en tu camino. 
+                            Recuerda que, si requieres información adicional o tienes alguna inquietud, comunícate con nuestro asesor virtual a través de 
+                            proteccion.com o llama a nuestra Línea de Servicio en Bogotá 7444464, en Medellín y Cali 5109099, en Barranquilla 3197999, 
+                            en Cartagena 6424999 y desde el resto del país 018000528000.
+                        </p>
+                    </td>
+                    <td colspan="7" style="background-color: #e7e6e6; padding:5px;">
+                        <p style="text-align: center;">
+                            <b>Conceptos claves</b>
+                        </p>
+                        <p>
+                            <b>Capacidad laboral:</b><br>
+                            Son las habilidades, destrezas y aptitudes físicas, mentales y sociales que permiten el desempeño de un trabajo.                           
+                        </p>
+                        <p>
+                            <b>Fecha de estructuración:</b><br>
+                            Es el día en el que una persona pierde un porcentaje de su capacidad laboral a raíz de una enfermedad o accidente.
+                        </p>
+                        <p>
+                            <b>Porcentaje de pérdida de capacidad laboral:</b><br>
+                            Es el grado de disminución de las habilidades, destrezas y aptitudes físicas, mentales y sociales que permiten realizar un trabajo.
+                        </p>
+                        <p>
+                            <b>Origen:</b>
+                            Es el motivo o situación que causa el accidente, enfermedad o muerte. Puede ser a causa del trabajo o a 
+                            raíz de una circunstancia que no está relacionada con lo laboral.
+                        </p>
+                        <p>
+                            <b>IMPORTANTE:</b><br>
+                            Ten en cuenta las siguientes recomendaciones a la hora de enviar el email con tu apelación:
+                            <ul>
+                                <li>En el asunto del correo informa que es una APELACIÓN seguido de tu tipo y número de identificación.</li>
+                                <li>Adjunta todos los documentos solicitados.</li>
+                                <li>Informa en el email tu Nombre completo, Ciudad de Residencia, Dirección y Teléfono Actualizado De Contacto.</li>                                
+                            </ul>
+                        </p>
+                        <p>
+                            <b>Solo se entenderá como radicada la apelación una vez entregues la documentación completa.</b>
+                        </p>
+                        <p>
+                            <b>Te invitamos a actualizar tus datos. Actualízalos en el siguiente QR:</b>
+                        </p>
+                        <?php
+                            $imagenPath_footer = public_path('/images/logos_preformas/QR_proteccion.png');
+                            $imagenData_footer = file_get_contents($imagenPath_footer);
+                            $imagenBase64_footer = base64_encode($imagenData_footer);
+                        ?>
+                        <img src="data:image/png;base64,{{ $imagenBase64_footer }}" class="qr_proteccion">
+                        <p style="font-size: 9px;">
+                            Al autorizar tus datos, accedes a la oferta que tenemos para ti y para la construcción de tu 
+                            futuro a través del ahorro.
+                        </p>
+                        <br><br><br><br><br>
+                    </td>
+                </tr>
+            </table>            
         </section>
     </div>
     <script type="text/php">

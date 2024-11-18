@@ -18,6 +18,12 @@ $(document).ready(function(){
         allowClear: false
     });
 
+    /* INICIALIZACIÓN DEL SELECT2 DE LISTADO DE Activador  */
+    $(".activador").select2({
+        placeholder: "Seleccione una opción",
+        allowClear: false
+    });
+
     /* INICIALIZACIÓN DEL SELECT2 DE LISTADO DE TIPO DE DOCUMENTO */
     $(".tipo_documento").select2({
         placeholder: "Seleccione una opción",
@@ -393,6 +399,27 @@ $(document).ready(function(){
             for (let i = 0; i < claves.length; i++) {
                 if (data[claves[i]]["Id_Evento"] != tipo_eventoEdicion) {
                     $('#tipo_evento').append('<option value="'+data[claves[i]]["Id_Evento"]+'">'+data[claves[i]]["Nombre_evento"]+'</option>');                    
+                }
+            }
+        }
+    });
+
+    // Listado activador
+    let datos_lista_activador = {
+        '_token': token,
+        'parametro' : "lista_activador"
+    };
+    $.ajax({
+        type:'POST',
+        url:'/cargarselectores',
+        data: datos_lista_activador,
+        success:function(data) {
+            // console.log(data);
+            let activador = $('select[name=activador]').val();
+            let claves = Object.keys(data);
+            for (let i = 0; i < claves.length; i++) {
+                if (data[claves[i]]["Id_Parametro"] != activador) {
+                    $('#activador').append('<option value="'+data[claves[i]]["Id_Parametro"]+'">'+data[claves[i]]["Nombre_parametro"]+'</option>');
                 }
             }
         }
