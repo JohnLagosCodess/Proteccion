@@ -657,6 +657,7 @@
                                                     <div class="col-3 columna_departamento_apoderado d-none">
                                                         <div class="form-group">
                                                             <label for="departamento_apoderado" class="col-form-label">Departamento apoderado <span style="color:red;">(*)</span></label>
+                                                            {{$array_datos_info_afiliados[0]->Id_departamento_apoderado}}
                                                             <select class="departamento_apoderado custom-select" name="departamento_apoderado" id="departamento_apoderado">
                                                                 <?php if(!empty($array_datos_info_afiliados[0]->Id_departamento_apoderado)):?>
                                                                     <option value="{{$array_datos_info_afiliados[0]->Id_departamento_apoderado}}" selected>{{$array_datos_info_afiliados[0]->Nombre_departamento_apoderado}}</option>

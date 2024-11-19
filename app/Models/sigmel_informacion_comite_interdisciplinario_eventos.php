@@ -51,6 +51,7 @@ class sigmel_informacion_comite_interdisciplinario_eventos extends Model
         'Cual_jr',
         'Copia_jn',
         'Anexos',
+        'Forma_envio',
         'Elaboro',
         'Reviso',
         'Firmar',

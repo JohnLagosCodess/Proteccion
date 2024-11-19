@@ -548,6 +548,29 @@ $(document).ready(function(){
         }
     });
 
+    // Listado de forma de envio
+    let datos_lista_medios_notificacion = {
+        '_token': token,
+        'parametro' : "forma_envio"
+    };
+    $.ajax({
+        type:'POST',
+        url:'/cargueListadoSelectoresDTOATEL',
+        data: datos_lista_medios_notificacion,
+        success:function(data) {
+            // console.log(data);
+            var bd_forma_envio = $("#bd_forma_envio").val();
+            let claves = Object.keys(data);
+            for (let i = 0; i < claves.length; i++) {
+                if (data[claves[i]]["Id_Parametro"] == bd_forma_envio) {
+                    $('#forma_envio').append('<option value="'+data[claves[i]]["Id_Parametro"]+'" selected>'+data[claves[i]]["Nombre_parametro"]+'</option>');
+                } else {
+                    $('#forma_envio').append('<option value="'+data[claves[i]]["Id_Parametro"]+'">'+data[claves[i]]["Nombre_parametro"]+'</option>');
+                }
+            }
+        }
+    });
+
     // Listado Reviso (Lideres del grupos de trabajo segun proceso PCL)
     var idProcesoLider = $("#Id_Proceso_dto_atel").val();
     let datos_lista_reviso = {
@@ -2885,6 +2908,7 @@ $(document).ready(function(){
         }       
         var jnci = $('input[name="jnci"]:checked').val();
         var anexos = $('#anexos').val();
+        var forma_envio = $('#forma_envio').val();
         var elaboro = $('#elaboro').val();
         var reviso = $('#reviso').val();
         var firmar = $('input[name="firmar"]:checked').val();
@@ -2892,7 +2916,7 @@ $(document).ready(function(){
         var f_correspondencia = $('#f_correspondencia').val();
         var radicado = $('#radicado').val();
         var bandera_correspondecia_guardar_actualizar = $('#bandera_correspondecia_guardar_actualizar').val();
-        console.log('Radicado ', radicado);
+        
         var datos_correspondecia={
             '_token': token,            
             'Id_Evento_dto_atel':Id_Evento_dto_atel,
@@ -2924,6 +2948,7 @@ $(document).ready(function(){
             'cual':cual,
             'jnci':jnci,
             'anexos':anexos,
+            'forma_envio': forma_envio,
             'elaboro':elaboro,
             'reviso':reviso,
             'firmar':firmar,

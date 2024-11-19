@@ -217,6 +217,21 @@ class DeterminacionOrigenATEL extends Controller
             ['Id_Asignacion',$Id_asignacion_dto_atel]
         ])
         ->get();
+
+        //Traer Información Forma envio
+        $datos_medio_notificacion = sigmel_informacion_afiliado_eventos::on('sigmel_gestiones')
+        ->select('Medio_notificacion')
+        ->where('ID_evento', $Id_evento_dto_atel)
+        ->get();
+
+        $datos_forma_envio = sigmel_lista_parametros::on('sigmel_gestiones')
+        ->select('Id_Parametro')
+        ->where([
+            ['Nombre_parametro', $datos_medio_notificacion[0]->Medio_notificacion],
+            ['Tipo_lista', 'Medio de Notificacion']
+        ])
+        ->get();
+
         // creación de consecutivo para el comunicado
         $consecutivo =  $this->getRadicado('origen',$Id_evento_dto_atel);
 
@@ -276,7 +291,7 @@ class DeterminacionOrigenATEL extends Controller
         'dato_articulo_12', 'array_datos_diagnostico_motcalifi','info_evento',
         'array_datos_examenes_interconsultas', 'array_datos_historico_laboral', 'datos_bd_DTO_ATEL', 
         'nombre_del_evento_guardado','array_comite_interdisciplinario', 'consecutivo', 
-        'array_comunicados_correspondencia', 'afp_afiliado', 'info_afp_conocimiento', 'caso_notificado', 'N_siniestro_evento'));
+        'array_comunicados_correspondencia', 'afp_afiliado', 'info_afp_conocimiento', 'caso_notificado', 'N_siniestro_evento', 'datos_forma_envio'));
 
     }
 
@@ -510,6 +525,21 @@ class DeterminacionOrigenATEL extends Controller
 
             $informacion_datos_tipo_junta = json_decode(json_encode($datos_tipo_junta, true));
             return response()->json($informacion_datos_tipo_junta);
+        }
+
+        // listado de forma de envio
+        if ($parametro == "forma_envio") {
+            
+            $listado_medios_notificacion = sigmel_lista_parametros::on('sigmel_gestiones')
+            ->select('Id_Parametro','Nombre_parametro')
+            ->where([
+                ['Tipo_lista', '=', 'Medio de Notificacion'],
+                ['Estado', '=', 'activo']
+            ])
+            ->get();
+            
+            $info_lista_medios_notificacion = json_decode(json_encode($listado_medios_notificacion, true));
+            return response()->json($info_lista_medios_notificacion);
         }
 
         //Lista Lider de procesos
@@ -1102,6 +1132,7 @@ class DeterminacionOrigenATEL extends Controller
         }
         
         $anexos = $request->anexos;
+        $forma_envio = $request->forma_envio;
         $elaboro = $request->elaboro;
         $reviso = $request->reviso;
         $firmar = $request->firmar;
@@ -1187,6 +1218,7 @@ class DeterminacionOrigenATEL extends Controller
                 'Cual_jr' => $cual,
                 'Copia_jn' => $jnci,
                 'Anexos' => $anexos,
+                'Forma_envio' => $forma_envio,
                 'Elaboro' => $elaboro,
                 'Reviso' => $reviso,
                 'Firmar' => $firmar,
@@ -1280,6 +1312,7 @@ class DeterminacionOrigenATEL extends Controller
                 'Cual_jr' => $cual,
                 'Copia_jn' => $jnci,
                 'Anexos' => $anexos,
+                'Forma_envio' => $forma_envio,
                 'Elaboro' => $elaboro,
                 'Reviso' => $reviso,
                 'Firmar' => $firmar,
@@ -1726,6 +1759,7 @@ class DeterminacionOrigenATEL extends Controller
         $anexos = $request->anexos;
         $tipo_evento = $request->tipo_evento;
         $N_siniestro = $request->N_siniestro;
+        
         /* Creación de las variables faltantes que no están en el formulario */
         $dato_nro_radicado = sigmel_informacion_comunicado_eventos::on('sigmel_gestiones')
         ->select('N_radicado')
