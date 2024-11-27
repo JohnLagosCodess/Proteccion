@@ -12,7 +12,7 @@
         #header {
             position: fixed; 
             /* esta ligado con el primer valor del margin */
-            top: -2.2cm;
+            top: -1.8cm;
             left: 0cm;
             width: 100%;
             /* height: 100px; */
@@ -163,7 +163,7 @@
                                 $imagenBase64_header = base64_encode($imagenData_header);
                             ?>
                             <img src="data:image/png;base64,{{ $imagenBase64_header }}" class="logo_header">
-                        <?php endif ?>  
+                        <?php endif ?>
                     </td>
                 </tr>
             </tbody>
@@ -211,7 +211,7 @@
                             <div class="fuente_todo_texto paddingTexto">{{$Email_destinatario}}</div>
                             <div class="fuente_todo_texto paddingTexto">{{$Direccion_destinatario}}</div>
                             <div class="fuente_todo_texto paddingTexto">{{$Telefono_destinatario}}</div>
-                            <div class="fuente_todo_texto paddingTexto">{{$Ciudad_destinatario.' - '.$Departamento_destinatario}}</div>
+                            <div class="fuente_todo_texto paddingTexto"><?php if($Ciudad_destinatario == "Bogota D.C."): ?>{{$Ciudad_destinatario}}<?php else: ?>{{$Ciudad_destinatario.' - '.$Departamento_destinatario}}<?php endif ?></div>
                         </div>   
                     </td>
                 </tr>
@@ -236,12 +236,13 @@
                 </tr>
             </tbody>
         </table>
+        <br>
         <section class="fuente_todo_texto" style="clear: both;"> 
             <br>           
             <?php
                 $patron1 = '/\{\{\$nombre_afiliado\}\}/';
-                if (!empty($cuerpo) && preg_match($patron1, $cuerpo)) {                    
-                    $texto_modificado = str_replace('{{$nombre_afiliado}}', $Nombre_destinatario, $cuerpo);;
+                if (!empty($cuerpo) && preg_match($patron1, $cuerpo)) {
+                    $texto_modificado = str_replace('{{$nombre_afiliado}}', $Tipo_afiliado === 27 ? $Nombre_beneficiario : $Nombre_afiliado, $cuerpo);;
                     $cuerpo = $texto_modificado;
                 } else {
                     $cuerpo = "";
@@ -258,11 +259,7 @@
         <br>
         <section class="fuente_todo_texto">
             <table class="tabla1" style="text-align: justify;">                               
-                @if (count($Agregar_copia) == 0)
-                    <tr>
-                        <td class='copias'><span class="negrita">Copia: </span>No se registran copias</td>                                                                                
-                    </tr>
-                @else
+                @if (count($Agregar_copia) > 0)
                     <tr>
                         <td class="justificado copias"><span class="negrita">Copia:</span></td>                            
                     </tr>
@@ -272,6 +269,7 @@
                         $EPS = 'EPS';
                         $AFP = 'AFP';
                         $ARL = 'ARL';
+                        $AFP_Conocimiento = 'AFP_Conocimiento';
                     ?>
                     <?php
                     if (isset($Agregar_copia[$Afiliado])) { ?>
@@ -323,11 +321,21 @@
                         <?php       
                         }
                     ?>
+                    <?php 
+                        if (isset($Agregar_copia[$AFP_Conocimiento])) { ?>
+                            <tr>
+                                <td class="copias">
+                                    <span class="negrita">AFP Conocimiento: </span><?=$Agregar_copia['AFP_Conocimiento'];?>
+                                </td>
+                            </tr>
+                        <?php       
+                        }
+                    ?>
                 @endif
             </table>
         </section>
         <br>
-        <div class="cuadro fuente_cuadro_inferior" style="margin: 0 auto">
+        <div class="cuadro fuente_cuadro_inferior" style="margin: 0 auto; page-break-inside: avoid;">
             <span class="fuente_cuadro_inferior"><span class="negrita">Nro. Radicado: <br>{{$nro_radicado}}</span></span><br>
             <span class="fuente_cuadro_inferior"><span class="negrita">{{$T_documento_destinatario.' '.$N_documento_destinatario}}</span></span><br>
             <span class="fuente_cuadro_inferior"><span class="negrita">Siniestro: {{$N_siniestro}}</span></span><br>

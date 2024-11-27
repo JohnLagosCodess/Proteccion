@@ -2880,7 +2880,7 @@ class BuscarEventoController extends Controller
 
                     //Se copian los documentos siempre y cuando no se una controversia y cumpla las reglas.
                     if($servicio['Nombre_servicio'] != 'Controversia PCL'){
-                        $this->copiarLisdatoGeneralDocumentos($evento,$servicioNuevo,$servicioOrigen);
+                        $this->copiarLisdatoGeneralDocumentos($evento,$servicioNuevo,$servicioOrigen,$nuevo_id_asignacion);
                     }
 
                     Log::channel('seguimiento_juntas')->notice("Se agregaron datos para la junta en PCL: " . json_encode($Controvertido));
@@ -2923,7 +2923,7 @@ class BuscarEventoController extends Controller
                     $Controvertido['Id_Asignacion_Servicio_Anterior'] = $Id_Asignacion_origen;
 
                     //Se copian los documentos siempre y cuando no se una controversia y cumpla las reglas.
-                    $this->copiarLisdatoGeneralDocumentos($evento,$servicioNuevo,$servicioOrigen);
+                    $this->copiarLisdatoGeneralDocumentos($evento,$servicioNuevo,$servicioOrigen,$nuevo_id_asignacion);
 
                     Log::channel('seguimiento_juntas')->notice("Se agregaron datos para la junta en Origen: " . json_encode($Controvertido));
                     Log::channel('seguimiento_juntas')->notice("Se agregaron los diagnosticoss para la junta en Origen: " . json_encode($diagnostico));
@@ -2960,8 +2960,8 @@ class BuscarEventoController extends Controller
      * @param int $servicio Id del nuevo sercio que se esta creando.
      * @param int $servicioOrigen Id del servico origen del cual se esta creando el nuvo proceso.
      */
-    public function copiarLisdatoGeneralDocumentos(string $evento,int $servicio,int $servicioOrigen){
-        $documentos = DB::select('CALL psrvistadocumentos(?,?)', array($evento,$servicioOrigen));
+    public function copiarLisdatoGeneralDocumentos(string $evento,int $servicio,int $servicioOrigen, int $nuevo_id_asignacion){
+        $documentos = DB::select('CALL psrvistadocumentos(?,?,?)', array($evento,$servicioOrigen,$nuevo_id_asignacion));
         
         $contador = 0;
 

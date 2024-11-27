@@ -646,7 +646,7 @@ $(document).ready(function () {
          */
         if(accion_ejecutar == "" || id_profecional_asignado == ""){
            $("#alerta_accion").removeClass('d-none');
-           $("#alerta_accion").append("<i class='fas fa-info-circle'></i><strong>Importante:</strong> No se puede ejecutar la accion debio a que no ha seleccionado una accion y/o profesional");
+           $("#alerta_accion").append("<i class='fas fa-info-circle'></i><b>Importante:</b> No se puede ejecutar la accion debio a que no ha seleccionado una accion y/o profesional");
            $("#c_ejecutar_accion").prop('disabled',true);
            profecional_asignado = "";
         }else{
@@ -692,7 +692,7 @@ $(document).ready(function () {
                 } else {
                     $("#alerta_accion").removeClass('d-none');
                     $("#c_ejecutar_accion").prop('disabled', true);
-                    $("#alerta_accion").append("<i class='fas fa-info-circle'></i><strong>Importante:</strong> Ésta acción solo puede ser ejecutada una única vez. Por favor valide el historial de acciones del servicio.");
+                    $("#alerta_accion").append("<i class='fas fa-info-circle'></i><b>Importante:</b> Ésta acción solo puede ser ejecutada una única vez. Por favor valide el historial de acciones del servicio.");
                 }
 
             });
@@ -742,7 +742,21 @@ $(document).ready(function () {
     //     }
     //     });
     // };
+
 });
+
+var controversia = {
+    desacuerdo : {
+            Asunto : "RECURSO DE REPOSICIÓN Y EN SUBSIDIO DE APELACIÓN CONTRA DICTAMEN DE CALIFICACIÓN DE PÉRDIDA DE CAPACIDAD LABORAL",
+            Texto_insertar : "<p>Con relación al caso de la referencia manifestamos nuestro <b>DESACUERDO</b> con la calificación de <b>PÉRDIDA DE CAPACIDAD LABORAL</b>, donde califican los diagnósticos: {{$cie10_nombre_cie10_jrci}}<p>Se decide interponer el <b>RECURSO DE REPOSICIÓN Y EN SUBSIDIO DE APELACIÓN</b> contra la calificación, teniendo en cuenta la siguiente argumentación que se fundamenta en la documentación aportada.</p><p><center><b>ANÁLISIS<br></b></center></p><p>En días pasados se recibió dictamen <b>N° {{$n_dictamen}}</b> emitido el <b>{{$f_dictamen_jrci}}</b> por <b>{{$nombre_junta}}</b> del (la) señor(a) <b>{{$nombre_afiliado}}</b> identificado(a) con <b>{{$tipo_identificacion_afiliado}}</b> N° <b>{{$num_identificacion_afiliado}}</b> en el que se califica una pérdida de capacidad Laboral de <b>{{$pcl_jrci}}</b> de origen <b>{{$tipo_evento}} {{$origen_jrci}}</b> y con fecha de estructuración del <b>{{$f_estructuracion_jrci}}</b>.</p><p>Estamos en desacuerdo con esta calificación por lo siguiente:</p><p>(SUSTENTACIÓN DEL DESACUERDO)<p>{{$sustentacion_jrci}}</p></p><p><b><center>CONCLUSIÓN<br></center></b></p>Por lo anterior, manifestamos nuestro <b>DESACUERDO</b> con la pérdida de capacidad laboral calificada por <b>{{$nombre_junta}}</b> y solicitamos que el caso sea remitido a la Junta Regional de Calificación de Invalidez para que se surta el recurso de apelación que estamos interponiendo.<p><p><center><b>PETICIÓN<br></b></center></p><p>Se solicita a la <b>{{$nombre_junta}}</b> proceda a dar respuesta a dicha solicitud de acuerdo a lo estipulado en el Decreto 1072 de 2015 Artículo 2.2.5.1.9. <i>“Además de las comunes, son funciones exclusivas de la Junta Nacional de Calificación de Invalidez las siguientes: Decidir en segunda instancia los recursos de apelación interpuestos contra los dictámenes de las juntas regionales de calificación de invalidez, sobre el origen, estado de pérdida de capacidad laboral, fecha de estructuración y revisión de la pérdida de capacidad laboral y estado de invalidez”</i>.</p><p><center><b>ANEXO</b></center></p><p>Certificado de existencia y representación legal expedido por la Superintendencia Financiera.</p>"
+    },
+    acuerdo : {
+        Asunto : "ADHESIÓN Y EN SUBSIDIO APELACIÓN DICTAMEN PÉRDIDA CAPACIDAD LABORAL",
+        Etiquetas: 'Número de Dictamen JRCI, Fecha de Dictamen JRCI, Nombre Afiliado, Tipo Documento Afiliado, Número Documento Afiliado, CIE-10 - Nombre CIE-10 JRCI, %Pcl JRCI, Origen Dx JRCI, Fecha Estructuracion JRCI, Decreto Calificador JRCI, ',
+        Texto_insertar : "<p>Respetados Señores,</p><p>Dado que el día {{$f_dictamen_jrci}} fuimos notificados de la calificación de <b>PÉRDIDA DE CAPACIDAD LABORAL</b> del (la) señor(a) {{$nombre_afiliado}}, identificado(a) con {{$tipo_identificacion_afiliado}}  N° {{$num_identificacion_afiliado}}, le informamos que la <b>AFP PROTECCIÓN</b> está <b>DE ACUERDO</b> con esta calificación y no interpondrá recursos de ley.</p><p>Igualmente informamos a {{$nombre_junta}} que en caso de que el paciente o alguna de las demás partes interesadas interponga alguno de los recursos de ley a que tiene derecho dentro de los términos legales previstos, y el dictamen sea modificado, manifestamos nuestro desacuerdo y solicitamos a la EPS dar trámite al recurso de apelación subsidiariamente interpuesto por AFP PROTECCIÓN; adicionalmente solicitamos nos informen por escrito y se nos tenga en cuenta como parte del proceso.</p>En caso que ninguna de las demás partes interesadas interponga los recursos de ley a que tienen derecho, <b>AFP PROTECCIÓN</b> renuncia al recurso subsidiario de apelación.</p>",
+        Texto_default : "<p>Respetados señores, cordial saludo:</p><p>HUGO IGNACIO GÓMEZ DAZA, identificado como aparece al pie de mi firma, actuando en nombre y representación de SEGUROS DE VIDA ALFA S.A. Aseguradora que expidió el <b><u>seguro previsional a la AFP PORVENIR S.A.</u></b>, debidamente facultado para ello, en atención al dictamen de la referencia, estando dentro de los términos de ley, me permito interponer RECURSO DE REPOSICIÓN Y EN SUBSIDIO DE APELACIÓN ante la Junta, por los siguientes motivos:</p><p>Nuestra inconformidad se dirige a la calificación de PÉRDIDA DE CAPACIDAD LABORAL, dictaminada al (la) afiliado(a) {{$nombre_afiliado}}, {{$tipo_identificacion_afiliado}} {{$num_identificacion_afiliado}} donde califican los diagnósticos: {{$cie10_nombre_cie10_jrci}} por los cuales otorgan puntaje de <b>PCL</b> de <b>{{$pcl_jrci}} %</b> con fecha de estructuración del {{$f_estructuracion_jrci}}.</p><p>{{$sustentacion_jrci}}</p><p>Por lo anterior, presentamos el recurso de reposición y en subsidio el de apelación, contra {{$tipos_controversia}}, con el fin que se dictamine el valor correspondiente a las patologías del paciente dando aplicación al Decreto1507/2014 como normatividad vigente. En caso de que no se revoque, solicitamos se de curso a la apelación ante la Junta Nacional de Calificación, e informarnos con el fin de consignar los honorarios respectivos.</p><p style='text-align:center;'>ANEXO:</p><p>Certificado de existencia y representación legal expedido por la Superintendencia Financiera.</p><p style='text-align:center;'>NOTIFICACIONES:</p><p>Cualquier inquietud o consulta al respecto, le invitamos a comunicarse a nuestras líneas de atención al cliente en Bogotá (601) 3 07 70 32 o a la línea nacional gratuita 01 8000 122 532, de lunes a viernes, de 8:00 a. m. a 8:00 p. m. - sábados de 8:00 a.m. a 12 m., o escríbanos a «servicioalcliente@segurosalfa.com.co» o a la dirección Carrera 10 # 18-36 piso 4 Edificio José María Córdoba, Bogotá D.C.</p>" 
+    }
+}
 
 /**
  * Obtiene el historial de servicio para el evento consultado con base a la identificacion del afiliado.
@@ -809,7 +823,7 @@ function historial_servicios(){
                             <input type="hidden" name="newIdProceso" value="${data.Id_proceso}">
                             <input type="hidden" name="newIdServicio" value="${data.Id_Servicio}">
                             <input type="hidden" name="newIdAsignacion" value="${data.Id_Asignacion}">
-                            <button type="submit" class="btn btn-icon-only text-info btn-sm"><strong>${data.ID_evento}</strong></button>
+                            <button type="submit" class="btn btn-icon-only text-info btn-sm"><b>${data.ID_evento}</b></button>
                         </form>`;
                         return editar_evento;
                     } 
@@ -1006,7 +1020,7 @@ function descargarDocumentos(){
             $("#status_spinner").addClass('d-none');  
             $('.mostrar_exito').removeClass('d-none');
             $('.mostrar_exito').empty();
-            $('.mostrar_exito').append('<strong>Archivo generado de manera correcta.</strong>');
+            $('.mostrar_exito').append('<b>Archivo generado de manera correcta.</b>');
 
             // Eliminamos el enlace despues de descargarse y los mensajes de estado.
             setTimeout(function() {
@@ -1186,7 +1200,7 @@ function eliminar_evento(id_comunicado,proceso){
         $.post('/eliminar_evento',data,function(response){
             if(response == 'ok'){
                 $('.alerta_externa_comunicado').removeClass('d-none');
-                $('.alerta_externa_comunicado').append('<strong>El comunicado se elimino de manera correcta</strong>');
+                $('.alerta_externa_comunicado').append('<b>El comunicado se elimino de manera correcta</b>');
                 setTimeout(function(){
                     $('.alerta_externa_comunicado').addClass('d-none');
                     $('.alerta_externa_comunicado').empty();
@@ -1224,7 +1238,7 @@ function radicados_duplicados(tabla){
 
         $("#alertaRadicado").show();
         $("#alerta_radicado_msj").empty();
-        $("#alerta_radicado_msj").append(`se encontraron <strong>${radicados_duplicados.length }</strong> radicados duplicados, por favor verifique.`);
+        $("#alerta_radicado_msj").append(`se encontraron <b>${radicados_duplicados.length }</b> radicados duplicados, por favor verifique.`);
         $("#alertaRadicado").show();
 
         setTimeout(() => {

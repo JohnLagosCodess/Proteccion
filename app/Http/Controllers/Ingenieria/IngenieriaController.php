@@ -136,6 +136,7 @@ class IngenieriaController extends Controller
                 'telefono_contacto' => $request->telefono_contacto_usuario,
                 'password' => bcrypt($request->password_usuario),
                 'id_procesos_usuario' => $strings_id_procesos_usuario,
+                'cambiar_clave' => 1, //Cada usuario nuevo debe cambiar su clave tras iniciar sesion
                 'estado' => $request->status_crear_usuario,
                 'created_at' => $date,
             );

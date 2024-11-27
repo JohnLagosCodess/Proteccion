@@ -418,6 +418,29 @@ class GlobalService
         return $nombreAfiliado."; ".$direccionAfiliado."; ".$emailAfiliado."; ".$telefonoAfiliado."; ".$ciudadAfiliado."; ".$municipioAfiliado."."; 
     }
     /**
+        * Retorna la información necesaria para una copia de afp conocimiento.
+        * 
+        * @param string $id_afp_conocimiento Necesario.
+        * 
+        * @return string Devuelve una cadena string con la información del empleador.
+    */
+    public function retornarAfpConocimiento($id_afp_conocimiento){
+        $datos_afp_conocimiento = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_entidades as sie')
+        ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm', 'sie.Id_Departamento', '=', 'sldm.Id_departamento')
+        ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm2', 'sie.Id_Ciudad', '=', 'sldm2.Id_municipios')
+        ->select('sie.Nombre_entidad', 'sie.Direccion', 'sie.Telefonos', 'sie.Emails as Email','sie.Otros_Telefonos', 'sldm.Nombre_departamento', 'sldm2.Nombre_municipio as Nombre_ciudad')
+        ->where([['sie.Id_Entidad', $id_afp_conocimiento]])
+        ->get();
+
+        $Nombre_afp_conocimiento = $datos_afp_conocimiento[0]->Nombre_entidad;
+        $Direccion_afp_conocimiento = $datos_afp_conocimiento[0]->Direccion;
+        $Telefonos_afp_conocimiento = $datos_afp_conocimiento[0]->Telefonos;
+        $Email_afp_conocimiento = $datos_afp_conocimiento[0]->Email;
+        $ciudad_afp_conocimiento = $datos_afp_conocimiento[0]->Nombre_ciudad;
+        $departamento_afp_conocimiento = $datos_afp_conocimiento[0]->Nombre_departamento;
+        return $Nombre_afp_conocimiento."; ".$Direccion_afp_conocimiento."; ".$Email_afp_conocimiento."; ".$Telefonos_afp_conocimiento."; ".$ciudad_afp_conocimiento."; ".$departamento_afp_conocimiento.".";
+    }
+    /**
         * Retorna la información necesaria para una copia de la entidad que sea enviada.
         * 
         * @param string $n_identificacion Necesario para saber cual es la persona y consultar sus datos o entidades a las que esta afiliado.
@@ -547,5 +570,39 @@ class GlobalService
         ]);
 
         return $query->get();
+    }
+    /**
+        * Retorna información necesaria para un documento de Firmeza PCL de una recalificación o calificación tecnica.
+        * 
+        * @param string $id_evento Necesario para saber a que evento en especifico hace referencia.
+        *
+        * @param string $id_asignacion Necesario.
+        *
+        * @param string $id_proceso Necesario.
+        *
+        * @return Collection Devuelve una colección con la información
+    */
+    public function retornarInformacionCalTec_Reca($id_evento, $id_asignacion, $id_proceso){
+        $query_comite = sigmel_informacion_comite_interdisciplinario_eventos::on('sigmel_gestiones')
+            ->where([
+                ['ID_evento',$id_evento],
+                ['Id_proceso',$id_proceso],
+                ['Id_Asignacion',$id_asignacion],
+            ])
+            ->value('F_visado_comite');
+        $query_servicio = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_decreto_eventos as side')
+            ->leftJoin('sigmel_gestiones.sigmel_lista_tipo_eventos as slte','side.Tipo_evento','=','slte.Id_Evento')
+            ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slp','side.Origen','=','slp.Id_Parametro')
+            ->select('side.Numero_dictamen as N_dictamen','side.Porcentaje_pcl','side.F_estructuracion','slte.Nombre_evento as Tipo_evento','slp.Nombre_parametro as Origen')
+            ->where([
+                ['side.ID_Evento', $id_evento],
+                ['side.Id_Asignacion', $id_asignacion],
+                ['side.Id_proceso', $id_proceso],
+            ])
+            ->get();
+        if ($query_servicio->isEmpty()) {
+            $query_servicio = null;  // Si no hay resultados, retorna null
+        }
+        return [$query_comite, $query_servicio];
     }
 }
