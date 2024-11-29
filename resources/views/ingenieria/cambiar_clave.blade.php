@@ -9,7 +9,14 @@
                 </div>
                 <div class="alert alert-warning mt-3" role="alert">
                     <i class="fas fa-info-circle"></i> <strong>Importante:</strong> Una vez actualizada la contraseña, debera
-                    volver a iniciar sesion con la nueva clave digitada.
+                    volver a iniciar sesion con la nueva clave digitada.<br>
+                    <ul>
+                        <li>La contraseña debe tener minimo un letra mayuscala</li>
+                        <li>La contraseña debe tener minimo un letra minuscula</li>
+                        <li>La contraseña debe tener minimo 8 caracteres</li>
+                        <li>La contraseña debe tener minimo un caracter especial</li>
+                        <li>La contraseña debe tener minimo un numero</li>
+                    </ul>
                 </div>
                 <div class="card-body">
                     <div class="row">
@@ -51,6 +58,9 @@
     <script type="text/javascript">
         $(document).ready(function() {
             $("#alertaCambioClave").show();
+            $("#cerrar_modal").click(function(){
+                $("#alertaCambioClave").hide();
+            });
             setTimeout(() => {
                 $("#alertaCambioClave").hide();
             }, 16000);
