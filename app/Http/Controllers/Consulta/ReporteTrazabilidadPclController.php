@@ -5,9 +5,10 @@ namespace App\Http\Controllers\Consulta;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 /* Importamos la vista */
-use App\Models\cnvista_reportes_trazabilidad_pcls;
+use App\Models\cnvista_reportes_trazabilidad_pcls_tres;
 
 /* Importando todo lo necesario de php spread sheet para el excel */
 use PhpOffice\PhpSpreadsheet\SpreadSheet;
@@ -73,8 +74,73 @@ class ReporteTrazabilidadPclController extends Controller
         }
         else if (!empty($fecha_desde) && !empty($fecha_hasta)){
 
-            $reporte_trazabilidad_pcl = cnvista_reportes_trazabilidad_pcls::on('sigmel_gestiones')
-            ->select('Servicio',
+            // $reporte_trazabilidad_pcl = cnvista_reportes_trazabilidad_pcls_tres::on('sigmel_gestiones')
+            // ->select('Servicio',
+            //     'Tipo_documentos',
+            //     'N_identificacion',
+            //     'Nombre_completo',
+            //     'Activador',
+            //     'N_radicado_siniestro',
+            //     'N_solicitud_evento',
+            //     'Conducta_actual',
+            //     DB::raw("date_format('F_ultima_accion', '%d/%m/%Y') as F_ultima_accion"),
+            //     'ultima_accion',
+            //     DB::raw("date_format('F_radicacion', '%d/%m/%Y') as F_radicacion"),
+            //     DB::raw("date_format('F_asignacion_gestion', '%d/%m/%Y') as F_asignacion_gestion"),
+            //     'Dias_control_asignacion',
+            //     'Control_asignacion',
+            //     DB::raw("date_format('F_emision_1ra_conducta', '%d/%m/%Y') as F_emision_1ra_conducta"),
+            //     'Dias_control_1ra_conducnta',
+            //     'Control_1ra_conducta',
+            //     'Nueva_F_radicacion',
+            //     'Complementos',
+            //     DB::raw("date_format('F_sol_complementos', '%d/%m/%Y') as F_sol_complementos"),
+            //     'Medio_envio_complementos',
+            //     'Estado_entrega_complementos',
+            //     DB::raw("date_format('F_noti_efectiva_complementos', '%d/%m/%Y') as F_noti_efectiva_complementos"),
+            //     'Guia_complementos_afiliado',
+            //     'Prorroga',
+            //     DB::raw("date_format('F_prorroga', '%d/%m/%Y') as F_prorroga"),
+            //     'Estado_prorroga',
+            //     DB::raw("date_format('F_aporte_complementos', '%d/%m/%Y') as F_aporte_complementos"),
+            //     'Aportado_correcto',
+            //     DB::raw("date_format('F_asignacion_cita', '%d/%m/%Y') as F_asignacion_cita"),
+            //     DB::raw("date_format('F_1ra_cita', '%d/%m/%Y') as F_1ra_cita"),
+            //     'Cita_reprogramada',
+            //     'Causal_incumpli_1ra_cita',
+            //     DB::raw("date_format('F_asignacion_2da_cita', '%d/%m/%Y') as F_asignacion_2da_cita"),
+            //     DB::raw("date_format('F_2da_cita', '%d/%m/%Y') as F_2da_cita"),
+            //     'Cierre_2da_cita',
+            //     'Causal_incumpli_2da_cita',
+            //     DB::raw("date_format('F_emision_dml', '%d/%m/%Y') as F_emision_dml"),
+            //     'Porcentaje_pcl',
+            //     DB::raw("date_format('F_estructuracion', '%d/%m/%Y') as F_estructuracion"),
+            //     'Origen',
+            //     'Medio_envio_noti_afi',
+            //     'Estado_general_noti',
+            //     DB::raw("date_format('F_noti_efectiva_afi', '%d/%m/%Y') as F_noti_efectiva_afi"),
+            //     'Guia_afiliado',
+            //     DB::raw("date_format('F_noti_efectiva_emp', '%d/%m/%Y') as F_noti_efectiva_emp"),
+            //     'Guia_empleador',
+            //     DB::raw("date_format('F_noti_efectiva_eps', '%d/%m/%Y') as F_noti_efectiva_eps"),
+            //     'Guia_eps',
+            //     DB::raw("date_format('F_noti_arl', '%d/%m/%Y') as F_noti_arl"),
+            //     'Guia_arl',
+            //     DB::raw("date_format('F_noti_efectiva_afp', '%d/%m/%Y') as F_noti_efectiva_afp"),
+            //     'Guia_afp',
+            //     'Causal_cierre',
+            //     'Medio_envio_comunicado_cierre',
+            //     'Estado_envio_comunicado_cierre',
+            //     DB::raw("date_format('F_noti_efectiva_comuni_cierre', '%d/%m/%Y') as F_noti_efectiva_comuni_cierre"),
+            //     'Guia_comuni_cierre_afi'
+            // )
+            // ->whereRaw('DATE(F_ultima_accion) BETWEEN ? AND ?', [$fecha_desde, $fecha_hasta])
+            // // ->orderBy('F_ultima_accion', 'asc')
+            // ->get();
+
+            $reporte_trazabilidad_pcl = cnvista_reportes_trazabilidad_pcls_tres::on('sigmel_gestiones')
+            ->select(
+                'Servicio',
                 'Tipo_documentos',
                 'N_identificacion',
                 'Nombre_completo',
@@ -82,59 +148,58 @@ class ReporteTrazabilidadPclController extends Controller
                 'N_radicado_siniestro',
                 'N_solicitud_evento',
                 'Conducta_actual',
-                'F_ultima_accion',
+                DB::raw("date_format(F_ultima_accion, '%d/%m/%Y') as F_ultima_accion"),
                 'ultima_accion',
-                'F_radicacion',
-                'F_asignacion_gestion',
+                DB::raw("date_format(F_radicacion, '%d/%m/%Y') as F_radicacion"),
+                DB::raw("date_format(F_asignacion_gestion, '%d/%m/%Y') as F_asignacion_gestion"),
                 'Dias_control_asignacion',
                 'Control_asignacion',
-                'F_emision_1ra_conducta',
+                DB::raw("date_format(F_emision_1ra_conducta, '%d/%m/%Y') as F_emision_1ra_conducta"),
                 'Dias_control_1ra_conducnta',
                 'Control_1ra_conducta',
                 'Nueva_F_radicacion',
                 'Complementos',
-                'F_sol_complementos',
+                DB::raw("date_format(F_sol_complementos, '%d/%m/%Y') as F_sol_complementos"),
                 'Medio_envio_complementos',
                 'Estado_entrega_complementos',
-                'F_noti_efectiva_complementos',
+                DB::raw("date_format(F_noti_efectiva_complementos, '%d/%m/%Y') as F_noti_efectiva_complementos"),
                 'Guia_complementos_afiliado',
                 'Prorroga',
-                'F_prorroga',
+                DB::raw("date_format(F_prorroga, '%d/%m/%Y') as F_prorroga"),
                 'Estado_prorroga',
-                'F_aporte_complementos',
+                DB::raw("date_format(F_aporte_complementos, '%d/%m/%Y') as F_aporte_complementos"),
                 'Aportado_correcto',
-                'F_asignacion_cita',
-                'F_1ra_cita',
+                DB::raw("date_format(F_asignacion_cita, '%d/%m/%Y') as F_asignacion_cita"),
+                DB::raw("date_format(F_1ra_cita, '%d/%m/%Y') as F_1ra_cita"),
                 'Cita_reprogramada',
                 'Causal_incumpli_1ra_cita',
-                'F_asignacion_2da_cita',
-                'F_2da_cita',
+                DB::raw("date_format(F_asignacion_2da_cita, '%d/%m/%Y') as F_asignacion_2da_cita"),
+                DB::raw("date_format(F_2da_cita, '%d/%m/%Y') as F_2da_cita"),
                 'Cierre_2da_cita',
                 'Causal_incumpli_2da_cita',
-                'F_emision_dml',
+                DB::raw("date_format(F_emision_dml, '%d/%m/%Y') as F_emision_dml"),
                 'Porcentaje_pcl',
-                'F_estructuracion',
+                DB::raw("date_format(F_estructuracion, '%d/%m/%Y') as F_estructuracion"),
                 'Origen',
                 'Medio_envio_noti_afi',
                 'Estado_general_noti',
-                'F_noti_efectiva_afi',
+                DB::raw("date_format(F_noti_efectiva_afi, '%d/%m/%Y') as F_noti_efectiva_afi"),
                 'Guia_afiliado',
-                'F_noti_efectiva_emp',
+                DB::raw("date_format(F_noti_efectiva_emp, '%d/%m/%Y') as F_noti_efectiva_emp"),
                 'Guia_empleador',
-                'F_noti_efectiva_eps',
+                DB::raw("date_format(F_noti_efectiva_eps, '%d/%m/%Y') as F_noti_efectiva_eps"),
                 'Guia_eps',
-                'F_noti_arl',
+                DB::raw("date_format(F_noti_arl, '%d/%m/%Y') as F_noti_arl"),
                 'Guia_arl',
-                'F_noti_efectiva_afp',
+                DB::raw("date_format(F_noti_efectiva_afp, '%d/%m/%Y') as F_noti_efectiva_afp"),
                 'Guia_afp',
                 'Causal_cierre',
                 'Medio_envio_comunicado_cierre',
                 'Estado_envio_comunicado_cierre',
-                'F_noti_efectiva_comuni_cierre',
+                DB::raw("date_format(F_noti_efectiva_comuni_cierre, '%d/%m/%Y') as F_noti_efectiva_comuni_cierre"),
                 'Guia_comuni_cierre_afi'
             )
             ->whereRaw('DATE(F_ultima_accion) BETWEEN ? AND ?', [$fecha_desde, $fecha_hasta])
-            // ->orderBy('F_ultima_accion', 'asc')
             ->get();
             
             /* 
