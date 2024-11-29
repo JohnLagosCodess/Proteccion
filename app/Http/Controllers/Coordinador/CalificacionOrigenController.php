@@ -2026,7 +2026,7 @@ class CalificacionOrigenController extends Controller
         switch (true) {
             case ($destinatarioPrincipal == 'Afiliado'):                
                 $array_datos_destinatarios = cndatos_comunicado_eventos::on('sigmel_gestiones')
-                ->where([['ID_evento',$newIdEvento],['Nro_identificacion',$identificacion_comunicado_afiliado]])
+                ->where([['ID_evento',$newIdEvento],['Nro_identificacion_afiliado',$identificacion_comunicado_afiliado]])
                 ->limit(1)->get(); 
                 $array_datos_lider =DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_grupos_trabajos as sgt')
                 ->leftJoin('sigmel_sys.users as ssu', 'ssu.id', '=', 'sgt.lider')
@@ -2049,7 +2049,7 @@ class CalificacionOrigenController extends Controller
             break;
             case ($destinatarioPrincipal == 'Empleador'):                
                 $array_datos_destinatarios = cndatos_comunicado_eventos::on('sigmel_gestiones')
-                ->where([['ID_evento',$newIdEvento],['Nro_identificacion',$identificacion_comunicado_afiliado]])
+                ->where([['ID_evento',$newIdEvento],['Nro_identificacion_afiliado',$identificacion_comunicado_afiliado]])
                 ->limit(1)->get(); 
                 $array_datos_lider =DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_grupos_trabajos as sgt')
                 ->leftJoin('sigmel_sys.users as ssu', 'ssu.id', '=', 'sgt.lider')

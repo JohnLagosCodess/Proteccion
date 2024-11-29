@@ -1745,7 +1745,6 @@ $(document).ready(function(){
                 success: function(response){
                     if(response && response[0]){
                         $("#btn_guardar_actualizar_correspondencia").val('Actualizar');
-
                         $("#modalCorrespondencia #n_orden").val(response[0]?.N_orden);
                         $("#modalCorrespondencia #nombre_destinatario").val(response[0]?.Nombre_destinatario);
                         $("#modalCorrespondencia #direccion").val(response[0]?.Direccion_destinatario);
@@ -2216,7 +2215,7 @@ $(document).ready(function(){
             $("#formatoB_revisionpension_editar").prop("checked", false);
             $("#documento_revisionpension_editar").prop("checked", false);
             $("#No_procede_recali_editar").prop("checked", false);
-        }else if (tipo_descarga == "Formato_B_Revision_pension") {
+        }else if (tipo_descarga == "RATIFICACIÓN PENSIÓN") {
             $("#documentos_pcl_editar").prop("checked", false);
             $("#otro_documento_pcl_editar").prop("checked", false);
             $("#formatoB_revisionpension_editar").prop("checked", true);
@@ -2638,7 +2637,6 @@ $(document).ready(function(){
     $("[name='tipo_documento_descarga_califi_editar']").on("change", function(){
         var opc_seleccionada = $(this).val();
         $("#asunto_editar").prop('readonly', true);
-        
         if (opc_seleccionada == "Documento_PCL") {
             $("#asunto_editar").val("Solicitud de documentos Calificación de Pérdida de Capacidad laboral al Fondo de Pensiones Porvenir S.A.");
 
@@ -3037,6 +3035,9 @@ $(document).ready(function(){
                 }
         });       
         var tipo_descarga = $("[name='tipo_documento_descarga_califi_editar']").filter(":checked").val();
+        if($("[name='tipo_documento_descarga_califi_editar']").filter(":checked").val() == 'Formato_B_Revision_pension'){
+            tipo_descarga = 'RATIFICACIÓN PENSIÓN'
+        }
         cuerpo_comunicado = cuerpo_comunicado ? cuerpo_comunicado.replace(/"/g, "'") : '';
         let token = $('input[name=_token]').val();        
         var datos_actualizarComunicado = {
@@ -3885,8 +3886,12 @@ $(document).ready(function(){
                 }
             }
         });
-        var tipo_descarga = $("[name='tipo_documento_descarga_califi']").filter(":checked").val();
-        
+        var tipo_descarga = $("[name='tipo_documento_descarga_califi_editar']").filter(":checked").val();
+        if($("[name='tipo_documento_descarga_califi_editar']").filter(":checked").val() == 'Formato_B_Revision_pension'){
+            tipo_descarga = 'RATIFICACIÓN PENSIÓN'
+        }
+        console.log($("[name='tipo_documento_descarga_califi_editar']").filter(":checked").val());
+        console.log(tipo_descarga);
         let token = $('input[name=_token]').val();  
         var datos_generarComunicado = {
             '_token': token,

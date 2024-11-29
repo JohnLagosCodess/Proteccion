@@ -163,7 +163,7 @@
                                 $imagenBase64_header = base64_encode($imagenData_header);
                             ?>
                             <img src="data:image/png;base64,{{ $imagenBase64_header }}" class="logo_header">
-                        <?php endif ?>  
+                        <?php endif ?>
                     </td>
                 </tr>
             </tbody>
@@ -211,7 +211,7 @@
                             <div class="fuente_todo_texto paddingTexto">{{$Email_destinatario}}</div>
                             <div class="fuente_todo_texto paddingTexto">{{$Direccion_destinatario}}</div>
                             <div class="fuente_todo_texto paddingTexto">{{$Telefono_destinatario}}</div>
-                            <div class="fuente_todo_texto paddingTexto">{{$Ciudad_destinatario.' - '.$Departamento_destinatario}}</div>
+                            <div class="fuente_todo_texto paddingTexto"><?php if($Ciudad_destinatario == "Bogota D.C."): ?>{{$Ciudad_destinatario}}<?php else: ?>{{$Ciudad_destinatario.' - '.$Departamento_destinatario}}<?php endif ?></div>
                         </div>   
                     </td>
                 </tr>
@@ -240,8 +240,8 @@
             <br>           
             <?php
                 $patron1 = '/\{\{\$nombre_afiliado\}\}/';
-                if (!empty($cuerpo) && preg_match($patron1, $cuerpo)) {                    
-                    $texto_modificado = str_replace('{{$nombre_afiliado}}', $Nombre_destinatario, $cuerpo);;
+                if (!empty($cuerpo) && preg_match($patron1, $cuerpo)) {
+                    $texto_modificado = str_replace('{{$nombre_afiliado}}', $Tipo_afiliado === 27 ? $Nombre_beneficiario : $Nombre_afiliado, $cuerpo);;
                     $cuerpo = $texto_modificado;
                 } else {
                     $cuerpo = "";
@@ -258,11 +258,7 @@
         <br>
         <section class="fuente_todo_texto">
             <table class="tabla1" style="text-align: justify;">                               
-                @if (count($Agregar_copia) == 0)
-                    <tr>
-                        <td class='copias'><span class="negrita">Copia: </span>No se registran copias</td>                                                                                
-                    </tr>
-                @else
+                @if (count($Agregar_copia) > 0)
                     <tr>
                         <td class="justificado copias"><span class="negrita">Copia:</span></td>                            
                     </tr>

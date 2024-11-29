@@ -2129,8 +2129,8 @@ class CalificacionPCLController extends Controller
         switch (true) {
             case ($destinatarioPrincipal == 'Afiliado'):                
                 $array_datos_destinatarios = cndatos_comunicado_eventos::on('sigmel_gestiones')
-                ->where([['ID_evento',$newIdEvento],['Nro_identificacion',$identificacion_comunicado_afiliado]])
-                ->limit(1)->get(); 
+                ->where([['ID_evento',$newIdEvento],['Nro_identificacion_afiliado',$identificacion_comunicado_afiliado]])
+                ->get(); 
                 $array_datos_lider =DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_grupos_trabajos as sgt')
                 ->leftJoin('sigmel_sys.users as ssu', 'ssu.id', '=', 'sgt.lider')
                 ->select('ssu.id', 'ssu.name', 'sgt.Id_proceso_equipo')
@@ -2152,7 +2152,7 @@ class CalificacionPCLController extends Controller
             break;
             case ($destinatarioPrincipal == 'Empleador'):                
                 $array_datos_destinatarios = cndatos_comunicado_eventos::on('sigmel_gestiones')
-                ->where([['ID_evento',$newIdEvento],['Nro_identificacion',$identificacion_comunicado_afiliado]])
+                ->where([['ID_evento',$newIdEvento],['Nro_identificacion_afiliado',$identificacion_comunicado_afiliado]])
                 ->limit(1)->get();  
                 $array_datos_lider =DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_grupos_trabajos as sgt')
                 ->leftJoin('sigmel_sys.users as ssu', 'ssu.id', '=', 'sgt.lider')
@@ -3481,19 +3481,11 @@ class CalificacionPCLController extends Controller
             
             $Agregar_copias = [];
             if (isset($copia_afiliado)) {
-                $AfiliadoData = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_afiliado_eventos as siae')
-                ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm', 'siae.Id_departamento', '=', 'sldm.Id_departamento')
-                ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm2', 'siae.Id_municipio', '=', 'sldm2.Id_municipios')
-                ->select('siae.Nombre_afiliado', 'siae.Direccion', 'siae.Telefono_contacto', 'sldm.Nombre_departamento as Nombre_ciudad', 'sldm2.Nombre_municipio', 'siae.Email')
-                ->where([['siae.Nro_identificacion', $N_identificacion],['siae.ID_evento', $ID_evento]])
-                ->get();
-                $nombreAfiliado = $AfiliadoData[0]->Nombre_afiliado;
-                $direccionAfiliado = $AfiliadoData[0]->Direccion;
-                $telefonoAfiliado = $AfiliadoData[0]->Telefono_contacto;
-                $ciudadAfiliado = $AfiliadoData[0]->Nombre_ciudad;
-                $municipioAfiliado = $AfiliadoData[0]->Nombre_municipio;
-                $emailAfiliado = $AfiliadoData[0]->Email;            
-                $Agregar_copias['Afiliado'] = $nombreAfiliado."; ".$direccionAfiliado."; ".$emailAfiliado."; ".$telefonoAfiliado."; ".$ciudadAfiliado."; ".$municipioAfiliado.".";          
+                if($apoderado){
+                    $Agregar_copias['Afiliado'] = $Nombre_destinatario."; ".$Direccion_destinatario."; ".$Email_destinatario."; ".$Telefono_destinatario."; ".$Departamento_destinatario."; ".$Ciudad_destinatario.".";
+                }else{
+                    $Agregar_copias['Afiliado'] = $Nombre_afiliado."; ".$Direccion_afiliado."; ".$Email_afiliado."; ".$Telefono_afiliado."; ".$Departamento_afiliado."; ".$Ciudad_afiliado.".";
+                }          
             }
 
             if(isset($copia_empleador)){
