@@ -1079,8 +1079,8 @@
                             <div class="col-3">
                                 <div class="form-group">
                                     <label for="destinatario_principal">Destinatario Principal</label>                                            
-                                    {{-- <input type="text" class="form-control" name="destinatario_principal" id="destinatario_principal" value="{{$array_datos_calificacion_origen[0]->Nombre_afiliado}}" disabled> --}}
-                                    <input type="text" class="form-control" name="destinatario_principal" id="destinatario_principal" value="{{$afp_afiliado[0]->Nombre_entidad}}" disabled>
+                                    <input type="text" class="form-control" name="destinatario_principal" id="destinatario_principal" value="{{$nombre_destinatario_principal_correspondencia}}" disabled>
+                                    {{-- <input type="text" class="form-control" name="destinatario_principal" id="destinatario_principal" value="{{$afp_afiliado[0]->Nombre_entidad}}" disabled> --}}
                                 </div>
                             </div>
                             <div class="col-3">

@@ -2542,7 +2542,7 @@ $(document).ready(function(){
         if ($(this).prop('checked')) {
             var asunto_insertar = "NOTIFICACIÓN SOBRE CALIFICACIÓN DE ORIGEN";
             var texto_insertar = '<p>En Protección estamos para guiarle y acompañarle en cada momento de su vida. En atención a la solicitud de emisión de dictamen sobre el presunto origen de la contingencia, le informamos que, una vez estudiada la documentación del paciente por nuestro Comité Interdisciplinario de Calificación de Pérdida de la Capacidad Laboral y Origen, experto en la materia, se considera que el presunto origen de la muerte del (la) señor(a) <b>{{$nombre_afiliado}}</b>, es con ocasión de:</p>\
-            <div style="display:flex;justify-content:center;">\
+            <div class="centrado" style="display:flex;justify-content:center;">\
                 <table class="tabla_cuerpo" style="width:20% !important;">\
                     <tr>\
                         <th><b>ORIGEN</b></th>\
@@ -3286,6 +3286,7 @@ $(document).ready(function(){
             }
             else{
                 datos_pdf_noti_dml_previsional = dataCreacionOficioDeNotificación(informacion_comunicado.Id_Comunicado);
+                
                 $.ajax({    
                     type:'POST',
                     url:'/DescargaProformaNotiDMLPrev',

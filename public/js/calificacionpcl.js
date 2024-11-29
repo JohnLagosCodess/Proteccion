@@ -80,6 +80,24 @@ $(document).ready(function(){
         allowClear:false
     });
 
+    $(".enviar").select2({      
+        width: '100%',
+        placeholder:"Seleccione una opción",
+        allowClear:false
+    });
+
+    $(".incumple_primera_cita").select2({      
+        width: '100%',
+        placeholder:"Seleccione una opción",
+        allowClear:false
+    });
+
+    $(".incumple_segunda_cita").select2({      
+        width: '100%',
+        placeholder:"Seleccione una opción",
+        allowClear:false
+    });
+
     // llenado de selectores
 
     let token = $('input[name=_token]').val();
@@ -236,6 +254,56 @@ $(document).ready(function(){
         }
     });
 
+    /* LLenamos el selector de Causal de incumplimiento 1ra cita */
+    let datos_lista_causal_incumple_primera_cita = {
+        '_token': token,
+        'parametro':"lista_incumple_primera_cita"
+    };
+
+    $.ajax({
+        type:'POST',
+        url:'/selectoresModuloCalificacionPCL',
+        data: datos_lista_causal_incumple_primera_cita,
+        success:function(data){
+            // console.log(data);
+            $('#incumple_primera_cita').append('<option value=""></option>');
+            let bd_id_incumple_pri_cita = $('#bd_id_incumple_pri_cita').val();
+            let incumple_primera_cita = Object.keys(data);
+            for (let i = 0; i < incumple_primera_cita.length; i++) {
+                if (data[incumple_primera_cita[i]]['Id_Parametro'] == bd_id_incumple_pri_cita) {                    
+                    $('#incumple_primera_cita').append('<option value="'+data[incumple_primera_cita[i]]['Id_Parametro']+'" selected>'+data[incumple_primera_cita[i]]['Nombre_parametro']+'</option>');
+                }else{
+                    $('#incumple_primera_cita').append('<option value="'+data[incumple_primera_cita[i]]['Id_Parametro']+'">'+data[incumple_primera_cita[i]]['Nombre_parametro']+'</option>');
+                }
+            }
+        }
+    });
+
+    /* LLenamos el selector de Causal de incumplimiento 2da cita */
+    let datos_lista_causal_incumple_segunda_cita = {
+        '_token': token,
+        'parametro':"lista_incumple_segunda_cita"
+    };
+
+    $.ajax({
+        type:'POST',
+        url:'/selectoresModuloCalificacionPCL',
+        data: datos_lista_causal_incumple_segunda_cita,
+        success:function(data){
+            // console.log(data);
+            $('#incumple_segunda_cita').append('<option value=""></option>');
+            let bd_id_incumple_segunda_cita = $('#bd_id_incumple_segunda_cita').val();
+            let incumple_segunda_cita = Object.keys(data);
+            for (let i = 0; i < incumple_segunda_cita.length; i++) {
+                if (data[incumple_segunda_cita[i]]['Id_Parametro'] == bd_id_incumple_segunda_cita) {                    
+                    $('#incumple_segunda_cita').append('<option value="'+data[incumple_segunda_cita[i]]['Id_Parametro']+'" selected>'+data[incumple_segunda_cita[i]]['Nombre_parametro']+'</option>');
+                }else{
+                    $('#incumple_segunda_cita').append('<option value="'+data[incumple_segunda_cita[i]]['Id_Parametro']+'">'+data[incumple_segunda_cita[i]]['Nombre_parametro']+'</option>');
+                }
+            }
+        }
+    });
+
     // LISTADO DE ACCIONES 
     var datos_listado_accion = {
         '_token': token,
@@ -361,6 +429,7 @@ $(document).ready(function(){
     }
 
     $("#accion").change(function(){
+        /* validar parametrica */
         let datos_ejecutar_parametrica_mod_principal = {
             '_token': token,
             'parametro': "validarSiModPrincipal",
@@ -391,6 +460,7 @@ $(document).ready(function(){
             }
         });
 
+        /* validar lista profesionales */
         let datos_lista_profesional={
             '_token':token,
             'parametro':"lista_profesional_accion",
@@ -453,6 +523,77 @@ $(document).ready(function(){
             var fecha_sin_hora = fecha_con_hora.substring(0, 10);
             $("#fecha_cierre").val(fecha_sin_hora);
         }
+
+        /* 
+            Funcionalidad para dejar los siguientes campos required cuando se ejecute las siguientes acciones:
+
+            Acción: REPORTAR PROGRAMACIÓN 1RA CITA - MÉDICO LABORAL (id 44)
+                Campos: Fecha de 1ra cita y Causal de incumplimiento 1ra cita
+            Acción: REPROGRAMAR 2DA CITA - MÉDICO LABORAL (id 51)
+                Campos: Fecha de 2da cita y Causal de incumplimiento 2da cita
+            Cualquier otra opción: Se quitan los required y se oculta la viñeta (*)
+        */
+        if ($(this).val() == 44) {
+            $("#fecha_primera_cita").prop('required', true);
+            $("#incumple_primera_cita").prop('required', true);
+            $(".obligatorio_primera_cita").removeClass('d-none');
+
+            $("#fecha_segunda_cita").prop('required', false);
+            $("#incumple_segunda_cita").prop('required', false);
+            $(".obligatorio_segunda_cita").addClass('d-none');
+
+            /* Activacion alerta para indicar sobre la creacion de obligatoriedad de los campos */
+            var nombre_accion = $(this).find('option:selected').text();
+            var texto_alerta = `Señor usuario(a): La acción seleccionada: <b>${nombre_accion}</b> marcó como obligatorio los campos: <b>Fecha de 1ra cita</b> y <b>Causal de incumplimiento 1ra cita</b>. 
+            Por favor diligéncielos para poder guardar y/o actualizar la información.`;
+
+            Swal.fire({
+                title: 'Campos Requeridos',
+                html: texto_alerta, // Usa 'html' para interpretar etiquetas HTML
+                icon: 'info',
+                confirmButtonText: 'Aceptar',
+                confirmButtonColor: '#17A2B8',
+                willOpen: () => {
+                    // Elimina cualquier problema relacionado con el foco
+                    document.activeElement.blur();
+                }
+            });
+
+        }else if($(this).val() == 51){
+            $("#fecha_segunda_cita").prop('required', true);
+            $("#incumple_segunda_cita").prop('required', true);
+            $(".obligatorio_segunda_cita").removeClass('d-none');
+
+            $("#fecha_primera_cita").prop('required', false);
+            $("#incumple_primera_cita").prop('required', false);
+            $(".obligatorio_primera_cita").addClass('d-none');
+
+            /* Activacion alerta para indicar sobre la creacion de obligatoriedad de los campos */
+            var nombre_accion = $(this).find('option:selected').text();
+            var texto_alerta = `Señor usuario(a): La acción seleccionada: <b>${nombre_accion}</b> marcó como obligatorio los campos: <b>Fecha de 2da cita</b> y <b>Causal de incumplimiento 2da cita</b>. 
+            Por favor diligéncielos para poder guardar y/o actualizar la información.`;
+
+            Swal.fire({
+                title: 'Campos Requeridos',
+                html: texto_alerta, // Usa 'html' para interpretar etiquetas HTML
+                icon: 'info',
+                confirmButtonText: 'Aceptar',
+                confirmButtonColor: '#17A2B8',
+                willOpen: () => {
+                    // Elimina cualquier problema relacionado con el foco
+                    document.activeElement.blur();
+                }
+            });
+
+        }else{
+            $("#fecha_primera_cita").prop('required', false);
+            $("#incumple_primera_cita").prop('required', false);
+            $("#fecha_segunda_cita").prop('required', false);
+            $("#incumple_segunda_cita").prop('required', false);
+            $(".obligatorio_primera_cita").addClass('d-none');
+            $(".obligatorio_segunda_cita").addClass('d-none');
+        }
+
     });
 
     //Listado de los tipos de documento que pueden subir
@@ -836,6 +977,10 @@ $(document).ready(function(){
         formData.append('fecha_devolucion', $('#fecha_devolucion').val());   
         formData.append('fuente_informacion', $('#fuente_informacion').val());
         formData.append('nueva_fecha_radicacion', $('#nueva_fecha_radicacion').val());
+        formData.append('fecha_primera_cita', $('#fecha_primera_cita').val());
+        formData.append('incumple_primera_cita', $('#incumple_primera_cita').val());
+        formData.append('fecha_segunda_cita', $('#fecha_segunda_cita').val());
+        formData.append('incumple_segunda_cita', $('#incumple_segunda_cita').val());
         formData.append('accion', $('#accion').val());
         formData.append('fecha_alerta', $('#fecha_alerta').val());
         formData.append('enviar', $('#enviar').val());
@@ -4772,7 +4917,31 @@ $(document).ready(function(){
         localStorage.removeItem("#guardar_datos_tabla");
         document.querySelector("#clicGuardado").click();
     }
-    
+
+    /* 
+        Funcionalidad de no permitir capturar fechas inferiores a la actual
+        en los inputs date de Fecha de 1ra cita y Fecha de 2da cita
+    */
+    $(document).on('keyup change', '#fecha_primera_cita, #fecha_segunda_cita', function(event){
+
+        var fecha_actual = obtenerFechaActual();
+        var tipo_evento = event.type;
+
+        if (tipo_evento == 'keyup' || tipo_evento == 'change') {
+            if ($(this).val() < fecha_actual) {
+                // Eliminar cualquier alerta previa
+                if ($(this).next('i').length) {
+                    $(this).next('i').remove();
+                }
+                let alerta = '<i style="color:red;">La fecha ingresada debe ser igual o superior a la fecha actual.</i>';
+                $(this).after(alerta);
+            }else{
+                if ($(this).next('i').length) {
+                    $(this).next('i').remove();
+                }
+            }
+        }
+    });
 });
 
 /**
@@ -4850,3 +5019,21 @@ function getHistorialNotificacion(n_radicado, nota,status_notificacion,data_comu
 
     return info_notificacion;
 }
+
+/* Función para obtener la fecha actual */
+function obtenerFechaActual() {
+    var hoy = new Date();
+    var dia = hoy.getDate();
+    var mes = hoy.getMonth() + 1; // Los meses van de 0 a 11
+    var año = hoy.getFullYear();
+
+    // Formatear la fecha como AAAA-MM-DD
+    if (mes < 10) {
+        mes = '0' + mes; // Agregar un cero si el mes es menor a 10
+    }
+    if (dia < 10) {
+        dia = '0' + dia; // Agregar un cero si el día es menor a 10
+    }
+
+    return año + '-' + mes + '-' + dia;
+};

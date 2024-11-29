@@ -521,6 +521,34 @@ class CalificacionPCLController extends Controller
             $datos_status_notificacion_corresp = json_decode(json_encode($datos_status_notificacion_correspondencia, true));
             return response()->json($datos_status_notificacion_corresp);
         }
+
+        if ($parametro == "lista_incumple_primera_cita") {
+            $datos_incumple_pri_cita = sigmel_lista_parametros::on('sigmel_gestiones')
+            ->select('Id_Parametro','Nombre_parametro')
+            ->where([
+                ['Tipo_lista', '=', 'Causal_incumplimiento'],
+                ['Estado', '=', 'activo']
+            ])
+            ->get();
+
+            $array_datos_incumple_pri_cita = json_decode(json_encode($datos_incumple_pri_cita, true));
+
+            return response()->json($array_datos_incumple_pri_cita);
+        }
+
+        if ($parametro == "lista_incumple_segunda_cita") {
+            $datos_incumple_segunda_cita = sigmel_lista_parametros::on('sigmel_gestiones')
+            ->select('Id_Parametro','Nombre_parametro')
+            ->where([
+                ['Tipo_lista', '=', 'Causal_incumplimiento'],
+                ['Estado', '=', 'activo']
+            ])
+            ->get();
+
+            $array_datos_incumple_segunda_cita = json_decode(json_encode($datos_incumple_segunda_cita, true));
+
+            return response()->json($array_datos_incumple_segunda_cita);
+        }
         
     }
 
@@ -652,6 +680,10 @@ class CalificacionPCLController extends Controller
                 'Id_proceso' => $request->Id_proceso,
                 // 'Modalidad_calificacion' => $request->modalidad_calificacion,
                 'fuente_informacion' => $request->fuente_informacion,
+                'F_primera_cita' => $request->fecha_primera_cita,
+                'Causal_incumplimiento_primera_cita' => $request->incumple_primera_cita,
+                'F_segunda_cita' => $request->fecha_segunda_cita,
+                'Causal_incumplimiento_segunda_cita' => $request->incumple_segunda_cita,
                 'F_accion' => $date_time,
                 'Accion' => $request->accion,
                 'F_Alerta' => $request->fecha_alerta,
@@ -671,6 +703,10 @@ class CalificacionPCLController extends Controller
                 'Aud_Id_proceso' => $request->Id_proceso,
                 // 'Aud_Modalidad_calificacion' => $request->modalidad_calificacion,
                 'Aud_fuente_informacion' => $request->fuente_informacion,
+                'Aud_F_primera_cita' => $request->fecha_primera_cita,
+                'Aud_Causal_incumplimiento_primera_cita' => $request->incumple_primera_cita,
+                'Aud_F_segunda_cita' => $request->fecha_segunda_cita,
+                'Aud_Causal_incumplimiento_segunda_cita' => $request->incumple_segunda_cita,
                 'Aud_F_accion' => $date_time,
                 'Aud_Accion' => $request->accion,
                 'Aud_F_Alerta' => $request->fecha_alerta,
@@ -1212,6 +1248,10 @@ class CalificacionPCLController extends Controller
                 'Id_proceso' => $request->Id_proceso,
                 // 'Modalidad_calificacion' => $request->modalidad_calificacion,
                 'fuente_informacion' => $request->fuente_informacion,
+                'F_primera_cita' => $request->fecha_primera_cita,
+                'Causal_incumplimiento_primera_cita' => $request->incumple_primera_cita,
+                'F_segunda_cita' => $request->fecha_segunda_cita,
+                'Causal_incumplimiento_segunda_cita' => $request->incumple_segunda_cita,
                 'F_accion' => $date_time,
                 'Accion' => $request->accion,
                 'F_Alerta' => $request->fecha_alerta,
@@ -1231,6 +1271,10 @@ class CalificacionPCLController extends Controller
                 'Aud_Id_proceso' => $request->Id_proceso,
                 // 'Aud_Modalidad_calificacion' => $request->modalidad_calificacion,
                 'Aud_fuente_informacion' => $request->fuente_informacion,
+                'Aud_F_primera_cita' => $request->fecha_primera_cita,
+                'Aud_Causal_incumplimiento_primera_cita' => $request->incumple_primera_cita,
+                'Aud_F_segunda_cita' => $request->fecha_segunda_cita,
+                'Aud_Causal_incumplimiento_segunda_cita' => $request->incumple_segunda_cita,
                 'Aud_F_accion' => $date_time,
                 'Aud_Accion' => $request->accion,
                 'Aud_F_Alerta' => $request->fecha_alerta,

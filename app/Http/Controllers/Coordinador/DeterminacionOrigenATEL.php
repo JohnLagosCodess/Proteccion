@@ -61,6 +61,25 @@ class DeterminacionOrigenATEL extends Controller
 
         $array_datos_calificacion_origen = DB::select('CALL psrcalificacionOrigen(?)', array($Id_asignacion_dto_atel));
 
+        // validacion nombre destinatario principal
+        if (count($array_datos_calificacion_origen) > 0) {
+            $apoderado_correspondencia = $array_datos_calificacion_origen[0]->Apoderado;
+            $tipo_afiliado_correspondencia = $array_datos_calificacion_origen[0]->Tipo_afiliado;
+
+            // Si hay apoderado
+            if ($apoderado_correspondencia == "Si") {
+                $nombre_destinatario_principal_correspondencia = $array_datos_calificacion_origen[0]->Nombre_apoderado;
+            }else{
+                // validacion por tipo de afiliado
+                if ($tipo_afiliado_correspondencia == "Cotizante" || $tipo_afiliado_correspondencia == "Subsidiado" || $tipo_afiliado_correspondencia == "Pensionado") {
+                    $nombre_destinatario_principal_correspondencia = $array_datos_calificacion_origen[0]->Nombre_afiliado;
+                }elseif($tipo_afiliado_correspondencia == "Beneficiario"){
+                    $nombre_destinatario_principal_correspondencia = $array_datos_calificacion_origen[0]->Nombre_afiliado_benefi;
+                }
+            }
+
+        }
+
         // $consecutivo_dto_atel = sigmel_informacion_dto_atel_eventos::on('sigmel_gestiones')
         // ->max('Numero_dictamen');
         
@@ -291,7 +310,7 @@ class DeterminacionOrigenATEL extends Controller
         'dato_articulo_12', 'array_datos_diagnostico_motcalifi','info_evento',
         'array_datos_examenes_interconsultas', 'array_datos_historico_laboral', 'datos_bd_DTO_ATEL', 
         'nombre_del_evento_guardado','array_comite_interdisciplinario', 'consecutivo', 
-        'array_comunicados_correspondencia', 'afp_afiliado', 'info_afp_conocimiento', 'caso_notificado', 'N_siniestro_evento', 'datos_forma_envio'));
+        'array_comunicados_correspondencia', 'afp_afiliado', 'info_afp_conocimiento', 'caso_notificado', 'N_siniestro_evento', 'datos_forma_envio', 'nombre_destinatario_principal_correspondencia'));
 
     }
 
@@ -1759,8 +1778,37 @@ class DeterminacionOrigenATEL extends Controller
         $anexos = $request->anexos;
         $tipo_evento = $request->tipo_evento;
         $N_siniestro = $request->N_siniestro;
-        
+
         /* Creación de las variables faltantes que no están en el formulario */
+        //QR
+        $formattedData = "";
+        $dictamenOrigenQr = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_asignacion_eventos as siae')
+        ->leftJoin('sigmel_gestiones.sigmel_informacion_decreto_eventos as side', 'side.Id_Asignacion', '=', 'siae.Id_Asignacion')
+        ->leftJoin('sigmel_gestiones.sigmel_informacion_afiliado_eventos as siaf', 'siaf.ID_evento', '=', 'siae.ID_evento')
+        ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slp', 'slp.Id_Parametro', '=', 'siaf.Tipo_documento')
+        ->select('siaf.Nombre_afiliado', 'slp.Nombre_parametro', 'siaf.Nro_identificacion', 'siae.Consecutivo_dictamen', 
+        'side.Porcentaje_pcl', 'side.F_estructuracion', 'siae.ID_evento')
+        ->where('siae.Id_Asignacion', $Id_asignacion)->get();     
+
+        if (!$dictamenOrigenQr->isEmpty()) {
+            // Crear una cadena para almacenar los datos en el formato deseado                    
+        
+            foreach ($dictamenOrigenQr as $evento) {
+                // Construir la cadena de texto con el formato deseado
+                $formattedData .= $evento->Nombre_afiliado."\n";
+                $formattedData .= $evento->Nombre_parametro." ".$evento->Nro_identificacion . "\n";
+                $formattedData .= "N° Dictámen: ".$evento->Consecutivo_dictamen."\n";
+                $formattedData .= "Cod. Verificación: ".$evento->ID_evento."\n";
+                // Agregar un salto de línea después de cada conjunto de atributos de evento
+                $formattedData .= "\n";
+            }
+                            
+        }
+
+        // Codigo QR
+        $datosQr = $formattedData;
+        $codigoQR = QrCode::size(110)->margin(0.5)->generate($datosQr); 
+
         $dato_nro_radicado = sigmel_informacion_comunicado_eventos::on('sigmel_gestiones')
         ->select('N_radicado')
         ->where([['Id_Comunicado', $id_comunicado]])
@@ -1768,6 +1816,87 @@ class DeterminacionOrigenATEL extends Controller
 
         $array_dato_nro_radicado = json_decode(json_encode($dato_nro_radicado), true);
         $nro_radicado = $array_dato_nro_radicado[0]["N_radicado"];
+
+        // Extraemos toda la información del afiliado para realizar validaciones del destinatario principial, copias y demás
+        $array_datos_info_afiliado = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_afiliado_eventos as siae')
+        ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slp', 'slp.Id_Parametro', '=', 'siae.Tipo_documento')
+        ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slpa', 'slpa.Id_Parametro', '=', 'siae.Nivel_escolar')
+        ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slpar', 'slpar.Id_Parametro', '=', 'siae.Estado_civil')
+        ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as slde', 'slde.Id_departamento', '=', 'siae.Id_departamento')
+        ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm', 'sldm.Id_municipios', '=', 'siae.Id_municipio')
+        ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slpara', 'slpara.Id_Parametro', '=', 'siae.Tipo_documento_benefi')
+        ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldep', 'sldep.Id_departamento', '=', 'siae.Id_departamento_benefi')
+        ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldmu', 'sldmu.Id_municipios', '=', 'siae.Id_municipio_benefi')
+        ->leftJoin('sigmel_gestiones.sigmel_informacion_entidades as sie', 'sie.Id_Entidad', '=', 'siae.Id_eps')
+        ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldepa', 'sldepa.Id_departamento', '=', 'sie.Id_Departamento')
+        ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldmun', 'sldmun.Id_municipios', '=', 'sie.Id_Ciudad')
+        ->leftJoin('sigmel_gestiones.sigmel_informacion_entidades as sien', 'sien.Id_Entidad', '=', 'siae.Id_afp')
+        ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldepar', 'sldepar.Id_departamento', '=', 'sien.Id_Departamento')
+        ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldmuni', 'sldmuni.Id_municipios', '=', 'sien.Id_Ciudad')
+        ->leftJoin('sigmel_gestiones.sigmel_informacion_entidades as sient', 'sient.Id_Entidad', '=', 'siae.Id_arl')
+        ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldepart', 'sldepart.Id_departamento', '=', 'sient.Id_Departamento')
+        ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldmunic', 'sldmunic.Id_municipios', '=', 'sient.Id_Ciudad')
+        ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slparam', 'slparam.Id_Parametro', '=', 'siae.Tipo_documento_apoderado')
+        ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldeparta', 'sldeparta.Id_departamento', '=', 'siae.Id_departamento_apoderado')
+        ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldmunici', 'sldmunici.Id_municipios', '=', 'siae.Id_municipio_apoderado')
+        ->select('siae.ID_evento', 'siae.Nombre_afiliado', 'siae.Tipo_documento', 'slp.Nombre_parametro as T_documento', 
+        'siae.Nro_identificacion', 'siae.F_nacimiento', 'siae.Edad', 'siae.Genero', 'siae.Email', 'siae.Telefono_contacto', 
+        'siae.Estado_civil', 'slpar.Nombre_parametro as Estado_civi', 'siae.Nivel_escolar', 'slpa.Nombre_parametro as Escolaridad', 
+        'siae.Apoderado', 'siae.Nombre_apoderado', 'siae.Email_apoderado', 'siae.Telefono_apoderado', 'siae.Direccion_apoderado', 
+        'siae.Nro_identificacion_apoderado', 'siae.Tipo_documento_apoderado', 'slparam.Nombre_parametro as Tipo_documento_apodera',
+        'siae.Id_departamento_apoderado', 'sldeparta.Nombre_departamento as Nombre_departamento_apoderado', 'siae.Id_municipio_apoderado', 
+        'sldmunici.Nombre_municipio as Nombre_municipio_apoderado', 'siae.Id_dominancia', 'siae.Direccion', 
+        'siae.Id_departamento', 'slde.Nombre_departamento as Nombre_departamento', 'siae.Id_municipio', 'sldm.Nombre_municipio as Nombre_municipio', 
+        'siae.Ocupacion', 'siae.Tipo_afiliado', 'siae.Ibc', 'siae.Id_eps', 'sie.Nombre_entidad as Entidad_eps', 'sie.Direccion as Direccion_eps', 
+        'sie.Telefonos as Telefono_eps', 'sie.Emails as Email_eps', 'sie.Id_Departamento', 'sldepa.Nombre_departamento as Nombre_departamento_eps', 'sie.Id_Ciudad', 
+        'sldmun.Nombre_municipio as Nombre_municipio_eps', 'siae.Id_afp', 'sien.Nombre_entidad as Entidad_afp', 
+        'sien.Direccion as Direccion_afp', 'sien.Telefonos as Telefono_afp', 'sien.Emails as Email_afp', 'sien.Id_Departamento', 
+        'sldepar.Nombre_departamento as Nombre_departamento_afp', 'sien.Id_Ciudad', 
+        'sldmuni.Nombre_municipio as Nombre_municipio_afp', 'siae.Id_arl', 'sient.Nombre_entidad as Entidad_arl', 
+        'sient.Direccion as Direccion_arl', 'sient.Telefonos as Telefono_arl', 'sient.Emails as Email_arl','sient.Id_Departamento', 
+        'sldepart.Nombre_departamento as Nombre_departamento_arl', 'sient.Id_Ciudad',
+        'sldmunic.Nombre_municipio as Nombre_municipio_arl',
+        'siae.Activo',
+        'siae.Medio_notificacion', 'siae.Nombre_afiliado_benefi', 'siae.Tipo_documento_benefi', 'slpara.Nombre_parametro as Tipo_documento_benfi',         
+        'siae.Nro_identificacion_benefi', 'siae.Telefono_benefi', 'siae.Email_benefi', 'siae.Direccion_benefi', 'siae.Id_departamento_benefi', 
+        'sldep.Nombre_departamento as Nombre_departamento_benefi', 'siae.Id_municipio_benefi', 
+        'sldmu.Nombre_municipio as Nombre_municipio_benefi', 'siae.Nombre_usuario', 'siae.F_registro', 'F_actualizacion')
+        ->where([['ID_Evento',$Id_evento]])->limit(1)->get(); 
+
+        $Tipo_afiliado = $array_datos_info_afiliado[0]->Tipo_afiliado;
+        $Apoderado = $array_datos_info_afiliado[0]->Apoderado;
+
+        // Extracción de datos en caso de que el apoderado este en si
+        if($Apoderado == 'Si'){
+            $Nombre_afiliado_noti_apoderado = $array_datos_info_afiliado[0]->Nombre_apoderado;
+            $Direccion_afiliado_noti_apoderado = $array_datos_info_afiliado[0]->Direccion_apoderado;
+            $Email_afiliado_noti_apoderado = $array_datos_info_afiliado[0]->Email_apoderado;
+            $Telefono_afiliado_noti_apoderado = $array_datos_info_afiliado[0]->Telefono_apoderado;
+            $T_documento_noti_apoderado = $array_datos_info_afiliado[0]->Tipo_documento_apodera;            
+            $NroIden_afiliado_noti_apoderado = $array_datos_info_afiliado[0]->Nro_identificacion_apoderado;
+            $Departamento_afiliado_noti_apoderado = $array_datos_info_afiliado[0]->Nombre_departamento_apoderado;            
+            $Ciudad_afiliado_noti_apoderado = $array_datos_info_afiliado[0]->Nombre_municipio_apoderado;
+        }
+
+        // Extraccción de datos del afiliado/beneficiario
+        $Nombre_afiliado = $array_datos_info_afiliado[0]->Nombre_afiliado;
+        $Direccion_afiliado = $array_datos_info_afiliado[0]->Direccion;
+        $Email_afiliado = $array_datos_info_afiliado[0]->Email;
+        $Telefono_afiliado = $array_datos_info_afiliado[0]->Telefono_contacto;
+        $tipo_doc_afiliado = $array_datos_info_afiliado[0]->T_documento;            
+        $nro_identificacion_afiliado = $array_datos_info_afiliado[0]->Nro_identificacion;
+        $Departamento_afiliado = $array_datos_info_afiliado[0]->Nombre_departamento;            
+        $Ciudad_afiliado = $array_datos_info_afiliado[0]->Nombre_municipio;
+
+        // Extracción de datos cuando se llena la sección Información del Afiliado (es decir cuando el tipo de afiliado es beneficiario)
+        $Nombre_afiliado_noti_benefi = $array_datos_info_afiliado[0]->Nombre_afiliado_benefi;
+        $Direccion_afiliado_notibenefi = $array_datos_info_afiliado[0]->Direccion_benefi;
+        $Email_afiliado_notibenefi = $array_datos_info_afiliado[0]->Email_benefi;
+        $Telefono_afiliado_notibenefi = $array_datos_info_afiliado[0]->Telefono_benefi;
+        $T_documento_notibenefi = $array_datos_info_afiliado[0]->Tipo_documento_benfi;            
+        $NroIden_afiliado_notibenefi = $array_datos_info_afiliado[0]->Nro_identificacion_benefi;
+        $Departamento_afiliado_notibenefi = $array_datos_info_afiliado[0]->Nombre_departamento_benefi;            
+        $Ciudad_afiliado_notibenefi = $array_datos_info_afiliado[0]->Nombre_municipio_benefi;
 
         // Validación información Destinatario Principal
         $datos_para_destinatario_principal = sigmel_informacion_comite_interdisciplinario_eventos::on('sigmel_gestiones')
@@ -1873,16 +2002,36 @@ class DeterminacionOrigenATEL extends Controller
                 break;
             }
         } 
-        // En caso de que no: la info del destinatario principal se saca de la AFP
+        // En caso de que no: la info del destinatario principal va a depender del tipo de afiliado
         else {
-            $nombre_destinatario_principal = $nombre_afp;
-            $email_destinatario_principal = $email_afp;
-            $direccion_destinatario_principal = $direccionAfp;
-            $telefono_destinatario_principal = $telefono_afp;
-            $ciudad_destinatario_principal = $ciudad_afp === 'Bogotá D.C.' ? $ciudad_afp.' ('.$ciudad_afp.')' : $ciudad_afp;
+            // si esta marcado el apoderado el destinatario principal serán los datos del apoderado
+            if ($Apoderado == "Si") {
+                $nombre_destinatario_principal = $Nombre_afiliado_noti_apoderado;
+                $email_destinatario_principal = $Email_afiliado_noti_apoderado;
+                $direccion_destinatario_principal = $Direccion_afiliado_noti_apoderado;
+                $telefono_destinatario_principal = $Telefono_afiliado_noti_apoderado;
+                $ciudad_destinatario_principal = $Ciudad_afiliado_noti_apoderado === 'Bogota D.C.' ? 'BOGOTÁ D.C.' : $Departamento_afiliado_noti_apoderado." - ".$Ciudad_afiliado_noti_apoderado;
+            } // En caso de que no se evalua el tipo de afiliado de la siguiente manera
+            else{
+                // Si el tipo de afiliado es alguno de estos tres: Cotizante o Subsidiado o Pensionado entonces el destinatario principal será los datos del afiliado.
+                if($Tipo_afiliado == 26 || $Tipo_afiliado == 28 || $Tipo_afiliado == 29){
+                    $nombre_destinatario_principal = $Nombre_afiliado;
+                    $email_destinatario_principal = $Email_afiliado;
+                    $direccion_destinatario_principal = $Direccion_afiliado;
+                    $telefono_destinatario_principal = $Telefono_afiliado;
+                    $ciudad_destinatario_principal = $Ciudad_afiliado === 'Bogota D.C.' ? 'BOGOTÁ D.C.' : $Departamento_afiliado." - ".$Ciudad_afiliado;
+                }elseif ($Tipo_afiliado == 27){ // si el tipo de afiliado es Beneficiario entonces el destinatario principal serán los datos de la sección Información del Afiliado
+                    $nombre_destinatario_principal = $Nombre_afiliado_noti_benefi;
+                    $email_destinatario_principal = $Email_afiliado_notibenefi;
+                    $direccion_destinatario_principal = $Direccion_afiliado_notibenefi;
+                    $telefono_destinatario_principal = $Telefono_afiliado_notibenefi;
+                    $ciudad_destinatario_principal = $Ciudad_afiliado_notibenefi === 'Bogota D.C.' ? 'BOGOTÁ D.C.' : $Departamento_afiliado_notibenefi." - ".$Ciudad_afiliado_notibenefi;
+                }
+                
+            }
         }
         
-        $ramo = "Previsionales";
+        // $ramo = "Previsionales";
         
         /* Copias Interesadas */
         // Validamos si los checkbox esta marcados
@@ -1910,21 +2059,48 @@ class DeterminacionOrigenATEL extends Controller
         $Agregar_copias = [];
         if (isset($copia_beneficiario)) {
             // $Id_evento 
-            $datos_beneficiario = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_afiliado_eventos as siae')
-            ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm', 'siae.Id_departamento_benefi', '=', 'sldm.Id_departamento')
-            ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm2', 'siae.Id_municipio_benefi', '=', 'sldm2.Id_municipios')
-            // ->select('siae.Nombre_afiliado_benefi', 'siae.Direccion_benefi', 'siae.Email','sldm.Nombre_departamento', 'sldm2.Nombre_municipio as Nombre_ciudad')
-            ->select('siae.Nombre_afiliado', 'siae.Direccion', 'siae.Telefono_contacto', 'sldm.Nombre_departamento as Departamento', 'sldm2.Nombre_municipio as ciudad', 'siae.Email')
-            ->where([['siae.ID_evento', $Id_evento ]])
-            ->get();
+            // $datos_beneficiario = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_afiliado_eventos as siae')
+            // ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm', 'siae.Id_departamento_benefi', '=', 'sldm.Id_departamento')
+            // ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm2', 'siae.Id_municipio_benefi', '=', 'sldm2.Id_municipios')
+            // // ->select('siae.Nombre_afiliado_benefi', 'siae.Direccion_benefi', 'siae.Email','sldm.Nombre_departamento', 'sldm2.Nombre_municipio as Nombre_ciudad')
+            // ->select('siae.Nombre_afiliado', 'siae.Direccion', 'siae.Telefono_contacto', 'sldm.Nombre_departamento as Departamento', 'sldm2.Nombre_municipio as ciudad', 'siae.Email')
+            // ->where([['siae.ID_evento', $Id_evento ]])
+            // ->get();
 
-            $nombre_beneficiario = $datos_beneficiario[0]->Nombre_afiliado;//$datos_beneficiario[0]->Nombre_afiliado_benefi;
-            $direccion_beneficiario = $datos_beneficiario[0]->Direccion;//$datos_beneficiario[0]->Direccion_benefi;
-            $email_beneficiario = $datos_beneficiario[0]->Email;
-            $telefono_beneficiario = $datos_beneficiario[0]->Telefono_contacto;
-            $departamento_beneficiario = $datos_beneficiario[0]->Departamento; //$datos_beneficiario[0]->Nombre_departamento;
-            $ciudad_beneficiario = $datos_beneficiario[0]->ciudad;
+            // $nombre_beneficiario = $datos_beneficiario[0]->Nombre_afiliado;//$datos_beneficiario[0]->Nombre_afiliado_benefi;
+            // $direccion_beneficiario = $datos_beneficiario[0]->Direccion;//$datos_beneficiario[0]->Direccion_benefi;
+            // $email_beneficiario = $datos_beneficiario[0]->Email;
+            // $telefono_beneficiario = $datos_beneficiario[0]->Telefono_contacto;
+            // $departamento_beneficiario = $datos_beneficiario[0]->Departamento; //$datos_beneficiario[0]->Nombre_departamento;
+            // $ciudad_beneficiario = $datos_beneficiario[0]->ciudad;
 
+            // si esta marcado el apoderado el destinatario principal serán los datos del apoderado
+            if ($Apoderado == "Si") {
+                $nombre_beneficiario = "<b>".$Nombre_afiliado_noti_apoderado."</b>";
+                $direccion_beneficiario = $Direccion_afiliado_noti_apoderado;//$datos_beneficiario[0]->Direccion_benefi;
+                $email_beneficiario = $Email_afiliado_noti_apoderado;
+                $telefono_beneficiario = $Telefono_afiliado_noti_apoderado;
+                $departamento_beneficiario = $Departamento_afiliado_noti_apoderado; //$datos_beneficiario[0]->Nombre_departamento;
+                $ciudad_beneficiario = $Ciudad_afiliado_noti_apoderado;
+            } // En caso de que no se evalua el tipo de afiliado de la siguiente manera
+            else{
+                // Si el tipo de afiliado es alguno de estos tres: Cotizante o Subsidiado o Pensionado entonces el destinatario principal será los datos del afiliado.
+                if($Tipo_afiliado == 26 || $Tipo_afiliado == 28 || $Tipo_afiliado == 29){
+                    $nombre_beneficiario = "<b>".$Nombre_afiliado."</b>";
+                    $direccion_beneficiario = $Direccion_afiliado;//$datos_beneficiario[0]->Direccion_benefi;
+                    $email_beneficiario = $Email_afiliado;
+                    $telefono_beneficiario = $Telefono_afiliado;
+                    $departamento_beneficiario = $Departamento_afiliado; //$datos_beneficiario[0]->Nombre_departamento;
+                    $ciudad_beneficiario = $Ciudad_afiliado;
+                }elseif ($Tipo_afiliado == 27){ // si el tipo de afiliado es Beneficiario entonces el destinatario principal serán los datos de la sección Información del Afiliado
+                    $nombre_beneficiario = "<b>".$Nombre_afiliado_noti_benefi."</b>";
+                    $direccion_beneficiario = $Direccion_afiliado_notibenefi;//$datos_beneficiario[0]->Direccion_benefi;
+                    $email_beneficiario = $Email_afiliado_notibenefi;
+                    $telefono_beneficiario = $Telefono_afiliado_notibenefi;
+                    $departamento_beneficiario = $Departamento_afiliado_notibenefi; //$datos_beneficiario[0]->Nombre_departamento;
+                    $ciudad_beneficiario = $Ciudad_afiliado_notibenefi;
+                }
+            }
 
             $Agregar_copias['Beneficiario'] = $nombre_beneficiario."; ".$direccion_beneficiario."; ".$email_beneficiario."; ".$telefono_beneficiario."; ".$departamento_beneficiario."; ".$ciudad_beneficiario.".";
         }
@@ -2101,20 +2277,23 @@ class DeterminacionOrigenATEL extends Controller
             $footer = $footer_imagen[0]->Footer_cliente;
         } else {
             $footer = null;
-        } 
+        }
+
+        
 
         /* Armado de datos para reemplazarlos en la plantilla */
         $datos_finales_noti_dml_origen = [
+            'codigoQR' => $codigoQR,
             'id_cliente' => $Id_cliente_firma,
             'logo_header' => $logo_header,
             'ciudad' => $ciudad,
             'fecha' => $fecha,
             'asunto' => $asunto,
             'cuerpo' => $cuerpo,
+            'nombre_afiliado' => $nombre_afiliado,
             'tipo_identificacion' => $tipo_identificacion,
             'num_identificacion' => $num_identificacion,
             'Id_evento' => $Id_evento,
-            'nombre_afiliado' => $nombre_afiliado,
             'origen' => $origen,
             'nro_radicado' => $nro_radicado,
             'anexos' => $anexos,
@@ -2123,13 +2302,20 @@ class DeterminacionOrigenATEL extends Controller
             'direccion_destinatario_principal' => $direccion_destinatario_principal,
             'telefono_destinatario_principal' => $telefono_destinatario_principal,
             'ciudad_destinatario_principal' => $ciudad_destinatario_principal,
-            'ramo' => $ramo,
+            // 'ramo' => $ramo,
             'Agregar_copia' => $Agregar_copias,
             'Firma_cliente' => $Firma_cliente,
             'nombre_usuario' => $nombre_usuario,
             'footer' => $footer,
             'N_siniestro' => $N_siniestro,
             'tipo_evento' => $tipo_evento,
+            'Tipo_afiliado' => $Tipo_afiliado,
+            'Nombre_afiliado' => $Nombre_afiliado,
+            'tipo_doc_afiliado' => $tipo_doc_afiliado,
+            'nro_identificacion_afiliado' => $nro_identificacion_afiliado,
+            'Nombre_afiliado_noti_benefi' => $Nombre_afiliado_noti_benefi,
+            'T_documento_noti_benefi' => $T_documento_notibenefi,
+            'NroIden_afiliado_noti_benefi' => $NroIden_afiliado_notibenefi,
         ];
         /* Creación del pdf */
         $pdf = app('dompdf.wrapper');

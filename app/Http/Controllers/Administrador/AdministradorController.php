@@ -4243,7 +4243,7 @@ class AdministradorController extends Controller
         }
         
         // validacion si selecciona la opción Si del selector Apoderado
-        if ($request->apoderado == 'Si') {
+        // if ($request->apoderado == 'Si') {
             
             $tipo_doc_apoderado = $request->tipo_doc_apoderado;
             $nro_identificacion_apoderado = $request->nro_identificacion_apoderado;
@@ -4254,16 +4254,16 @@ class AdministradorController extends Controller
             $departamento_apoderado = $request->departamento_apoderado;
             $ciudad_apoderado = $request->ciudad_apoderado;
 
-        } else {
-            $tipo_doc_apoderado = "";
-            $nro_identificacion_apoderado = "";
-            $nombre_apoderado = "";
-            $email_apoderado = "";
-            $telefono_apoderado = "";
-            $direccion_apoderado = "";
-            $departamento_apoderado = "";
-            $ciudad_apoderado = "";
-        }
+        // } else {
+            // $tipo_doc_apoderado = "";
+            // $nro_identificacion_apoderado = "";
+            // $nombre_apoderado = "";
+            // $email_apoderado = "";
+            // $telefono_apoderado = "";
+            // $direccion_apoderado = "";
+            // $departamento_apoderado = "";
+            // $ciudad_apoderado = "";
+        // }
         
         // validacion si selecciona la opción de Exterior del selector Departamentos (Información afiliado)
         if ($request->departamento_info_afiliado == 33) {

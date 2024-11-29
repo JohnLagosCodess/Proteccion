@@ -1522,13 +1522,53 @@ class CoordinadorController extends Controller
             ];
             //Informacion afiliado
             $infoAfiliado = DB::table(getDatabaseName('sigmel_gestiones') .'sigmel_informacion_afiliado_eventos as siae')
-                ->select('siae.Direccion as Direccion_destinatario','ci.Nombre_municipio as Ciudad_destinatario','ci.Nombre_departamento as Departamento_destinatario',
-                'siae.Telefono_contacto as Telefono_destinatario','siae.Email as Email_destinatario','siae.Nombre_afiliado as Nombre_destinatario',
-                'siae.Medio_notificacion as Medio_notificacion_destinatario', 'siae.Nro_identificacion as Documento_destinatario', 'siae.Entidad_conocimiento', 'siae.Id_afp_entidad_conocimiento')
-                ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm', 'siae.Id_departamento', '=', 'sldm.Id_departamento')
-                ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as ci', 'siae.Id_municipio', '=', 'ci.Id_municipios')
-                ->where('siae.ID_evento',  '=', $Id_evento)
-                ->get();
+            ->select(
+                DB::raw("CASE 
+                        WHEN siae.Apoderado = 'Si' THEN siae.Direccion_apoderado
+                        WHEN siae.tipo_afiliado = 27 THEN siae.Direccion_benefi 
+                        ELSE siae.Direccion 
+                    END as Direccion_destinatario"),
+                DB::raw("CASE 
+                        WHEN siae.Apoderado = 'Si' THEN cia.Nombre_municipio 
+                        WHEN siae.tipo_afiliado = 27 THEN cb.Nombre_municipio 
+                        ELSE ci.Nombre_municipio 
+                    END as Ciudad_destinatario"),
+                DB::raw("CASE 
+                        WHEN siae.Apoderado = 'Si' THEN da.Nombre_departamento
+                        WHEN siae.tipo_afiliado = 27 THEN db.Nombre_departamento 
+                        ELSE sldm.Nombre_departamento 
+                    END as Departamento_destinatario"),
+                DB::raw("CASE
+                        WHEN siae.Apoderado = 'Si' THEN siae.Telefono_apoderado 
+                        WHEN siae.tipo_afiliado = 27 THEN siae.Telefono_benefi 
+                        ELSE siae.Telefono_contacto 
+                    END as Telefono_destinatario"),
+                DB::raw("CASE 
+                        WHEN siae.Apoderado = 'Si' THEN siae.Email_apoderado
+                        WHEN siae.tipo_afiliado = 27 THEN siae.Email_benefi 
+                        ELSE siae.Email 
+                    END as Email_destinatario"),
+                DB::raw("CASE
+                        WHEN siae.Apoderado = 'Si' THEN siae.Nombre_apoderado
+                        WHEN siae.tipo_afiliado = 27 THEN siae.Nombre_afiliado_benefi 
+                        ELSE siae.Nombre_afiliado
+                    END as Nombre_destinatario"),
+                DB::raw("CASE 
+                        WHEN siae.Apoderado = 'Si' THEN siae.Nro_identificacion_apoderado 
+                        WHEN siae.tipo_afiliado = 27 THEN siae.Nro_identificacion_benefi 
+                        ELSE siae.Nro_identificacion 
+                    END as Documento_destinatario"),
+                'siae.Medio_notificacion as Medio_notificacion_destinatario','siae.Entidad_conocimiento', 'siae.Id_afp_entidad_conocimiento','siae.Apoderado',
+                'siae.Tipo_documento_apoderado','siae.Tipo_documento_benefi')
+            ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm', 'siae.Id_departamento', '=', 'sldm.Id_departamento')
+            ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as ci', 'siae.Id_municipio', '=', 'ci.Id_municipios')
+            ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as db', 'siae.Id_departamento_benefi', '=', 'db.Id_departamento')//departamento apoderado
+            ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as cb', 'siae.Id_municipio_benefi', '=', 'cb.Id_municipios')//ciudad apoderado
+            ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as da', 'siae.Id_departamento_apoderado', '=', 'da.Id_departamento')//departamento apoderado
+            ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as cia', 'siae.Id_municipio_apoderado', '=', 'cia.Id_municipios')//ciudad apoderado
+            ->where('siae.ID_evento',  '=', $Id_evento)
+            ->get();
+            
             if($Tipo_correspondencia != '' && $Tipo_correspondencia != null){
                 $Tipo_correspondencia = strtolower($Tipo_correspondencia);
                 if($Tipo_correspondencia === 'afiliado' && !empty($infoAfiliado)){
