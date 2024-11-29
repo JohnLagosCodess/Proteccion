@@ -12,25 +12,25 @@
         }
         #header {
             position: fixed; 
-            top: -3cm;
+            top: -1.8cm;
             left: 0cm;
             width: 100%;
-            text-align: right; 
+            text-align: center; 
         }
         .codigo_qr{
             position: absolute;
-            top: 5px; 
+            top: -30px; 
             left: 58px; 
             max-width: 90px; 
             max-height: 70px; 
         }
         .logo_header{
-            position: absolute;
-            /* max-width: 40%; */
-            width: 150px;
+            /* position: absolute; */
+            max-width: 33%;
+            /* width: 150px; */
             height: auto;
-            left: 530px;
-            max-height: 80px; 
+            /* left: 530px; */
+            max-height: 60px; 
         }
         .tabla_header{
             width: 100%;
@@ -197,7 +197,7 @@
                     <td>
                         <img src="data:image/png;base64,{{ base64_encode($codigoQR) }}" class="codigo_qr" alt="Código QR">
                     </td>                    
-                    <td>
+                    <td style="width:100%; text-align:right;">
                         <?php if($logo_header == "Sin logo"): ?>
                             <p>No logo</p>
                         <?php else: ?>
@@ -228,7 +228,11 @@
             ?>
             <div class="footer_content" style="text-align:center;">
                 <span style="position: absolute; width: 100%; text-align:center; top: 10px; left:0px; color:#4D4D4D; font-weight:bold; font-size: 11px;">
-                    {{$Nombre_afiliado}} - {{$T_documento_noti}} {{$NroIden_afiliado_noti}} - SINIESTRO: {{$N_siniestro}} 
+                    @if ($Tipo_afiliado == 26 || $Tipo_afiliado == 28 || $Tipo_afiliado == 29)
+                        {{$Nombre_afiliado_noti}} - {{$T_documento_noti}} {{$NroIden_afiliado_noti}} - SINIESTRO: {{$N_siniestro}} 
+                    @elseif ($Tipo_afiliado == 27)
+                        {{$Nombre_afiliado_noti_benefi}} - {{$T_documento_notibenefi}} {{$NroIden_afiliado_notibenefi}} - SINIESTRO: {{$N_siniestro}} 
+                    @endif
                 </span>
                 <img src="data:image/png;base64,{{ $footer_base64 }}" class="footer_image" style="display: block;">
             </div>
@@ -251,7 +255,7 @@
                         <div>
                             <div class="fuente_todo_texto paddingTexto">
                                 <span>Señor(a)</span><br>
-                                <b>{{$Nombre_afiliado}}</b>
+                                <b>{{$Nombre_destinatario_principal}}</b>
                             </div>
                             <div class="fuente_todo_texto paddingTexto">{{$Email_afiliado_noti}}</div>
                             <div class="fuente_todo_texto paddingTexto">{{$direccion_destinatario_principal}}</div>
@@ -320,17 +324,12 @@
         <section class="fuente_todo_texto">            
             Cordialmente,
             <br><br>
-            <b>PROTECCIÓN S.A.</b>                        
-            {{-- <div class="fuente_todo_texto">
-                <b>Anexos:</b> {{$Anexos_correspondecia}}
-                <br>
-                <b>Elaboró:</b> {{$Elaboro_correspondecia}}
-            </div> --}}
+            <b>PROTECCIÓN S.A.</b>                                    
         </section>        
         <br>
         <section class="fuente_todo_texto">
             <table class="tabla1" style="text-align: justify;">                               
-                @if (empty($Copia_afiliado_correspondecia) && empty($Copia_empleador_correspondecia) && empty($Copia_eps_correspondecia) && empty($Copia_afp_correspondecia) && empty($Copia_arl_correspondecia))
+                @if (empty($Copia_afiliado_correspondencia) && empty($Copia_empleador_correspondecia) && empty($Copia_eps_correspondecia) && empty($Copia_afp_correspondecia) && empty($Copia_arl_correspondecia))
                     <tr>
                         <td class="copias"><span class="negrita">Copia: </span>No se registran copias</td>                                                                                
                     </tr>
@@ -339,10 +338,10 @@
                         <td class="justificado copias"><span class="negrita">Copia:</span></td>                            
                     </tr> 
                     <?php 
-                        if (!empty($Copia_afiliado_correspondecia)) { ?>
+                        if (!empty($Copia_afiliado_correspondencia)) { ?>
                             <tr>
                                 <td class="copias">
-                                    <span class="negrita">Afiliado: </span><?php echo $copia_nombreAfiliado.' - '.$copia_direccionAfiliado.'; '.$copia_emailAfiliado.'; '.$copia_telefonoAfiliado.'; '.$copia_ciudadAfiliado.' - '.$copia_departamentoAfiliado;?>
+                                    <span class="negrita">Afiliado: <?php echo $Nombre_afiliado_copia;?></span><?php echo ' - '.$Direccion_afiliado_copia.'; '.$Copia_afiliado_correo.'; '.$Telefono_afiliado_copia.'; '.$Ciudad_departamento_afiliado_copia;?>
                                 </td>
                             </tr>
                         <?php       
@@ -400,8 +399,8 @@
                     ?>                    
                 @endif
             </table>
-        </section>   
-        <br>
+        </section>
+        <br><br>
         <div class="cuadro fuente_cuadro_inferior" style="margin: 0 auto">
             <span class="fuente_cuadro_inferior"><span class="negrita">Nro. Radicado: <br>{{$Radicado_comuni}}</span></span><br>
             <span class="fuente_cuadro_inferior"><span class="negrita">{{$T_documento_noti}} {{$NroIden_afiliado_noti}}</span></span><br>

@@ -524,6 +524,34 @@ class CalificacionPCLController extends Controller
             $datos_status_notificacion_corresp = json_decode(json_encode($datos_status_notificacion_correspondencia, true));
             return response()->json($datos_status_notificacion_corresp);
         }
+
+        if ($parametro == "lista_incumple_primera_cita") {
+            $datos_incumple_pri_cita = sigmel_lista_parametros::on('sigmel_gestiones')
+            ->select('Id_Parametro','Nombre_parametro')
+            ->where([
+                ['Tipo_lista', '=', 'Causal_incumplimiento'],
+                ['Estado', '=', 'activo']
+            ])
+            ->get();
+
+            $array_datos_incumple_pri_cita = json_decode(json_encode($datos_incumple_pri_cita, true));
+
+            return response()->json($array_datos_incumple_pri_cita);
+        }
+
+        if ($parametro == "lista_incumple_segunda_cita") {
+            $datos_incumple_segunda_cita = sigmel_lista_parametros::on('sigmel_gestiones')
+            ->select('Id_Parametro','Nombre_parametro')
+            ->where([
+                ['Tipo_lista', '=', 'Causal_incumplimiento'],
+                ['Estado', '=', 'activo']
+            ])
+            ->get();
+
+            $array_datos_incumple_segunda_cita = json_decode(json_encode($datos_incumple_segunda_cita, true));
+
+            return response()->json($array_datos_incumple_segunda_cita);
+        }
         
     }
 
@@ -655,6 +683,10 @@ class CalificacionPCLController extends Controller
                 'Id_proceso' => $request->Id_proceso,
                 // 'Modalidad_calificacion' => $request->modalidad_calificacion,
                 'fuente_informacion' => $request->fuente_informacion,
+                'F_primera_cita' => $request->fecha_primera_cita,
+                'Causal_incumplimiento_primera_cita' => $request->incumple_primera_cita,
+                'F_segunda_cita' => $request->fecha_segunda_cita,
+                'Causal_incumplimiento_segunda_cita' => $request->incumple_segunda_cita,
                 'F_accion' => $date_time,
                 'Accion' => $request->accion,
                 'F_Alerta' => $request->fecha_alerta,
@@ -674,6 +706,10 @@ class CalificacionPCLController extends Controller
                 'Aud_Id_proceso' => $request->Id_proceso,
                 // 'Aud_Modalidad_calificacion' => $request->modalidad_calificacion,
                 'Aud_fuente_informacion' => $request->fuente_informacion,
+                'Aud_F_primera_cita' => $request->fecha_primera_cita,
+                'Aud_Causal_incumplimiento_primera_cita' => $request->incumple_primera_cita,
+                'Aud_F_segunda_cita' => $request->fecha_segunda_cita,
+                'Aud_Causal_incumplimiento_segunda_cita' => $request->incumple_segunda_cita,
                 'Aud_F_accion' => $date_time,
                 'Aud_Accion' => $request->accion,
                 'Aud_F_Alerta' => $request->fecha_alerta,
@@ -1215,6 +1251,10 @@ class CalificacionPCLController extends Controller
                 'Id_proceso' => $request->Id_proceso,
                 // 'Modalidad_calificacion' => $request->modalidad_calificacion,
                 'fuente_informacion' => $request->fuente_informacion,
+                'F_primera_cita' => $request->fecha_primera_cita,
+                'Causal_incumplimiento_primera_cita' => $request->incumple_primera_cita,
+                'F_segunda_cita' => $request->fecha_segunda_cita,
+                'Causal_incumplimiento_segunda_cita' => $request->incumple_segunda_cita,
                 'F_accion' => $date_time,
                 'Accion' => $request->accion,
                 'F_Alerta' => $request->fecha_alerta,
@@ -1234,6 +1274,10 @@ class CalificacionPCLController extends Controller
                 'Aud_Id_proceso' => $request->Id_proceso,
                 // 'Aud_Modalidad_calificacion' => $request->modalidad_calificacion,
                 'Aud_fuente_informacion' => $request->fuente_informacion,
+                'Aud_F_primera_cita' => $request->fecha_primera_cita,
+                'Aud_Causal_incumplimiento_primera_cita' => $request->incumple_primera_cita,
+                'Aud_F_segunda_cita' => $request->fecha_segunda_cita,
+                'Aud_Causal_incumplimiento_segunda_cita' => $request->incumple_segunda_cita,
                 'Aud_F_accion' => $date_time,
                 'Aud_Accion' => $request->accion,
                 'Aud_F_Alerta' => $request->fecha_alerta,
@@ -6443,8 +6487,24 @@ class CalificacionPCLController extends Controller
         //$Id_servicio_balt = $request->Id_servicio_calitec;
         $hay_agudeza_visual = sigmel_informacion_agudeza_visual_eventos::on('sigmel_gestiones')
         ->where('ID_evento', $Id_evento_calitec)->get();
-
+        // traer todos los datos del evento segun el id de asignacion
         $array_datos_calificacionPclTecnica = DB::select('CALL psrcalificacionpcl(?)', array($Id_asignacion_calitec));
+        // Validar el destinario principal para la seccion conrrespondecia punto 3 ficha pbs 080
+        if(count($array_datos_calificacionPclTecnica) > 0){
+            $Apoderado_sec_correspo = $array_datos_calificacionPclTecnica[0]->Apoderado;
+            $Tipo_afiliado_sec_correspo = $array_datos_calificacionPclTecnica[0]->Tipo_afiliado;
+            // Si hay poderado
+            if ($Apoderado_sec_correspo == 'Si') {
+                $Destinatario_principal_correspo = $array_datos_calificacionPclTecnica[0]->Nombre_apoderado;
+            } else {
+                //Validacion tipo afiliado
+                if ($Tipo_afiliado_sec_correspo == 'Cotizante' || $Tipo_afiliado_sec_correspo == 'Subsidiado' || $Tipo_afiliado_sec_correspo == 'Pensionado') {
+                    $Destinatario_principal_correspo = $array_datos_calificacionPclTecnica[0]->Nombre_afiliado;                    
+                } elseif ($Tipo_afiliado_sec_correspo == 'Beneficiario') {
+                    $Destinatario_principal_correspo = $array_datos_calificacionPclTecnica[0]->Nombre_afiliado_benefi;                    
+                }                
+            }            
+        } 
         //Traer Motivo de solicitud,Dominancia actual
         $motivo_solicitud_actual = cndatos_eventos::on('sigmel_gestiones')
         ->select('Id_motivo_solicitud','Nombre_solicitud','Id_dominancia','Nombre_dominancia')
@@ -7052,7 +7112,7 @@ class CalificacionPCLController extends Controller
         'hay_agudeza_visual','datos_demos','array_info_decreto_evento','array_datos_relacion_documentos','array_datos_examenes_interconsultas','numero_consecutivo',
         'array_datos_diagnostico_motcalifi', 'array_agudeza_Auditiva', 'array_datos_deficiencias_alteraciones', 'array_laboralmente_Activo', 'array_rol_ocupacional', 
         'array_libros_2_3', 'deficiencias', 'TotalDeficiencia50', 'array_tipo_fecha_evento', 'array_comite_interdisciplinario', 'consecutivo', 'array_dictamen_pericial', 
-        'array_comunicados_correspondencia', 'array_comunicados_comite_inter', 'info_afp_conocimiento','N_siniestro_evento', 'edad_afiliado', 'Modalidad_calificacion'));
+        'array_comunicados_correspondencia', 'array_comunicados_comite_inter', 'info_afp_conocimiento','N_siniestro_evento', 'edad_afiliado', 'Modalidad_calificacion', 'Destinatario_principal_correspo'));
     }
 
     public function cargueListadoSelectoresCalifcacionTecnicaPcl(Request $request){
@@ -7413,6 +7473,7 @@ class CalificacionPCLController extends Controller
                 }
                 $descripcion_otros = $request->descripcion_otros;
                 $descripcion_enfermedad = $request->descripcion_enfermedad;
+                $historial_sociofamiliar = $request->historial_sociofamiliar;
                 $dominancia = $request->dominancia;
                 $id_afiliado = $request->id_afiliado;
 
@@ -7427,6 +7488,7 @@ class CalificacionPCLController extends Controller
                     'Relacion_documentos' => $total_relacion_documentos,
                     'Otros_relacion_doc' => $descripcion_otros,
                     'Descripcion_enfermedad_actual' => $descripcion_enfermedad,
+                    'Historial_sociofamiliar' => $historial_sociofamiliar,
                     'Estado_decreto' =>  'Abierto',
                     'Modalidad_calificacion' => $modalidad_calificacion,
                     'Nombre_usuario' => $usuario,
@@ -7477,6 +7539,7 @@ class CalificacionPCLController extends Controller
                 }
                 $descripcion_otros = $request->descripcion_otros;
                 $descripcion_enfermedad = $request->descripcion_enfermedad;
+                $historial_sociofamiliar = $request->historial_sociofamiliar;
                 $dominancia = $request->dominancia;
                 $id_afiliado = $request->id_afiliado;
                 
@@ -7491,6 +7554,7 @@ class CalificacionPCLController extends Controller
                     'Relacion_documentos' => $total_relacion_documentos,
                     'Otros_relacion_doc' => $descripcion_otros,
                     'Descripcion_enfermedad_actual' => $descripcion_enfermedad,
+                    'Historial_sociofamiliar' => $historial_sociofamiliar,
                     'Modalidad_calificacion' => $modalidad_calificacion,
                     'Nombre_usuario' => $usuario,
                     'F_registro' => $date,
@@ -7505,7 +7569,7 @@ class CalificacionPCLController extends Controller
                 ];
         
                 sigmel_informacion_decreto_eventos::on('sigmel_gestiones')
-                ->where('ID_Evento', $id_Evento_decreto)->update($datos_info_decreto_eventos);
+                ->where([['ID_Evento', $id_Evento_decreto], ['Id_Asignacion', $id_Asignacion_decreto]])->update($datos_info_decreto_eventos);
                 sleep(2);
                 sigmel_informacion_pericial_eventos::on('sigmel_gestiones')
                 ->where([
@@ -10133,7 +10197,7 @@ class CalificacionPCLController extends Controller
         ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slpa', 'slpa.Id_Parametro', '=', 'side.Tipo_enfermedad')
         ->select('side.ID_Evento', 'side.Id_proceso', 'side.Id_Asignacion', 'side.Origen_firme', 'side.Cobertura', 'side.Decreto_calificacion', 
         'side.Numero_dictamen', 'side.PCL_anterior', 'side.Descripcion_nueva_calificacion', 'side.Relacion_documentos', 'side.Otros_relacion_doc', 
-        'side.Descripcion_enfermedad_actual', 'side.Suma_combinada', 'side.Total_Deficiencia50', 'side.Porcentaje_pcl', 'side.Rango_pcl', 
+        'side.Descripcion_enfermedad_actual', 'side.Historial_sociofamiliar', 'side.Suma_combinada', 'side.Total_Deficiencia50', 'side.Porcentaje_pcl', 'side.Rango_pcl', 
         'side.Monto_indemnizacion', 'side.Tipo_evento', 'sltp.Nombre_evento', 'side.Origen', 'slp.Nombre_parametro as Nombre_origen', 'side.F_evento', 
         'side.F_estructuracion', 'side.Requiere_Revision_Pension', 'side.Sustentacion_F_estructuracion', 'side.Detalle_calificacion', 'side.Enfermedad_catastrofica', 
         'side.Enfermedad_congenita', 'side.Tipo_enfermedad', 'slpa.Nombre_parametro as Nombre_enfermedad', 'side.Requiere_tercera_persona', 
@@ -10449,6 +10513,7 @@ class CalificacionPCLController extends Controller
         //Captura de datos Fundamentos para la calificacion de la perdida de la capacidad laboral y ocupacional - titulos I Y II
 
         $Descripcion_enfermedad_actual = $array_datos_info_dictamen[0]->Descripcion_enfermedad_actual;
+        $Historial_sociofamiliar = $array_datos_info_dictamen[0]->Historial_sociofamiliar;
 
         $array_diagnosticos_fc = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_diagnosticos_eventos as side')
         ->leftJoin('sigmel_gestiones.sigmel_lista_cie_diagnosticos as slcd', 'slcd.Id_Cie_diagnostico', '=', 'side.CIE10')
@@ -10577,6 +10642,7 @@ class CalificacionPCLController extends Controller
             'Nit_laboral' => $Nit_laboral,
             'array_datos_relacion_examentes' => $array_datos_relacion_examentes,
             'Descripcion_enfermedad_actual' => $Descripcion_enfermedad_actual,
+            'Historial_sociofamiliar' => $Historial_sociofamiliar,
             'array_diagnosticos_fc' => $array_diagnosticos_fc,
             'array_deficiencias_alteraciones' => $array_deficiencias_alteraciones,
             'Suma_combinada_fc' => $Suma_combinada_fc,
@@ -10627,51 +10693,6 @@ class CalificacionPCLController extends Controller
         ];
         sigmel_informacion_comunicado_eventos::on('sigmel_gestiones')->where('Id_Comunicado', $Id_Comunicado)
         ->update($actualizar_nombre_documento);
-
-        /* Inserción del registro de que fue descargado */
-        // Extraemos el id del servicio asociado
-        // $dato_id_servicio = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_asignacion_eventos as siae')
-        // ->select('siae.Id_servicio')
-        // ->where([
-        //     ['siae.Id_Asignacion', $Id_Asignacion_comuni],
-        //     ['siae.ID_evento', $ID_Evento_comuni],
-        //     ['siae.Id_proceso', $Id_Proceso_comuni],
-        // ])->get();
-
-        // $Id_servicio = $dato_id_servicio[0]->Id_servicio;
-
-        // // Extraemos la Fecha de elaboración de correspondencia: Esta consulta aplica solo para los dictamenes
-        // $dato_f_elaboracion_correspondencia = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_comunicado_eventos as sice') 
-        // ->select('sice.F_comunicado')
-        // ->where([
-        //     ['sice.N_radicado', $Radicado_comuni]
-        // ])
-        // ->get();
-
-        // $F_elaboracion_correspondencia = $dato_f_elaboracion_correspondencia[0]->F_comunicado;
-
-        // // Se pregunta por el nombre del documento si ya existe para evitar insertarlo más de una vez
-        // $verficar_documento = sigmel_registro_descarga_documentos::on('sigmel_gestiones')
-        // ->select('Nombre_documento')
-        // ->where([
-        //     ['Nombre_documento', $nombre_pdf],
-        // ])->get();
-        
-        // if(count($verficar_documento) == 0){
-        //     $info_descarga_documento = [
-        //         'Id_Asignacion' => $Id_Asignacion_comuni,
-        //         'Id_proceso' => $Id_Proceso_comuni,
-        //         'Id_servicio' => $Id_servicio,
-        //         'ID_evento' => $ID_Evento_comuni,
-        //         'Nombre_documento' => $nombre_pdf,
-        //         'N_radicado_documento' => $Radicado_comuni,
-        //         'F_elaboracion_correspondencia' => $F_elaboracion_correspondencia,
-        //         'F_descarga_documento' => $date,
-        //         'Nombre_usuario' => $nombre_usuario,
-        //     ];
-            
-        //     sigmel_registro_descarga_documentos::on('sigmel_gestiones')->insert($info_descarga_documento);
-        // }
 
         return $pdf->download($nombre_pdf);
     }
@@ -10750,7 +10771,7 @@ class CalificacionPCLController extends Controller
         ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slpa', 'slpa.Id_Parametro', '=', 'side.Tipo_enfermedad')
         ->select('side.ID_Evento', 'side.Id_proceso', 'side.Id_Asignacion', 'side.Origen_firme', 'side.Cobertura', 'side.Decreto_calificacion', 
         'side.Numero_dictamen', 'side.PCL_anterior', 'side.Descripcion_nueva_calificacion', 'side.Relacion_documentos', 'side.Otros_relacion_doc', 
-        'side.Descripcion_enfermedad_actual', 'side.Suma_combinada', 'side.Total_Deficiencia50', 'side.Porcentaje_pcl', 'side.Rango_pcl', 
+        'side.Descripcion_enfermedad_actual', 'side.Historial_sociofamiliar', 'side.Suma_combinada', 'side.Total_Deficiencia50', 'side.Porcentaje_pcl', 'side.Rango_pcl', 
         'side.Monto_indemnizacion', 'side.Tipo_evento', 'sltp.Nombre_evento', 'side.Origen', 'slp.Nombre_parametro as Nombre_origen', 'side.F_evento', 
         'side.F_estructuracion', 'side.Requiere_Revision_Pension', 'side.Sustentacion_F_estructuracion', 'side.Detalle_calificacion', 'side.Enfermedad_catastrofica', 
         'side.Enfermedad_congenita', 'side.Tipo_enfermedad', 'slpa.Nombre_parametro as Nombre_enfermedad', 'side.Requiere_tercera_persona', 
@@ -10917,6 +10938,7 @@ class CalificacionPCLController extends Controller
         //Captura de datos Fundamentos para la calificacion de la perdida de la capacidad laboral y ocupacional - libros I, II y III
 
         $Descripcion_enfermedad_actual = $array_datos_info_dictamen[0]->Descripcion_enfermedad_actual;
+        $Historial_sociofamiliar = $array_datos_info_dictamen[0]->Historial_sociofamiliar;        
 
         $array_diagnosticos_fc = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_diagnosticos_eventos as side')
         ->leftJoin('sigmel_gestiones.sigmel_lista_cie_diagnosticos as slcd', 'slcd.Id_Cie_diagnostico', '=', 'side.CIE10')
@@ -11013,6 +11035,7 @@ class CalificacionPCLController extends Controller
             'Nit_laboral' => $Nit_laboral,
             'array_datos_relacion_examentes' => $array_datos_relacion_examentes,
             'Descripcion_enfermedad_actual' => $Descripcion_enfermedad_actual,
+            'Historial_sociofamiliar' => $Historial_sociofamiliar,
             'array_diagnosticos_fc' => $array_diagnosticos_fc,
             'array_deficiencias_alteraciones' => $array_deficiencias_alteraciones,
             'Suma_combinada_fc' => $Suma_combinada_fc,
@@ -11060,52 +11083,7 @@ class CalificacionPCLController extends Controller
         ];
         sigmel_informacion_comunicado_eventos::on('sigmel_gestiones')->where('Id_Comunicado', $Id_Comunicado)
         ->update($actualizar_nombre_documento);
-
-        /* Inserción del registro de que fue descargado */
-        // Extraemos el id del servicio asociado
-        // $dato_id_servicio = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_asignacion_eventos as siae')
-        // ->select('siae.Id_servicio')
-        // ->where([
-        //     ['siae.Id_Asignacion', $Id_Asignacion_comuni],
-        //     ['siae.ID_evento', $ID_Evento_comuni],
-        //     ['siae.Id_proceso', $Id_Proceso_comuni],
-        // ])->get();
-
-        // $Id_servicio = $dato_id_servicio[0]->Id_servicio;
-
-        // // Extraemos la Fecha de elaboración de correspondencia: Esta consulta aplica solo para los dictamenes
-        // $dato_f_elaboracion_correspondencia = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_comunicado_eventos as sice') 
-        // ->select('sice.F_comunicado')
-        // ->where([
-        //     ['sice.N_radicado', $Radicado_comuni]
-        // ])
-        // ->get();
-
-        // $F_elaboracion_correspondencia = $dato_f_elaboracion_correspondencia[0]->F_comunicado;
-
-        // // Se pregunta por el nombre del documento si ya existe para evitar insertarlo más de una vez
-        // $verficar_documento = sigmel_registro_descarga_documentos::on('sigmel_gestiones')
-        // ->select('Nombre_documento')
-        // ->where([
-        //     ['Nombre_documento', $nombre_pdf],
-        // ])->get();
         
-        // if(count($verficar_documento) == 0){
-        //     $info_descarga_documento = [
-        //         'Id_Asignacion' => $Id_Asignacion_comuni,
-        //         'Id_proceso' => $Id_Proceso_comuni,
-        //         'Id_servicio' => $Id_servicio,
-        //         'ID_evento' => $ID_Evento_comuni,
-        //         'Nombre_documento' => $nombre_pdf,
-        //         'N_radicado_documento' => $Radicado_comuni,
-        //         'F_elaboracion_correspondencia' => $F_elaboracion_correspondencia,
-        //         'F_descarga_documento' => $date,
-        //         'Nombre_usuario' => $nombre_usuario,
-        //     ];
-            
-        //     sigmel_registro_descarga_documentos::on('sigmel_gestiones')->insert($info_descarga_documento);
-        // }
-
         return $pdf->download($nombre_pdf);
     }
     // Generar PDF de Notificacion numerica para el decreto 1507 y 917
@@ -11282,29 +11260,17 @@ class CalificacionPCLController extends Controller
             $T_documento_noti_apoderado = $array_datos_info_afiliado[0]->Tipo_documento_apodera;            
             $NroIden_afiliado_noti_apoderado = $array_datos_info_afiliado[0]->Nro_identificacion_apoderado;
             $Email_afiliado_noti_apoderado = $array_datos_info_afiliado[0]->Email_apoderado;
-            // Afiliado
-            $Nombre_afiliado_pie = $array_datos_info_afiliado[0]->Nombre_afiliado;
-            $Nombre_afiliado_noti = $array_datos_info_afiliado[0]->Nombre_afiliado;
-            $Direccion_afiliado_noti = $array_datos_info_afiliado[0]->Direccion;
-            $Telefono_afiliado_noti = $array_datos_info_afiliado[0]->Telefono_contacto;
-            $Departamento_afiliado_noti = $array_datos_info_afiliado[0]->Nombre_departamento;            
-            $Ciudad_afiliado_noti = $array_datos_info_afiliado[0]->Nombre_municipio;
-            $T_documento_noti = $array_datos_info_afiliado[0]->T_documento;            
-            $NroIden_afiliado_noti = $array_datos_info_afiliado[0]->Nro_identificacion;
-            $Email_afiliado_noti = $array_datos_info_afiliado[0]->Email;
-
-        }else{
-
-            $Nombre_afiliado_pie = $array_datos_info_afiliado[0]->Nombre_afiliado;
-            $Nombre_afiliado_noti = $array_datos_info_afiliado[0]->Nombre_afiliado;
-            $Direccion_afiliado_noti = $array_datos_info_afiliado[0]->Direccion;
-            $Telefono_afiliado_noti = $array_datos_info_afiliado[0]->Telefono_contacto;
-            $Departamento_afiliado_noti = $array_datos_info_afiliado[0]->Nombre_departamento;            
-            $Ciudad_afiliado_noti = $array_datos_info_afiliado[0]->Nombre_municipio;
-            $T_documento_noti = $array_datos_info_afiliado[0]->T_documento;            
-            $NroIden_afiliado_noti = $array_datos_info_afiliado[0]->Nro_identificacion;
-            $Email_afiliado_noti = $array_datos_info_afiliado[0]->Email;
         }
+        // Afiliado
+        $Nombre_afiliado_pie = $array_datos_info_afiliado[0]->Nombre_afiliado;
+        $Nombre_afiliado_noti = $array_datos_info_afiliado[0]->Nombre_afiliado;
+        $Direccion_afiliado_noti = $array_datos_info_afiliado[0]->Direccion;
+        $Telefono_afiliado_noti = $array_datos_info_afiliado[0]->Telefono_contacto;
+        $Departamento_afiliado_noti = $array_datos_info_afiliado[0]->Nombre_departamento;            
+        $Ciudad_afiliado_noti = $array_datos_info_afiliado[0]->Nombre_municipio;
+        $T_documento_noti = $array_datos_info_afiliado[0]->T_documento;            
+        $NroIden_afiliado_noti = $array_datos_info_afiliado[0]->Nro_identificacion;
+        $Email_afiliado_noti = $array_datos_info_afiliado[0]->Email;
         // Beneficiario
         // $Nombre_afiliado_pie = $array_datos_info_afiliado[0]->Nombre_afiliado_benefi;
         $Nombre_afiliado_noti_benefi = $array_datos_info_afiliado[0]->Nombre_afiliado_benefi;
@@ -11316,13 +11282,47 @@ class CalificacionPCLController extends Controller
         $NroIden_afiliado_notibenefi = $array_datos_info_afiliado[0]->Nro_identificacion_benefi;
         $Email_afiliado_notibenefi = $array_datos_info_afiliado[0]->Email_benefi;
         
-
         if (!empty($Copia_afiliado_correspondencia) && $Copia_afiliado_correspondencia == 'Afiliado') {
-            $Nombre_afiliado = $array_datos_info_afiliado[0]->Nombre_afiliado;
-            $Direccion_afiliado = $array_datos_info_afiliado[0]->Direccion;
-            $Telefono_afiliado = $array_datos_info_afiliado[0]->Telefono_contacto;
-            $Email_afiliado = $array_datos_info_afiliado[0]->Email;
-            $Ciudad_departamento_afiliado = $array_datos_info_afiliado[0]->Nombre_municipio.'-'.$array_datos_info_afiliado[0]->Nombre_departamento;
+
+            if ($Apoderado == 'Si') {
+                // Apoderado
+                $Nombre_afiliado = $array_datos_info_afiliado[0]->Nombre_apoderado;
+                $Direccion_afiliado = $array_datos_info_afiliado[0]->Direccion_apoderado;
+                $Telefono_afiliado = $array_datos_info_afiliado[0]->Telefono_apoderado;
+                $Email_afiliado = $array_datos_info_afiliado[0]->Email_apoderado;
+                if ($array_datos_info_afiliado[0]->Nombre_municipio_apoderado == 'Bogota D.C.') {
+                    $Ciudad_departamento_afiliado = $array_datos_info_afiliado[0]->Nombre_municipio_apoderado;
+                }else{
+                    $Ciudad_departamento_afiliado = $array_datos_info_afiliado[0]->Nombre_municipio_apoderado.'-'.$array_datos_info_afiliado[0]->Nombre_departamento_apoderado;
+                }
+            } else {
+                if($Tipo_afiliado == 26 || $Tipo_afiliado == 28 || $Tipo_afiliado == 29){
+                    // Afiliado
+                    $Nombre_afiliado = $array_datos_info_afiliado[0]->Nombre_afiliado;
+                    $Direccion_afiliado = $array_datos_info_afiliado[0]->Direccion;
+                    $Telefono_afiliado = $array_datos_info_afiliado[0]->Telefono_contacto;
+                    $Email_afiliado = $array_datos_info_afiliado[0]->Email;
+                    if ($array_datos_info_afiliado[0]->Nombre_municipio == 'Bogota D.C.') {
+                        $Ciudad_departamento_afiliado = $array_datos_info_afiliado[0]->Nombre_municipio;
+                        
+                    } else {
+                        $Ciudad_departamento_afiliado = $array_datos_info_afiliado[0]->Nombre_municipio.'-'.$array_datos_info_afiliado[0]->Nombre_departamento;                        
+                    }
+                    
+                }elseif ($Tipo_afiliado == 27){
+                    // Beneficiario
+                    $Nombre_afiliado = $array_datos_info_afiliado[0]->Nombre_afiliado_benefi;
+                    $Direccion_afiliado = $array_datos_info_afiliado[0]->Direccion_benefi;
+                    $Telefono_afiliado = $array_datos_info_afiliado[0]->Telefono_benefi;
+                    $Email_afiliado = $array_datos_info_afiliado[0]->Email_benefi;
+                    if ($array_datos_info_afiliado[0]->Nombre_municipio == 'Bogota D.C.') {
+                        $Ciudad_departamento_afiliado = $array_datos_info_afiliado[0]->Nombre_municipio_benefi;                        
+                    } else {
+                        $Ciudad_departamento_afiliado = $array_datos_info_afiliado[0]->Nombre_municipio_benefi.'-'.$array_datos_info_afiliado[0]->Nombre_departamento_benefi;                        
+                    }                    
+                }             
+            }            
+
         } else {
             $Nombre_afiliado = '';
             $Direccion_afiliado = '';
@@ -11420,7 +11420,7 @@ class CalificacionPCLController extends Controller
         ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slpa', 'slpa.Id_Parametro', '=', 'side.Tipo_enfermedad')
         ->select('side.ID_Evento', 'side.Id_proceso', 'side.Id_Asignacion', 'side.Origen_firme', 'side.Cobertura', 'side.Decreto_calificacion', 
         'side.Numero_dictamen', 'side.PCL_anterior', 'side.Descripcion_nueva_calificacion', 'side.Relacion_documentos', 'side.Otros_relacion_doc', 
-        'side.Descripcion_enfermedad_actual', 'side.Suma_combinada', 'side.Total_Deficiencia50', 'side.Porcentaje_pcl', 'side.Rango_pcl', 
+        'side.Descripcion_enfermedad_actual', 'side.Historial_sociofamiliar', 'side.Suma_combinada', 'side.Total_Deficiencia50', 'side.Porcentaje_pcl', 'side.Rango_pcl', 
         'side.Monto_indemnizacion', 'side.Tipo_evento', 'sltp.Nombre_evento', 'side.Origen', 'slp.Nombre_parametro as Nombre_origen', 'side.F_evento', 
         'side.F_estructuracion', 'side.Sustentacion_F_estructuracion', 'side.Detalle_calificacion', 'side.Enfermedad_catastrofica', 
         'side.Enfermedad_congenita', 'side.Tipo_enfermedad', 'slpa.Nombre_parametro as Nombre_enfermedad', 'side.Requiere_tercera_persona', 
@@ -11598,20 +11598,32 @@ class CalificacionPCLController extends Controller
                 $nombre_destinatario_principal = $Nombre_afiliado_noti_apoderado;
                 $direccion_destinatario_principal = $Direccion_afiliado_noti_apoderado;
                 $telefono_destinatario_principal = $Telefono_afiliado_noti_apoderado;
-                $ciudad_destinatario_principal = $Ciudad_afiliado_noti_apoderado.'-'.$Departamento_afiliado_noti_apoderado;
+                if ($Ciudad_afiliado_noti_apoderado == 'Bogota D.C.') {
+                    $ciudad_destinatario_principal = $Ciudad_afiliado_noti_apoderado;                                        
+                } else {
+                    $ciudad_destinatario_principal = $Ciudad_afiliado_noti_apoderado.'-'.$Departamento_afiliado_noti_apoderado;                    
+                }                
                 $Email_afiliado_noti = $Email_afiliado_noti_apoderado;
             }else{       
                 if($Tipo_afiliado == 26 || $Tipo_afiliado == 28 || $Tipo_afiliado == 29){
                     $nombre_destinatario_principal = $Nombre_afiliado_noti;
                     $direccion_destinatario_principal = $Direccion_afiliado_noti;
                     $telefono_destinatario_principal = $Telefono_afiliado_noti;
-                    $ciudad_destinatario_principal = $Ciudad_afiliado_noti.'-'.$Departamento_afiliado_noti;
+                    if ($Ciudad_afiliado_noti == 'Bogota D.C.') {
+                        $ciudad_destinatario_principal = $Ciudad_afiliado_noti;                        
+                    } else {                        
+                        $ciudad_destinatario_principal = $Ciudad_afiliado_noti.'-'.$Departamento_afiliado_noti;
+                    }                    
                     $Email_afiliado_noti = $Email_afiliado_noti;                    
                 }elseif ($Tipo_afiliado == 27){
                     $nombre_destinatario_principal = $Nombre_afiliado_noti_benefi;
                     $direccion_destinatario_principal = $Direccion_afiliado_notibenefi;
                     $telefono_destinatario_principal = $Telefono_afiliado_notibenefi;
-                    $ciudad_destinatario_principal = $Ciudad_afiliado_notibenefi.'-'.$Departamento_afiliado_notibenefi;
+                    if ($Ciudad_afiliado_notibenefi == 'Bogota D.C.') {
+                        $ciudad_destinatario_principal = $Ciudad_afiliado_notibenefi;
+                    } else {
+                        $ciudad_destinatario_principal = $Ciudad_afiliado_notibenefi.'-'.$Departamento_afiliado_notibenefi;                        
+                    }                    
                     $Email_afiliado_noti = $Email_afiliado_notibenefi; 
                 }  
             }
@@ -11660,7 +11672,8 @@ class CalificacionPCLController extends Controller
                 'F_correspondecia' => fechaFormateada($F_correspondecia),
                 'Ciudad_correspondencia' => $Ciudad_correspondencia, 
                 'Nombre_afiliado_pie' => $Nombre_afiliado_pie,
-                'Nombre_afiliado' => $nombre_destinatario_principal,
+                'Nombre_destinatario_principal' => $nombre_destinatario_principal,
+                'Nombre_afiliado' => $Nombre_afiliado_noti,
                 'direccion_destinatario_principal' => $direccion_destinatario_principal,
                 'telefono_destinatario_principal' => $telefono_destinatario_principal,
                 'ciudad_destinatario_principal' => $ciudad_destinatario_principal,
@@ -11823,7 +11836,7 @@ class CalificacionPCLController extends Controller
                 
             }
 
-            return $pdf->stream($nombre_pdf);
+            return $pdf->download($nombre_pdf);
         } else {
             $data = [
                 'codigoQR' => $codigoQR,
@@ -12079,7 +12092,7 @@ class CalificacionPCLController extends Controller
         ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slpa', 'slpa.Id_Parametro', '=', 'side.Tipo_enfermedad')
         ->select('side.ID_Evento', 'side.Id_proceso', 'side.Id_Asignacion', 'side.Origen_firme', 'side.Cobertura', 'side.Decreto_calificacion', 
         'side.Numero_dictamen', 'side.PCL_anterior', 'side.Descripcion_nueva_calificacion', 'side.Relacion_documentos', 'side.Otros_relacion_doc', 
-        'side.Descripcion_enfermedad_actual', 'side.Suma_combinada', 'side.Total_Deficiencia50', 'side.Porcentaje_pcl', 'side.Rango_pcl', 
+        'side.Descripcion_enfermedad_actual', 'side.Historial_sociofamiliar', 'side.Suma_combinada', 'side.Total_Deficiencia50', 'side.Porcentaje_pcl', 'side.Rango_pcl', 
         'side.Monto_indemnizacion', 'side.Tipo_evento', 'sltp.Nombre_evento', 'side.Origen', 'slp.Nombre_parametro as Nombre_origen', 'side.F_evento', 
         'side.F_estructuracion', 'side.Sustentacion_F_estructuracion', 'side.Detalle_calificacion', 'side.Enfermedad_catastrofica', 
         'side.Enfermedad_congenita', 'side.Tipo_enfermedad', 'slpa.Nombre_parametro as Nombre_enfermedad', 'side.Requiere_tercera_persona', 
@@ -12402,6 +12415,7 @@ class CalificacionPCLController extends Controller
         //Captura de datos Fundamentos para la calificacion de la perdida de la capacidad laboral y ocupacional - titulos I Y II
 
         $Descripcion_enfermedad_actual = $array_datos_info_dictamen[0]->Descripcion_enfermedad_actual;
+        $Historial_sociofamiliar = $array_datos_info_dictamen[0]->Historial_sociofamiliar;        
 
         $array_diagnosticos_fc = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_diagnosticos_eventos as side')
         ->leftJoin('sigmel_gestiones.sigmel_lista_cie_diagnosticos as slcd', 'slcd.Id_Cie_diagnostico', '=', 'side.CIE10')
@@ -12524,6 +12538,7 @@ class CalificacionPCLController extends Controller
             'Nit_laboral' => $Nit_laboral,
             'array_datos_relacion_examentes' => $array_datos_relacion_examentes,
             'Descripcion_enfermedad_actual' => $Descripcion_enfermedad_actual,
+            'Historial_sociofamiliar' => $Historial_sociofamiliar,            
             'array_diagnosticos_fc' => $array_diagnosticos_fc,
             'array_deficiencias_alteraciones' => $array_deficiencias_alteraciones,
             'Suma_combinada_fc' => $Suma_combinada_fc,
@@ -12573,52 +12588,7 @@ class CalificacionPCLController extends Controller
         sigmel_informacion_comunicado_eventos::on('sigmel_gestiones')->where('Id_Comunicado', $Id_Comunicado)
         ->update($actualizar_nombre_documento);
 
-        /* Inserción del registro de que fue descargado */
-        // Extraemos el id del servicio asociado
-        // $dato_id_servicio = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_asignacion_eventos as siae')
-        // ->select('siae.Id_servicio')
-        // ->where([
-        //     ['siae.Id_Asignacion', $Id_Asignacion_comuni],
-        //     ['siae.ID_evento', $ID_Evento_comuni],
-        //     ['siae.Id_proceso', $Id_Proceso_comuni],
-        // ])->get();
-
-        // $Id_servicio = $dato_id_servicio[0]->Id_servicio;
-
-        // // Extraemos la Fecha de elaboración de correspondencia: Esta consulta aplica solo para los dictamenes
-        // $dato_f_elaboracion_correspondencia = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_comunicado_eventos as sice') 
-        // ->select('sice.F_comunicado')
-        // ->where([
-        //     ['sice.N_radicado', $Radicado_comuni]
-        // ])
-        // ->get();
-
-        // $F_elaboracion_correspondencia = $dato_f_elaboracion_correspondencia[0]->F_comunicado;
-
-        // // Se pregunta por el nombre del documento si ya existe para evitar insertarlo más de una vez
-        // $verficar_documento = sigmel_registro_descarga_documentos::on('sigmel_gestiones')
-        // ->select('Nombre_documento')
-        // ->where([
-        //     ['Nombre_documento', $nombre_pdf],
-        // ])->get();
-        
-        // if(count($verficar_documento) == 0){
-        //     $info_descarga_documento = [
-        //         'Id_Asignacion' => $Id_Asignacion_comuni,
-        //         'Id_proceso' => $Id_Proceso_comuni,
-        //         'Id_servicio' => $Id_servicio,
-        //         'ID_evento' => $ID_Evento_comuni,
-        //         'Nombre_documento' => $nombre_pdf,
-        //         'N_radicado_documento' => $Radicado_comuni,
-        //         'F_elaboracion_correspondencia' => $F_elaboracion_correspondencia,
-        //         'F_descarga_documento' => $date,
-        //         'Nombre_usuario' => $nombre_usuario,
-        //     ];
-            
-        //     sigmel_registro_descarga_documentos::on('sigmel_gestiones')->insert($info_descarga_documento);
-        // }
-
-        return $pdf->download($nombre_pdf);   
+        return $pdf->stream($nombre_pdf);   
     }
     // Generar PDF de Notificacion Cero
 
@@ -12796,7 +12766,7 @@ class CalificacionPCLController extends Controller
         ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slpa', 'slpa.Id_Parametro', '=', 'side.Tipo_enfermedad')
         ->select('side.ID_Evento', 'side.Id_proceso', 'side.Id_Asignacion', 'side.Origen_firme', 'side.Cobertura', 'side.Decreto_calificacion', 
         'side.Numero_dictamen', 'side.PCL_anterior', 'side.Descripcion_nueva_calificacion', 'side.Relacion_documentos', 'side.Otros_relacion_doc', 
-        'side.Descripcion_enfermedad_actual', 'side.Suma_combinada', 'side.Total_Deficiencia50', 'side.Porcentaje_pcl', 'side.Rango_pcl', 
+        'side.Descripcion_enfermedad_actual', 'side.Historial_sociofamiliar', 'side.Suma_combinada', 'side.Total_Deficiencia50', 'side.Porcentaje_pcl', 'side.Rango_pcl', 
         'side.Monto_indemnizacion', 'side.Tipo_evento', 'sltp.Nombre_evento', 'side.Origen', 'slp.Nombre_parametro as Nombre_origen', 'side.F_evento', 
         'side.F_estructuracion', 'side.Sustentacion_F_estructuracion', 'side.Detalle_calificacion', 'side.Enfermedad_catastrofica', 
         'side.Enfermedad_congenita', 'side.Tipo_enfermedad', 'slpa.Nombre_parametro as Nombre_enfermedad', 'side.Requiere_tercera_persona', 

@@ -541,6 +541,12 @@
                 <div class="dato_dinamico_font"><b>Descripción de la enfermedad Actual:</b></div>
                 <div class="dato_dinamico_font">{{$Descripcion_enfermedad_actual}}</div>
             </section>
+        </div>
+        <div class="content2">
+            <section class="border_section">
+                <div class="dato_dinamico_font"><b>Historial sociofamiliar:</b></div>
+                <div class="dato_dinamico_font"><?php echo nl2br($Historial_sociofamiliar); ?></div>
+            </section>
         </div> 
         <table class="tabla_dictamen">            
             <tr>

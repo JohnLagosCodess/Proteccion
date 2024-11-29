@@ -17,7 +17,11 @@ return new class extends Migration
             $table->integer('Id_Asignacion');
             $table->integer('Id_proceso');
             $table->string('Modalidad_calificacion',25)->nullable();
-            $table->string('Fuente_informacion',25)->nullable();            
+            $table->string('Fuente_informacion',25)->nullable();
+            $table->date('F_primera_cita')->nullable();
+            $table->integer('Causal_incumplimiento_primera_cita')->nullable();
+            $table->date('F_segunda_cita')->nullable();
+            $table->integer('Causal_incumplimiento_segunda_cita')->nullable();       
             $table->datetime('F_accion');
             $table->string('Accion',40);
             $table->datetime('F_Alerta')->nullable();

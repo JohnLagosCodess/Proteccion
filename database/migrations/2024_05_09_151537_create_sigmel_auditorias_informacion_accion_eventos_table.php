@@ -18,7 +18,11 @@ return new class extends Migration
             $table->integer('Aud_Id_Asignacion')->nullable();
             $table->integer('Aud_Id_proceso')->nullable();
             $table->string('Aud_Modalidad_calificacion',25)->nullable();
-            $table->string('Aud_Fuente_informacion',25)->nullable();            
+            $table->string('Aud_Fuente_informacion',25)->nullable();
+            $table->date('Aud_F_primera_cita')->nullable();
+            $table->integer('Aud_Causal_incumplimiento_primera_cita')->nullable();
+            $table->date('Aud_F_segunda_cita')->nullable();
+            $table->integer('Aud_Causal_incumplimiento_segunda_cita')->nullable();  
             $table->datetime('Aud_F_accion')->nullable();
             $table->string('Aud_Accion',40)->nullable();
             $table->date('Aud_F_Alerta')->nullable();

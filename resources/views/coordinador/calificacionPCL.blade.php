@@ -273,6 +273,40 @@
                                                 <span class="d-none" id="alertaNuevaFechaDeRadicacion" style="color: red; font-style: italic;"></span>
                                             </div>
                                         </div>
+                                        <?php if(!empty($array_datos_calificacionPcl[0]->Id_Servicio)):?>
+                                            {{-- Los siguientes campos se mostrarán dependiendo de que el servicio sean Calificación técnica y Revisión Pensión --}}
+                                            <?php if($array_datos_calificacionPcl[0]->Id_Servicio == 6 || $array_datos_calificacionPcl[0]->Id_Servicio == 7):?>
+                                                <div class="col-4">
+                                                    <div class="form-group">
+                                                        <label for="fecha_primera_cita">Fecha de 1ra cita <span class="obligatorio_primera_cita d-none" style="color:red;">(*)</span></label>
+                                                        <input type="date" class="form-control" name="fecha_primera_cita" id="fecha_primera_cita" min="{{ date('Y-m-d') }}" value="<?php if(!empty($array_datos_calificacionPcl[0]->F_primera_cita)){echo $array_datos_calificacionPcl[0]->F_primera_cita;}?>">
+                                                    </div>
+                                                </div>
+                                                <div class="col-4">
+                                                    <div class="form-group">
+                                                        <label for="incumple_primera_cita">Causal de incumplimiento 1ra cita <span class="obligatorio_primera_cita d-none" style="color:red;">(*)</span></label>
+                                                        <input type="hidden" id="bd_id_incumple_pri_cita" value="<?php if(!empty($array_datos_calificacionPcl[0]->Causal_incumplimiento_primera_cita)){echo $array_datos_calificacionPcl[0]->Causal_incumplimiento_primera_cita;}?>">
+                                                        <select class="custom-select incumple_primera_cita" name="incumple_primera_cita" id="incumple_primera_cita">
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-4">
+                                                    <div class="form-group">
+                                                        <label for="fecha_segunda_cita">Fecha de 2da cita <span class="obligatorio_segunda_cita d-none" style="color:red;">(*)</span></label>
+                                                        <input type="date" class="form-control" name="fecha_segunda_cita" id="fecha_segunda_cita" min="{{ date('Y-m-d') }}" value="<?php if(!empty($array_datos_calificacionPcl[0]->F_segunda_cita)){echo $array_datos_calificacionPcl[0]->F_segunda_cita;}?>">
+                                                    </div>
+                                                </div>
+                                                <div class="col-4">
+                                                    <div class="form-group">
+                                                        <label for="incumple_segunda_cita">Causal de incumplimiento 2da cita <span class="obligatorio_segunda_cita d-none" style="color:red;">(*)</span></label>
+                                                        <input type="hidden" id="bd_id_incumple_segunda_cita" value="<?php if(!empty($array_datos_calificacionPcl[0]->Causal_incumplimiento_segunda_cita)){echo $array_datos_calificacionPcl[0]->Causal_incumplimiento_segunda_cita;}?>">
+                                                        <select class="custom-select incumple_segunda_cita" name="incumple_segunda_cita" id="incumple_segunda_cita">
+                                                            <option value=""></option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            @endif
+                                        <?php endif?>
                                     </div>
                                     <div class="row">
                                         <div class="col-12">
@@ -1723,4 +1757,5 @@
     <script type="text/javascript" src="/js/funciones_helpers.js?v=1.0.0"></script>
     <script src="https://cdn.jsdelivr.net/npm/resumablejs@1.1.0/resumable.min.js"></script>
     <script src="/plugins/summernote/summernote.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @stop

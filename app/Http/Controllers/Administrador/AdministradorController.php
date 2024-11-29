@@ -4148,7 +4148,7 @@ class AdministradorController extends Controller
         
         /* Actualizacion tabla sigmel_informacion_eventos */
 
-        //validacion del otro/cual? en el tipo de cliente 
+        // validacion del otro/cual? en el tipo de cliente 
 
         if ($request->tipo_cliente == 4) {
                 
@@ -4172,6 +4172,8 @@ class AdministradorController extends Controller
             'F_evento' => $request->fecha_evento,
             'F_radicacion' => $request->fecha_radicacion,
             'N_siniestro' => $request->n_siniestro,
+            'Activador' => $request->activador,
+            'N_Radicado_HC' => $request->n_radicado_hc,
             'Nombre_usuario' => $nombre_usuario,
             'F_registro' => $date
         ];      
@@ -4240,14 +4242,27 @@ class AdministradorController extends Controller
         }
         
         // validacion si selecciona la opción Si del selector Apoderado
-        if ($request->apoderado == 'Si') {
+        // if ($request->apoderado == 'Si') {
             
-            $nombre_apoderado = $request->nombre_apoderado;
+            $tipo_doc_apoderado = $request->tipo_doc_apoderado;
             $nro_identificacion_apoderado = $request->nro_identificacion_apoderado;
-        } else {
-            $nombre_apoderado = "";
-            $nro_identificacion_apoderado = "";
-        }
+            $nombre_apoderado = $request->nombre_apoderado;
+            $email_apoderado = $request->email_apoderado;
+            $telefono_apoderado = $request->telefono_apoderado;
+            $direccion_apoderado = $request->direccion_apoderado;
+            $departamento_apoderado = $request->departamento_apoderado;
+            $ciudad_apoderado = $request->ciudad_apoderado;
+
+        // } else {
+            // $tipo_doc_apoderado = "";
+            // $nro_identificacion_apoderado = "";
+            // $nombre_apoderado = "";
+            // $email_apoderado = "";
+            // $telefono_apoderado = "";
+            // $direccion_apoderado = "";
+            // $departamento_apoderado = "";
+            // $ciudad_apoderado = "";
+        // }
         
         // validacion si selecciona la opción de Exterior del selector Departamentos (Información afiliado)
         if ($request->departamento_info_afiliado == 33) {
@@ -4364,8 +4379,14 @@ class AdministradorController extends Controller
             'Estado_civil' => $estado_civil,
             'Nivel_escolar' => $nivel_escolar,
             'Apoderado' => $request->apoderado,
-            'Nombre_apoderado' => $nombre_apoderado,
+            'Tipo_documento_apoderado' => $tipo_doc_apoderado,
             'Nro_identificacion_apoderado' => $nro_identificacion_apoderado,
+            'Nombre_apoderado' => $nombre_apoderado,
+            'Email_apoderado' => $email_apoderado,
+            'Telefono_apoderado' => $telefono_apoderado,
+            'Direccion_apoderado' => $direccion_apoderado,
+            'Id_departamento_apoderado' => $departamento_apoderado,
+            'Id_municipio_apoderado' => $ciudad_apoderado,
             'Id_dominancia' => $request->dominancia,
             'Direccion' => $request->direccion_info_afiliado,
             'Id_departamento' => $request->departamento_info_afiliado,
@@ -4376,12 +4397,14 @@ class AdministradorController extends Controller
             'Id_eps' => $id_eps,
             'Id_afp' => $id_afp,
             'Id_arl' => $id_arl,
-            'Activo' => $request->activo,
             'Nombre_afiliado_benefi' => $request->afi_nombre_afiliado,
             'Direccion_benefi' => $request->afi_direccion_info_afiliado,
+            'Email_benefi' => $request->afi_email_afiliado,
+            'Telefono_benefi' => $request->afi_telefono_afiliado,
             'Nro_identificacion_benefi' => $request->afi_nro_identificacion,
             'Tipo_documento_benefi' => $request->afi_tipo_documento,
             'Id_departamento_benefi' => $request->afi_departamento_info_afiliado,
+            'Activo' => $request->activo,
             'Id_municipio_benefi' => $request->afi_municipio_info_afiliado,
             'Medio_notificacion' => $request->medio_notificacion_afiliado,
             'Entidad_conocimiento' => $entidad_conocimiento,
@@ -4391,10 +4414,14 @@ class AdministradorController extends Controller
             'F_actualizacion' => $date
         ];        
 
-        $afiliadoActualizar = sigmel_informacion_afiliado_eventos::on('sigmel_gestiones')
-        ->where('ID_evento', $IdEventoactulizar)->firstOrFail();
-        $afiliadoActualizar->fill($actualizar_GestionInicialAfiliado);
-        $afiliadoActualizar->save();
+        sigmel_informacion_afiliado_eventos::on('sigmel_gestiones')
+        ->where('ID_evento', $IdEventoactulizar)
+        ->update($actualizar_GestionInicialAfiliado);
+
+        // $afiliadoActualizar = sigmel_informacion_afiliado_eventos::on('sigmel_gestiones')
+        // ->where('ID_evento', $IdEventoactulizar)->firstOrFail();
+        // $afiliadoActualizar->fill($actualizar_GestionInicialAfiliado);
+        // $afiliadoActualizar->save();
 
         sleep(2);
 
@@ -4707,9 +4734,42 @@ class AdministradorController extends Controller
         'sie.Activador', 'slp_activador.Nombre_parametro as Nombre_activador', 'sie.N_Radicado_HC')
         ->where([['sie.ID_evento', '=', $newIdEvento]])->get();  
         
+        // $array_datos_info_afiliados =DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_afiliado_eventos as siae')
+        // ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slp_tipo_doc', 'siae.Tipo_documento', '=', 'slp_tipo_doc.Id_Parametro')
+        // ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slp_tipo_doc_benefi', 'siae.Tipo_documento_benefi', '=', 'slp_tipo_doc_benefi.Id_Parametro')
+        // ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slp_tipo_genero', 'siae.Genero', '=', 'slp_tipo_genero.Id_Parametro')
+        // ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slp_estado_civil', 'siae.Estado_civil', '=', 'slp_estado_civil.Id_Parametro')
+        // ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slp_nivel_escolar', 'siae.Nivel_escolar', '=', 'slp_nivel_escolar.Id_Parametro')
+        // ->leftJoin('sigmel_gestiones.sigmel_lista_dominancias as sld', 'siae.Id_dominancia', '=', 'sld.Id_Dominancia')
+        // ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm', 'sldm.Id_departamento', '=', 'siae.Id_departamento')
+        // ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm1', 'sldm1.Id_municipios', '=', 'siae.Id_municipio')
+        // ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm_benefi', 'sldm_benefi.Id_departamento', '=', 'siae.Id_departamento_benefi')
+        // ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm1_benefi', 'sldm1_benefi.Id_municipios', '=', 'siae.Id_municipio_benefi')
+        // ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slp_tipo_afiliado', 'siae.Tipo_afiliado', '=', 'slp_tipo_afiliado.Id_Parametro')
+        // ->leftJoin('sigmel_gestiones.sigmel_informacion_entidades as sle', 'sle.Id_Entidad', '=', 'siae.Id_eps')
+        // ->leftJoin('sigmel_gestiones.sigmel_informacion_entidades as sle1', 'sle1.Id_Entidad', '=', 'siae.Id_afp')
+        // ->leftJoin('sigmel_gestiones.sigmel_informacion_entidades as sle2', 'sle2.Id_Entidad', '=', 'siae.Id_arl')
+        // ->leftJoin('sigmel_gestiones.sigmel_informacion_entidades as sle3', 'sle3.Id_Entidad', '=', 'siae.Id_afp_entidad_conocimiento')
+        // ->select('siae.Id_Afiliado', 'siae.ID_evento', 'siae.F_registro', 'siae.Nombre_afiliado', 'siae.Direccion', 'siae.Tipo_documento',
+        // 'slp_tipo_doc.Nombre_parametro as Nombre_documento', 'siae.Nro_identificacion', 'siae.F_nacimiento', 'siae.Edad', 'siae.Genero',
+        // 'slp_tipo_genero.Nombre_parametro as Nombre_genero', 'siae.Email', 'siae.Telefono_contacto', 'siae.Estado_civil',
+        // 'slp_estado_civil.Nombre_parametro as Nombre_estado_civil', 'siae.Nivel_escolar', 'slp_nivel_escolar.Nombre_parametro as Nombre_nivel_escolar',
+        // 'sld.Id_dominancia', 'sld.Nombre_dominancia as Dominancia', 'siae.Id_departamento', 'sldm.Nombre_departamento',
+        // 'siae.Id_municipio', 'sldm1.Nombre_municipio', 'siae.Ocupacion', 'siae.Tipo_afiliado', 'slp_tipo_afiliado.Nombre_parametro as Nombre_tipo_afiliado',
+        // 'siae.Ibc', 'siae.Id_eps', 'sle.Nombre_entidad as Nombre_eps', 'siae.Id_afp', 'sle1.Nombre_entidad as Nombre_afp', 'siae.Id_arl', 'sle2.Nombre_entidad as Nombre_arl',
+        // 'siae.Entidad_conocimiento', 'siae.Id_afp_entidad_conocimiento', 'sle3.Nombre_entidad as Nombre_afp_conocimiento',
+        // 'siae.Apoderado', 'siae.Nombre_apoderado', 'siae.Nro_identificacion_apoderado', 'siae.Activo', 'siae.Medio_notificacion','siae.Nombre_afiliado_benefi','Nro_identificacion_benefi',
+        // 'siae.Direccion_benefi','siae.Tipo_documento_benefi','siae.Id_departamento_benefi','siae.Id_municipio_benefi','slp_tipo_doc_benefi.Nombre_parametro as Nombre_documento_benefi',
+        // 'sldm_benefi.Nombre_departamento as Nombre_departamento_benefi', 'sldm1_benefi.Nombre_municipio as Nombre_municipio_benefi')
+        // ->where([['siae.ID_evento','=',$newIdEvento]])
+        // ->orderBy('siae.F_registro', 'desc')
+        // ->limit(1)
+        // ->get();
+
         $array_datos_info_afiliados =DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_afiliado_eventos as siae')
         ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slp_tipo_doc', 'siae.Tipo_documento', '=', 'slp_tipo_doc.Id_Parametro')
         ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slp_tipo_doc_benefi', 'siae.Tipo_documento_benefi', '=', 'slp_tipo_doc_benefi.Id_Parametro')
+        ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slp_tipo_doc_apoderado', 'siae.Tipo_documento_apoderado', '=', 'slp_tipo_doc_apoderado.Id_Parametro')
         ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slp_tipo_genero', 'siae.Genero', '=', 'slp_tipo_genero.Id_Parametro')
         ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slp_estado_civil', 'siae.Estado_civil', '=', 'slp_estado_civil.Id_Parametro')
         ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slp_nivel_escolar', 'siae.Nivel_escolar', '=', 'slp_nivel_escolar.Id_Parametro')
@@ -4718,6 +4778,8 @@ class AdministradorController extends Controller
         ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm1', 'sldm1.Id_municipios', '=', 'siae.Id_municipio')
         ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm_benefi', 'sldm_benefi.Id_departamento', '=', 'siae.Id_departamento_benefi')
         ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm1_benefi', 'sldm1_benefi.Id_municipios', '=', 'siae.Id_municipio_benefi')
+        ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm_apoderado', 'sldm_apoderado.Id_departamento', '=', 'siae.Id_departamento_apoderado')
+        ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm1_apoderado', 'sldm1_apoderado.Id_municipios', '=', 'siae.Id_municipio_apoderado')
         ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slp_tipo_afiliado', 'siae.Tipo_afiliado', '=', 'slp_tipo_afiliado.Id_Parametro')
         ->leftJoin('sigmel_gestiones.sigmel_informacion_entidades as sle', 'sle.Id_Entidad', '=', 'siae.Id_eps')
         ->leftJoin('sigmel_gestiones.sigmel_informacion_entidades as sle1', 'sle1.Id_Entidad', '=', 'siae.Id_afp')
@@ -4731,12 +4793,14 @@ class AdministradorController extends Controller
         'siae.Id_municipio', 'sldm1.Nombre_municipio', 'siae.Ocupacion', 'siae.Tipo_afiliado', 'slp_tipo_afiliado.Nombre_parametro as Nombre_tipo_afiliado',
         'siae.Ibc', 'siae.Id_eps', 'sle.Nombre_entidad as Nombre_eps', 'siae.Id_afp', 'sle1.Nombre_entidad as Nombre_afp', 'siae.Id_arl', 'sle2.Nombre_entidad as Nombre_arl',
         'siae.Entidad_conocimiento', 'siae.Id_afp_entidad_conocimiento', 'sle3.Nombre_entidad as Nombre_afp_conocimiento',
-        'siae.Apoderado', 'siae.Nombre_apoderado', 'siae.Nro_identificacion_apoderado', 'siae.Activo', 'siae.Medio_notificacion','siae.Nombre_afiliado_benefi','Nro_identificacion_benefi',
-        'siae.Direccion_benefi','siae.Tipo_documento_benefi','siae.Id_departamento_benefi','siae.Id_municipio_benefi','slp_tipo_doc_benefi.Nombre_parametro as Nombre_documento_benefi',
-        'sldm_benefi.Nombre_departamento as Nombre_departamento_benefi', 'sldm1_benefi.Nombre_municipio as Nombre_municipio_benefi')
+        'siae.Tipo_documento_apoderado','slp_tipo_doc_apoderado.Nombre_parametro as Nombre_documento_apoderado',
+        'siae.Apoderado', 'siae.Nombre_apoderado','siae.Nro_identificacion_apoderado', 'siae.Email_apoderado','siae.Telefono_apoderado', 'siae.Direccion_apoderado', 'siae.Id_departamento_apoderado', 'siae.Id_municipio_apoderado', 
+        'sldm_apoderado.Nombre_departamento as Nombre_departamento_apoderado', 'sldm1_apoderado.Nombre_municipio as Nombre_municipio_apoderado',
+        'siae.Activo', 'siae.Medio_notificacion','siae.Nombre_afiliado_benefi','Nro_identificacion_benefi', 
+        'siae.Email_benefi','siae.Telefono_benefi','siae.Direccion_benefi','siae.Tipo_documento_benefi','siae.Id_departamento_benefi','siae.Id_municipio_benefi','slp_tipo_doc_benefi.Nombre_parametro as Nombre_documento_benefi','sldm_benefi.Nombre_departamento as Nombre_departamento_benefi', 'sldm1_benefi.Nombre_municipio as Nombre_municipio_benefi')
         ->where([['siae.ID_evento','=',$newIdEvento]])
         ->orderBy('siae.F_registro', 'desc')
-        ->limit(1)
+        // ->limit(1)
         ->get();
 
         $array_datos_info_laboral=DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_laboral_eventos as sile')

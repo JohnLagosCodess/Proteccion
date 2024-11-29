@@ -397,11 +397,18 @@
                                         <div class="form-group">
                                             <label for="sustenta_cali">Sustentación<span style="color: red;">(*)</span></label>
                                             <br>
-                                            <button class="btn btn-sm btn-secondary mb-2 d-none" id="btn_insertar_Nombre_afiliado">Nombre afiliado</button>
+                                            <button class="btn btn-sm btn-secondary mb-2 d-none" id="btn_insertar_Nombre_afiliado">Nombre afiliado / Beneficiario</button>
+                                            <button class="btn btn-sm btn-secondary mb-2 d-none" id="btn_insertar_tipo_documento">Tipo de documento</button>
+                                            <button class="btn btn-sm btn-secondary mb-2 d-none" id="btn_insertar_nro_documento">N° de identificación</button>
+                                            <button class="btn btn-sm btn-secondary mb-2 d-none" id="btn_insertar_entidad_calificadora">Nombre entidad calificadora</button>
                                             <button class="btn btn-sm btn-secondary mb-2 d-none" id="btn_insertar_nombreCIE10">CIE10-Nombre-Origen</button>
-                                            {{-- <button class="btn btn-sm btn-secondary mb-2 d-none" id="btn_insertar_Origen">Origen</button> --}}
+                                            <button class="btn btn-sm btn-secondary mb-2 d-none" id="btn_insertar_nro_dicta_pri_cali">N° dictamen primer calificador</button>
+                                            <button class="btn btn-sm btn-secondary mb-2 d-none" id="btn_insertar_f_dicta_pri_cali">Fecha dictamen primer calificador</button>
+                                            <button class="btn btn-sm btn-secondary mb-2 d-none" id="btn_insertar_tipo_evento">Tipo de evento</button>
+                                            <button class="btn btn-sm btn-secondary mb-2 d-none" id="btn_insertar_Origen">Origen</button>
                                             <button class="btn btn-sm btn-secondary mb-2 d-none" id="btn_insertar_porPcl">% PCL</button>
                                             <button class="btn btn-sm btn-secondary mb-2 d-none" id="btn_insertar_F_estructuracion">Fecha de estructuracion</button>
+
                                             @if (!empty($info_pronuncia[0]->Sustenta_cali))
                                                 <textarea class="form-control" name="sustenta_cali" id="sustenta_cali" cols="30" rows="5" style="resize: none;" required>{{$info_pronuncia[0]->Sustenta_cali}}</textarea>
                                             @else
@@ -531,6 +538,17 @@
                                             @endif
                                         </div>
                                     </div>
+                                    <div class="col-2">
+                                        <div class="form-group">
+                                            <label for="forma_envio">Forma de Envío</label>
+                                            @if (!empty($datos_forma_envio[0]->Id_Parametro) && empty($array_comite_interdisciplinario[0]->Forma_envio))
+                                                <input type="hidden" name="bd_forma_envio" id="bd_forma_envio" value="{{$datos_forma_envio[0]->Id_Parametro}}">
+                                            @elseif(!empty($datos_forma_envio[0]->Id_Parametro) && !empty($array_comite_interdisciplinario[0]->Forma_envio))
+                                                <input type="hidden" name="bd_forma_envio" id="bd_forma_envio" value="{{$array_comite_interdisciplinario[0]->Forma_envio}}">
+                                            @endif
+                                            <select class="custom-select forma_envio" name="forma_envio" id="forma_envio"></select>
+                                        </div>
+                                    </div>
                                     <div class="col-4">
                                         <div class="form-group">
                                             <label for="elaboro">Elaboró</label>
@@ -559,18 +577,20 @@
                                             @if (!empty($info_pronuncia[0]->Ciudad_correspon))
                                                 <input type="text" class="form-control" name="ciudad_correspon" id="ciudad_correspon" value="{{$info_pronuncia[0]->Ciudad_correspon}}" required>
                                             @else
-                                                <input type="text" class="form-control" name="ciudad_correspon" id="ciudad_correspon" value="Bogotá D.C." required>
+                                                <input type="text" class="form-control" name="ciudad_correspon" id="ciudad_correspon" required>
                                             @endif
                                         </div>
                                     </div>
                                     <div class="col-4">
                                         <div class="form-group">
                                             <label for="fecha_correspon">Fecha</label>
-                                            @if (!empty($info_pronuncia[0]->Fecha_correspondencia))
+                                            {{-- @if (!empty($info_pronuncia[0]->Fecha_correspondencia))
                                                 <input type="date" class="form-control" name="fecha_correspon" id="fecha_correspon" value="{{$info_pronuncia[0]->Fecha_correspondencia}}" readonly>
                                             @else
                                                 <input type="date" class="form-control" name="fecha_correspon" id="fecha_correspon" value="{{now()->format('Y-m-d')}}" readonly>
-                                            @endif
+                                            @endif --}}
+                                            
+                                            <input type="date" class="form-control" name="fecha_correspon" id="fecha_correspon" value="<?php if(!empty($info_pronuncia[0]->Fecha_pronuncia)){echo date("Y-m-d", strtotime($info_pronuncia[0]->Fecha_pronuncia));}?>" readonly>
                                         </div>
                                     </div>
                                     <div class="col-3">

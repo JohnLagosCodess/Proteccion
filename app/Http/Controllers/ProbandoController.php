@@ -20,7 +20,9 @@ use App\Imports\ProbandoImportCsvSinEncabezados;
 use App\Imports\ProbandoImportXslxConEncabezados;
 use App\Imports\ProbandoImportXslxSinEncabezados;
 use App\Models\sigmel_lista_solicitantes;
+use App\Models\sigmel_clientes;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\DB;
 
 use PDF;
 use Dompdf\Dompdf;
@@ -318,41 +320,89 @@ class ProbandoController extends Controller
 
         $diagnosticos_cie10 = array("Manzana", "Plátano", "Uva", "Pera", 
         "Banano", "Sandía", "Papaya", "Durazno", "Arándanos");
+
+        $formattedData = "";
+        $dictamenOrigenQr = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_asignacion_eventos as siae')
+        ->leftJoin('sigmel_gestiones.sigmel_informacion_decreto_eventos as side', 'side.Id_Asignacion', '=', 'siae.Id_Asignacion')
+        ->leftJoin('sigmel_gestiones.sigmel_informacion_afiliado_eventos as siaf', 'siaf.ID_evento', '=', 'siae.ID_evento')
+        ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slp', 'slp.Id_Parametro', '=', 'siaf.Tipo_documento')
+        ->select('siaf.Nombre_afiliado', 'slp.Nombre_parametro', 'siaf.Nro_identificacion', 'siae.Consecutivo_dictamen', 
+        'side.Porcentaje_pcl', 'side.F_estructuracion', 'siae.ID_evento')
+        ->where('siae.Id_Asignacion', 3)->get();     
+
+        if (!$dictamenOrigenQr->isEmpty()) {
+            // Crear una cadena para almacenar los datos en el formato deseado                    
         
+            foreach ($dictamenOrigenQr as $evento) {
+                // Construir la cadena de texto con el formato deseado
+                $formattedData .= $evento->Nombre_afiliado."\n";
+                $formattedData .= $evento->Nombre_parametro." ".$evento->Nro_identificacion . "\n";
+                $formattedData .= "N° Dictámen: ".$evento->Consecutivo_dictamen."\n";
+                $formattedData .= "Cod. Verificación: ".$evento->ID_evento."\n";
+                // Agregar un salto de línea después de cada conjunto de atributos de evento
+                $formattedData .= "\n";
+            }
+                            
+        }
+
+        // Codigo QR
+        $datosQr = $formattedData;
+        $codigoQR = QrCode::size(110)->margin(0.5)->generate($datosQr); 
+        
+        // $data = [
+        //     'ciudad' => $nombreCiudad,
+        //     'fecha' => $fechaFormateada,
+        //     'nombre_afiliado' => 'Mauro Estefan Ramírez Aranguren',
+        //     'correo_afiliado' => 'mauro.ramirez@codess.org.co',
+        //     'direccion_afiliado' => 'Calle 41 A Sur # 72 H - 03',
+        //     'telefonos_afiliado' => '3124431689',
+        //     'municipio_afiliado' => 'Bogotá D.C.',
+        //     'departamento_afiliado' => 'Bogotá D.C.',
+        //     'nro_radicado' => '1234578',
+        //     'tipo_identificacion' => 'Cc',
+        //     'num_identificacion' => '1030651087',
+        //     'nro_siniestro' => '987456321',
+        //     'identificacion' => '1030651087',
+        //     'fecha_evento' => $date,
+        //     'diagnosticos_cie10' => $diagnosticos_cie10,
+        //     'Firma_cliente' => 'gola',
+        //     'nombre_usuario' => Auth::user()->name,
+        // ];
+
+        $dato_logo_header = sigmel_clientes::on('sigmel_gestiones')
+        ->select('Logo_cliente')
+        ->where([['Id_cliente', 1]])
+        ->limit(1)->get();
+
+        if (count($dato_logo_header) > 0) {
+            $logo_header = $dato_logo_header[0]->Logo_cliente;
+        } else {
+            $logo_header = "Sin logo";
+        }
+
         $data = [
-            'ciudad' => $nombreCiudad,
-            'fecha' => $fechaFormateada,
-            'nombre_afiliado' => 'Mauro Estefan Ramírez Aranguren',
-            'correo_afiliado' => 'mauro.ramirez@codess.org.co',
-            'direccion_afiliado' => 'Calle 41 A Sur # 72 H - 03',
-            'telefonos_afiliado' => '3124431689',
-            'municipio_afiliado' => 'Bogotá D.C.',
-            'departamento_afiliado' => 'Bogotá D.C.',
-            'nro_radicado' => '1234578',
-            'tipo_identificacion' => 'Cc',
-            'num_identificacion' => '1030651087',
-            'nro_siniestro' => '987456321',
-            'identificacion' => '1030651087',
-            'fecha_evento' => $date,
-            'diagnosticos_cie10' => $diagnosticos_cie10,
-            'Firma_cliente' => 'gola',
-            'nombre_usuario' => Auth::user()->name
+            'codigoQR' => $codigoQR,
+            'id_cliente' => 1,
+            'logo_header' => $logo_header
         ];
 
-        $html = view('/Proformas/Proformas_Arl/Origen_Atel/notificacion_dml_origen', $data)->render();
-        $options = new Options();
-        $options->set('isHtml5ParserEnabled', true);
-        $options->set('isPhpEnabled', true);
+        // $html = view('/Proformas/Proformas_Prev/Origen_Atel/notificacion_dml_origen1', $data)->render();
+        // $options = new Options();
+        // $options->set('isHtml5ParserEnabled', true);
+        // $options->set('isPhpEnabled', true);
 
-        $dompdf = new Dompdf($options);
+        // $dompdf = new Dompdf($options);
+        // $dompdf->loadHtml($html);
+        // $dompdf->setPaper('A4', 'portrait');
+        // $dompdf->render();
+        // $dompdf->stream('pdf_prueba.pdf');
 
-        $dompdf->loadHtml($html);
-
-        $dompdf->setPaper('A4', 'portrait');
-
-        $dompdf->render();
-
-        return $dompdf->stream('pdf_prueba.pdf');
+        $pdf = app('dompdf.wrapper');
+        $pdf->loadView('/Proformas/Proformas_Prev/Origen_Atel/notificacion_dml_origen1', $data);
+        // $pdf->set('isHtml5ParserEnabled', true);
+        // $pdf->set('isPhpEnabled', true);
+        $fileName = 'pdfsito.pdf';
+        return $pdf->stream($fileName);
 
 
 

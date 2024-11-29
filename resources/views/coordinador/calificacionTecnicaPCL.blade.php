@@ -328,6 +328,16 @@
                                             @endif
                                         </div>
                                     </div>
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label for="historial_sociofamiliar">Historial sociofamiliar<span style="color: red;">(*)</span>:</label>
+                                            @if (empty($array_info_decreto_evento[0]->Historial_sociofamiliar))
+                                                <textarea class="form-control" name="historial_sociofamiliar" id="historial_sociofamiliar" cols="30" rows="5" style="resize: none;" ></textarea>                                                
+                                            @else
+                                                <textarea class="form-control" name="historial_sociofamiliar" id="historial_sociofamiliar" cols="30" rows="5" style="resize: none;" >{{$array_info_decreto_evento[0]->Historial_sociofamiliar}}</textarea>
+                                            @endif
+                                        </div>
+                                    </div>
                                     <div class="col-4">
                                         <div class="form-group">
                                             <label for="dominancia">Dominancia</label>
@@ -7243,7 +7253,7 @@
                                             </div>
                                         </div>
                                     </div> 
-                                    <div class="col-3">
+                                    {{-- <div class="col-3">
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox">
                                                 @if (!empty($array_comite_interdisciplinario[0]->Oficio_incapacidad) && $array_comite_interdisciplinario[0]->Oficio_incapacidad == 'Si')
@@ -7254,7 +7264,7 @@
                                                 <label for="oficioinca" class="custom-control-label">Oficio Incapacidad</label>
                                             </div>
                                         </div>
-                                    </div> 
+                                    </div>  --}}
                                     {{-- <div class="col-3" style="display: flex; flex-direction: row; justify-content:space-between;">
                                         <div>
                                             <div class="form-group">
@@ -7298,7 +7308,7 @@
                                     <div class="col-3">
                                         <div class="form-group">
                                             <label for="destinatario_principal">Destinatario Principal</label>                                            
-                                            <input type="text" class="form-control" name="destinatario_principal" id="destinatario_principal" value="{{$array_datos_calificacionPclTecnica[0]->Nombre_afiliado}}" disabled>
+                                            <input type="text" class="form-control" name="destinatario_principal" id="destinatario_principal" value="{{$Destinatario_principal_correspo}}" disabled>
                                         </div>
                                     </div>
                                     <div class="col-3">
