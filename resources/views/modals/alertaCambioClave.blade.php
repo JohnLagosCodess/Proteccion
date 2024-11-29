@@ -15,5 +15,6 @@
         </div>
     </div>
     <x-slot name="footerSlot">
+        <button class="btn btn-danger" id="cerrar_modal" data-dismiss="modal">Cerrar</button>
     </x-slot>
 </x-adminlte-modal>

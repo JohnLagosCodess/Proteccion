@@ -2976,7 +2976,6 @@ $(document).ready(function(){
                     } else {
                         listado = '';
                     }
-                    console.log('LISTADO ',listado)
                     var texto_insertar = "<p>Respetado(a) Señor(a),</p>"+
                         "<p>Reciba un cordial saludo de la Administradora de Fondos de Pensiones y Cesantías Protección S.A.</p>"+
                         "<p>Con ocasión a la documentación médica radicada para el trámite de estudio de su prestación económica, respetuosamente, nos permitimos "+
