@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\DB;
+use App\Models\sigmel_informacion_afiliado_eventos;
+use App\Models\sigmel_lista_departamentos_municipios;
 use Carbon\Carbon;
 
 if (!function_exists("getDatabaseName")) {
@@ -97,3 +99,51 @@ if (!function_exists("generarNumeroEvento")) {
     }
 }
 
+if (!function_exists("afiliado_principal")) {
+    function afiliado_principal($Id_evento,$modo = null){
+        $info_afiliado = sigmel_informacion_afiliado_eventos::on('sigmel_gestiones')
+        ->leftJoin("sigmel_gestiones.sigmel_lista_parametros as be","be.Id_Parametro","Tipo_documento_benefi")
+        ->leftJoin("sigmel_gestiones.sigmel_lista_parametros as afi","afi.Id_Parametro","Tipo_documento")
+        ->select("sigmel_informacion_afiliado_eventos.*"
+        ,"be.Nombre_parametro as t_doc_beneficiario","afi.Nombre_parametro as t_doc_afiliado")->where('ID_evento',$Id_evento)->first();
+    
+        $tipoAfiliado = $info_afiliado->Apoderado == "Si" ? "apoderado" : ($info_afiliado->Tipo_afiliado == 27 ? "beneficiario" : null);
+
+        $get_ciudad = function($id){
+            return sigmel_lista_departamentos_municipios::on('sigmel_gestiones')->select("Nombre_departamento","Nombre_municipio")->where("Id_municipios",$id)->first();
+        };
+
+        $afiliado_principal = match ($tipoAfiliado) {
+            "apoderado"  => [
+                "nombre" => $info_afiliado->Nombre_apoderado,
+                "direccion" => $info_afiliado->Direccion_apoderado,
+                "email" => $info_afiliado->Email_apoderado,
+                "tel" => $info_afiliado->Telefono_apoderado,
+                "ciudad" => $get_ciudad($info_afiliado->Id_municipio_apoderado)->Nombre_municipio ?? "Medellin",
+                "departamento" => $get_ciudad($info_afiliado->Id_municipio_apoderado)->Nombre_departamento ?? "Antioquia",
+            ],
+            "beneficiario" => [
+                "nombre" => $info_afiliado->Nombre_afiliado_benefi,
+                "direccion" => $info_afiliado->Direccion_benefi,
+                "email" => $info_afiliado->Email_benefi,
+                "tel" => $info_afiliado->Telefono_benefi,
+                "departamento" => $get_ciudad($info_afiliado->Id_municipio_benefi)->Nombre_departamento ?? "Antioquia",
+                "ciudad" => $get_ciudad($info_afiliado->Id_municipio_benefi)->Nombre_municipio ?? "Medellin",
+            ],
+            default => [
+                "nombre" => $info_afiliado->Nombre_afiliado,
+                "direccion" => $info_afiliado->Direccion,
+                "email" => $info_afiliado->Email,
+                "tel" => $info_afiliado->Telefono_contacto,
+                "departamento" => $get_ciudad($info_afiliado->Id_municipio)->Nombre_departamento ?? "Antioquia",
+                "ciudad" => $get_ciudad($info_afiliado->Id_municipio)->Nombre_municipio ?? "Medellin",
+            ]
+        };
+
+        if($modo != null) {
+             return $afiliado_principal;
+         } else {
+            return implode(";", $afiliado_principal);
+         }
+    }
+}

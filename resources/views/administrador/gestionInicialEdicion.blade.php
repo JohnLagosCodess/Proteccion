@@ -678,16 +678,58 @@
                                                     <div class="col-12 columna_nombre_apoderado d-none text-center">
                                                         <p style="font-weight: bold;">Información del apoderado o reclamante</p>
                                                     </div>
-                                                    <div class="col-3 columna_nombre_apoderado d-none">
+                                                    <div class="col-3 columna_tipo_doc_apoderado d-none">
                                                         <div class="form-group">
-                                                            <label for="nombre_apoderado" class="col-form-label">Nombre del apoderado</label>
-                                                            <input type="text" class="nombre_apoderado form-control" name="nombre_apoderado" id="nombre_apoderado">
+                                                            <label for="tipo_doc_apoderado" class="col-form-label">Tipo de documento apoderado <span style="color:red;">(*)</span></label>
+                                                            <select class="tipo_doc_apoderado custom-select" name="tipo_doc_apoderado" id="tipo_doc_apoderado">
+                                                            </select>
                                                         </div>
                                                     </div>
                                                     <div class="col-3 columna_identificacion_apoderado d-none">
                                                         <div class="form-group">
-                                                            <label for="nro_identificacion_apoderado" class="col-form-label">N° identificación apoderado</label>
-                                                            <input type="text" class="nro_identificacion_apoderado form-control" name="nro_identificacion_apoderado" id="nro_identificacion_apoderado">
+                                                            <label for="nro_identificacion_apoderado" class="col-form-label">N° identificación apoderado <span style="color:red;">(*)</span></label>
+                                                            <input type="text" class="nro_identificacion_apoderado form-control" name="nro_identificacion_apoderado" id="nro_identificacion_apoderado" >
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-3 columna_nombre_apoderado d-none">
+                                                        <div class="form-group">
+                                                            <label for="nombre_apoderado" class="col-form-label">Nombre del apoderado <span style="color:red;">(*)</span></label>
+                                                            <input type="text" class="nombre_apoderado form-control" name="nombre_apoderado" id="nombre_apoderado" >
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-3 columna_email_apoderado d-none">
+                                                        <div class="form-group">
+                                                            <label for="email_apoderado" class="col-form-label">Email apoderado <span style="color:red;">(*)</span></label>
+                                                            <input type="email" class="email_apoderado form-control" list="opciones_email_apoderado" id="email_apoderado" name="email_apoderado" placeholder="Selecciona o escribe..." >
+                                                            <datalist id="opciones_email_apoderado">
+                                                                <option value="sin@correo.com">
+                                                            </datalist>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-3 columna_telefono_apoderado d-none">
+                                                        <div class="form-group">
+                                                            <label for="telefono_apoderado" class="col-form-label">Teléfono apoderado <span style="color:red;">(*)</span></label>
+                                                            <input type="text" class="form-control" name="telefono_apoderado" id="telefono_apoderado">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-3 columna_direccion_apoderado d-none">
+                                                        <div class="form-group">
+                                                            <label for="direccion_apoderado" class="col-form-label">Dirección apoderado <span style="color:red;">(*)</span></label>
+                                                            <input type="text" class="form-control" name="direccion_apoderado" id="direccion_apoderado" >
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-3 columna_departamento_apoderado d-none">
+                                                        <div class="form-group">
+                                                            <label for="departamento_apoderado" class="col-form-label">Departamento apoderado <span style="color:red;">(*)</span></label>
+                                                            <select class="departamento_apoderado custom-select" name="departamento_apoderado" id="departamento_apoderado">
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-3 columna_ciudad_apoderado d-none">
+                                                        <div class="form-group">
+                                                            <label for="ciudad_apoderado" class="col-form-label">Ciudad apoderado <span style="color:red;">(*)</span></label>
+                                                            <select class="ciudad_apoderado custom-select" name="ciudad_apoderado" id="ciudad_apoderado" disabled>
+                                                            </select>
                                                         </div>
                                                     </div>
                                                 <?php endif ?>         

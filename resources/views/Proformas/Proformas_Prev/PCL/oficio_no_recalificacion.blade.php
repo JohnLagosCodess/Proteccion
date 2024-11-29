@@ -8,40 +8,36 @@
     
     <style>
         @page{
-            margin: 3cm 1.3cm 2.5cm 1.3cm;
+            margin: 2.5cm 1.3cm 2.5cm 1.3cm;
         }
         #header {
             position: fixed; 
-            top: -3cm;
+            /* esta ligado con el primer valor del margin */
+            top: -1.8cm;
             left: 0cm;
             width: 100%;
-            text-align: right; 
+            /* height: 100px; */
+            text-align: center; 
+            /* background: green; */
         }
         .codigo_qr{
-            position: absolute;
-            top: 5px; 
-            left: 5px; 
             max-width: 90px; 
             max-height: 70px; 
         }
         .logo_header{
-            position: absolute;
-            /* max-width: 40%; */
-            width: 150px;
+            max-width: 30%;
             height: auto;
-            left: 530px;
-            max-height: 80px; 
-        }
+            max-height: 60px; 
+        } 
         .tabla_header{
             width: 100%;
             font-family: sans-serif;
             font-size: 13px;
             text-align: center;            
         }
-
         .tabla_header td {
             border: none;
-        }        
+        }
         #footer{
             position: fixed;
             /* esta ligado con el tercer valor del margin */
@@ -54,12 +50,14 @@
             justify-content: flex-end;
             align-items: center; 
         }
-        #footer .page{
-            text-align: center;
-        }
+        /* #footer .page{
+            text-align: right;
+        } */
+
         .footer_image{
             max-width: 100%;
-            max-height: 80%;
+            width: 100%;
+            max-height: 100;
             margin-bottom: -5px;
         }
         .footer_content {
@@ -67,18 +65,16 @@
             text-align: center;
         }
 
-        #footer .page:after { content: counter(page, upper-decimal); } 
-
         #footer2 { 
             position: fixed; 
-            left: -20px; 
+            left: 20px; 
             right: 0px; 
             width: 0px; 
             height: 0px; 
             color:black; 
             background-color: white; 
             transform: rotate(0deg); 
-            top:300px;
+            top:450px;
         }
         .logo_footer{
             width: auto;
@@ -96,14 +92,14 @@
         .negrita{
             font-weight: bold;
         }
-        .fuente_todo_texto{
-            font-family: sans-serif;
-            font-size: 12px;
-        }
         .paddingTexto{
             margin: 0;
             padding: 0;
         }
+        .fuente_todo_texto{
+            font-family: sans-serif;
+            font-size: 12px;
+        }      
         .tabla1{
             width: 100%;            
             margin-left: -3.5px;
@@ -129,6 +125,7 @@
             padding-left: 25px;
             padding-right: 25px;
             text-align: justify;
+            font-style: italic;
         }
 
         section{
@@ -144,7 +141,7 @@
             width: 4cm;
             padding: 1px;
             height: auto;
-        }     
+        }
         .fuente_cuadro_inferior{
             font-family: sans-serif;
             font-size: 10px;
@@ -153,10 +150,10 @@
         }
         .copias{
             font-size: 10px;
-        }
+        }     
         .derecha{
-            float:right;
-        } 
+            float: right;
+        }
     </style>
 </head>
 <body>
@@ -164,10 +161,7 @@
         <table class="tabla_header">
             <tbody>
                 <tr>
-                    {{-- <td>
-                        <img src="data:image/png;base64,{{ base64_encode($codigoQR) }}" class="codigo_qr" alt="Código QR">
-                    </td> --}}
-                    <td>
+                    <td style="width:100%; text-align: right; margin-right: 30px;">
                         <?php if($logo_header == "Sin logo"): ?>
                             <p>No logo</p>
                         <?php else: ?>
@@ -187,7 +181,7 @@
     <div id="footer">        
         <?php if($footer == null): ?>
             <div style="text-align:center;">
-                <span style="color: #3C3C3C; margin-top:2px;">{{$nombre}} - {{$tipo_identificacion}} {{$num_identificacion}} - Siniestro: {{$N_siniestro}} </span>
+                <span style="color: #4D4D4D; margin-top:2px;">{{$Nombre_destinatario}} - {{$T_documento_destinatario}} {{$N_documento_destinatario}} - Siniestro: {{$N_siniestro}} </span>
             </div>
         <?php else: ?>
             <?php 
@@ -196,10 +190,11 @@
                 $footer_data = file_get_contents($footer_path);
                 $footer_base64 = base64_encode($footer_data);
             ?>
-            <div class="footer_content">
-                <span style="color: #3C3C3C; margin-top:2px;">{{$nombre}} - {{$tipo_identificacion}} {{$num_identificacion}} - Siniestro: {{$N_siniestro}} </span>
-                <br>
-                <img src="data:image/png;base64,{{ $footer_base64 }}" class="footer_image">
+            <div class="footer_content" style="text-align:center;">
+                <span style="position: absolute; width: 100%; text-align:center; top: 10px; left:0px; color:#4D4D4D; font-weight:bold; font-size: 11px;">
+                    {{$Nombre_destinatario}} - {{$T_documento_destinatario}} {{$N_documento_destinatario}} - SINIESTRO: {{$N_siniestro}} 
+                </span>
+                <img src="data:image/png;base64,{{ $footer_base64 }}" class="footer_image" style="display: block;">
             </div>
         <?php endif ?>
     </div>
@@ -216,16 +211,16 @@
             <tbody>
                 <tr>
                     <td style="width:100%; display:table; justify-content: space-between;">
-                        <p class="fuente_todo_texto paddingTexto derecha"><span class="negrita">{{$ciudad}} {{$fecha}}</span></p>
+                        <p class="fuente_todo_texto paddingTexto derecha"><span class="negrita">{{$ciudad}}, {{$fecha}}</span></p>
                         <div>
                             <div class="fuente_todo_texto paddingTexto">
                                 <span class="negrita">Señor(a): </span><br>
-                                {{$nombre}}
+                                <span class="negrita">{{$Nombre_destinatario}}</span>
                             </div>
-                            <div class="fuente_todo_texto paddingTexto">{{$email_destinatario}}</div>
-                            <div class="fuente_todo_texto paddingTexto">{{$direccion}}</div>
-                            <div class="fuente_todo_texto paddingTexto">{{$telefono}}</div>
-                            <div class="fuente_todo_texto paddingTexto">{{$municipio.' - '.$departamento}}</div>
+                            <div class="fuente_todo_texto paddingTexto">{{$Email_destinatario}}</div>
+                            <div class="fuente_todo_texto paddingTexto">{{$Direccion_destinatario}}</div>
+                            <div class="fuente_todo_texto paddingTexto">{{$Telefono_destinatario}}</div>
+                            <div class="fuente_todo_texto paddingTexto"><?php if($Ciudad_destinatario == "Bogota D.C."): ?>{{$Ciudad_destinatario}}<?php else: ?>{{$Ciudad_destinatario.' - '.$Departamento_destinatario}}<?php endif ?></div>
                         </div>   
                     </td>
                 </tr>
@@ -236,59 +231,45 @@
             <tbody>
                 <tr>
                     <td class="fuente_todo_texto">
-                        <div style="margin-left: 3cm;">
+                        <div style="float:right; text-align: right;">
                             <span class="negrita">Asunto: {{$asunto}}</span><br> 
-                            <span class="negrita">Ramo:</span> Previsionales<br>                        
-                            {{$tipo_identificacion.' '.$num_identificacion}}<br>
-                            <span class="negrita">Siniestro: </span>{{$N_siniestro}}
+                            @if($Tipo_afiliado === 27)
+                                <span class="negrita">Beneficiario:</span> {{$Nombre_beneficiario}} {{$T_documento_beneficiario}} {{$N_documento_beneficiario}}<br>
+                                <span class="negrita">Afiliado:</span> {{$Nombre_afiliado}} {{$T_documento_afiliado}} {{$N_documento_afiliado}}<br>
+                            @endif
+                            @if($Tipo_afiliado === 26 || $Tipo_afiliado === 28 || $Tipo_afiliado === 29) 
+                                <span class="negrita">Afiliado:</span> {{$Nombre_afiliado}} {{$T_documento_afiliado}} {{$N_documento_afiliado}}<br>
+                            @endif
                         </div>
                     </td>
                 </tr>
             </tbody>
         </table>
-        <section class="fuente_todo_texto">                
-            <?php       
-                // $patron1 = '/\{\{\$OrigenPcl_dp\}\}/';   
-                // $patron2 = '/\{\{\$CIE10Nombres\}\}/'; 
-                // $patron3 = '/\{\{\$PorcentajePcl_dp\}\}/'; 
-                // $patron4 = '/\{\{\$F_estructuracionPcl_dp\}\}/'; 
-                // if (preg_match($patron1, $cuerpo) && preg_match($patron2, $cuerpo) 
-                //     && preg_match($patron3, $cuerpo) && preg_match($patron4, $cuerpo)) {                    
-                //     $texto_modificado = str_replace('{{$OrigenPcl_dp}}', '<b>'.$OrigenPcl_dp.'</b>', $cuerpo);
-                //     $texto_modificado = str_replace('{{$CIE10Nombres}}', $CIE10Nombres, $texto_modificado);
-                //     $texto_modificado = str_replace('{{$PorcentajePcl_dp}}', '<b>'.$PorcentajePcl_dp.'</b>', $texto_modificado);
-                //     $texto_modificado = str_replace('{{$F_estructuracionPcl_dp}}', '<b>'.$F_estructuracionPcl_dp.'</b>', $texto_modificado);
-                //     $cuerpo = $texto_modificado;
-                // } else {
-                //     $cuerpo = "";
-                // }                
-                print_r($cuerpo);  
+        <br>
+        <section class="fuente_todo_texto" style="clear: both;">
+            <br>
+            <br>
+            <?php
+                $patron1 = '/\{\{\$nombre_afiliado\}\}/';
+                if (!empty($cuerpo) && preg_match($patron1, $cuerpo)) {
+                    $texto_modificado = str_replace('{{$nombre_afiliado}}', $Tipo_afiliado === 27 ? $Nombre_beneficiario : $Nombre_afiliado, $cuerpo);;
+                    $cuerpo = $texto_modificado;
+                } else {
+                    $cuerpo = "";
+                }                
+                print_r($cuerpo);
             ?>
         </section>
         <section class="fuente_todo_texto">
             Cordialmente,
-            <div class="firma">
-                <?=$Firma_cliente?>
-            </div>
-        </section>   
-        <p class="fuente_todo_texto" style="text-align: justify;">
-            Departamento de medicina laboral <br>
-            Convenio Seguro de Vida Alfa <br>
-            Seguro alfa S.A. y Seguro de Vida Alfa S.A.
-        </p>
-        {{-- <p class="fuente_todo_texto" style="text-align: justify;">            
-            <b>Anexos:</b> {{$Anexos}}
             <br>
-            <b>Elaboró:</b> {{$nombre_usuario}}
-        </p> --}}
+            <br>
+            <strong>PROTECCIÓN S.A.</strong>
+        </section>  
         <br>
         <section class="fuente_todo_texto" style="margin-bottom: 10px;">
             <table class="tabla1" style="text-align: justify;">                               
-                @if (count($Agregar_copia) == 0)
-                    <tr>
-                        <td class="copias"><span class="negrita">Copia: </span>No se registran copias</td>                                                                                
-                    </tr>
-                @else
+                @if (count($Agregar_copia) > 0)
                     <tr>
                         <td class="justificado copias"><span class="negrita">Copia:</span></td>                            
                     </tr>
@@ -298,6 +279,7 @@
                         $EPS = 'EPS';
                         $AFP = 'AFP';
                         $ARL = 'ARL';
+                        $AFP_Conocimiento = 'AFP_Conocimiento';
                     ?>
                     <?php
                     if (isset($Agregar_copia[$Afiliado])) { ?>
@@ -349,21 +331,41 @@
                         <?php       
                         }
                     ?>
+                    <?php 
+                        if (isset($Agregar_copia[$AFP_Conocimiento])) { ?>
+                            <tr>
+                                <td class="copias">
+                                    <span class="negrita">AFP Conocimiento: </span><?=$Agregar_copia['AFP_Conocimiento'];?>
+                                </td>
+                            </tr>
+                        <?php       
+                        }
+                    ?>
                 @endif
             </table>
         </section>      
         <br>
-        <div class="cuadro fuente_cuadro_inferior" style="margin: 0 auto">
+        <div class="cuadro fuente_cuadro_inferior" style="margin: 0 auto; page-break-inside: avoid;">
             <span class="fuente_cuadro_inferior"><span class="negrita">Nro. Radicado: <br>{{$nro_radicado}}</span></span><br>
-            <span class="fuente_cuadro_inferior"><span class="negrita">{{$tipo_identificacion.' '.$num_identificacion}}</span></span><br>
+            <span class="fuente_cuadro_inferior"><span class="negrita">{{$T_documento_destinatario.' '.$N_documento_destinatario}}</span></span><br>
             <span class="fuente_cuadro_inferior"><span class="negrita">Siniestro: {{$N_siniestro}}</span></span><br>
-        </div>        
+        </div>
+        <br>
+        <section>
+            <p class="fuente_todo_texto">Le invitamos a actualizar sus datos.</p>
+            <p class="fuente_todo_texto">Al autorizar sus datos, accedes a la oferta que tenemos para usted y para la construcción de su futuro a través del ahorro.</p>
+            <p class="fuente_todo_texto">Actualízalos en el siguiente QR:</p>
+        </section>
+        <br>
+        <div style="text-align:center;">
+            <img src="data:image/png;base64,{{ base64_encode($codigoQR) }}" alt="Código QR" >
+        </div>
     </div>
     <script type="text/php">
         if ( isset($pdf) ) {
             $pdf->page_script('
-                $font = $fontMetrics->get_font("Arial, Helvetica, sans-serif", "normal");
-                $pdf->text(485, 50, "Página $PAGE_NUM de $PAGE_COUNT", $font, 9);
+                $font = $fontMetrics->get_font("microsoft-new-tai-lue", "normal");
+                $pdf->text(530, 825, "Página $PAGE_NUM de $PAGE_COUNT", $font, 9);
             ');
         }
 	</script>

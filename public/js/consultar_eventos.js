@@ -249,15 +249,15 @@ $(document).ready(function () {
                         $(api.column(colIdx).header()).index()
                     );
                     
-                    // console.log(cell_1[0].cellIndex);
 
-                    if(cell_1[0].cellIndex != 13){
+                    // if(cell_1[0].cellIndex != 13){
 
                         var cell = $('.filters th').eq(
                             $(api.column(colIdx).header()).index()
                         );
                         
                         var title = $(cell).text();
+                        // console.log(title);
                         
                         if (title !== 'Detalle') {
     
@@ -288,7 +288,7 @@ $(document).ready(function () {
                                     .setSelectionRange(cursorPosition, cursorPosition);
                             });
                         }
-                    }
+                    // }
 
                 });
             },
@@ -312,7 +312,7 @@ $(document).ready(function () {
                                                      
                         ],
                         exportOptions: {
-                            columns: [ 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14]
+                            columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18]
                         }
                     }
                 ]

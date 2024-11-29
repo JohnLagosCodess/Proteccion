@@ -108,8 +108,7 @@ class registrarEventoController extends Controller
                 "remplazar" => "1:Correo electrónico,2:Email"
             ],
             'apoderado' => [
-                "validar" => ['nullable', 'integer', "in:1,2"],
-                "remplazar" => "1:Si,2:No"
+                "validar" => ['required', 'integer', "in:1,2"]
             ],
             'n_identificacion_apoderado' => [
                 "validar" => ["nullable", 'string', 'max:25']
@@ -393,7 +392,7 @@ class registrarEventoController extends Controller
             'F_nacimiento' => $this->request->fecha_nacimiento,
             'Email' => $this->request->email_afiliado,
             'Telefono_contacto' =>  $this->request->telefono_celular,
-            'Apoderado'=> $this->request->apoderado ?? 'No',
+            'Apoderado'=> $this->request->apoderado,
             'Tipo_documento_apoderado' => $this->request->tipo_documento_apoderado ?? null,
             'Nro_identificacion_apoderado' => $this->request->n_identificacion_apoderado ?? null,
             'Nombre_apoderado' => $this->request->nombre_apoderado ?? null,

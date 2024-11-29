@@ -50,6 +50,7 @@ return new class extends Migration
             $table->text('Cual_jr')->nullable();
             $table->text('Copia_jn')->nullable();
             $table->integer('Anexos')->nullable();
+            $table->integer('Forma_envio')->nullable();
             $table->text('Elaboro')->nullable();
             $table->text('Reviso')->nullable();
             $table->string('Firmar', 5)->nullable();

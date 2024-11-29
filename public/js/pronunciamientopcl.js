@@ -54,6 +54,12 @@ $(document).ready(function(){
         allowClear:false
     });
 
+    $(".forma_envio").select2({
+        width: "100%",
+        placeholder:"Seleccione una opción",
+        allowClear:false
+    });
+
     $(".tipo_entidad").select2({
         width: '100%',
         placeholder:"Seleccione una opción",
@@ -445,6 +451,29 @@ $(document).ready(function(){
                     }
                 }
                 $("#reviso").prop("selectedIndex", 1);
+            }
+        }
+    });
+
+    // Listado de forma de envio
+    let datos_lista_medios_notificacion = {
+        '_token': token,
+        'parametro' : "forma_envio"
+    };
+    $.ajax({
+        type:'POST',
+        url:'/selectoresPronunciamiento',
+        data: datos_lista_medios_notificacion,
+        success:function(data) {
+            // console.log(data);
+            var bd_forma_envio = $("#bd_forma_envio").val();
+            let claves = Object.keys(data);
+            for (let i = 0; i < claves.length; i++) {
+                if (data[claves[i]]["Id_Parametro"] == bd_forma_envio) {
+                    $('#forma_envio').append('<option value="'+data[claves[i]]["Id_Parametro"]+'" selected>'+data[claves[i]]["Nombre_parametro"]+'</option>');
+                } else {
+                    $('#forma_envio').append('<option value="'+data[claves[i]]["Id_Parametro"]+'">'+data[claves[i]]["Nombre_parametro"]+'</option>');
+                }
             }
         }
     });
@@ -981,19 +1010,33 @@ $(document).ready(function(){
     var opc_seleccionada = $(this).val();
 
         if (opc_seleccionada == 'Acuerdo') {
-            $('#asunto_cali').val('CONCEPTO MÉDICO DE DICTAMEN PÉRDIDA DE CAPACIDAD LABORAL');
-            var texto_insertar = "";
+            $('#asunto_cali').val('ADHESIÓN Y EN SUBSIDIO APELACIÓN DICTAMEN PÉRDIDA CAPACIDAD LABORAL');
+            var texto_insertar = "<p>Respetados Señores,</p>\
+            <p>En días pasados fuimos notificados de la calificación de <b>PÉRDIDA DE CAPACIDAD LABORAL</b> del (la) señor(a) <b>{{$Nombre_afiliado}}</b>, identificado(a) con <b>{{$Tipo_documento}}</b> N° <b>{{$Nro_documento}}</b>, le informamos que la <b>AFP PROTECCIÓN</b> está <b>DE ACUERDO</b> con esta calificación y no interpondrá recursos de ley.</p>\
+            <p>Igualmente informamos a <b>{{$Entidad_califi}}</b> que en caso de que el paciente o alguna de las demás partes interesadas interponga alguno de los recursos de ley a que tiene derecho dentro de los términos legales previstos, y el dictamen sea modificado, manifestamos nuestro desacuerdo y solicitamos a la EPS dar trámite al recurso de apelación subsidiariamente interpuesto por <b>AFP PROTECCIÓN</b>; adicionalmente solicitamos nos informen por escrito y se nos tenga en cuenta como parte del proceso.</p>\
+            <p>En caso que ninguna de las demás partes interesadas interponga los recursos de ley a que tienen derecho, <b>AFP PROTECCIÓN</b> renuncia al recurso subsidiario de apelación.</p>";
+
             $('#sustenta_cali').summernote('code', texto_insertar);
+
+
             $('#proformas_pro_pcl').removeClass('d-none');
             $('#proformas_pro_pcl').val('PDF');
-            $('#btn_insertar_Nombre_afiliado').addClass('d-none');
+
+            $('#btn_insertar_Nombre_afiliado').removeClass('d-none');
+            $('#btn_insertar_tipo_documento').removeClass('d-none');
+            $('#btn_insertar_nro_documento').removeClass('d-none');
+            $('#btn_insertar_entidad_calificadora').removeClass('d-none');
             $('#btn_insertar_nombreCIE10').addClass('d-none');
-            // $('#btn_insertar_Origen').addClass('d-none')
+            $('#btn_insertar_nro_dicta_pri_cali').addClass('d-none');
+            $('#btn_insertar_f_dicta_pri_cali').addClass('d-none');
+            $('#btn_insertar_tipo_evento').addClass('d-none');
+            $('#btn_insertar_Origen').addClass('d-none')
             $('#btn_insertar_porPcl').addClass('d-none');
             $('#btn_insertar_F_estructuracion').addClass('d-none');
 
+
             // Seteo automático del nro de anexos:
-            var seteo_nro_anexos = 0;
+            var seteo_nro_anexos = 1;
             $("#n_anexos").val(seteo_nro_anexos);
 
             // Deselección automática de las copias a partes interesadas: Afiliado
@@ -1001,55 +1044,73 @@ $(document).ready(function(){
 
             // Selección automática del checkbox firmar
             $("#firmar").prop('checked', true);
+            
+            // Seteo ciudad Medellín
+            $("#ciudad_correspon").val('Medellín');
 
         }else if (opc_seleccionada == 'Desacuerdo') {
-            $('#asunto_cali').val('RECURSO DE REPOSICIÓN EN SUBSIDIO DE APELACIÓN FRENTE A DICTAMEN N°');
-            var texto_insertar = "<p>Respetados Señores, </p>"+
-            "<p><strong>HUGO IGNACIO GÓMEZ DAZA</strong>, identificado como aparece al pie de mi firma, actuando en nombre y representación de <strong>SEGUROS DE VIDA "+ 
-            "ALFA S.A.</strong> Aseguradora que expidió el <b><u>seguro previsional a la AFP PORVENIR S.A.</u></b>, debidamente facultado para ello, en atención al "+
-            "dictamen de la referencia, estando dentro de los términos de ley, me permito interponer <strong>RECURSO DE REPOSICIÓN Y EN SUBSIDIO DE "+
-            "APELACIÓN</strong> ante la Junta, por los siguientes motivos: </p>"+
-            "<p>Nuestra inconformidad se dirige a la calificación de <strong>PERDIDA DE CAPACIDAD LABORAL</strong> dictaminada al (la) afiliado(a) {{$Nombre_afiliado}}, "+
-            "donde califican los diagnósticos: {{$CIE10_Nombres_Origen}}, PCL de {{$PorcentajePcl}}% y fecha de "+
-            "estructuración {{$F_estructuracionPcl}}.</p>"+
-            "<p>1. (Descripción de recurso)</p>"+
-            "<p>Por lo anterior, presentamos el recurso de reposición y en subsidio el de apelación, contra la pérdida de capacidad laboral (PCL), "+
-            "con el fin que se dictamine el valor correspondiente a las patologías del paciente dando aplicación al Decreto 1507/2014 como "+
-            "normatividad vigente. En caso de que no se revoque, solicitamos se de curso a la apelación ante la Junta Regional de Calificación.</p>"+
-            "<p>Por último, se informa que esta Administradora realizó pago de honorarios pertinentes, el cual se efectuó de manera efectiva y por lo tanto se anexará en los próximos días el soporte del mismo.</p>"+
-            "<p style='text-align:center;'>ANEXO:</p>"+
-            "<p>Certificado de existencia y representación legal expedido por la Superintendencia Financiera. </p>"+
-            "<p style='text-align:center;'>NOTIFICACIONES:</p>"+
-            "<p>Recibiré notificaciones en la Carrera 10 # 18 – 36 Edificio Córdoba Piso 4, en la ciudad de Bogotá, D.C. </p>"+
-            "<p>Cualquier Información adicional con gusto le será suministrada,</p>";
+            $('#asunto_cali').val('RECURSO DE REPOSICIÓN Y EN SUBSIDIO DE APELACIÓN CONTRA DICTAMEN DE CALIFICACIÓN DE PÉRDIDA DE CAPACIDAD LABORAL');
+
+            var texto_insertar = "<p>Con relación al caso de la referencia manifestamos nuestro <b>DESACUERDO</b> con la calificación de <b>PÉRDIDA DE CAPACIDAD LABORAL</b>, donde califican los diagnósticos: {{$CIE10_Nombres_Origen}}.</p>\
+            <p>Se decide interponer el <b>RECURSO DE REPOSICIÓN Y EN SUBSIDIO DE APELACIÓN</b> contra la calificación, teniendo en cuenta la siguiente argumentación que se fundamenta en la documentación aportada.</p>\
+            <p style='text-align:center;'><b>ANÁLISIS</b></p>\
+            <p>En días pasados se recibió dictamen <b>N°</b> <b>{{$Nro_dictamen_primer_calificador}}</b> emitido el <b>{{$Fecha_dictamen_primer_calificador}}</b> por <b>{{$Entidad_califi}}</b> del (la) señor(a) <b>{{$Nombre_afiliado}}</b> identificado(a) con <b>{{$Tipo_documento}}</b> N° <b>{{$Nro_documento}}</b> en el que se califica una pérdida de capacidad Laboral de <b>{{$PorcentajePcl}}%</b> de origen <b>{{$Tipo_evento}}</b> <b>{{$Origen}}</b> y con fecha de estructuración del <b>{{$F_estructuracionPcl}}</b>.</p>\
+            <p>Estamos en desacuerdo con esta calificación por lo siguiente:</p>\
+            <p>(SUSTENTACIÓN DEL DESACUERDO)</p>\
+            <p style='text-align:center;'><b>CONCLUSIÓN</b></p>\
+            <p>Por lo anterior, manifestamos nuestro <b>DESACUERDO</b> con la pérdida de capacidad laboral calificada por <b>{{$Entidad_califi}}</b> y solicitamos que el caso sea remitido a la Junta Regional de Calificación de Invalidez para que se surta el recurso de apelación que estamos interponiendo con el fin que se dictamine el valor correspondiente a las patologías del paciente dando aplicación al Decreto 1507/2014 como normatividad vigente. En caso de que no se reponga, solicitamos se dé curso a la apelación ante la Junta Regional de Calificación.</p>\
+            <p>Por último, se informa que una vez se admita el presente recurso apelación y se dé tramite al mismo, se solicite formalmente el pago de honorarios a la Junta Regional respectiva al correo habilitado para ello RecepcionDocumental@proteccion.com.co.</p>\
+            <p style='text-align:center;'><b>ANEXO</b></p>\
+            <p>Certificado de existencia y representación legal expedido por la Superintendencia Financiera.</p>\
+            ";
+
             $('#sustenta_cali').summernote('code', texto_insertar);
+
             $('#proformas_pro_pcl').removeClass('d-none');
             $('#proformas_pro_pcl').val('WORD');
+
             $('#btn_insertar_Nombre_afiliado').removeClass('d-none');
+            $('#btn_insertar_tipo_documento').removeClass('d-none');
+            $('#btn_insertar_nro_documento').removeClass('d-none');
+            $('#btn_insertar_entidad_calificadora').removeClass('d-none');
             $('#btn_insertar_nombreCIE10').removeClass('d-none');
-            // $('#btn_insertar_Origen').removeClass('d-none')
+            $('#btn_insertar_nro_dicta_pri_cali').removeClass('d-none');
+            $('#btn_insertar_f_dicta_pri_cali').removeClass('d-none');
+            $('#btn_insertar_tipo_evento').removeClass('d-none');
             $('#btn_insertar_porPcl').removeClass('d-none');
+            $('#btn_insertar_Origen').removeClass('d-none')
             $('#btn_insertar_F_estructuracion').removeClass('d-none');
 
             // Seteo automático del nro de anexos:
-            var seteo_nro_anexos = 0;
+            var seteo_nro_anexos = 1;
             $("#n_anexos").val(seteo_nro_anexos);
 
             // Selección automática de las copias a partes interesadas: Afiliado
             $("#copia_afiliado").prop('checked', true);
 
             // Selección automática del checkbox firmar
-            $("#firmar").prop('checked', false);
+            $("#firmar").prop('checked', true);
+
+            // Seteo ciudad Medellín
+            $("#ciudad_correspon").val('Medellín');
         }
         else{
             $('#asunto_cali').val('');
             var texto_insertar = "";
             $('#sustenta_cali').summernote('code', texto_insertar);
+
             $('#proformas_pro_pcl').addClass('d-none');
+
             $('#btn_insertar_Nombre_afiliado').addClass('d-none');
+            $('#btn_insertar_tipo_documento').addClass('d-none');
+            $('#btn_insertar_nro_documento').addClass('d-none');
+            $('#btn_insertar_entidad_calificadora').addClass('d-none');
             $('#btn_insertar_nombreCIE10').addClass('d-none');
-            // $('#btn_insertar_Origen').addClass('d-none')
+            $('#btn_insertar_nro_dicta_pri_cali').addClass('d-none');
+            $('#btn_insertar_f_dicta_pri_cali').addClass('d-none');
+            $('#btn_insertar_tipo_evento').addClass('d-none');
             $('#btn_insertar_porPcl').addClass('d-none');
+            $('#btn_insertar_Origen').addClass('d-none')
             $('#btn_insertar_F_estructuracion').addClass('d-none');
 
             // Seteo automático del nro de anexos:
@@ -1061,30 +1122,68 @@ $(document).ready(function(){
 
             // Selección automática del checkbox firmar
             $("#firmar").prop('checked', false);
+
+            // Seteo ciudad Medellín
+            $("#ciudad_correspon").val('');
         }
         iniciarIntervalo_correspon();
     });
 
-     $("#btn_insertar_Nombre_afiliado").click(function(e){
+    $("#btn_insertar_Nombre_afiliado").click(function(e){
         e.preventDefault();
 
         var etiqueta_Nombre_afiliado = "{{$Nombre_afiliado}}";
         $('#sustenta_cali').summernote('editor.insertText', etiqueta_Nombre_afiliado);
     }); 
 
+    $('#btn_insertar_tipo_documento').click(function(e){
+        e.preventDefault();
+        var etiqueta_tipo_doc = "{{$Tipo_documento}}";
+        $('#sustenta_cali').summernote('editor.insertText', etiqueta_tipo_doc);
+    });
+
+    $('#btn_insertar_nro_documento').click(function(e){
+        e.preventDefault();
+        var etiqueta_nro_doc = "{{$Nro_documento}}";
+        $('#sustenta_cali').summernote('editor.insertText', etiqueta_nro_doc);
+    });
+
+    $('#btn_insertar_entidad_calificadora').click(function(e){
+        e.preventDefault();
+        var etiqueta_entidad_califi = "{{$Entidad_califi}}";
+        $('#sustenta_cali').summernote('editor.insertText', etiqueta_entidad_califi);
+    });
+
     $("#btn_insertar_nombreCIE10").click(function(e){
         e.preventDefault();
-
         var etiqueta_nombreCIE10 = "{{$CIE10_Nombres_Origen}}";
         $('#sustenta_cali').summernote('editor.insertText', etiqueta_nombreCIE10);
     });
 
-    // $("#btn_insertar_Origen").click(function(e){
-    //     e.preventDefault();
+    $("#btn_insertar_nro_dicta_pri_cali").click(function(e){
+        e.preventDefault();
+        var etiqueta_nro_dictamen_pri_cali = "{{$Nro_dictamen_primer_calificador}}";
+        $('#sustenta_cali').summernote('editor.insertText', etiqueta_nro_dictamen_pri_cali);
+    });
 
-    //     var etiqueta_nombreCIE10 = "{{$OrigenPcl}}";
-    //     $('#sustenta_cali').summernote('editor.insertText', etiqueta_nombreCIE10);
-    // });
+    $("#btn_insertar_f_dicta_pri_cali").click(function(e){
+        e.preventDefault();
+        var etiqueta_f_dictamen_pri_cali = "{{$Fecha_dictamen_primer_calificador}}";
+        $('#sustenta_cali').summernote('editor.insertText', etiqueta_f_dictamen_pri_cali);
+    });
+
+    $("#btn_insertar_tipo_evento").click(function(e){
+        e.preventDefault();
+        var etiqueta_tipo_evento = "{{$Tipo_evento}}";
+        $('#sustenta_cali').summernote('editor.insertText', etiqueta_tipo_evento);
+    });
+
+    $("#btn_insertar_Origen").click(function(e){
+        e.preventDefault();
+
+        var etiqueta_nombreCIE10 = "{{$Origen}}";
+        $('#sustenta_cali').summernote('editor.insertText', etiqueta_nombreCIE10);
+    });
 
     $("#btn_insertar_porPcl").click(function(e){
         e.preventDefault();
@@ -1177,6 +1276,7 @@ $(document).ready(function(){
         formData.append('junta_nacional', $('#junta_nacional').filter(":checked").val());
         formData.append('junta_regional_cual', $('#junta_regional_cual').val());
         formData.append('n_anexos', $('#n_anexos').val());
+        formData.append('forma_envio', $('#forma_envio').val());
         formData.append('elaboro', $('#elaboro').val());
         formData.append('reviso', $('#reviso').val());
         formData.append('ciudad_correspon', $('#ciudad_correspon').val());
@@ -1433,21 +1533,38 @@ $(document).ready(function(){
                     }else{
 
                         // Obtener el contenido codificado en base64 del PDF desde la respuesta
-                        var base64Word = response.word;
+                        // var base64Word = response.word;
                 
+                        // // Decodificar base64 en un array de bytes
+                        // var binaryString = atob(base64Word);
+                        // var len = binaryString.length;
+                        // var bytes = new Uint8Array(len);
+                
+                        // for (var i = 0; i < len; i++) {
+                        //     bytes[i] = binaryString.charCodeAt(i);
+                        // }
+
+                        // var blob = new Blob([bytes], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+
+                        // // var nombre_documento = "PCL_DESACUERDO_"+Asignacion_Pronuncia_corre+"_"+Iden_afiliado_corre+".docx";
+                        // var nombre_documento = "PCL_DESACUERDO_"+Asignacion_Pronuncia_corre+"_"+Iden_afiliado_corre+"_"+indicativo+".docx";
+
+                        // Obtener el contenido codificado en base64 del PDF desde la respuesta
+                        var base64Pdf = response.pdf;
+
                         // Decodificar base64 en un array de bytes
-                        var binaryString = atob(base64Word);
+                        var binaryString = atob(base64Pdf);
                         var len = binaryString.length;
                         var bytes = new Uint8Array(len);
-                
+
                         for (var i = 0; i < len; i++) {
                             bytes[i] = binaryString.charCodeAt(i);
                         }
 
-                        var blob = new Blob([bytes], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
-
-                        // var nombre_documento = "PCL_DESACUERDO_"+Asignacion_Pronuncia_corre+"_"+Iden_afiliado_corre+".docx";
-                        var nombre_documento = "PCL_DESACUERDO_"+Asignacion_Pronuncia_corre+"_"+Iden_afiliado_corre+"_"+indicativo+".docx";
+                        // Crear un Blob a partir del array de bytes
+                        var blob = new Blob([bytes], { type: 'application/pdf' });
+                    
+                        var nombre_documento = "PCL_DESACUERDO_"+Asignacion_Pronuncia_corre+"_"+Iden_afiliado_corre+"_"+indicativo+".pdf";
                     }
                     var link = document.createElement('a');
                     link.href = window.URL.createObjectURL(blob);
@@ -1530,10 +1647,17 @@ $(document).ready(function(){
         $("#asunto_cali").prop('readonly', true);
         $(".note-editable").attr("contenteditable", true);
 
-        $("#btn_insertar_Nombre_afiliado").prop('disabled', false);
-        $("#btn_insertar_nombreCIE10").prop('disabled', false);
-        $("#btn_insertar_porPcl").prop('disabled', false);
-        $("#sustenta_cali").prop('disabled', true);
+        $('#btn_insertar_Nombre_afiliado').prop('disabled', true);
+        $('#btn_insertar_tipo_documento').prop('disabled', true);
+        $('#btn_insertar_nro_documento').prop('disabled', true);
+        $('#btn_insertar_entidad_calificadora').prop('disabled', true);
+        $('#btn_insertar_nombreCIE10').prop('disabled', true);
+        $('#btn_insertar_nro_dicta_pri_cali').prop('disabled', true);
+        $('#btn_insertar_f_dicta_pri_cali').prop('disabled', true);
+        $('#btn_insertar_tipo_evento').prop('disabled', true);
+        $('#btn_insertar_porPcl').prop('disabled', true);
+        $('#btn_insertar_Origen').prop('disabled', true)
+        $('#btn_insertar_F_estructuracion').prop('disabled', true);
         
         $("#firmar").prop('disabled', true);
     }

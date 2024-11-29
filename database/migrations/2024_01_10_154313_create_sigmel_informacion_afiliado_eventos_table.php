@@ -25,8 +25,14 @@ return new class extends Migration
             $table->integer('Estado_civil')->nullable();
             $table->integer('Nivel_escolar')->nullable();
             $table->enum('Apoderado', ['Si', 'No'])->nullable();
-            $table->text('Nombre_apoderado')->nullable();
+            $table->integer('Tipo_documento_apoderado')->nullable();
             $table->string('Nro_identificacion_apoderado', 25)->nullable();
+            $table->text('Nombre_apoderado')->nullable();
+            $table->text('Email_apoderado')->nullable();
+            $table->text('Telefono_apoderado')->nullable();
+            $table->text('Direccion_apoderado')->nullable();
+            $table->integer('Id_departamento_apoderado')->nullable();
+            $table->integer('Id_municipio_apoderado')->nullable();
             $table->integer('Id_dominancia')->nullable();
             $table->text('Direccion');
             $table->integer('Id_departamento')->nullable();

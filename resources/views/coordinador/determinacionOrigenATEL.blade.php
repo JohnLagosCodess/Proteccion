@@ -1079,8 +1079,8 @@
                             <div class="col-3">
                                 <div class="form-group">
                                     <label for="destinatario_principal">Destinatario Principal</label>                                            
-                                    {{-- <input type="text" class="form-control" name="destinatario_principal" id="destinatario_principal" value="{{$array_datos_calificacion_origen[0]->Nombre_afiliado}}" disabled> --}}
-                                    <input type="text" class="form-control" name="destinatario_principal" id="destinatario_principal" value="{{$afp_afiliado[0]->Nombre_entidad}}" disabled>
+                                    <input type="text" class="form-control" name="destinatario_principal" id="destinatario_principal" value="{{$nombre_destinatario_principal_correspondencia}}" disabled>
+                                    {{-- <input type="text" class="form-control" name="destinatario_principal" id="destinatario_principal" value="{{$afp_afiliado[0]->Nombre_entidad}}" disabled> --}}
                                 </div>
                             </div>
                             <div class="col-3">
@@ -1356,6 +1356,11 @@
                             <div class="col-2">
                                 <div class="form-group">
                                     <label for="forma_envio">Forma de Envío</label>
+                                    @if (!empty($datos_forma_envio[0]->Id_Parametro) && empty($array_comite_interdisciplinario[0]->Forma_envio))
+                                        <input type="hidden" name="bd_forma_envio" id="bd_forma_envio" value="{{$datos_forma_envio[0]->Id_Parametro}}">
+                                    @elseif(!empty($datos_forma_envio[0]->Id_Parametro) && !empty($array_comite_interdisciplinario[0]->Forma_envio))
+                                       <input type="hidden" name="bd_forma_envio" id="bd_forma_envio" value="{{$array_comite_interdisciplinario[0]->Forma_envio}}">
+                                    @endif
                                     <select class="custom-select forma_envio" name="forma_envio" id="forma_envio"></select>
                                 </div>
                             </div>

@@ -12,7 +12,7 @@
         #header {
             position: fixed; 
             /* esta ligado con el primer valor del margin */
-            top: -2.2cm;
+            top: -1.8cm;
             left: 0cm;
             width: 100%;
             /* height: 100px; */
@@ -236,6 +236,7 @@
                 </tr>
             </tbody>
         </table>
+        <br>
         <section class="fuente_todo_texto" style="clear: both;"> 
             <br>           
             <?php
@@ -268,6 +269,7 @@
                         $EPS = 'EPS';
                         $AFP = 'AFP';
                         $ARL = 'ARL';
+                        $AFP_Conocimiento = 'AFP_Conocimiento';
                     ?>
                     <?php
                     if (isset($Agregar_copia[$Afiliado])) { ?>
@@ -319,11 +321,21 @@
                         <?php       
                         }
                     ?>
+                    <?php 
+                        if (isset($Agregar_copia[$AFP_Conocimiento])) { ?>
+                            <tr>
+                                <td class="copias">
+                                    <span class="negrita">AFP Conocimiento: </span><?=$Agregar_copia['AFP_Conocimiento'];?>
+                                </td>
+                            </tr>
+                        <?php       
+                        }
+                    ?>
                 @endif
             </table>
         </section>
         <br>
-        <div class="cuadro fuente_cuadro_inferior" style="margin: 0 auto">
+        <div class="cuadro fuente_cuadro_inferior" style="margin: 0 auto; page-break-inside: avoid;">
             <span class="fuente_cuadro_inferior"><span class="negrita">Nro. Radicado: <br>{{$nro_radicado}}</span></span><br>
             <span class="fuente_cuadro_inferior"><span class="negrita">{{$T_documento_destinatario.' '.$N_documento_destinatario}}</span></span><br>
             <span class="fuente_cuadro_inferior"><span class="negrita">Siniestro: {{$N_siniestro}}</span></span><br>

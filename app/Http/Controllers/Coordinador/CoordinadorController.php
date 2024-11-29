@@ -1522,52 +1522,53 @@ class CoordinadorController extends Controller
             ];
             //Informacion afiliado
             $infoAfiliado = DB::table(getDatabaseName('sigmel_gestiones') .'sigmel_informacion_afiliado_eventos as siae')
-                ->select(
-                    DB::raw("CASE 
-                            WHEN siae.Apoderado = 'Si' THEN siae.Direccion_apoderado
-                            WHEN siae.tipo_afiliado = 27 THEN siae.Direccion_benefi 
-                            ELSE siae.Direccion 
-                        END as Direccion_destinatario"),
-                    DB::raw("CASE 
-                            WHEN siae.Apoderado = 'Si' THEN cia.Nombre_municipio 
-                            WHEN siae.tipo_afiliado = 27 THEN cb.Nombre_municipio 
-                            ELSE ci.Nombre_municipio 
-                        END as Ciudad_destinatario"),
-                    DB::raw("CASE 
-                            WHEN siae.Apoderado = 'Si' THEN da.Nombre_departamento
-                            WHEN siae.tipo_afiliado = 27 THEN db.Nombre_departamento 
-                            ELSE sldm.Nombre_departamento 
-                        END as Departamento_destinatario"),
-                    DB::raw("CASE
-                            WHEN siae.Apoderado = 'Si' THEN siae.Telefono_apoderado 
-                            WHEN siae.tipo_afiliado = 27 THEN siae.Telefono_benefi 
-                            ELSE siae.Telefono_contacto 
-                        END as Telefono_destinatario"),
-                    DB::raw("CASE 
-                            WHEN siae.Apoderado = 'Si' THEN siae.Email_apoderado
-                            WHEN siae.tipo_afiliado = 27 THEN siae.Email_benefi 
-                            ELSE siae.Email 
-                        END as Email_destinatario"),
-                    DB::raw("CASE
-                            WHEN siae.Apoderado = 'Si' THEN siae.Nombre_apoderado
-                            WHEN siae.tipo_afiliado = 27 THEN siae.Nombre_afiliado_benefi 
-                            ELSE siae.Nombre_afiliado
-                        END as Nombre_destinatario"),
-                    DB::raw("CASE 
-                            WHEN siae.Apoderado = 'Si' THEN siae.Nro_identificacion_apoderado 
-                            WHEN siae.tipo_afiliado = 27 THEN siae.Nro_identificacion_benefi 
-                            ELSE siae.Nro_identificacion 
-                        END as Documento_destinatario"),
-                    'siae.Medio_notificacion as Medio_notificacion_destinatario','siae.Entidad_conocimiento', 'siae.Id_afp_entidad_conocimiento','siae.Apoderado',
-                    'siae.Tipo_documento_apoderado','siae.Tipo_documento_benefi')
-                ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm', 'siae.Id_departamento', '=', 'sldm.Id_departamento')
-                ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as ci', 'siae.Id_municipio', '=', 'ci.Id_municipios')
-                ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as db', 'siae.Id_departamento_benefi', '=', 'db.Id_departamento')//departamento apoderado
-                ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as cb', 'siae.Id_municipio_benefi', '=', 'cb.Id_municipios')//ciudad apoderado
-                ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as da', 'siae.Id_departamento_apoderado', '=', 'da.Id_departamento')//departamento apoderado
-                ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as cia', 'siae.Id_municipio_apoderado', '=', 'cia.Id_municipios')//ciudad apoderado
-                ->where('siae.ID_evento',  '=', $Id_evento)
-                ->get();
+            ->select(
+                DB::raw("CASE 
+                        WHEN siae.Apoderado = 'Si' THEN siae.Direccion_apoderado
+                        WHEN siae.tipo_afiliado = 27 THEN siae.Direccion_benefi 
+                        ELSE siae.Direccion 
+                    END as Direccion_destinatario"),
+                DB::raw("CASE 
+                        WHEN siae.Apoderado = 'Si' THEN cia.Nombre_municipio 
+                        WHEN siae.tipo_afiliado = 27 THEN cb.Nombre_municipio 
+                        ELSE ci.Nombre_municipio 
+                    END as Ciudad_destinatario"),
+                DB::raw("CASE 
+                        WHEN siae.Apoderado = 'Si' THEN da.Nombre_departamento
+                        WHEN siae.tipo_afiliado = 27 THEN db.Nombre_departamento 
+                        ELSE sldm.Nombre_departamento 
+                    END as Departamento_destinatario"),
+                DB::raw("CASE
+                        WHEN siae.Apoderado = 'Si' THEN siae.Telefono_apoderado 
+                        WHEN siae.tipo_afiliado = 27 THEN siae.Telefono_benefi 
+                        ELSE siae.Telefono_contacto 
+                    END as Telefono_destinatario"),
+                DB::raw("CASE 
+                        WHEN siae.Apoderado = 'Si' THEN siae.Email_apoderado
+                        WHEN siae.tipo_afiliado = 27 THEN siae.Email_benefi 
+                        ELSE siae.Email 
+                    END as Email_destinatario"),
+                DB::raw("CASE
+                        WHEN siae.Apoderado = 'Si' THEN siae.Nombre_apoderado
+                        WHEN siae.tipo_afiliado = 27 THEN siae.Nombre_afiliado_benefi 
+                        ELSE siae.Nombre_afiliado
+                    END as Nombre_destinatario"),
+                DB::raw("CASE 
+                        WHEN siae.Apoderado = 'Si' THEN siae.Nro_identificacion_apoderado 
+                        WHEN siae.tipo_afiliado = 27 THEN siae.Nro_identificacion_benefi 
+                        ELSE siae.Nro_identificacion 
+                    END as Documento_destinatario"),
+                'siae.Medio_notificacion as Medio_notificacion_destinatario','siae.Entidad_conocimiento', 'siae.Id_afp_entidad_conocimiento','siae.Apoderado',
+                'siae.Tipo_documento_apoderado','siae.Tipo_documento_benefi')
+            ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm', 'siae.Id_departamento', '=', 'sldm.Id_departamento')
+            ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as ci', 'siae.Id_municipio', '=', 'ci.Id_municipios')
+            ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as db', 'siae.Id_departamento_benefi', '=', 'db.Id_departamento')//departamento apoderado
+            ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as cb', 'siae.Id_municipio_benefi', '=', 'cb.Id_municipios')//ciudad apoderado
+            ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as da', 'siae.Id_departamento_apoderado', '=', 'da.Id_departamento')//departamento apoderado
+            ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as cia', 'siae.Id_municipio_apoderado', '=', 'cia.Id_municipios')//ciudad apoderado
+            ->where('siae.ID_evento',  '=', $Id_evento)
+            ->get();
+            
             if($Tipo_correspondencia != '' && $Tipo_correspondencia != null){
                 $Tipo_correspondencia = strtolower($Tipo_correspondencia);
                 if($Tipo_correspondencia === 'afiliado' && !empty($infoAfiliado)){
@@ -1585,7 +1586,7 @@ class CoordinadorController extends Controller
                     ->select('sile.Empresa as Nombre_destinatario', 'sile.Direccion as Direccion_destinatario', 'sile.Telefono_empresa as Telefono_destinatario',
                     'sile.Email as Email_destinatario', 'sldm.Nombre_departamento as Departamento_destinatario', 'sldm2.Nombre_municipio as Ciudad_destinatario',
                     'sile.Medio_notificacion as Medio_notificacion_destinatario')
-                    ->where([['sile.Nro_identificacion', $infoAfiliado[0]->Documento_destinatario],['sile.ID_evento', $Id_evento]])
+                    ->where([['sile.Nro_identificacion', $infoAfiliado[0]->Documento_afiliado],['sile.ID_evento', $Id_evento]])
                     ->get();
                     $response['datos'] = count($datos_empleador) > 0 ? $datos_empleador[0] : null;
                     if(!empty($info_comunicado) && strtolower($info_comunicado[0]->Otro_destinatario === 1)){
@@ -1603,7 +1604,7 @@ class CoordinadorController extends Controller
                     ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slp', 'slp.Id_Parametro', '=', 'sie.Id_Medio_Noti')
                     ->select('sie.Nombre_entidad as Nombre_destinatario', 'sie.Direccion as Direccion_destinatario', 'sie.Emails as Email_destinatario', 'sie.Telefonos as Telefono_destinatario', 
                     'sldm.Nombre_departamento as Departamento_destinatario', 'sldm2.Nombre_municipio as Ciudad_destinatario','slp.Nombre_parametro as Medio_notificacion_destinatario')
-                    ->where([['Nro_identificacion', $infoAfiliado[0]->Documento_destinatario],['ID_evento', $Id_evento]])
+                    ->where([['Nro_identificacion', $infoAfiliado[0]->Documento_afiliado],['ID_evento', $Id_evento]])
                     ->get();
                     $response['datos'] = count($datos_eps) > 0 ? $datos_eps[0] : null;
                     if(!empty($info_comunicado) && $info_comunicado[0]->Otro_destinatario === 1){
@@ -1628,7 +1629,7 @@ class CoordinadorController extends Controller
                     ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slp', 'slp.Id_Parametro', '=', 'sie.Id_Medio_Noti')
                     ->select('sie.Nombre_entidad as Nombre_destinatario', 'sie.Direccion as Direccion_destinatario', 'sie.Telefonos as Telefono_destinatario', 'sie.Otros_Telefonos', 'sie.Emails as Email_destinatario',
                     'sldm.Nombre_departamento as Departamento_destinatario', 'sldm2.Nombre_municipio as Ciudad_destinatario','slp.Nombre_parametro as Medio_notificacion_destinatario')
-                    ->where([['Nro_identificacion', $infoAfiliado[0]->Documento_destinatario],['ID_evento', $Id_evento]])
+                    ->where([['Nro_identificacion', $infoAfiliado[0]->Documento_afiliado],['ID_evento', $Id_evento]])
                     ->get();
                     $response['datos'] = count($datos_afp) > 0 ? $datos_afp[0] : null;
                     if(!empty($info_comunicado) && $info_comunicado[0]->Otro_destinatario === 1){
@@ -1653,7 +1654,7 @@ class CoordinadorController extends Controller
                     ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slp', 'slp.Id_Parametro', '=', 'sie.Id_Medio_Noti')
                     ->select('sie.Nombre_entidad as Nombre_destinatario', 'sie.Direccion as Direccion_destinatario', 'sie.Telefonos as Telefono_destinatario', 'sie.Otros_Telefonos', 'sie.Emails as Email_destinatario',
                     'sldm.Nombre_departamento as Departamento_destinatario', 'sldm2.Nombre_municipio as Ciudad_destinatario', 'slp.Nombre_parametro as Medio_notificacion_destinatario')
-                    ->where([['Nro_identificacion', $infoAfiliado[0]->Documento_destinatario],['ID_evento', $Id_evento]])
+                    ->where([['Nro_identificacion', $infoAfiliado[0]->Documento_afiliado],['ID_evento', $Id_evento]])
                     ->get();
                     $response['datos'] = count($datos_arl) > 0 ? $datos_arl[0] : null;
                     if(!empty($info_comunicado) && $info_comunicado[0]->Otro_destinatario === 1){
@@ -1873,5 +1874,43 @@ class CoordinadorController extends Controller
             );
             return json_decode(json_encode($mensajes, true));
         }
+    }
+    /**
+        * Retorna información del ultimo comunicado guardado con estado notificado efectivamente y con correspondencia de afiliado guardada, PBS080
+        * 
+        * @param string $id_evento Necesario para saber a que evento en especifico hace referencia.
+        *
+        * @param string $id_asignacion Necesario.
+        *
+        * @param string $id_proceso Necesario.
+        *
+        * @return Collection | null Devuelve una colección con la información y si no devuelve null
+    */
+    public function retornarInformacionComunicadoYCorrespondencia(Request $request){
+        $id_evento = $request->id_evento;
+        $id_asignacion = $request->id_asignacion;
+        $id_proceso = $request->id_proceso;
+        $tipo_documento = $request->tipo_documento;
+        $query = DB::table('sigmel_gestiones.sigmel_informacion_comunicado_eventos as sice')
+            ->leftJoin('sigmel_gestiones.sigmel_informacion_correspondencia_eventos as sicee', 'sice.Id_Comunicado', '=', 'sicee.Id_comunicado')
+            ->where('sice.ID_evento', $id_evento)
+            ->where('sice.Id_Asignacion', $id_asignacion)
+            ->where('sice.Id_proceso', $id_proceso)
+            ->where('sice.Estado_Notificacion', 357)
+            ->where('sicee.Tipo_correspondencia', 'Afiliado');
+        if($tipo_documento === 'Suspension_Mesada_Revision_pension'){
+            $query->whereIn('sice.Tipo_descarga', ['Documento_Revision_pension', 'Reiteracion_Documento_Revision_pension'])
+            ->selectRaw("
+                MAX(CASE WHEN sice.Tipo_descarga = 'Documento_Revision_pension' THEN sicee.F_notificacion END) as F_notificacion_sol_doc_rev_pen,
+                MAX(CASE WHEN sice.Tipo_descarga = 'Reiteracion_Documento_Revision_pension' THEN sicee.F_notificacion END) as F_notificacion_reiteracion_sol_doc_rev_pen
+            ");
+        }else if($tipo_documento === 'Reiteracion_Documento_Revision_pension'){
+            $query->where('sice.Tipo_descarga', 'Documento_Revision_pension')
+            ->selectRaw("
+                MAX(CASE WHEN sice.Tipo_descarga = 'Documento_Revision_pension' THEN sicee.F_notificacion END) as F_notificacion_sol_doc_rev_pen
+            ");
+        }
+        $response = $query->first();
+        return response()->json($response);
     }
 }

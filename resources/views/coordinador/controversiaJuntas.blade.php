@@ -359,7 +359,6 @@
                                         </div>
                                         <div class="col-6">
                                             <div class="form-group">
-                                                <?php dump($array_datos_diagnostico_motcalifi_contro)?>
                                                 <input type="submit" id="guardar_datos_controvertido_j" class="btn btn-info" value="Guardar">
                                             </div>
                                         </div>
@@ -2164,7 +2163,7 @@
             document.getElementById('formularioEnvio').submit();
         });
 
-        var arrayComunicadosCorrespondencia = <?php echo json_encode($array_comunicados_correspondencia); ?>;
+        var arrayComunicadosCorrespondencia = @json($array_comunicados_correspondencia);
         
         //SCRIPT PARA INSERTAR O ELIMINAR FILAS DINAMICAS DEL DATATABLES DE DIAGNOSTCO CIE10 CONTROVERTIDO
         $(".centrar").css('text-align', 'center');

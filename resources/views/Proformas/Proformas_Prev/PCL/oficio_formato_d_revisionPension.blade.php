@@ -12,25 +12,25 @@
         }
         #header {
             position: fixed; 
-            top: -3cm;
+            top: -1.8cm;
             left: 0cm;
             width: 100%;
-            text-align: right; 
+            text-align: center; 
         }
         .codigo_qr{
             position: absolute;
-            top: 5px; 
-            left: 5px; 
+            top: -30px; 
+            left: 58px; 
             max-width: 90px; 
             max-height: 70px; 
         }
         .logo_header{
-            position: absolute;
-            /* max-width: 40%; */
-            width: 150px;
+            /* position: absolute; */
+            max-width: 33%;
+            /* width: 150px; */
             height: auto;
-            left: 498px;
-            max-height: 80px; 
+            /* left: 530px; */
+            max-height: 60px; 
         }
         .tabla_header{
             width: 100%;
@@ -59,7 +59,8 @@
         }
         .footer_image{
             max-width: 100%;
-            max-height: 80%;
+            width: 100%;
+            max-height: 100;
             margin-bottom: -5px;
         }
         .footer_content {
@@ -71,14 +72,14 @@
 
         #footer2 { 
             position: fixed; 
-            left: -20px; 
+            left: 20px; 
             right: 0px; 
             width: 0px; 
             height: 0px; 
             color:black; 
             background-color: white; 
             transform: rotate(0deg); 
-            top:300px;
+            top:450px;
         }
         .logo_footer{
             width: auto;
@@ -96,14 +97,24 @@
         .negrita{
             font-weight: bold;
         }
-        .fuente_todo_texto{
-            font-family: sans-serif;
-            font-size: 12px;
+                
+        @font-face {
+            font-family: 'Microsoft New Tai Lue';
+            src: url('/storage/fonts/microsoft-new-tai-lue-2.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
         }
+
+        .fuente_todo_texto {
+            font-family: 'Microsoft New Tai Lue', sans-serif;
+            font-size: 12px;
+        } 
+        
         .paddingTexto{
             margin: 0;
             padding: 0;
-        }     
+        }
+
         .tabla1{
             width: 100%;            
             margin-left: -3.5px;
@@ -137,7 +148,7 @@
             width: 4cm;
             padding: 1px;
             height: auto;
-        }     
+        }
         .fuente_cuadro_inferior{
             font-family: sans-serif;
             font-size: 10px;
@@ -146,10 +157,18 @@
         }
         .copias{
             font-size: 10px;
+            font-style: italic;
         }
         .derecha{
-            float: right;
+            float:right;
         }    
+
+        .qr_proteccion{
+            width: auto;
+            height: 150px;
+            padding-left: 200px;
+        }
+        
     </style>
 </head>
 <body>
@@ -157,10 +176,10 @@
         <table class="tabla_header">
             <tbody>
                 <tr>
-                    {{-- <td>
-                        <img src="data:image/png;base64,{{ base64_encode($codigoQR) }}" class="codigo_qr" alt="Código QR">
-                    </td> --}}
                     <td>
+                        <img src="data:image/png;base64,{{ base64_encode($codigoQR) }}" class="codigo_qr" alt="Código QR">
+                    </td>
+                    <td style="width:100%; text-align:right;">
                         <?php if($logo_header == "Sin logo"): ?>
                             <p>No logo</p>
                         <?php else: ?>
@@ -180,8 +199,8 @@
     <div id="footer">        
         <?php if($footer == null): ?>
             <div style="text-align:center;">
-                <span style="color: #3C3C3C; margin-top:2px;">{{$Nombre_afiliado}} - {{$T_documento_noti}} {{$NroIden_afiliado_noti}} - Siniestro: {{$N_siniestro}} </span>
-            </div>
+                <span style="color: #3C3C3C; margin-top:2px;">{{$Nombre_afiliado_noti}} - {{$T_documento_noti}} {{$NroIden_afiliado_noti}} - SINIESTRO: {{$N_siniestro}} </span>
+            </div>        
         <?php else: ?>
             <?php 
                 $ruta_footer = "/footer_clientes/{$Id_cliente_ent}/{$footer}";
@@ -189,10 +208,15 @@
                 $footer_data = file_get_contents($footer_path);
                 $footer_base64 = base64_encode($footer_data);
             ?>
-            <div class="footer_content">
-                <span style="color: #3C3C3C; margin-top:2px;">{{$Nombre_afiliado}} - {{$T_documento_noti}} {{$NroIden_afiliado_noti}} - Siniestro: {{$N_siniestro}} </span>
-                <br>
-                <img src="data:image/png;base64,{{ $footer_base64 }}" class="footer_image">
+            <div class="footer_content" style="text-align:center;">
+                <span style="position: absolute; width: 100%; text-align:center; top: 10px; left:0px; color:#4D4D4D; font-weight:bold; font-size: 11px;">
+                    @if ($Tipo_afiliado == 26 || $Tipo_afiliado == 28 || $Tipo_afiliado == 29)
+                        {{$Nombre_afiliado_noti}} - {{$T_documento_noti}} {{$NroIden_afiliado_noti}} - SINIESTRO: {{$N_siniestro}} 
+                    @elseif ($Tipo_afiliado == 27)
+                        {{$Nombre_afiliado_noti_benefi}} - {{$T_documento_notibenefi}} {{$NroIden_afiliado_notibenefi}} - SINIESTRO: {{$N_siniestro}} 
+                    @endif
+                </span>
+                <img src="data:image/png;base64,{{ $footer_base64 }}" class="footer_image" style="display: block;">
             </div>
         <?php endif ?>
     </div>
@@ -209,17 +233,17 @@
             <tbody>
                 <tr>
                     <td style="width:100%; display:table; justify-content: space-between;">
-                        <p class="fuente_todo_texto paddingTexto derecha"><span class="negrita">{{$Ciudad_correspondencia}} {{$F_correspondecia}}</span></p>
+                        <p class="fuente_todo_texto paddingTexto derecha"><span class="negrita">{{$Ciudad_correspondencia}}, {{$F_correspondecia}}</span></p>
                         <div>
                             <div class="fuente_todo_texto paddingTexto">
                                 <span class="negrita">Señor(a):</span><br>
-                                {{$Nombre_afiliado}}
+                                <b>{{$Nombre_destinatario_principal}}</b>
                             </div>
                             <div class="fuente_todo_texto paddingTexto">{{$Email_afiliado_noti}}</div>
                             <div class="fuente_todo_texto paddingTexto">{{$direccion_destinatario_principal}}</div>
                             <div class="fuente_todo_texto paddingTexto">{{$telefono_destinatario_principal}}</div>
                             <div class="fuente_todo_texto paddingTexto">{{$ciudad_destinatario_principal}}</div>
-                        </div>   
+                        </div>    
                     </td>
                 </tr>
             </tbody>
@@ -229,60 +253,91 @@
             <tbody>
                 <tr>
                     <td class="fuente_todo_texto">
-                        <div style="margin-left: 3cm;"> 
-                            <span class="negrita">Asunto: {{$Asunto_correspondencia}}</span><br> 
-                            <span class="negrita">Ramo:</span> Previsionales<br>                        
-                            {{$T_documento_noti.' '.$NroIden_afiliado_noti}}<br>
-                            <span class="negrita">Siniestro: </span>{{$N_siniestro}}
-                        </div>
+                        <span class="negrita derecha">Asunto: {{$Asunto_correspondencia}}</span><br>
                     </td>
                 </tr>
+                @if ($Tipo_afiliado == 26 || $Tipo_afiliado == 28 || $Tipo_afiliado == 29)
+                    <tr>
+                        <td class="fuente_todo_texto">
+                            <span class="derecha">Afiliado(a) <b>{{$Nombre_afiliado_noti}} {{$T_documento_noti}}. {{$NroIden_afiliado_noti}}</b></span>
+                        </td>
+                    </tr>
+                @elseif ($Tipo_afiliado == 27)
+                    <tr>
+                        <td class="fuente_todo_texto">
+                            <span class="derecha">Beneficiario(a) <b>{{$Nombre_afiliado_noti}} {{$T_documento_noti}}. {{$NroIden_afiliado_noti}}</b></span>
+                        </td>
+                    </tr>
+                    <tr></tr>
+                    <tr></tr>
+                    <tr></tr>
+                    <tr></tr>
+                    <tr></tr>
+                    <tr>
+                        <td class="fuente_todo_texto">
+                            <span class="derecha">Afiliado(a) <b>{{$Nombre_afiliado_noti_benefi}} {{$T_documento_notibenefi}}. {{$NroIden_afiliado_notibenefi}}</b></span>
+                        </td>
+                    </tr>
+                @endif
             </tbody>
         </table>
         <section class="fuente_todo_texto">            
             <?php
-                // $patron1 = '/\{\{\$Detalle_calificacion_Fbdp\}\}/';
-                $patron1 = '/\{\{\$PorcentajePcl_dp\}\}/'; 
-                $patron2 = '/\{\{\$F_estructuracionPcl_dp\}\}/'; 
-                $patron3 = '/\{\{\$OrigenPcl_dp\}\}/'; 
-                $patron4 = '/\{\{\$Detalle_calificacion_Fbdp\}\}/'; 
-                // if (preg_match($patron1, $Cuerpo_comunicado_correspondencia))
+                $patron1 = '/\{\{\$Nombre_afiliado\}\}/';   
+                $patron2 = '/\{\{\$PorcentajePcl_dp\}\}/'; 
+                $patron3 = '/\{\{\$F_estructuracionPcl_dp\}\}/'; 
+                $patron4 = '/\{\{\$OrigenPcl_dp\}\}/'; 
+                $patron5 = '/\{\{\$TipoEvento_dp\}\}/';
+                $patron6 = '/\{\{\$Detalle_calificacion_Fbdp\}\}/';                   
                 if (preg_match($patron1, $Cuerpo_comunicado_correspondencia) && preg_match($patron2, $Cuerpo_comunicado_correspondencia) 
-                    && preg_match($patron3, $Cuerpo_comunicado_correspondencia) && preg_match($patron4, $Cuerpo_comunicado_correspondencia))
-                {                    
-                    $texto_modificado = str_replace('{{$PorcentajePcl_dp}}', '<b>'.$PorcentajePcl_dp.'</b>', $Cuerpo_comunicado_correspondencia);
+                    && preg_match($patron3, $Cuerpo_comunicado_correspondencia) && preg_match($patron4, $Cuerpo_comunicado_correspondencia)
+                    && preg_match($patron5, $Cuerpo_comunicado_correspondencia) && preg_match($patron6, $Cuerpo_comunicado_correspondencia)) {                    
+                    $texto_modificado = str_replace('{{$Nombre_afiliado}}', $Nombre_afiliado, $Cuerpo_comunicado_correspondencia);
+                    $texto_modificado = str_replace('{{$PorcentajePcl_dp}}', '<b>'.$PorcentajePcl_dp.'%'.'</b>', $texto_modificado);
                     $texto_modificado = str_replace('{{$F_estructuracionPcl_dp}}', '<b>'.date("d/m/Y", strtotime($F_estructuracionPcl_dp)).'</b>', $texto_modificado);
+                    $texto_modificado = str_replace('{{$TipoEvento_dp}}', '<b>'.$TipoEvento_dp.'</b>', $texto_modificado);
                     $texto_modificado = str_replace('{{$OrigenPcl_dp}}', '<b>'.$OrigenPcl_dp.'</b>', $texto_modificado);
                     $texto_modificado = str_replace('{{$Detalle_calificacion_Fbdp}}', $Detalle_calificacion_Fbdp, $texto_modificado);
                     $Cuerpo_comunicado_correspondencia = $texto_modificado;
                 } else {
                     $Cuerpo_comunicado_correspondencia = "";
                 }                
-                // print_r($Cuerpo_comunicado_correspondencia);
-                echo nl2br($Cuerpo_comunicado_correspondencia);
+                print_r($Cuerpo_comunicado_correspondencia);
             ?>
         </section>
-        <section class="fuente_todo_texto">
-            Cordialmente,
-            <div class="firma">
-                <?=$Firma_cliente?>
-            </div>
-        </section>   
         <p class="fuente_todo_texto" style="text-align: justify;">
-            Departamento de medicina laboral <br>
-            Convenio Seguro de Vida Alfa <br>
-            Seguro Alfa S.A. y Seguro de Vida Alfa S.A.
+            Como puede observarse, usted ahora se encuentra dentro del porcentaje establecido en el <b>literal A del Artículo 40 de la Ley 100 de 1993</b>, 
+            por lo anterior, se efectuará el pago de su mesada pensional en los términos establecidos en la norma anteriormente mencionada.
         </p>
-        {{-- <section>        
-            <div class="fuente_todo_texto">                
-                <b>Anexos:</b> {{$Anexos_correspondecia}}
-                <br>
-                <b>Elaboró:</b> {{$Elaboro_correspondecia}}
-            </div>
-        </section>           --}}
+        <p class="fuente_todo_texto" style="text-align: justify;">
+            En caso de encontrarse en desacuerdo con la presente calificación, usted cuenta con el derecho de interponer el recurso de apelación por 
+            escrito ante <b>PROTECCIÓN</b> al email documentos.calificacion@proteccion.com.co con los fundamentos que motivan su solicitud, 
+            dentro de los diez (10) días hábiles posteriores a esta notificación.
+        </p>
+        <p class="fuente_todo_texto" style="text-align: justify;">
+            Si esto pasara, el caso y la documentación serían entregados a la Junta Regional de Calificación para una nueva evaluación. 
+            Estas Juntas son entidades gubernamentales independientes por lo que sus médicos son los responsables de asignar la cita para 
+            valoración, brindar información del trámite, emitir y notificar el dictamen en términos de ley.
+        </p>
+        <p class="fuente_todo_texto" style="text-align: justify;">
+            * Dando cumplimiento al Artículo 41 de la Ley 100 de 1993, modificado por el Artículo 142 del Decreto Ley 019 de 2012, En caso de no 
+            recibir respuesta en este tiempo, se entenderá que está de acuerdo (Dictamen en firme) y se finalizará su solicitud de calificación de 
+            pérdida de capacidad laboral.
+        </p>
+        <p class="fuente_todo_texto" style="text-align: justify;">
+            Le agradecemos la confianza depositada en nosotros durante estos años y le recordamos que cuenta con nuestra asesoría. Ante cualquier 
+            duda, puede comunicarse a nuestra Línea de Servicio: Bogotá: 744 44 64, Medellín y Cali: 510 90 99 Barranquilla: 319 79 99, 
+            Cartagena: 642 49 99 y resto del país: 01 8000 52 8000.
+        </p>        
+        <section class="fuente_todo_texto">            
+            Cordialmente,
+            <br><br>
+            <b>PROTECCIÓN S.A.</b>           
+        </section>
+        <br>
         <section class="fuente_todo_texto">
             <table class="tabla1" style="text-align: justify;">                              
-                @if (empty($Copia_afiliado_correspondecia) && empty($Copia_empleador_correspondecia) && empty($Copia_eps_correspondecia) && empty($Copia_afp_correspondecia) && empty($Copia_arl_correspondecia) && empty($Copia_afp_conocimiento_correspondencia))
+                @if (empty($Copia_afiliado_correspondencia) && empty($Copia_empleador_correspondecia) && empty($Copia_eps_correspondecia) && empty($Copia_afp_correspondecia) && empty($Copia_arl_correspondecia) && empty($Copia_afp_conocimiento_correspondencia))
                     <tr>
                         <td class="copias"><span class="negrita ">Copia: </span>No se registran copias</td>                                                                                
                     </tr>
@@ -291,10 +346,10 @@
                         <td class="justificado copias"><span class="negrita">Copia:</span></td>                            
                     </tr> 
                     <?php 
-                        if (!empty($Copia_afiliado_correspondecia)) { ?>
+                        if (!empty($Copia_afiliado_correspondencia)) { ?>
                             <tr>
                                 <td class="copias">
-                                    <span class="negrita">Afiliado: </span><?php echo $copia_nombreAfiliado.' - '.$copia_direccionAfiliado.'; '.$copia_emailAfiliado.'; '.$copia_telefonoAfiliado.'; '.$copia_ciudadAfiliado.'-'.$copia_departamentoAfiliado;?>
+                                    <span class="negrita">Afiliado: <?php echo $Nombre_afiliado_copia;?></span><?php echo ' - '.$Direccion_afiliado_copia.'; '.$Copia_afiliado_correo.'; '.$Telefono_afiliado_copia.'; '.$Ciudad_departamento_afiliado_copia;?>
                                 </td>
                             </tr>
                         <?php       
@@ -353,18 +408,76 @@
                 @endif
             </table>
         </section>
-        <br>
+        <br><br>
         <div class="cuadro fuente_cuadro_inferior" style="margin: 0 auto">
             <span class="fuente_cuadro_inferior"><span class="negrita">Nro. Radicado: <br>{{$Radicado_comuni}}</span></span><br>
             <span class="fuente_cuadro_inferior"><span class="negrita">{{$T_documento_noti}} {{$NroIden_afiliado_noti}}</span></span><br>
             <span class="fuente_cuadro_inferior"><span class="negrita">Siniestro: {{$N_siniestro}}</span></span><br>
-        </div>        
+        </div>
+        <br>
+        <section>
+            <div class="fuente_todo_texto">
+                Para nosotros es importante saber si recibiste esta notificación para poder continuar 
+                con tu proceso. Firma esta carta y envíala al correo documentos.calificacion@proteccion.com.co.
+            </div>
+        </section>
+        <br>
+        <section>
+            <div class="fuente_todo_texto">
+                <b>Los siguientes campos son obligatorios, diligenciar fecha de firma en formato numérico (23/01/2000).</b>
+            </div>
+        </section>
+        <br>
+        <section>
+            <div class="fuente_todo_texto">
+                <b>Fecha de firma:</b> Día____ Mes____ Año_____
+            </div>
+        </section>
+        <br>
+        <section>
+            <div class="fuente_todo_texto">
+                <b>Nombre del afiliado:</b> _____________________________________________
+            </div>
+        </section>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <section>
+            <div class="fuente_todo_texto" style="text-align: center;">
+                ______________________________________                
+            </div>
+        </section>
+        <section>
+            <div class="fuente_todo_texto" style="text-align: center;">
+                <b>Firma y cédula del afiliado</b>
+            </div>
+        </section>
+        <p class="fuente_todo_texto" style="text-align: justify;">
+            Le invitamos a actualizar sus datos.
+        </p>
+        <p class="fuente_todo_texto" style="text-align: justify;">
+            Al autorizar sus datos, accedes a la oferta que tenemos para usted y para la construcción de su futuro a través del ahorro.
+        </p>
+        <p class="fuente_todo_texto" style="text-align: justify;">
+            Actualízalos en el siguiente QR:
+        </p>
+        <br>
+        <section>
+            <?php
+                $imagenPath_footer = public_path('/images/logos_preformas/QR_proteccion.png');
+                $imagenData_footer = file_get_contents($imagenPath_footer);
+                $imagenBase64_footer = base64_encode($imagenData_footer);
+            ?>
+            <img src="data:image/png;base64,{{ $imagenBase64_footer }}" class="qr_proteccion">
+        </section>
     </div>
     <script type="text/php">
         if ( isset($pdf) ) {
             $pdf->page_script('
                 $font = $fontMetrics->get_font("Arial, Helvetica, sans-serif", "normal");
-                $pdf->text(485, 60, "Página $PAGE_NUM de $PAGE_COUNT", $font, 9);
+                $pdf->text(485, 825, "Página $PAGE_NUM de $PAGE_COUNT", $font, 9);
             ');
         }
 	</script>

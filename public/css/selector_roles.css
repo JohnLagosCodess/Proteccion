@@ -97,6 +97,11 @@
     text-align: justify;
     font-style: italic;
 }
+.texto_con_padding{
+    padding-left: 100px;
+    padding-right: 100px;
+    text-align: justify;
+}
 
 #div_cual {
     display: none;

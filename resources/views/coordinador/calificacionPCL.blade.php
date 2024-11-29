@@ -273,6 +273,40 @@
                                                 <span class="d-none" id="alertaNuevaFechaDeRadicacion" style="color: red; font-style: italic;"></span>
                                             </div>
                                         </div>
+                                        <?php if(!empty($array_datos_calificacionPcl[0]->Id_Servicio)):?>
+                                            {{-- Los siguientes campos se mostrarán dependiendo de que el servicio sean Calificación técnica y Revisión Pensión --}}
+                                            <?php if($array_datos_calificacionPcl[0]->Id_Servicio == 6 || $array_datos_calificacionPcl[0]->Id_Servicio == 7):?>
+                                                <div class="col-4">
+                                                    <div class="form-group">
+                                                        <label for="fecha_primera_cita">Fecha de 1ra cita <span class="obligatorio_primera_cita d-none" style="color:red;">(*)</span></label>
+                                                        <input type="date" class="form-control" name="fecha_primera_cita" id="fecha_primera_cita" min="{{ date('Y-m-d') }}" value="<?php if(!empty($array_datos_calificacionPcl[0]->F_primera_cita)){echo $array_datos_calificacionPcl[0]->F_primera_cita;}?>">
+                                                    </div>
+                                                </div>
+                                                <div class="col-4">
+                                                    <div class="form-group">
+                                                        <label for="incumple_primera_cita">Causal de incumplimiento 1ra cita <span class="obligatorio_primera_cita d-none" style="color:red;">(*)</span></label>
+                                                        <input type="hidden" id="bd_id_incumple_pri_cita" value="<?php if(!empty($array_datos_calificacionPcl[0]->Causal_incumplimiento_primera_cita)){echo $array_datos_calificacionPcl[0]->Causal_incumplimiento_primera_cita;}?>">
+                                                        <select class="custom-select incumple_primera_cita" name="incumple_primera_cita" id="incumple_primera_cita">
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-4">
+                                                    <div class="form-group">
+                                                        <label for="fecha_segunda_cita">Fecha de 2da cita <span class="obligatorio_segunda_cita d-none" style="color:red;">(*)</span></label>
+                                                        <input type="date" class="form-control" name="fecha_segunda_cita" id="fecha_segunda_cita" min="{{ date('Y-m-d') }}" value="<?php if(!empty($array_datos_calificacionPcl[0]->F_segunda_cita)){echo $array_datos_calificacionPcl[0]->F_segunda_cita;}?>">
+                                                    </div>
+                                                </div>
+                                                <div class="col-4">
+                                                    <div class="form-group">
+                                                        <label for="incumple_segunda_cita">Causal de incumplimiento 2da cita <span class="obligatorio_segunda_cita d-none" style="color:red;">(*)</span></label>
+                                                        <input type="hidden" id="bd_id_incumple_segunda_cita" value="<?php if(!empty($array_datos_calificacionPcl[0]->Causal_incumplimiento_segunda_cita)){echo $array_datos_calificacionPcl[0]->Causal_incumplimiento_segunda_cita;}?>">
+                                                        <select class="custom-select incumple_segunda_cita" name="incumple_segunda_cita" id="incumple_segunda_cita">
+                                                            <option value=""></option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            @endif
+                                        <?php endif?>
                                     </div>
                                     <div class="row">
                                         <div class="col-12">
@@ -745,11 +779,51 @@
                                     <div class="row">
                                         @if (!empty($array_datos_calificacionPcl[0]->Id_Servicio) )
                                             @if ($array_datos_calificacionPcl[0]->Id_Servicio == 6 || $array_datos_calificacionPcl[0]->Id_Servicio == 7)
-                                                <div class="col-3">
+                                                <div class="col-2">
                                                     <div class="form-group">
                                                         <div class="form-check custom-control custom-radio">
                                                             <input class="form-check-input custom-control-input custom-control-input-info" type="radio" name="tipo_documento_descarga_califi" id="documentos_pcl" value="Documento_PCL" required>
-                                                            <label class="form-check-label custom-control-label" for="documentos_pcl"><strong>SOLICITUD DOCUMENTOS (PCL)</strong></label>
+                                                            <label class="form-check-label custom-control-label" for="documentos_pcl"><strong>SOL. DOCUMENTOS PCL</strong></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-2">
+                                                    <div class="form-group">
+                                                        <div class="form-check custom-control custom-radio">
+                                                            <input class="form-check-input custom-control-input custom-control-input-info" type="radio" name="tipo_documento_descarga_califi" id="No_procede_recali" value="Documento_No_Recalificacion" required>
+                                                            <label class="form-check-label custom-control-label" for="No_procede_recali"><strong>NO CALIFICACIÓN PCL</strong></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-2">
+                                                    <div class="form-group">
+                                                        <div class="form-check custom-control custom-radio">
+                                                            <input class="form-check-input custom-control-input custom-control-input-info" type="radio" name="tipo_documento_descarga_califi" id="desistimiento_pcl" value="Desistimiento_PCL" required>
+                                                            <label class="form-check-label custom-control-label" for="desistimiento_pcl"><strong>DESISTIMIENTO PCL</strong></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-2">
+                                                    <div class="form-group">
+                                                        <div class="form-check custom-control custom-radio">
+                                                            <input class="form-check-input custom-control-input custom-control-input-info" type="radio" name="tipo_documento_descarga_califi" id="cierre_mmm_pcl" value="Cierre_MMM_PCL" required>
+                                                            <label class="form-check-label custom-control-label" for="cierre_mmm_pcl"><strong>CIERRE MMM</strong></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-2">
+                                                    <div class="form-group">
+                                                        <div class="form-check custom-control custom-radio">
+                                                            <input class="form-check-input custom-control-input custom-control-input-info" type="radio" name="tipo_documento_descarga_califi" id="cierre_cita_pcl" value="Cierre_Cita_PCL" required>
+                                                            <label class="form-check-label custom-control-label" for="cierre_cita_pcl"><strong>CIERRE INASISTENCIA CITA</strong></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-2">
+                                                    <div class="form-group">
+                                                        <div class="form-check custom-control custom-radio">
+                                                            <input class="form-check-input custom-control-input custom-control-input-info" type="radio" name="tipo_documento_descarga_califi" id="firmeza_pcl" value="Firmeza_PCL" required>
+                                                            <label class="form-check-label custom-control-label" for="firmeza_pcl"><strong>FIRMEZA PCL</strong></label>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -768,28 +842,34 @@
                                                 <div class="form-group">
                                                     <div class="form-check custom-control custom-radio">
                                                         <input class="form-check-input custom-control-input custom-control-input-info" type="radio" name="tipo_documento_descarga_califi" id="formatoB_revisionpension" value="Formato_B_Revision_pension" required>
-                                                        <label class="form-check-label custom-control-label" for="formatoB_revisionpension"><strong>RATIFICACIÓN (B)</strong></label>
+                                                        <label class="form-check-label custom-control-label" for="formatoB_revisionpension"><strong>RATIFICACIÓN PENSIÓN (B)</strong></label>
                                                     </div>
                                                 </div>
                                             </div>   
-                                            <div class="col-4">
+                                            <div class="col-2">
                                                 <div class="form-group">
                                                     <div class="form-check custom-control custom-radio">
                                                         <input class="form-check-input custom-control-input custom-control-input-info" type="radio" name="tipo_documento_descarga_califi" id="documento_revisionpension" value="Documento_Revision_pension" required>
-                                                        <label class="form-check-label custom-control-label" for="documento_revisionpension"><strong>SOLICITUD DOCUMENTOS (R.V)</strong></label>
+                                                        <label class="form-check-label custom-control-label" for="documento_revisionpension"><strong>SOL. DOCUMENTOS REV. PENSIÓN</strong></label>
                                                     </div>
                                                 </div>
-                                            </div>                                          
-                                        @endif
-                                        @if (!empty($array_datos_calificacionPcl[0]->Id_Servicio) && $array_datos_calificacionPcl[0]->Id_Servicio == 7)
-                                            <div class="col-4">
+                                            </div>
+                                            <div class="col-3">
                                                 <div class="form-group">
                                                     <div class="form-check custom-control custom-radio">
-                                                        <input class="form-check-input custom-control-input custom-control-input-info" type="radio" name="tipo_documento_descarga_califi" id="No_procede_recali" value="Documento_No_Recalificacion" required>
-                                                        <label class="form-check-label custom-control-label" for="No_procede_recali"><strong>NO RECALIFICACIÓN</strong></label>
+                                                        <input class="form-check-input custom-control-input custom-control-input-info" type="radio" name="tipo_documento_descarga_califi" id="reiteracion_documento_revisionpension" value="Reiteracion_Documento_Revision_pension" required>
+                                                        <label class="form-check-label custom-control-label" for="reiteracion_documento_revisionpension"><strong>REITERACIÓN SOL. DOCUMENTOS REV. PENSIÓN</strong></label>
                                                     </div>
                                                 </div>
-                                            </div> 
+                                            </div>
+                                            <div class="col-2">
+                                                <div class="form-group">
+                                                    <div class="form-check custom-control custom-radio">
+                                                        <input class="form-check-input custom-control-input custom-control-input-info" type="radio" name="tipo_documento_descarga_califi" id="suspension_de_mesada" value="Suspension_Mesada_Revision_pension" required>
+                                                        <label class="form-check-label custom-control-label" for="suspension_de_mesada"><strong>SUSPENSIÓN DE MESADA</strong></label>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         @endif
                                     </div>
                                     <div class="row text-center">
@@ -973,6 +1053,16 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        @if (!empty($info_afp_conocimiento[0]->Entidad_conocimiento) && $info_afp_conocimiento[0]->Entidad_conocimiento == "Si")
+                                            <div class="col-2">
+                                                <div class="form-group">
+                                                    <div class="custom-control custom-checkbox">
+                                                            <input class="custom-control-input" type="checkbox" id="copia_conocimiento" name="copia_conocimiento" value="AFP_Conocimiento">                                                    
+                                                            <label for="copia_conocimiento" class="custom-control-label">AFP Conocimiento</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
                                     </div>                                                                        
                                 </div>
                                 <div class="card-footer">
@@ -984,6 +1074,9 @@
                                         </div>
                                         <div class="col-12">
                                             <div class="alerta_comunicado alert alert-success mt-2 mr-auto d-none" role="alert"></div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="danger_comunicado alert alert-danger mt-2 mr-auto d-none" role="alert"></div>
                                         </div>
                                         <div class="text-center d-none" id="mostrar_barra_creacion_comunicado">                                
                                             <button class="btn btn-info" type="button" disabled>
@@ -1094,17 +1187,57 @@
                                     <div class="row">
                                         @if (!empty($array_datos_calificacionPcl[0]->Id_Servicio) )
                                             @if ($array_datos_calificacionPcl[0]->Id_Servicio == 6 || $array_datos_calificacionPcl[0]->Id_Servicio == 7)
-                                                <div class="col-3">
+                                                <div class="col-2">
                                                     <div class="form-group">
                                                         <div class="form-check custom-control custom-radio">
                                                             <input class="form-check-input custom-control-input custom-control-input-info" type="radio" name="tipo_documento_descarga_califi_editar" id="documentos_pcl_editar" value="Documento_PCL" required>
-                                                            <label class="form-check-label custom-control-label" for="documentos_pcl_editar"><strong>SOLICITUD DOCIMENTOS (PCL)</strong></label>
+                                                            <label class="form-check-label custom-control-label" for="documentos_pcl_editar"><strong>SOL. DOCUMENTOS PCL</strong></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-2"> 
+                                                    <div class="form-group">
+                                                        <div class="form-check custom-control custom-radio">
+                                                            <input class="form-check-input custom-control-input custom-control-input-info" type="radio" name="tipo_documento_descarga_califi_editar" id="No_procede_recali_editar" value="Documento_No_Recalificacion" required>
+                                                            <label class="form-check-label custom-control-label" for="No_procede_recali_editar"><strong>NO CALIFICACIÓN PCL</strong></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-2">
+                                                    <div class="form-group">
+                                                        <div class="form-check custom-control custom-radio">
+                                                            <input class="form-check-input custom-control-input custom-control-input-info" type="radio" name="tipo_documento_descarga_califi_editar" id="desistimiento_pcl_editar" value="Desistimiento_PCL" required>
+                                                            <label class="form-check-label custom-control-label" for="desistimiento_pcl_editar"><strong>DESISTIMIENTO PCL</strong></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-2">
+                                                    <div class="form-group">
+                                                        <div class="form-check custom-control custom-radio">
+                                                            <input class="form-check-input custom-control-input custom-control-input-info" type="radio" name="tipo_documento_descarga_califi_editar" id="cierre_mmm_pcl_editar" value="Cierre_MMM_PCL" required>
+                                                            <label class="form-check-label custom-control-label" for="cierre_mmm_pcl_editar"><strong>CIERRE MMM</strong></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-2">
+                                                    <div class="form-group">
+                                                        <div class="form-check custom-control custom-radio">
+                                                            <input class="form-check-input custom-control-input custom-control-input-info" type="radio" name="tipo_documento_descarga_califi_editar" id="cierre_cita_pcl_editar" value="Cierre_Cita_PCL" required>
+                                                            <label class="form-check-label custom-control-label" for="cierre_cita_pcl_editar"><strong>CIERRE INASISTENCIA CITA</strong></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-2">
+                                                    <div class="form-group">
+                                                        <div class="form-check custom-control custom-radio">
+                                                            <input class="form-check-input custom-control-input custom-control-input-info" type="radio" name="tipo_documento_descarga_califi_editar" id="firmeza_pcl_editar" value="Firmeza_PCL" required>
+                                                            <label class="form-check-label custom-control-label" for="firmeza_pcl_editar"><strong>FIRMEZA PCL</strong></label>
                                                         </div>
                                                     </div>
                                                 </div>
                                             @endif
                                         @endif
-                                        <div class="col-2">
+                                        <div class="col-3">
                                             <div class="form-group">
                                                 <div class="form-check custom-control custom-radio">
                                                     <input class="form-check-input custom-control-input custom-control-input-info" type="radio" name="tipo_documento_descarga_califi_editar" id="otro_documento_pcl_editar" value="Otro_Documento" required>
@@ -1117,28 +1250,34 @@
                                                 <div class="form-group">
                                                     <div class="form-check custom-control custom-radio">
                                                         <input class="form-check-input custom-control-input custom-control-input-info" type="radio" name="tipo_documento_descarga_califi_editar" id="formatoB_revisionpension_editar" value="Formato_B_Revision_pension" required>
-                                                        <label class="form-check-label custom-control-label" for="formatoB_revisionpension_editar"><strong>RATIFICACIÓN (B)</strong></label>
+                                                        <label class="form-check-label custom-control-label" for="formatoB_revisionpension_editar"><strong>RATIFICACIÓN PENSIÓN (B)</strong></label>
                                                     </div>
                                                 </div>
                                             </div>   
-                                            <div class="col-4">
+                                            <div class="col-2">
                                                 <div class="form-group">
                                                     <div class="form-check custom-control custom-radio">
                                                         <input class="form-check-input custom-control-input custom-control-input-info" type="radio" name="tipo_documento_descarga_califi_editar" id="documento_revisionpension_editar" value="Documento_Revision_pension" required>
-                                                        <label class="form-check-label custom-control-label" for="documento_revisionpension_editar"><strong>SOLICITUD DOCUMENTOS (R.V)</strong></label>
+                                                        <label class="form-check-label custom-control-label" for="documento_revisionpension_editar"><strong>SOL. DOCUMENTOS REV. PENSIÓN</strong></label>
                                                     </div>
                                                 </div>
-                                            </div>                                          
-                                        @endif
-                                        @if (!empty($array_datos_calificacionPcl[0]->Id_Servicio) && $array_datos_calificacionPcl[0]->Id_Servicio == 7)
-                                            <div class="col-4">
+                                            </div>
+                                            <div class="col-2">
                                                 <div class="form-group">
                                                     <div class="form-check custom-control custom-radio">
-                                                        <input class="form-check-input custom-control-input custom-control-input-info" type="radio" name="tipo_documento_descarga_califi_editar" id="No_procede_recali_editar" value="Documento_No_Recalificacion" required>
-                                                        <label class="form-check-label custom-control-label" for="No_procede_recali_editar"><strong>NO RECALIFICACIÓN</strong></label>
+                                                        <input class="form-check-input custom-control-input custom-control-input-info" type="radio" name="tipo_documento_descarga_califi_editar" id="reiteracion_documento_revisionpension_editar" value="Reiteracion_Documento_Revision_pension" required>
+                                                        <label class="form-check-label custom-control-label" for="reiteracion_documento_revisionpension_editar"><strong>REITERACIÓN SOL. DOCUMENTOS REV. PENSIÓN</strong></label>
                                                     </div>
                                                 </div>
-                                            </div> 
+                                            </div>
+                                            <div class="col-2">
+                                                <div class="form-group">
+                                                    <div class="form-check custom-control custom-radio">
+                                                        <input class="form-check-input custom-control-input custom-control-input-info" type="radio" name="tipo_documento_descarga_califi_editar" id="suspension_de_mesada_editar" value="Suspension_Mesada_Revision_pension" required>
+                                                        <label class="form-check-label custom-control-label" for="suspension_de_mesada_editar"><strong>SUSPENSIÓN DE MESADA</strong></label>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         @endif
                                     </div>               
                                     <div class="row text-center">                                  
@@ -1331,6 +1470,20 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        @if (!empty($info_afp_conocimiento[0]->Entidad_conocimiento) && $info_afp_conocimiento[0]->Entidad_conocimiento == "Si")
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <div class="custom-control custom-checkbox">
+                                                    @if (!empty($array_comite_interdisciplinario[0]->copia_conocimiento))
+                                                        <input class="custom-control-input" type="checkbox" id="edit_copia_conocimiento" name="edit_copia_conocimiento" value="AFP_Conocimiento" checked>
+                                                    @else
+                                                        <input class="custom-control-input" type="checkbox" id="edit_copia_conocimiento" name="edit_copia_conocimiento" value="AFP_Conocimiento">                                                    
+                                                    @endif
+                                                    <label for="edit_copia_conocimiento" class="custom-control-label">AFP Conocimiento</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endif
                                     </div>
                                     <div class="alert alert-warning mensaje_confirmacion_cargar_evento" role="alert">
                                         <i class="fas fa-info-circle"></i> <strong>Importante:</strong> Recuerde Actualizar siempre después de haber modificado uno o más campos, El botón Actualizar se bloquea cuando falte algún campo obligatorio por llenar, y el del PDF se habilitará después de realizar la actualización.
@@ -1354,6 +1507,9 @@
                                         </div>
                                         <div class="col-12">
                                             <div class="alerta_editar_comunicado alert alert-success mt-2 mr-auto d-none" role="alert"></div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="danger_editar_comunicado alert alert-danger mt-2 mr-auto d-none" role="alert"></div>
                                         </div>
                                         <div class="text-center d-none" id="mostrar_barra_actualizacion_comunicado">                                
                                             <button class="btn btn-info" type="button" disabled>
@@ -1601,4 +1757,5 @@
     <script type="text/javascript" src="/js/funciones_helpers.js?v=1.0.0"></script>
     <script src="https://cdn.jsdelivr.net/npm/resumablejs@1.1.0/resumable.min.js"></script>
     <script src="/plugins/summernote/summernote.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @stop

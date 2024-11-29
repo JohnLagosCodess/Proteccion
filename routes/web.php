@@ -33,6 +33,7 @@ use App\Http\Controllers\Consulta\ConsultaController;
 use App\Http\Controllers\Administrador\ReporteNotificacionesController;
 use App\Http\Controllers\Administrador\ReporteFacturacionPclController;
 use App\Http\Controllers\Administrador\ReporteFacturacionJuntasController;
+use App\Http\Controllers\Consulta\ReporteTrazabilidadPclController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -51,6 +52,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [LoginController::class, 'show'])->name('login');
 // Cuando se ingresan las credenciales de inicion de sesión
 Route::post('/', [LoginController::class, 'authenticate'])->name('loginSigmel');
+Route::post('cambiar_clave', [LoginController::class, 'cambiar_clave'])->name("cambiar_clave");
 // Cuando se cierra sesión
 Route::post('/logout', [LogoutController:: class, 'destroy']);
 
@@ -323,6 +325,8 @@ Route::post('/getInformacionCorrespondencia', [CoordinadorController::class, 'ge
 Route::post('/guardarInformacionCorrespondencia', [CoordinadorController::class, 'guardarInformacionCorrespondencia']);
 // Acción: Consultar la información de correspondencia en base a un id de destinatario
 Route::post('/getInfoCorrespByIdDest', [CoordinadorController::class, 'getInformacionPorIdDestinatario']);
+// Acción: Consultar la información de el ultimo comunicado con Notificado efectivamente y con correspondencia en Afiliado
+Route::post('/getInfoComuCorres', [CoordinadorController::class, 'retornarInformacionComunicadoYCorrespondencia']);
 
 // 14/07/2023
 // Vista: Módulo Calificación PCL Coordinador
@@ -886,6 +890,13 @@ Route::post('/consultaReporteFactuJuntas', [ReporteFacturacionJuntasController::
 // 18-06-2024
 // Validación creación de un nuevo servicio de Adición Dx, Calificacion técnica, Reacalificación y Revisión Pensión desde la modal Nuevo Proceso
 Route::post('/ValidarNuevosServiciosNuevoProceso', [BuscarEventoController::class, 'ValidarNuevosServiciosNuevoProceso']);
+
+
+// Creación Vista Módulo Reporte Trazabilidad PCL
+// 25/11/2024 Vista Reporte Trazabilidad PCL
+Route::get('/Sigmel/ReporteTrazabilidadPcl', [ReporteTrazabilidadPclController::class, 'show'])->name('reporteTrazabilidadPcl');
+// Acción: Consulta de Reporte Trazabilidad PCL
+Route::post('/consultaReporteTrazabilidadPcl', [ReporteTrazabilidadPclController::class, 'consultaReporteTrazabilidadPcl']);
 
 /* FIN SECCION: AQUI SE RENDERIZARÁN LAS RUTAS DE LOS DEMÁS ROLES: */
 
