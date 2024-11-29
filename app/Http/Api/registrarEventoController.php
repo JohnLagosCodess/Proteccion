@@ -306,9 +306,9 @@ class registrarEventoController extends Controller
         /**Dependiendo del input suministrado se ajustaran las validaciones para dicha seccion */
         if($this->request->input("tipo_afiliado") == 2 || $this->request->input("apoderado") == 1){
             $this->actualizar_validaciones("Afiliado")->validar();
-        }else if($this->request->tipo_empleado == "Empleado Actual"){
-            $this->actualizar_validaciones("Laboral")->validar();
-        }
+        }//else if($this->request->tipo_empleado == "Empleado Actual"){
+           // $this->actualizar_validaciones("Laboral")->validar();
+        //}
         
         if ($this->estado_ejecucion == "Fallo") {
             return $this->msg_validacion;
@@ -438,14 +438,14 @@ class registrarEventoController extends Controller
             'ID_evento' => $this->n_evento,
             'Nro_identificacion' => $this->request->n_identificacion,
             'Tipo_empleado' => $this->request->tipo_empleado,
-            'Empresa' => $this->request->nombre_empresa,
-            'Nit_o_cc' => $this->request->nit_cc_empresa,
-            'Telefono_empresa' => $this->request->telefono_empresa,
-            'Email' => $this->request->email_empresa,
-            'Direccion' => $this->request->direccion_empresa,
-            'Id_departamento' => $municipio_empresa->Id_departamento,
-            'Id_municipio' => $municipio_empresa->Id_municipios,
-            'Medio_notificacion' => $this->request->m_notificacion_empresa,
+            'Empresa' => $this->request->nombre_empresa ?? null,
+            'Nit_o_cc' => $this->request->nit_cc_empresa ?? null,
+            'Telefono_empresa' => $this->request->telefono_empresa ?? null,
+            'Email' => $this->request->email_empresa ?? null,
+            'Direccion' => $this->request->direccion_empresa ?? null,
+            'Id_departamento' => $municipio_empresa->Id_departamento ?? null,
+            'Id_municipio' => $municipio_empresa->Id_municipios ?? null,
+            'Medio_notificacion' => $this->request->m_notificacion_empresa ?? null,
             'Nombre_usuario' => Auth::user()->name,
             'F_registro' => date('y-m-d')
         ];

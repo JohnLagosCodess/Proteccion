@@ -7,7 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Crypt;
-use Illuminate\Http\RedirectResponse;
+
+use Illuminate\Support\Facades\Session;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
@@ -67,7 +68,7 @@ class LoginController extends Controller
     public function cambiar_clave(Request $request)
     {
         $request->validate([
-            'password' => [
+            'clave1' => [
                 'required',
                 'string',
                 'min:8', // Mínimo 8 caracteres
@@ -87,14 +88,17 @@ class LoginController extends Controller
                 return redirect()->route('login')->withErrors(['error' => 'Token no válido.']);
             }
 
-            $user = User::where('email', $request->email)->first();
-            $user->password = bcrypt($request->password);
-            $user->save();
+            $user = User::where('email', $request->email)->update([
+                'cambiar_clave' => 0,
+                'password' => bcrypt($request->clave1)
+            ]);
 
-            return redirect()->route('login')->with('status', 'Contraseña actualizada correctamente, por favor vuelva a iniciar sesion con la nueva clave.');
+           
+            return view('autenticacion.login')->with('success', 'Contraseña actualizada de manera correcta, por favor inicie sesion nuevamente.');
 
         } catch (\Exception $e) {
-            return redirect()->route('login')->withErrors(['error' => 'Token no válido o expirado.']);
+            return redirect()->route('login')->withErrors(['error' => 'Hubo un problema con el token. Intenta nuevamente.']);
         }
+
     }
 }
