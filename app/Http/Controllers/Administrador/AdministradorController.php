@@ -65,7 +65,7 @@ use App\Models\sigmel_informacion_ans_clientes;
 use App\Models\sigmel_informacion_firmas_clientes;
 use App\Models\sigmel_informacion_firmas_proveedores;
 use App\Models\sigmel_informacion_entidades;
-
+use Illuminate\Support\Facades\Log;
 /* Parametrizaciones */
 use App\Models\sigmel_informacion_parametrizaciones_clientes;
 use App\Models\sigmel_informacion_acciones;
@@ -3182,11 +3182,10 @@ class AdministradorController extends Controller
         $dato_consecutivoEvento = sigmel_numero_orden_eventos::on('sigmel_gestiones')->select('Numero_orden')
         ->where([['Proceso', 'General_Evento'], ['Estado', 'activo']])->get();
 
-        $Id_evento = $dato_consecutivoEvento[0]->Numero_orden;        
-        $consecutivoEventos = (int)$Id_evento;        
+        $consecutivoEventos = (int) $dato_consecutivoEvento[0]->Numero_orden;          
         $consecutivoEventos+=1;
         $Nuevo_consecutivoEvento = sprintf("%015d", $consecutivoEventos);                
-        
+        $Id_evento = $Nuevo_consecutivoEvento;
         $actualizarIdEvento =[
             'Numero_orden' => $Nuevo_consecutivoEvento
         ];

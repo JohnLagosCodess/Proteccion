@@ -7,31 +7,39 @@
     <title>Document</title>
 
     <style>
-        /* @font-face {
-            font-family: 'Arial';
+        /*@font-face {
+            font-family: 'Microsoft New Tai Lue';
             font-style: normal;
             font-weight: normal;
-            src: url(https://fonts.googleapis.com/css2?family=Arial&display=swap);
-        } */
+            src: url('fonts/ntailu.ttf') format('truetype');
+        }*/
         @page{
             /* arriba  derecha  abajo  izquierda */
             margin: 3cm 1.3cm 2.5cm 1.3cm;
+            counter-increment: page;
+        }
+        body {
+            font-family: sans-serif;
+            font-size: 11px;
         }
         #header {
             position: fixed; 
             /* esta ligado con el primer valor del margin */
-            top: -3cm;
+            top: -2.2cm;
             left: 0cm;
             width: 100%;
+            /* height: 100px; */
             text-align: right; 
+            /* background: green; */
         }
         .logo_header{
-            width: 150px;
+            max-width: 30%;
             height: auto;
-        }
+            max-height: 60px; 
+        }  
         #footer{
             position: fixed;
-            /* esta ligado con el tercer valor del margin */
+            /* esta ligado con el tercer valor del margin  bottom: -2.4cm;*/
             bottom: -2.4cm;
             left: 0cm;
             width: 100%;
@@ -42,7 +50,7 @@
             align-items: center; 
         }
         #footer .page{
-            text-align: center;
+            text-align: right;
         }
         .footer_image{
             max-width: 100%;
@@ -54,7 +62,7 @@
             text-align: center;
         }
 
-        #footer .page:after { content: counter(page, upper-decimal); }   
+        #footer .page:after { content: "Página " counter(page) " de " counter(pages); }
 
         #footer2 { 
             position: fixed; 
@@ -108,12 +116,23 @@
             margin-left: 1.5cm;
             margin-right: 1.5cm;
         }
+        .radicado{
+            position: relative;
+        }
+        .page_break{
+            page-break-before: always;
+        }
         .cuadro{
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-35px);
+            margin: auto;
             border: 2px solid black;
             width: 4cm;
             padding: 1px;
-            height: auto;
-        }     
+            height: 60px;
+        }      
         .fuente_cuadro_inferior{
             font-family: sans-serif;
             font-size: 10px;
@@ -127,6 +146,14 @@
         .copias{
             font-size: 10px;
         }
+        .firma > *{
+            display: block;
+            margin-top: 10px;
+            margin-bottom: 12px;
+        }
+        .tabla2 {
+            display:block; 
+        }
         /* .hijo{
             width: 2cm;
             height: 1cm;
@@ -136,98 +163,68 @@
     </style>
 </head>
 <body>
+    @php 
+        $imagenPath_header = public_path($ruta_logo);
+        $imagenData_header = file_get_contents($imagenPath_header);
+        $imagenBase64_header = base64_encode($imagenData_header);
+        $footer_path = public_path($ruta_footer);
+        $footer_data = file_get_contents($footer_path); 
+        $footer_base64 = base64_encode($footer_data);
+    @endphp
     <div id="header">
-        <?php
-            // $imagenPath_header = public_path('/images/logos_preformas/logo_arl_alfa.png');
-            // $imagenData_header = file_get_contents($imagenPath_header);
-            // $imagenBase64_header = base64_encode($imagenData_header);
-        ?>
-        {{-- <img src="data:image/png;base64,{{ $imagenBase64_header }}" class="logo_header"> --}}
-        <?php if($logo_header == "Sin logo"): ?>
+        @if($logo_header == "Sin logo")
             <p>No logo</p>
-        <?php else: ?>
-            <?php 
-                $ruta_logo = "/logos_clientes/{$id_cliente}/{$logo_header}";
-                $imagenPath_header = public_path($ruta_logo);
-                $imagenData_header = file_get_contents($imagenPath_header);
-                $imagenBase64_header = base64_encode($imagenData_header);
-            ?>
+        @else
             <img src="data:image/png;base64,{{ $imagenBase64_header }}" class="logo_header">
-        <?php endif ?>
+        @endif
     </div>
-    <div id="footer">
-        <?php if($footer == null): ?>
+    <div id="footer">        
+        @if($footer == null)
             <div style="text-align:center;">
-                <span style="color: #3C3C3C; margin-top:2px;">{{$nombre_afiliado}} - {{$tipo_identificacion}} {{$num_identificacion}} - Siniestro: {{$N_siniestro}} </span>
+                <span style="color: #4D4D4D; margin-top:2px;">{{$nombre_afiliado}} - {{$tipo_identificacion}} {{$num_identificacion}} - Siniestro: {{$N_siniestro}} </span>
             </div>
-        <?php else: ?>
-            <?php 
-                $ruta_footer = "/footer_clientes/{$id_cliente}/{$footer}";
-                $footer_path = public_path($ruta_footer);
-                $footer_data = file_get_contents($footer_path);
-                $footer_base64 = base64_encode($footer_data);
-            ?>
-            <div class="footer_content">
-                <span style="color: #3C3C3C; margin-top:2px;">{{$nombre_afiliado}} - {{$tipo_identificacion}} {{$num_identificacion}} - Siniestro: {{$N_siniestro}} </span>
-                <br>
-                <img src="data:image/png;base64,{{ $footer_base64 }}" class="footer_image">
+        @else
+            <div class="footer_content" style="text-align:center;">
+                <span style="position: absolute; width: 100%; text-align:center; top: 10px; left:0px; color:#4D4D4D; font-weight:bold; font-size: 11px;">
+                    @if($info_afiliado->Tipo_afiliado == 27)
+                        {{$info_afiliado->Nombre_afiliado_benefi}} - {{$info_afiliado->t_doc_beneficiario}} {{$info_afiliado->Nro_identificacion_benefi}} - SINIESTRO: {{$N_siniestro}} 
+                    @else
+                        {{$nombre_afiliado}} - {{$tipo_identificacion}} {{$num_identificacion}} - SINIESTRO: {{$N_siniestro}} 
+                    @endif
+                </span>
+                <img src="data:image/png;base64,{{ $footer_base64 }}" class="footer_image" style="display: block;" width="100%">
             </div>
-        <?php endif ?>
+        @endif
     </div>
     <div id="footer2">
-        <?php
+        @php
             $imagenPath_footer = public_path('/images/logos_preformas/vigilado.png');
             $imagenData_footer = file_get_contents($imagenPath_footer);
             $imagenBase64_footer = base64_encode($imagenData_footer);
-        ?>
+        @endphp
         <img src="data:image/png;base64,{{ $imagenBase64_footer }}" class="logo_footer">
     </div>
     <div class="container">
-        {{-- @for ($i=0; $i<40; $i++)
-            <div class="hijo">{{$i}}</div>
-        @endfor --}}
-
-        <p class="fuente_todo_texto derecha"><span class="negrita">Bogotá D.C. {{$fecha_sustentacion_jrci}}</span></p>
+        <p class="fuente_todo_texto derecha fecha_comunicado"><span class="negrita">{{$ciudad_comunicado->Ciudad}},  {{$fecha_sustentacion_jrci}}</span></p>
         <br><br>
-        <table class="tabla2">
-            <tbody>
-                <tr>
-                    <td style="width:100%;">
-                        <span class="fuente_todo_texto negrita">Señores: <br>{{$nombre_junta}}</span><br>
-                        <span class="fuente_todo_texto">{{$direccion_junta}}</span><br>
-                        <span class="fuente_todo_texto">{{$telefono_junta}}</span><br>
-                        <span class="fuente_todo_texto">{{$ciudad_junta}} - {{$departamento_junta}}</span>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="tabla2" style="margin-top: 30px;">
+            <span class="fuente_todo_texto">Señores: <br><strong>{{$nombre_junta}}</strong></span><br>
+            <span class="fuente_todo_texto">{{$email_comunicado}}</span><br>
+            <span class="fuente_todo_texto">{{$direccion_junta}}</span><br>
+            <span class="fuente_todo_texto">{{$telefono_junta}}</span><br>
+            <span class="fuente_todo_texto">{{$ciudad_junta}} - {{$departamento_junta}}</span>
+        </div>
         <br>
-        <table class="tabla1">
-            <tbody>
-                <tr>
-                    <td>
-                        <span class="fuente_todo_texto">
-                            <span class="negrita">
-                                Asunto: 
-                                <?php
-                                    $patron_asunto = '/\{\{\$NRO_DICTAMEN_ASUNTO\}\}/';
-                                    if (preg_match($patron_asunto, $asunto)) {
-                                        $asunto_modificado = str_replace('{{$NRO_DICTAMEN_ASUNTO}}', $nro_dictamen, $asunto);
-                                        $asunto = $asunto_modificado;
-                                    } else {
-                                        $asunto = "";
-                                    }
-                                    print_r($asunto);
-                                ?>
-                            </span>
-                        </span>
-                        <br>
-                        <span class="fuente_todo_texto"><span class="negrita">Siniestro: {{$N_siniestro}} {{$tipo_identificacion}} {{$num_identificacion}} {{$nombre_afiliado}}</span></span><br>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <section class="fuente_todo_texto">
+        <div style="float: right;text-align: right; width:97%; margin-top:30px; margin-bottom:30px;">
+            <div class="col-6">
+                <span class="fuente_todo_texto negrita"> Asunto: {{$asunto}}</span><br>
+                <span>CASO DEL (LA) SEÑOR(A) <strong>{{$nombre_afiliado}} {{$tipo_identificacion}}. {{$num_identificacion}}</strong></span><br>
+                @if($info_afiliado->Tipo_afiliado == 27 && $info_afiliado->Apoderado == "No")
+                    <span class="fuente_todo_texto negrita">Afiliado(a): <strong>{{$info_afiliado->Nombre_afiliado_benefi}} {{$info_afiliado->t_doc_beneficiario}}. {{$info_afiliado->Nro_identificacion_benefi}}</strong></span>
+                @endif
+            </div>
+        </div>
+        <div class="fuente_todo_texto" style="margin-bottom: 2em">
             <?php 
                 $patron1 = '/\{\{\$nro_dictamen\}\}/';
                 $patron2 = '/\{\{\$f_dictamen_jrci\}\}/';
@@ -247,8 +244,9 @@
                     if (preg_match($patron1, $cuerpo) && preg_match($patron2, $cuerpo) && preg_match($patron3, $cuerpo) &&
                         preg_match($patron4, $cuerpo) && preg_match($patron5, $cuerpo) && preg_match($patron6, $cuerpo)                    
                     ) {
-                        
-                        $cuerpo_modificado = str_replace('{{$nro_dictamen}}', "<b>".$nro_dictamen."</b>", $cuerpo);
+          
+                        $cuerpo_modificado = str_replace(':nombre_junta', "<b>" . $nombre_junta . "</b>", $cuerpo);
+                        $cuerpo_modificado = str_replace('{{$nro_dictamen}}', "<b>".$nro_dictamen."</b>", $cuerpo_modificado);
                         $cuerpo_modificado = str_replace('{{$f_dictamen_jrci}}', "<b>".date("d/m/Y", strtotime($f_dictamen_jrci_emitido))."</b>", $cuerpo_modificado);
                         $cuerpo_modificado = str_replace('{{$nombre_afiliado}}', "<b>".$nombre_afiliado."</b>", $cuerpo_modificado);
                         $cuerpo_modificado = str_replace('{{$tipo_identificacion_afiliado}}', "<b>".$tipo_identificacion."</b>", $cuerpo_modificado);
@@ -259,6 +257,7 @@
                         // $cuerpo_modificado = str_replace('{{$f_estructuracion_jrci}}', "<b>".$f_estructuracion_contro_jrci_emitido."</b>", $cuerpo_modificado);
                         // $cuerpo_modificado = str_replace('{{$decreto_calificador_jrci}}', "<b>".$manual_de_califi_jrci_emitido."</b>", $cuerpo_modificado);
                         $cuerpo_modificado = str_replace('ACUERDO', "<b>ACUERDO</b>", $cuerpo_modificado);
+                        
 
                         if (preg_match($patron11, $cuerpo_modificado) && preg_match($patron12, $cuerpo_modificado)) {
                             // Ambos patrones encontrados
@@ -288,25 +287,24 @@
                     }
                 }else{
 
-                    if (preg_match($patron1, $cuerpo) && preg_match($patron2, $cuerpo) && preg_match($patron3, $cuerpo) &&
-                        preg_match($patron4, $cuerpo) && preg_match($patron5, $cuerpo) && preg_match($patron6, $cuerpo) &&
-                        preg_match($patron7, $cuerpo) && preg_match($patron8, $cuerpo) && preg_match($patron9, $cuerpo) &&
-                        preg_match($patron10, $cuerpo)
+                    if (preg_match($patron2, $cuerpo) && preg_match($patron3, $cuerpo) &&
+                        preg_match($patron4, $cuerpo) && preg_match($patron5, $cuerpo)
                     ){
-                        
-                        $cuerpo_modificado = str_replace('{{$nro_dictamen}}', "<b>".$nro_dictamen."</b>", $cuerpo);
-                        $cuerpo_modificado = str_replace('{{$f_dictamen_jrci}}', "<b>".date("d/m/Y", strtotime($f_dictamen_jrci_emitido))."</b>", $cuerpo_modificado);
+                        $cuerpo_modificado = str_replace('{{$nombre_junta}}', "<b>" . $nombre_junta . "</b>", $cuerpo);
+                        //$cuerpo_modificado = str_replace('{{$nro_dictamen}}', "<b>".$nro_dictamen."</b>", $cuerpo);
+                        $cuerpo_modificado = str_replace('{{$f_dictamen_jrci}}', "<b>".date("d/m/Y", strtotime($f_dictamen_jrci_emitido))."</b>", $cuerpo_modificado );
                         $cuerpo_modificado = str_replace('{{$nombre_afiliado}}', "<b>".$nombre_afiliado."</b>", $cuerpo_modificado);
                         $cuerpo_modificado = str_replace('{{$tipo_identificacion_afiliado}}', "<b>".$tipo_identificacion."</b>", $cuerpo_modificado);
                         $cuerpo_modificado = str_replace('{{$num_identificacion_afiliado}}', "<b>".$num_identificacion."</b>", $cuerpo_modificado);
-                        $cuerpo_modificado = str_replace('{{$cie10_nombre_cie10_jrci}}', $string_diagnosticos_cie10_jrci, $cuerpo_modificado);
-                        $cuerpo_modificado = str_replace('{{$pcl_jrci}}', "<b>".$porcentaje_pcl_jrci_emitido."</b>", $cuerpo_modificado);
-                        $cuerpo_modificado = str_replace('{{$origen_dx_jrci}}', "<b>".$origen_jrci_emitido."</b>", $cuerpo_modificado);
-                        $cuerpo_modificado = str_replace('{{$f_estructuracion_jrci}}', "<b>".date("d/m/Y", strtotime($f_estructuracion_contro_jrci_emitido))."</b>", $cuerpo_modificado);
-                        $cuerpo_modificado = str_replace('{{$decreto_calificador_jrci}}', "<b>".$manual_de_califi_jrci_emitido."</b>", $cuerpo_modificado);
+                        //$cuerpo_modificado = str_replace('{{$cie10_nombre_cie10_jrci}}', $string_diagnosticos_cie10_jrci, $cuerpo_modificado);
+                        //$cuerpo_modificado = str_replace('{{$pcl_jrci}}', "<b>".$porcentaje_pcl_jrci_emitido."</b>", $cuerpo_modificado);
+                        //$cuerpo_modificado = str_replace('{{$origen_dx_jrci}}', "<b>".$origen_jrci_emitido."</b>", $cuerpo_modificado);
+                        //$cuerpo_modificado = str_replace('{{$f_estructuracion_jrci}}', "<b>".date("d/m/Y", strtotime($f_estructuracion_contro_jrci_emitido))."</b>", $cuerpo_modificado);
+                        //$cuerpo_modificado = str_replace('{{$decreto_calificador_jrci}}', "<b>".$manual_de_califi_jrci_emitido."</b>", $cuerpo_modificado);
                         $cuerpo_modificado = str_replace('ACUERDO', "<b>ACUERDO</b>", $cuerpo_modificado);
-    
-                        if (preg_match($patron11, $cuerpo_modificado) && preg_match($patron12, $cuerpo_modificado)) {
+                        $cuerpo = nl2br($cuerpo_modificado);
+
+                        /*if (preg_match($patron11, $cuerpo_modificado) && preg_match($patron12, $cuerpo_modificado)) {
                             // Ambos patrones encontrados
                             $cuerpo_modificado = str_replace('{{$sustentacion_jrci}}', $sustentacion_concepto_jrci, $cuerpo_modificado);
                             $cuerpo_modificado = str_replace('{{$sustentacion_jrci1}}', $sustentacion_concepto_jrci1, $cuerpo_modificado);
@@ -326,114 +324,57 @@
                             $cuerpo = nl2br($cuerpo_modificado);
                         } else {
                             // Ninguno de los patrones encontrados
-                            $cuerpo = "";
-                        }
+                           // $cuerpo = "";
+                        }*/
     
-                    } else {
+                    }else{
                         $cuerpo = "";
                     }
                 }
 
                 print_r($cuerpo);
             ?>
-        </section>
-        <p class="fuente_todo_texto">
-            Cordialmente,
-            <div class="firma">
-                <?=$Firma_cliente?>
+        </div>
+        <div class="fuente_todo_texto firma">
+            <span>Cordialmente,</span><br><br>
+            <span><strong>PROTECCIÓN S.A.</strong></span>
+        </div>
+        @if(!empty($Agregar_copia))
+            <div class="copias">
+                @foreach ($Agregar_copia as $copias => $valor)
+                    @if($copias == "Afiliado")
+                        <span class="fuente_todo_texto"><strong>Afiliado</strong> {{$afiliado_principal}}</strong></span><br>
+                    @else
+                        <span class="fuente_todo_texto"><strong>{{$copias}}:</strong> {{$valor}}</span><br>
+                    @endif
+                @endforeach
             </div>
-            <div class="fuente_todo_texto">
-                <span class="negrita">Departamento de medicina laboral</span>
-                <br>
-                <span class="negrita">Convenio Codess - Seguros de Vida Alfa S.A</span>
+        @endif
+        <div class="radicado">
+            <div class="cuadro fuente_cuadro_inferior" >
+                <span class="fuente_cuadro_inferior"><span class="negrita">Nro. Radicado: <br>{{$nro_radicado}}</span></span><br>
+                <span class="fuente_cuadro_inferior"><span class="negrita">{{$tipo_identificacion}} {{$num_identificacion}}</span></span><br>
+                <span class="fuente_cuadro_inferior"><span class="negrita">Siniestro: {{$N_siniestro}}</span></span><br>
             </div>
-        </p>
-        <br>
-        <section class="fuente_todo_texto">
-            {{-- <span class="negrita">Elboró:</span> {{$nombre_usuario}} --}}
-            <table style="text-align: justify; width:100%; margin-left: -3px;">
-                @if (count($Agregar_copia) == 0)
-                    <tr>
-                        <td class="copias"><span class="negrita">Copia: </span>No se registran copias</td>                                                                                
-                    </tr>
-                @else
-                    <tr>
-                        <td class="justificado copias"><span class="negrita">Copia:</span></td>                            
-                    </tr>
-                    <?php 
-                        $Afiliado = 'Afiliado';
-                        $Empleador = 'Empleador';
-                        $EPS = 'EPS';
-                        $AFP = 'AFP';
-                        $ARL = 'ARL';
-                    ?>
-                    <?php 
-                        if (isset($Agregar_copia[$Afiliado])) { ?>
-                            <tr>
-                                <td class="copias">
-                                    <span class="negrita">Afiliado: </span><?=$Agregar_copia['Afiliado'];?>
-                                </td>
-                            </tr>
-                        <?php       
-                        }
-                    ?>
-                    <?php 
-                        if (isset($Agregar_copia[$Empleador])) { ?>
-                            <tr>
-                                <td class="copias">
-                                    <span class="negrita">Empleador: </span><?=$Agregar_copia['Empleador'];?>
-                                </td>
-                            </tr>
-                        <?php       
-                        }
-                    ?>
-                    <?php 
-                        if (isset($Agregar_copia[$EPS])) { ?>
-                            <tr>
-                                <td class="copias">
-                                    <span class="negrita">EPS: </span><?=$Agregar_copia['EPS'];?>
-                                </td>
-                            </tr>
-                        <?php       
-                        }
-                    ?>
-                    <?php 
-                        if (isset($Agregar_copia[$AFP])) { ?>
-                            <tr>
-                                <td class="copias">
-                                    <span class="negrita">AFP: </span><?=$Agregar_copia['AFP'];?>
-                                </td>
-                            </tr>
-                        <?php       
-                        }
-                    ?>
-                    <?php 
-                        if (isset($Agregar_copia[$ARL])) { ?>
-                            <tr>
-                                <td class="copias">
-                                    <span class="negrita">ARL: </span><?=$Agregar_copia['ARL'];?>
-                                </td>
-                            </tr>
-                        <?php       
-                        }
-                    ?>
-                @endif
-            </table>
-        </section>
-        <br>
-        <div class="cuadro fuente_cuadro_inferior" style="margin: 0 auto; page-break-before: always;">
-            <span class="fuente_cuadro_inferior"><span class="negrita">Nro. Radicado: <br>{{$nro_radicado}}</span></span><br>
-            <span class="fuente_cuadro_inferior"><span class="negrita">{{$tipo_identificacion}} {{$num_identificacion}}</span></span><br>
-            <span class="fuente_cuadro_inferior"><span class="negrita">Siniestro: {{$N_siniestro}}</span></span><br>
         </div>
     </div>
-    <script type="text/php">
-        if ( isset($pdf) ) {
-            $pdf->page_script('
-                $font = $fontMetrics->get_font("Arial, Helvetica, sans-serif", "normal");
-                $pdf->text(485, 50, "Página $PAGE_NUM de $PAGE_COUNT", $font, 10);
-            ');
-        }
-	</script>
+    <div class="page_break"></div>
+    <div class="anexos">
+        @foreach ($anexos as $anexo)
+            @php
+                $imgBase64 = base64_encode(file_get_contents($anexo));
+            @endphp
+            <img src="data:image/png;base64,{{ $imgBase64 }}" style="display: block; width: 100%; max-width: 100%; height: 99%;">
+        @endforeach
+    </div>
+
+<script type="text/php">
+    if ( isset($pdf) ) {
+        $pdf->page_script('
+            $font = $fontMetrics->get_font("microsoft-new-tai-lue", "normal");
+            $pdf->text(530, 825, "Página $PAGE_NUM de $PAGE_COUNT", $font, 9);
+        ');
+    }
+</script>
 </body>
 </html>

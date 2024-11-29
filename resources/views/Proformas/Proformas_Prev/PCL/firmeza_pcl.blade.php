@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
-    
+
     <style>
         @page{
             margin: 2.5cm 1.3cm 2.5cm 1.3cm;
@@ -20,24 +20,11 @@
             text-align: center; 
             /* background: green; */
         }
-        .codigo_qr{
-            max-width: 90px; 
-            max-height: 70px; 
-        }
         .logo_header{
             max-width: 30%;
             height: auto;
             max-height: 60px; 
-        } 
-        .tabla_header{
-            width: 100%;
-            font-family: sans-serif;
-            font-size: 13px;
-            text-align: center;            
-        }
-        .tabla_header td {
-            border: none;
-        }
+        }      
         #footer{
             position: fixed;
             /* esta ligado con el tercer valor del margin */
@@ -49,6 +36,12 @@
             flex-direction: column;
             justify-content: flex-end;
             align-items: center; 
+        }
+        .cuerpo_doc_revPen {
+            padding-left: 25px;
+            padding-right: 25px;
+            text-align: justify;
+            font-style: italic;
         }
         /* #footer .page{
             text-align: right;
@@ -76,6 +69,15 @@
             transform: rotate(0deg); 
             top:450px;
         }
+        .tabla_header{
+            width: 100%;
+            font-family: sans-serif;
+            font-size: 13px;
+            text-align: center;
+        }
+        .tabla_header td {
+            border: none;
+        }
         .logo_footer{
             width: auto;
             height: 150px;
@@ -85,9 +87,10 @@
             font-family: sf-pro-display-black, sans-serif;
             font-size: 12px;
         }
-        .color_letras_alfa{
-            color: #184F56;
-            font-weight: bold;
+        .container{
+            margin-top: -0.5cm;
+            margin-left: 1.5cm;
+            margin-right: 1.5cm;
         }
         .negrita{
             font-weight: bold;
@@ -108,33 +111,9 @@
             width: 100%;
             margin-left: -3.5px;
         }
-        .tabla_cuerpo {
-            font-family: sans-serif;
-            text-align: center;
-            width: 100%;
-            table-layout: fixed; 
-            border-collapse: collapse;
-        }
-
-        .tabla_cuerpo, .tabla_cuerpo td, .tabla_cuerpo th {
-            border: 1px solid black;
-            border-collapse: collapse;
-        }
-
-        .cuerpo_doc_revPen {
-            padding-left: 25px;
-            padding-right: 25px;
-            text-align: justify;
-            font-style: italic;
-        }
 
         section{
             text-align: justify;
-        }
-        .container{
-            margin-top: -0.5cm;
-            margin-left: 1.5cm;
-            margin-right: 1.5cm;
         }
         .cuadro{
             border: 2px solid black;
@@ -207,7 +186,7 @@
         <img src="data:image/png;base64,{{ $imagenBase64_footer }}" class="logo_footer">
     </div>
     <div class="container">
-        <table class="tabla2">                        
+        <table class="tabla2">            
             <tbody>
                 <tr>
                     <td style="width:100%; display:table; justify-content: space-between;">
@@ -248,16 +227,26 @@
         <br>
         <section class="fuente_todo_texto" style="clear: both;">
             <br>
-            <br>
-            <?php
-                $patron1 = '/\{\{\$nombre_afiliado\}\}/';
-                if (!empty($cuerpo) && preg_match($patron1, $cuerpo)) {
-                    $texto_modificado = str_replace('{{$nombre_afiliado}}', $Tipo_afiliado === 27 ? $Nombre_beneficiario : $Nombre_afiliado, $cuerpo);;
+            <?php     
+                $patron1 = '/\{\{\$N_Dictamen\}\}/';
+                $patron2 = '/\{\{\$F_visado_comite\}\}/';
+                $patron3 = '/\{\{\$PCL\}\}/';
+                $patron4 = '/\{\{\$Tipo_evento\}\}/';
+                $patron5 = '/\{\{\$Origen\}\}/';
+                $patron6 = '/\{\{\$Fecha_estructuracion\}\}/';
+                if (!empty($cuerpo) && preg_match($patron1, $cuerpo) && preg_match($patron2, $cuerpo) && preg_match($patron3, $cuerpo) && preg_match($patron4, $cuerpo)
+                && preg_match($patron5, $cuerpo) && preg_match($patron6, $cuerpo)) {
+                    $texto_modificado = str_replace('{{$N_Dictamen}}', $n_dictamen, $cuerpo);
+                    $texto_modificado = str_replace('{{$F_visado_comite}}', $f_visado_comite, $texto_modificado);
+                    $texto_modificado = str_replace('{{$PCL}}', $porcentaje_pcl, $texto_modificado);
+                    $texto_modificado = str_replace('{{$Tipo_evento}}', $tipo_evento, $texto_modificado);
+                    $texto_modificado = str_replace('{{$Origen}}', $origen, $texto_modificado);
+                    $texto_modificado = str_replace('{{$Fecha_estructuracion}}', $f_estructuracion, $texto_modificado);
                     $cuerpo = $texto_modificado;
                 } else {
                     $cuerpo = "";
                 }                
-                print_r($cuerpo);
+                print_r($cuerpo); 
             ?>
         </section>
         <section class="fuente_todo_texto">
@@ -265,10 +254,10 @@
             <br>
             <br>
             <strong>PROTECCIÓN S.A.</strong>
-        </section>  
+        </section>
         <br>
-        <section class="fuente_todo_texto" style="margin-bottom: 10px;">
-            <table class="tabla1" style="text-align: justify;">                               
+        <section class="fuente_todo_texto">
+            <table class="tabla1" style="text-align: justify; width:100%;">
                 @if (count($Agregar_copia) > 0)
                     <tr>
                         <td class="justificado copias"><span class="negrita">Copia:</span></td>                            
@@ -343,7 +332,7 @@
                     ?>
                 @endif
             </table>
-        </section>      
+        </section> 
         <br>
         <div class="cuadro fuente_cuadro_inferior" style="margin: 0 auto; page-break-inside: avoid;">
             <span class="fuente_cuadro_inferior"><span class="negrita">Nro. Radicado: <br>{{$nro_radicado}}</span></span><br>

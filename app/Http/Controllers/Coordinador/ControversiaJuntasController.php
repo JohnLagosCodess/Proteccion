@@ -26,8 +26,9 @@ use App\Models\sigmel_registro_descarga_documentos;
 use App\Models\sigmel_informacion_correspondencia_eventos;
 use App\Models\sigmel_registro_documentos_eventos;
 use App\Services\GlobalService;
+use App\Services\PlantillaProformas;
 use App\Traits\GenerarRadicados;
-
+use App\Traits\PDF;
 use PhpOffice\PhpWord\PhpWord;
 use PhpOffice\PhpWord\Shared\Converter;
 use PhpOffice\PhpWord\Writer\Word2007;
@@ -36,7 +37,7 @@ use PhpOffice\PhpWord\Style\Image;
 
 class ControversiaJuntasController extends Controller
 {
-    use GenerarRadicados;
+    use GenerarRadicados,PDF;
     protected $globalService;
 
     public function __construct(GlobalService $globalService)
@@ -1841,10 +1842,10 @@ class ControversiaJuntasController extends Controller
         }
 
         if($request->decision_dictamen === 'Desacuerdo'){
-            $tipo_descarga = 'RECURSO JRCI';
+            $tipo_descarga = 'DESACUERDO PCL JRCI';
         }
         else if($request->decision_dictamen === 'Acuerdo'){
-            $tipo_descarga = 'ACUERDO JRCI';
+            $tipo_descarga = 'ACUERDO PCL JRCI';
         }else{
             $tipo_descarga = 'Controversia';
         }
@@ -2558,7 +2559,7 @@ class ControversiaJuntasController extends Controller
             $datos_junta_regional = DB::table(getDatabaseName('sigmel_gestiones').'sigmel_informacion_entidades as sie')
             ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm', 'sie.Id_Departamento', '=', 'sldm.Id_departamento')
             ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm2', 'sie.Id_Ciudad', '=', 'sldm2.Id_municipios')
-            ->select('sie.Direccion', 'sie.Telefonos', 'sldm.Nombre_departamento', 'sldm2.Nombre_municipio as Nombre_ciudad')
+            ->select('sie.Direccion', 'sie.Telefonos', 'sldm.Nombre_departamento', 'sldm2.Nombre_municipio as Nombre_ciudad',"sie.Emails")
             ->where([['sie.Id_Entidad', $id_Jrci_califi_invalidez]])->get();
 
             $array_datos_junta_regional = json_decode(json_encode($datos_junta_regional), true);
@@ -2569,12 +2570,14 @@ class ControversiaJuntasController extends Controller
                 $telefono_junta = $array_datos_junta_regional[0]["Telefonos"];
                 $departamento_junta = $array_datos_junta_regional[0]["Nombre_departamento"];
                 $ciudad_junta = $array_datos_junta_regional[0]["Nombre_ciudad"];
+                $email_junta = $array_datos_junta_regional[0]["Emails"];
             }else {
                 $nombre_junta = "";
                 $direccion_junta = "";
                 $telefono_junta = "";
                 $ciudad_junta = "";
                 $departamento_junta = "";
+                $email_junta = "";
             }
 
             // $datos_municipio_ciudad_afiliado = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_afiliado_eventos as siae')
@@ -2604,10 +2607,14 @@ class ControversiaJuntasController extends Controller
 
         /* Tipos de controversia primera calificación */
         $datos_tipo_controversia = sigmel_informacion_controversia_juntas_eventos::on('sigmel_gestiones')
-        ->select('Contro_origen', 'Contro_pcl', 'Contro_diagnostico', 'Contro_f_estructura', 'Contro_m_califi')
-        ->where([['ID_evento',$id_evento],
-            ['Id_Asignacion',$id_asignacion],
+        ->select('Contro_origen', 'Contro_pcl', 'Contro_diagnostico', 'Contro_f_estructura', 'Contro_m_califi','N_dictamen_controvertido','Nombre_parametro','Origen_jrci_emitido','Nombre_evento')
+        ->leftjoin("sigmel_gestiones.sigmel_informacion_eventos as sie","sie.ID_evento",'sigmel_informacion_controversia_juntas_eventos.ID_evento')
+        ->leftjoin("sigmel_gestiones.sigmel_lista_tipo_eventos as ste","ste.Id_Evento","Tipo_evento")
+        ->leftjoin("sigmel_gestiones.sigmel_lista_parametros as slp","slp.Id_Parametro","Origen_jrci_emitido")
+        ->where([['sigmel_informacion_controversia_juntas_eventos.ID_evento',$id_evento],
+            ['sigmel_informacion_controversia_juntas_eventos.Id_Asignacion',$id_asignacion],
         ])->get();
+        
         $array_datos_tipo_controversia = json_decode(json_encode($datos_tipo_controversia), true);
 
         if (count($array_datos_tipo_controversia) > 0) {
@@ -2651,7 +2658,7 @@ class ControversiaJuntasController extends Controller
         ->where([
             ['side.ID_evento', '=', $id_evento],
             ['side.Id_Asignacion', '=', $id_asignacion],
-            ['side.Item_servicio', '=', 'Emitido JRCI'],
+            ['side.Item_servicio', '=', 'Controvertido Juntas'],
             ['side.Estado', '=', 'Activo'],
         ])
         ->get();
@@ -2659,7 +2666,8 @@ class ControversiaJuntasController extends Controller
         $array_datos_diagnostico_motcalifi = json_decode(json_encode($datos_diagnostico_motcalifi), true);
 
         for ($i=0; $i < count($array_datos_diagnostico_motcalifi); $i++) { 
-            $dato_concatenado = "(<b>".$array_datos_diagnostico_motcalifi[$i]['Codigo']."</b>) ".mb_strtoupper($array_datos_diagnostico_motcalifi[$i]['Nombre_CIE10'], 'UTF-8').", ".$array_datos_diagnostico_motcalifi[$i]['Nombre_parametro']."";
+            $dato_concatenado = "(<b>".$array_datos_diagnostico_motcalifi[$i]['Codigo']."</b>) ".mb_strtoupper($array_datos_diagnostico_motcalifi[$i]['Nombre_CIE10'], 'UTF-8').", de origen ".
+            $array_datos_diagnostico_motcalifi[$i]['Nombre_parametro'];
             array_push($diagnosticos_cie10, $dato_concatenado);
         }
 
@@ -2727,6 +2735,47 @@ class ControversiaJuntasController extends Controller
 
         if(isset($copia_jnci)){
             $Agregar_copias['JNCI'] = $this->globalService->retornarJnci();
+        }
+
+        if($request->tipo_proforma == "pdf"){
+            $datos_proforma = [
+                "id_evento" => $id_evento,
+                "id_asignacion" => $id_asignacion,
+                "id_servicio" => $id_servicio,
+                "id_proceso" => $id_proceso,
+                "firmar" => $firmar,
+                "nro_radicado" => $nro_radicado,
+                "diagnosticos" => $string_diagnosticos_cie10,
+                "nombre_junta" => $nombre_junta,
+                "direccion_junta" => $direccion_junta,
+                "telefono_junta" => $telefono_junta,
+                'Agregar_copia' => $Agregar_copias,
+                "ciudad_junta" => $ciudad_junta,
+                "departamento_junta" => $departamento_junta,
+                "n_dictamen" => $datos_tipo_controversia[0]->N_dictamen_controvertido ?? null,
+                "f_dictamen_jcri" => date("d/m/Y", strtotime($f_dictamen_jrci_emitido)),
+                "nombre_afiliado" => $nombre_afiliado,
+                'afiliado_principal' => afiliado_principal($id_evento),
+                "t_documento" => $tipo_identificacion,
+                "n_documento" => $num_identificacion,
+                "pcl_jrci" => $porcentaje_pcl_jrci_emitido ,
+                'fecha_sustentacion_jrci' => fechaFormateada($fecha_sustent_jrci ? $fecha_sustent_jrci : $date),
+                "tipo_evento" => $datos_tipo_controversia[0]->Nombre_evento,
+                "origen_jrci" => $datos_tipo_controversia[0]->Nombre_parametro ?? null,
+                "f_estructuracion_jrci" => date("d/m/Y", strtotime($f_estructuracion_contro_jrci_emitido)),
+                "sustentacion_jrci" => nl2br($sustentacion_concepto_jrci)  . nl2br($sustentacion_concepto_jrci1),
+                "asunto" => $asunto,
+                "cuerpo" => $cuerpo,
+                "email_junta" => $email_junta, 
+                "id_comite_inter" => $id_comite_inter,
+                "N_siniestro" => $N_siniestro
+            ];
+            
+            $nombre_proforma = $this->crearProforma("DESACUERDO",$datos_proforma);
+
+            return response()->download(public_path("Documentos_Eventos/{$id_evento}/{$nombre_proforma}"));
+            
+            exit(200);
         }
 
         /* Validación Firma Cliente */
@@ -3277,12 +3326,118 @@ class ControversiaJuntasController extends Controller
         return response()->download(public_path("Documentos_Eventos/{$id_evento}/{$nombre_docx}"));
     }
 
+    public function crearProforma($tipo,$datos_proforma){
+        if($tipo == "DESACUERDO"){
+            $plantilla_proformas = new PlantillaProformas();
+            $info_comunicado = sigmel_informacion_comunicado_eventos::on('sigmel_gestiones')
+            ->select('Ciudad')->where('Id_Asignacion',$datos_proforma["id_asignacion"])->first();
+
+            $datos_proforma["info_afiliado"] = sigmel_informacion_afiliado_eventos::on('sigmel_gestiones')
+            ->leftJoin("sigmel_gestiones.sigmel_lista_parametros as be","be.Id_Parametro","Tipo_documento_benefi")
+            ->leftJoin("sigmel_gestiones.sigmel_lista_parametros as afi","afi.Id_Parametro","Tipo_documento")
+            ->select("sigmel_informacion_afiliado_eventos.*","be.Nombre_parametro as t_doc_beneficiario","afi.Nombre_parametro as t_doc_afiliado")->where('ID_evento',$datos_proforma["id_evento"])->first();
+        
+            /* Validación Firma Cliente */
+            $validarFirma = isset($datos_proforma["firmar"]) ? 'Firmar' : 'No firma';
+        
+            if ($validarFirma == "Firmar") {
+                $datos_proforma["Firma_cliente"] = $plantilla_proformas->firma_cliente;
+            }
+
+            /* datos del logo que va en el header y el footer*/
+            $datos_proforma["logo_header"] = $plantilla_proformas->LOGO;
+            $datos_proforma["ruta_logo"] = $plantilla_proformas->PATH_LOGO;
+            $datos_proforma["ruta_footer"] = $plantilla_proformas->PATH_FOOTER;
+            $datos_proforma["footer"] = $plantilla_proformas->footer;
+            $datos_proforma["ciudad_comunicado"] = $info_comunicado->Ciudad;
+            
+            /* Inserción del registro de que fue descargado */
+    
+            // Extraemos la Fecha de elaboración de correspondencia: Esta consulta aplica solo para los dictamenes
+            $dato_f_elaboracion_correspondencia = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_comunicado_eventos as sice') 
+            ->select('sice.F_comunicado')
+            ->where([
+                ['sice.N_radicado', $datos_proforma["nro_radicado"]]
+            ])->first();
+
+            $anexos =  File::files(public_path('anexos/juntas_proformas'));
+
+            $datos_proforma["anexos"] = collect($anexos)->map(function ($file) {
+                return public_path("anexos/juntas_proformas/{$file->getFilename()}"); // Devuelve la ruta completa del archivo
+            });
+
+            $pdf = app('dompdf.wrapper');
+            $options = $pdf->getOptions();
+            $options->set('pdf_version', '1.4');
+            $pdf->loadView('/Proformas/Proformas_Prev/Juntas/desacuerdo_pcl', $datos_proforma);
+            
+            $nombre_pdf = "JUN_DESACUERDO_{$datos_proforma["id_asignacion"]}_{$datos_proforma["n_documento"]}_{$datos_proforma["nro_radicado"]}.pdf";
+    
+            //Obtener el contenido del PDF
+            $output = $pdf->output();
+            $destino_documento = public_path("Documentos_Eventos/{$datos_proforma["id_evento"]}/{$nombre_pdf}");
+    
+            
+            sigmel_informacion_comunicado_eventos::on('sigmel_gestiones')->where('Id_Asignacion', $datos_proforma["id_asignacion"])
+            ->update(['Nombre_documento' => $nombre_pdf]);
+
+            //Guardar el PDF en un archivo
+            file_put_contents($destino_documento, $output);
+            // Se pregunta por el nombre del documento si ya existe para evitar insertarlo más de una vez
+            $verficar_documento = sigmel_registro_descarga_documentos::on('sigmel_gestiones')
+            ->select('Nombre_documento')
+            ->where([
+                ['Nombre_documento', $nombre_pdf],
+            ])->first();
+            
+            if(is_null($verficar_documento)){
+                    $info_descarga_documento = [
+                        'Id_Asignacion' => $datos_proforma["id_asignacion"],
+                        'Id_proceso' => $datos_proforma["id_proceso"],
+                        'Id_servicio' => $datos_proforma["id_servicio"],
+                        'ID_evento' => $datos_proforma["id_evento"],
+                        'Nombre_documento' => $nombre_pdf,
+                        'N_radicado_documento' => $datos_proforma["nro_radicado"],
+                        'F_elaboracion_correspondencia' => $dato_f_elaboracion_correspondencia->F_comunicado,
+                        'F_descarga_documento' => date('Y-m-d'),
+                        'Nombre_usuario' => Auth::user()->name
+                    ];
+
+                    sigmel_registro_descarga_documentos::on('sigmel_gestiones')->insert($info_descarga_documento);
+    
+            }else{
+                $info_descarga_documento = [
+                    'Id_Asignacion' => $datos_proforma["id_asignacion"],
+                    'Id_proceso' => $datos_proforma["id_proceso"],
+                    'Id_servicio' => $datos_proforma["id_servicio"],
+                    'ID_evento' => $datos_proforma["id_evento"],
+                    'Nombre_documento' => $nombre_pdf,
+                    'N_radicado_documento' => $datos_proforma["nro_radicado"],
+                    'F_elaboracion_correspondencia' => $dato_f_elaboracion_correspondencia->F_comunicado,
+                    'F_descarga_documento' => date('Y-m-d'),
+                    'Nombre_usuario' => Auth::user()->name
+                ];
+                
+                sigmel_registro_descarga_documentos::on('sigmel_gestiones')
+                ->where([
+                    ['Id_Asignacion', $datos_proforma["id_asignacion"]],
+                    ['N_radicado_documento', $datos_proforma["nro_radicado"]],
+                    ['ID_evento', $datos_proforma["id_evento"]],
+                ])
+                ->update($info_descarga_documento);
+            }
+
+            return $nombre_pdf;
+    
+        }
+    }
+
     /* Proforma Acuerdo */
     public function DescargarProformaPronunDictaAcuerdo(Request $request){
         $time = time();
         $date = date("Y-m-d", $time);
         $nombre_usuario = Auth::user()->name;
-
+        $plantilla_proformas = new PlantillaProformas();
         /* Captura de variables que vienen del ajax */
         $id_comite_inter = $request->id_comite_inter;
         $id_cliente = $request->id_cliente;
@@ -3314,6 +3469,14 @@ class ControversiaJuntasController extends Controller
         $firmar = $request->firmar;
         $N_siniestro = $request->N_siniestro;
 
+        $info_comunicado = sigmel_informacion_comunicado_eventos::on('sigmel_gestiones')
+        ->select('Ciudad')->where('Id_Comunicado',$request->id_comunicado)->first();
+
+        $info_afiliado = sigmel_informacion_afiliado_eventos::on('sigmel_gestiones')
+        ->leftJoin("sigmel_gestiones.sigmel_lista_parametros as be","be.Id_Parametro","Tipo_documento_benefi")
+        ->leftJoin("sigmel_gestiones.sigmel_lista_parametros as afi","afi.Id_Parametro","Tipo_documento")
+        ->select("sigmel_informacion_afiliado_eventos.*","be.Nombre_parametro as t_doc_beneficiario","afi.Nombre_parametro as t_doc_afiliado")->where('ID_evento',$request->id_evento)->first();
+
         /* Creación de las variables faltantes que no están en el ajax */
 
         // Validación información Destinatario Principal
@@ -3340,7 +3503,7 @@ class ControversiaJuntasController extends Controller
                     $datos_entidad = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_entidades as sie')
                     ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm', 'sie.Id_Ciudad', '=', 'sldm.Id_municipios')
                     ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm2', 'sie.Id_Departamento', '=', 'sldm2.Id_departamento')
-                    ->select('sie.Nombre_entidad', 'sie.Direccion', 'sie.Telefonos', 'sldm.Nombre_municipio as Nombre_ciudad', 'sldm2.Nombre_departamento')
+                    ->select('sie.Nombre_entidad', 'sie.Direccion', 'sie.Telefonos', 'sldm.Nombre_municipio as Nombre_ciudad', 'sldm2.Nombre_departamento','sie.Emails')
                     ->where([
                         ['sie.Id_Entidad', $id_entidad],
                         ['sie.IdTipo_entidad', $tipo_destinatario]
@@ -3351,6 +3514,7 @@ class ControversiaJuntasController extends Controller
                     $telefono_junta = $datos_entidad[0]->Telefonos;
                     $ciudad_junta = $datos_entidad[0]->Nombre_ciudad;
                     $departamento_junta = $datos_entidad[0]->Nombre_ciudad;
+                    $email_comunicado = $datos_entidad[0]->Emails;
 
                 break;
                 
@@ -3359,7 +3523,7 @@ class ControversiaJuntasController extends Controller
                     $datos_municipio_ciudad_afiliado = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_afiliado_eventos as siae')
                     ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm', 'siae.Id_departamento', '=', 'sldm.Id_departamento')
                     ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm2', 'siae.Id_municipio', '=', 'sldm2.Id_municipios')
-                    ->select('siae.Nombre_afiliado','siae.Direccion','siae.Telefono_contacto','sldm.Nombre_departamento', 'sldm2.Nombre_municipio')
+                    ->select('siae.Nombre_afiliado','siae.Direccion','siae.Telefono_contacto','sldm.Nombre_departamento', 'sldm2.Nombre_municipio','siae.Emails')
                     ->where([['siae.ID_evento','=', $id_evento]])
                     ->get();
         
@@ -3370,7 +3534,7 @@ class ControversiaJuntasController extends Controller
                     $telefono_junta = $array_datos_municipio_ciudad_afiliado[0]["Telefono_contacto"];
                     $ciudad_junta = $array_datos_municipio_ciudad_afiliado[0]["Nombre_municipio"];
                     $departamento_junta = $array_datos_municipio_ciudad_afiliado[0]["Nombre_departamento"];
-
+                    $email_comunicado = $array_datos_municipio_ciudad_afiliado[0]["Emails"];
                 break;
 
                 // Si escoge la opción Empleador: Se sacan los datos del destinatario principal pero del Empleador
@@ -3378,7 +3542,7 @@ class ControversiaJuntasController extends Controller
                     $datos_entidad_empleador = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_laboral_eventos as sile')
                     ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm', 'sile.Id_municipio', '=', 'sldm.Id_municipios')
                     ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm2', 'sile.Id_departamento', '=', 'sldm2.Id_departamento')
-                    ->select('sile.Empresa', 'sile.Direccion', 'sile.Telefono_empresa', 'sldm.Nombre_municipio as Nombre_ciudad', 'sldm2.Nombre_departamento')
+                    ->select('sile.Empresa', 'sile.Direccion', 'sile.Telefono_empresa', 'sldm.Nombre_municipio as Nombre_ciudad', 'sldm2.Nombre_departamento','sile.Emails')
                     ->where([['sile.ID_evento', $id_evento]])->get();
 
                     $nombre_junta = $datos_entidad_empleador[0]->Empresa;
@@ -3386,7 +3550,7 @@ class ControversiaJuntasController extends Controller
                     $telefono_junta = $datos_entidad_empleador[0]->Telefono_empresa;
                     $ciudad_junta = $datos_entidad_empleador[0]->Nombre_ciudad;
                     $departamento_junta = $datos_entidad_empleador[0]->Nombre_departamento;
-
+                    $email_comunicado = $datos_entidad_empleador[0]->Emails;
                 break;
                 
                 // Si escoge la opción Otro: se sacan los datos del destinatario de la tabla sigmel_informacion_comite_interdisciplinario_eventos
@@ -3433,7 +3597,7 @@ class ControversiaJuntasController extends Controller
             $datos_junta_regional = DB::table(getDatabaseName('sigmel_gestiones').'sigmel_informacion_entidades as sie')
             ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm', 'sie.Id_Departamento', '=', 'sldm.Id_departamento')
             ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm2', 'sie.Id_Ciudad', '=', 'sldm2.Id_municipios')
-            ->select('sie.Direccion', 'sie.Telefonos', 'sldm.Nombre_departamento', 'sldm2.Nombre_municipio as Nombre_ciudad')
+            ->select('sie.Direccion', 'sie.Telefonos', 'sldm.Nombre_departamento', 'sldm2.Nombre_municipio as Nombre_ciudad','sie.Emails')
             ->where([['sie.Id_Entidad', $id_Jrci_califi_invalidez]])->get();
 
             $array_datos_junta_regional = json_decode(json_encode($datos_junta_regional), true);
@@ -3444,6 +3608,7 @@ class ControversiaJuntasController extends Controller
                 $telefono_junta = $array_datos_junta_regional[0]["Telefonos"];
                 $ciudad_junta = $array_datos_junta_regional[0]["Nombre_ciudad"];
                 $departamento_junta = $array_datos_junta_regional[0]["Nombre_departamento"];
+                $email_comunicado =  $array_datos_junta_regional[0]["Emails"];
             }else {
                     $nombre_junta = "";
                     $direccion_junta = "";
@@ -3658,49 +3823,17 @@ class ControversiaJuntasController extends Controller
         }
 
         /* Validación Firma Cliente */
-        $validarFirma = isset($firmar) ? 'Firmar' : 'Sin Firma';
+        $validarFirma = isset($firmar) ? 'Firmar' : 'No firma';
         
         if ($validarFirma == "Firmar") {
-            $idcliente = sigmel_clientes::on('sigmel_gestiones')->select('Id_cliente')
-            ->where('Id_cliente', $id_cliente)->limit(1)->get();
-
-            $firmaclientecompleta = sigmel_informacion_firmas_clientes::on('sigmel_gestiones')->select('Firma')
-            ->where('Id_cliente', $idcliente[0]->Id_cliente)->limit(1)->get();
-
-            if(count($firmaclientecompleta) > 0){
-                $Firma_cliente = $firmaclientecompleta[0]->Firma;
-            }else{
-                $Firma_cliente = 'No firma';
-            }
-        } else {
-            $Firma_cliente = 'No firma';
+            $Firma_cliente = $plantilla_proformas->firma_cliente;
         }
 
-        /* datos del logo que va en el header */
-        $dato_logo_header = sigmel_clientes::on('sigmel_gestiones')
-        ->select('Logo_cliente')
-        ->where([['Id_cliente', $id_cliente]])
-        ->limit(1)->get();
-
-        if (count($dato_logo_header) > 0) {
-            $logo_header = $dato_logo_header[0]->Logo_cliente;
-            $ruta_logo = "/logos_clientes/{$id_cliente}/{$logo_header}";
-        } else {
-            $logo_header = "Sin logo";
-            $ruta_logo = "";
-        }
-
-        //Footer image
-        $footer_imagen = sigmel_clientes::on('sigmel_gestiones')
-        ->select('Footer_cliente')
-        ->where([['Id_cliente', $id_cliente]])
-        ->limit(1)->get();
-
-        if (count($footer_imagen) > 0 && $footer_imagen[0]->Footer_cliente != null) {
-            $footer = $footer_imagen[0]->Footer_cliente;
-        } else {
-            $footer = null;
-        } 
+        /* datos del logo que va en el header y el footer*/
+        $logo_header = $plantilla_proformas->LOGO;
+        $ruta_logo = $plantilla_proformas->PATH_LOGO;
+        $ruta_footer = $plantilla_proformas->PATH_FOOTER;
+        $footer = $plantilla_proformas->footer;
 
         /* Extraemos los datos del footer */
         // $datos_footer = sigmel_clientes::on('sigmel_gestiones')
@@ -3723,21 +3856,34 @@ class ControversiaJuntasController extends Controller
         // }
 
         /* Armado de datos para reemplazarlos en la plantilla */
+        $anexos =  File::files(public_path('anexos/juntas_proformas'));
+
+        $anexos = collect($anexos)->map(function ($file) {
+            return public_path("anexos/juntas_proformas/{$file->getFilename()}"); // Devuelve la ruta completa del archivo
+        });
 
         $datos_finales_proforma_acuerdo = [
             'id_cliente' => $id_cliente,
+            "ruta_logo" => $ruta_logo,
+            "ruta_footer" => $ruta_logo,
             'logo_header' => $logo_header,
+            'anexos' => $anexos,
+            'ruta_footer' => $ruta_footer,
             'fecha_sustentacion_jrci' => fechaFormateada($fecha_sustent_jrci ? $fecha_sustent_jrci : $date),
             'nombre_junta' => $nombre_junta,
+            'info_afiliado' => $info_afiliado,
+            'afiliado_principal' => afiliado_principal($id_evento),
             'direccion_junta' => $direccion_junta,
             'telefono_junta' => $telefono_junta,
+            "email_comunicado" => $email_comunicado,
             'ciudad_junta' => $ciudad_junta,
+            "ciudad_comunicado" => $info_comunicado,
             'departamento_junta' => $departamento_junta,
             'nro_radicado'=> $nro_radicado,
             'tipo_identificacion'=> $tipo_identificacion,
             'num_identificacion'=> $num_identificacion,
             'id_evento'=> $id_evento,
-            'asunto' => $asunto,
+            'asunto' => strtoupper($asunto),
             'cuerpo' => $cuerpo,
             'nro_dictamen' => $nro_dictamen,
             'nombre_afiliado' => $nombre_afiliado,
@@ -3763,17 +3909,24 @@ class ControversiaJuntasController extends Controller
         ];
 
         // print_r($datos_finales_proforma_acuerdo);
-
+    
         /* Creación del pdf */
         $pdf = app('dompdf.wrapper');
+        $options = $pdf->getOptions();
+        $options->set('pdf_version', '1.4');
         $pdf->loadView('/Proformas/Proformas_Prev/Juntas/pronunciamiento_frente_dictamen', $datos_finales_proforma_acuerdo);
         
         $nombre_pdf = "JUN_ACUERDO_{$id_asignacion}_{$num_identificacion}_{$nro_radicado}.pdf";
 
         //Obtener el contenido del PDF
         $output = $pdf->output();
+        $destino_documento = public_path("Documentos_Eventos/{$id_evento}/{$nombre_pdf}");
+
         //Guardar el PDF en un archivo
-        file_put_contents(public_path("Documentos_Eventos/{$id_evento}/{$nombre_pdf}"), $output);
+        file_put_contents($destino_documento, $output);
+
+        //$this->combinar_pdf($destino_documento,$destino_documento,array($anexo));
+
         $actualizar_nombre_documento = [
             'Nombre_documento' => $nombre_pdf
         ];
