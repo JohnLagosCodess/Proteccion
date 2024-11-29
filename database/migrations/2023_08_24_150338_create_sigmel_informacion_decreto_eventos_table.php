@@ -25,6 +25,7 @@ return new class extends Migration
             $table->text('Relacion_documentos')->nullable();
             $table->text('Otros_relacion_doc')->nullable();
             $table->text('Descripcion_enfermedad_actual');
+            $table->text('Historial_sociofamiliar');
             $table->string('Suma_combinada',10)->nullable();
             $table->string('Total_Deficiencia50',10)->nullable();
             $table->text('Porcentaje_pcl');

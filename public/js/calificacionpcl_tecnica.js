@@ -503,6 +503,7 @@ $(document).ready(function(){
             if(opt_origen == 48 && opt_cobertura == 50) { // si origen y cobertura es SI                
                 $('#botonNoDecrecto').addClass('d-none');
                 $("#descripcion_enfermedad").attr("required", "required");
+                $("#historial_sociofamiliar").attr("required", "required");                
                 switch (opt_decreto) {                    
                     case 1:
                         elementosDeslizar.forEach(elemento => {
@@ -559,7 +560,8 @@ $(document).ready(function(){
 
             } else if(opt_origen == 49 && opt_cobertura == 51){
                 // Deslizar hacia arriba (ocultar) los elementos
-                $("#descripcion_enfermedad").removeAttr("required");                
+                $("#descripcion_enfermedad").removeAttr("required");
+                $("#historial_sociofamiliar").removeAttr("required");                                
                 elementosDeslizar.forEach(elemento => {
                     $(elemento).slideUp(tiempoDeslizamiento);
                 });
@@ -570,7 +572,8 @@ $(document).ready(function(){
                     $(elemento).slideUp(tiempoDeslizamiento3);
                 });                   
             }else if(opt_origen == 48 && opt_cobertura == 51){
-                $("#descripcion_enfermedad").removeAttr("required");                 
+                $("#descripcion_enfermedad").removeAttr("required");
+                $("#historial_sociofamiliar").removeAttr("required");                                 
                 $('#botonNoDecrecto').removeClass('d-none');
                 // Deslizar hacia arriba (ocultar) los elementos
                 elementosDeslizar.forEach(elemento => {
@@ -584,7 +587,8 @@ $(document).ready(function(){
                 });               
                 return;
             }else if(opt_origen == 49 && opt_cobertura == 50){
-                $("#descripcion_enfermedad").removeAttr("required");                  
+                $("#descripcion_enfermedad").removeAttr("required");
+                $("#historial_sociofamiliar").removeAttr("required");                                  
                 $('#botonNoDecrecto').removeClass('d-none');
                 // Deslizar hacia arriba (ocultar) los elementos
                 elementosDeslizar.forEach(elemento => {
@@ -1913,6 +1917,7 @@ $(document).ready(function(){
             });
             var otros = $('#descripcion_otros').val();
             var descripcionEnfermedad = $('#descripcion_enfermedad').val();
+            var historialSociofamiliar = $('#historial_sociofamiliar').val();
             var dominancia = $("#dominancia").val();
             var id_afiliado = $("#id_afiliado").val();
             var bandera_decreto_guardar_actualizar = $('#bandera_decreto_guardar_actualizar').val();
@@ -1930,6 +1935,7 @@ $(document).ready(function(){
                 'Relacion_Documentos':Relacion_Documentos,
                 'descripcion_otros':otros,
                 'descripcion_enfermedad':descripcionEnfermedad,
+                'historial_sociofamiliar':historialSociofamiliar,
                 'dominancia': dominancia,
                 'id_afiliado': id_afiliado,
                 'bandera_decreto_guardar_actualizar':bandera_decreto_guardar_actualizar,
@@ -4499,7 +4505,7 @@ $(document).ready(function(){
             
             // Se valida si han marcado como si la opcion de la entidad de conocimiento (afp)
             if (entidad_conocimiento != '' && entidad_conocimiento == "Si") {
-                $("#afp_conocimiento").prop('checked', true);
+                // $("#afp_conocimiento").prop('checked', true);
             }
 
             // Seteo automático del nro de anexos:
@@ -4522,10 +4528,11 @@ $(document).ready(function(){
             $("#btn_insertar_Tipo_Evento").prop('disabled', true);
 
             // Deselección automática de las copias a partes interesadas: Empleador, Eps, Arl, Afp, Afp conocimiento
+            $("#afiliado").prop('checked', false);
             $("#empleador").prop('checked', false);
             $("#eps").prop('checked', false);
             $("#arl").prop('checked', false);
-            // $("#afp").prop('checked', false);
+            $("#afp").prop('checked', false);
             
             // Se valida si han marcado como si la opcion de la entidad de conocimiento (afp)
             if (entidad_conocimiento != '' && entidad_conocimiento == "Si") {
