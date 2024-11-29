@@ -1586,7 +1586,7 @@ class CoordinadorController extends Controller
                     ->select('sile.Empresa as Nombre_destinatario', 'sile.Direccion as Direccion_destinatario', 'sile.Telefono_empresa as Telefono_destinatario',
                     'sile.Email as Email_destinatario', 'sldm.Nombre_departamento as Departamento_destinatario', 'sldm2.Nombre_municipio as Ciudad_destinatario',
                     'sile.Medio_notificacion as Medio_notificacion_destinatario')
-                    ->where([['sile.Nro_identificacion', $infoAfiliado[0]->Documento_destinatario],['sile.ID_evento', $Id_evento]])
+                    ->where([['sile.Nro_identificacion', $infoAfiliado[0]->Documento_afiliado],['sile.ID_evento', $Id_evento]])
                     ->get();
                     $response['datos'] = count($datos_empleador) > 0 ? $datos_empleador[0] : null;
                     if(!empty($info_comunicado) && strtolower($info_comunicado[0]->Otro_destinatario === 1)){
@@ -1604,7 +1604,7 @@ class CoordinadorController extends Controller
                     ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slp', 'slp.Id_Parametro', '=', 'sie.Id_Medio_Noti')
                     ->select('sie.Nombre_entidad as Nombre_destinatario', 'sie.Direccion as Direccion_destinatario', 'sie.Emails as Email_destinatario', 'sie.Telefonos as Telefono_destinatario', 
                     'sldm.Nombre_departamento as Departamento_destinatario', 'sldm2.Nombre_municipio as Ciudad_destinatario','slp.Nombre_parametro as Medio_notificacion_destinatario')
-                    ->where([['Nro_identificacion', $infoAfiliado[0]->Documento_destinatario],['ID_evento', $Id_evento]])
+                    ->where([['Nro_identificacion', $infoAfiliado[0]->Documento_afiliado],['ID_evento', $Id_evento]])
                     ->get();
                     $response['datos'] = count($datos_eps) > 0 ? $datos_eps[0] : null;
                     if(!empty($info_comunicado) && $info_comunicado[0]->Otro_destinatario === 1){
@@ -1629,7 +1629,7 @@ class CoordinadorController extends Controller
                     ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slp', 'slp.Id_Parametro', '=', 'sie.Id_Medio_Noti')
                     ->select('sie.Nombre_entidad as Nombre_destinatario', 'sie.Direccion as Direccion_destinatario', 'sie.Telefonos as Telefono_destinatario', 'sie.Otros_Telefonos', 'sie.Emails as Email_destinatario',
                     'sldm.Nombre_departamento as Departamento_destinatario', 'sldm2.Nombre_municipio as Ciudad_destinatario','slp.Nombre_parametro as Medio_notificacion_destinatario')
-                    ->where([['Nro_identificacion', $infoAfiliado[0]->Documento_destinatario],['ID_evento', $Id_evento]])
+                    ->where([['Nro_identificacion', $infoAfiliado[0]->Documento_afiliado],['ID_evento', $Id_evento]])
                     ->get();
                     $response['datos'] = count($datos_afp) > 0 ? $datos_afp[0] : null;
                     if(!empty($info_comunicado) && $info_comunicado[0]->Otro_destinatario === 1){
@@ -1654,7 +1654,7 @@ class CoordinadorController extends Controller
                     ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slp', 'slp.Id_Parametro', '=', 'sie.Id_Medio_Noti')
                     ->select('sie.Nombre_entidad as Nombre_destinatario', 'sie.Direccion as Direccion_destinatario', 'sie.Telefonos as Telefono_destinatario', 'sie.Otros_Telefonos', 'sie.Emails as Email_destinatario',
                     'sldm.Nombre_departamento as Departamento_destinatario', 'sldm2.Nombre_municipio as Ciudad_destinatario', 'slp.Nombre_parametro as Medio_notificacion_destinatario')
-                    ->where([['Nro_identificacion', $infoAfiliado[0]->Documento_destinatario],['ID_evento', $Id_evento]])
+                    ->where([['Nro_identificacion', $infoAfiliado[0]->Documento_afiliado],['ID_evento', $Id_evento]])
                     ->get();
                     $response['datos'] = count($datos_arl) > 0 ? $datos_arl[0] : null;
                     if(!empty($info_comunicado) && $info_comunicado[0]->Otro_destinatario === 1){
@@ -1874,5 +1874,43 @@ class CoordinadorController extends Controller
             );
             return json_decode(json_encode($mensajes, true));
         }
+    }
+    /**
+        * Retorna información del ultimo comunicado guardado con estado notificado efectivamente y con correspondencia de afiliado guardada, PBS080
+        * 
+        * @param string $id_evento Necesario para saber a que evento en especifico hace referencia.
+        *
+        * @param string $id_asignacion Necesario.
+        *
+        * @param string $id_proceso Necesario.
+        *
+        * @return Collection | null Devuelve una colección con la información y si no devuelve null
+    */
+    public function retornarInformacionComunicadoYCorrespondencia(Request $request){
+        $id_evento = $request->id_evento;
+        $id_asignacion = $request->id_asignacion;
+        $id_proceso = $request->id_proceso;
+        $tipo_documento = $request->tipo_documento;
+        $query = DB::table('sigmel_gestiones.sigmel_informacion_comunicado_eventos as sice')
+            ->leftJoin('sigmel_gestiones.sigmel_informacion_correspondencia_eventos as sicee', 'sice.Id_Comunicado', '=', 'sicee.Id_comunicado')
+            ->where('sice.ID_evento', $id_evento)
+            ->where('sice.Id_Asignacion', $id_asignacion)
+            ->where('sice.Id_proceso', $id_proceso)
+            ->where('sice.Estado_Notificacion', 357)
+            ->where('sicee.Tipo_correspondencia', 'Afiliado');
+        if($tipo_documento === 'Suspension_Mesada_Revision_pension'){
+            $query->whereIn('sice.Tipo_descarga', ['Documento_Revision_pension', 'Reiteracion_Documento_Revision_pension'])
+            ->selectRaw("
+                MAX(CASE WHEN sice.Tipo_descarga = 'Documento_Revision_pension' THEN sicee.F_notificacion END) as F_notificacion_sol_doc_rev_pen,
+                MAX(CASE WHEN sice.Tipo_descarga = 'Reiteracion_Documento_Revision_pension' THEN sicee.F_notificacion END) as F_notificacion_reiteracion_sol_doc_rev_pen
+            ");
+        }else if($tipo_documento === 'Reiteracion_Documento_Revision_pension'){
+            $query->where('sice.Tipo_descarga', 'Documento_Revision_pension')
+            ->selectRaw("
+                MAX(CASE WHEN sice.Tipo_descarga = 'Documento_Revision_pension' THEN sicee.F_notificacion END) as F_notificacion_sol_doc_rev_pen
+            ");
+        }
+        $response = $query->first();
+        return response()->json($response);
     }
 }

@@ -52,6 +52,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [LoginController::class, 'show'])->name('login');
 // Cuando se ingresan las credenciales de inicion de sesión
 Route::post('/', [LoginController::class, 'authenticate'])->name('loginSigmel');
+Route::post('cambiar_clave', [LoginController::class, 'cambiar_clave'])->name("cambiar_clave");
 // Cuando se cierra sesión
 Route::post('/logout', [LogoutController:: class, 'destroy']);
 
@@ -324,6 +325,8 @@ Route::post('/getInformacionCorrespondencia', [CoordinadorController::class, 'ge
 Route::post('/guardarInformacionCorrespondencia', [CoordinadorController::class, 'guardarInformacionCorrespondencia']);
 // Acción: Consultar la información de correspondencia en base a un id de destinatario
 Route::post('/getInfoCorrespByIdDest', [CoordinadorController::class, 'getInformacionPorIdDestinatario']);
+// Acción: Consultar la información de el ultimo comunicado con Notificado efectivamente y con correspondencia en Afiliado
+Route::post('/getInfoComuCorres', [CoordinadorController::class, 'retornarInformacionComunicadoYCorrespondencia']);
 
 // 14/07/2023
 // Vista: Módulo Calificación PCL Coordinador

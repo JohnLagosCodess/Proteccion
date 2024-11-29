@@ -20,6 +20,8 @@
         "phpoffice/phpspreadsheet": "^1.28",
         "phpoffice/phpword": "^1.2",
         "pion/laravel-chunk-upload": "^1.5",
+        "setasign/fpdf": "^1.8",
+        "setasign/fpdi": "^2.6",
         "simplesoftwareio/simple-qrcode": "^4.2"
     },
     "require-dev": {

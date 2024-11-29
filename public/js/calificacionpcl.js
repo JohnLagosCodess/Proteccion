@@ -1463,13 +1463,34 @@ $(document).ready(function(){
             { 
                 "data": function(row) {
                     if (row.Tipo_descarga === "Documento_PCL") {
-                        return "SOLICITUD DOCUMENTOS (PCL)";
+                        return "SOL. DOCUMENTOS PCL";
                     }
                     else if(row.Tipo_descarga === "Documento_No_Recalificacion") {
-                        return "NO RECALIFICACIÓN";
+                        return "NO CALIFICACIÓN PCL";
+                    }
+                    else if(row.Tipo_descarga === 'Desistimiento_PCL'){
+                        return 'DESISTIMIENTO PCL';
+                    }
+                    else if(row.Tipo_descarga === 'Cierre_MMM_PCL'){
+                        return 'CIERRE MMM';
+                    }
+                    else if(row.Tipo_descarga === 'Cierre_Cita_PCL'){
+                        return 'CIERRE INASISTENCIA CITA';
+                    }
+                    else if(row.Tipo_descarga === 'Firmeza_PCL'){
+                        return 'FIRMEZA_PCL';
+                    }
+                    else if(row.Tipo_descarga === 'Formato_B_Revision_pension'){
+                        return 'RATIFICACIÓN PENSIÓN';
                     }
                     else if(row.Tipo_descarga === "Documento_Revision_pension") {
-                        return "SOLICITUD DOCUMENTOS (R.V)";
+                        return "SOL. DOCUMENTOS REV. PENSIÓN";
+                    }
+                    else if(row.Tipo_descarga === "Reiteracion_Documento_Revision_pension"){
+                        return "REITERACIÓN SOL. DOCUMENTOS REV. PENSIÓN";
+                    }
+                    else if(row.Tipo_descarga === "Suspension_Mesada_Revision_pension"){
+                        return "SUSPENSIÓN MESADA"
                     }
                     else if(row.Tipo_descarga === "Otro_Documento") {
                         return "Otro Documento";
@@ -1558,23 +1579,31 @@ $(document).ready(function(){
         var edit_copia_eps;
         var edit_copia_afp;
         var edit_copia_arl;
+        var edit_copia_conocimiento;
         var bandera_descarga = 'IconoDescarga';
         if(this.getAttribute('agregar_copia')){
-            if(this.getAttribute('agregar_copia').includes("Afiliado")){
-                edit_copia_afiliado = true;
-            }
-            if(this.getAttribute('agregar_copia').includes("Empleador")){
-                edit_copia_empleador = true;
-            }
-            if(this.getAttribute('agregar_copia').includes("EPS")){
-                edit_copia_eps = true;
-            }
-            if(this.getAttribute('agregar_copia').includes("AFP")){
-                edit_copia_afp = true;
-            }
-            if(this.getAttribute('agregar_copia').includes("ARL")){
-                edit_copia_arl = true;
-            }
+            let agregarCopia = this.getAttribute('agregar_copia')?.split(',');
+            agregarCopia.forEach(copia => {
+                copia = copia.trim();
+                if(copia == "Afiliado"){
+                    edit_copia_afiliado = true;
+                }
+                if(copia ==  "Empleador"){
+                    edit_copia_empleador = true;
+                }
+                if(copia == "EPS"){
+                    edit_copia_eps = true;
+                }
+                if(copia == "AFP"){
+                    edit_copia_afp = true;
+                }
+                if(copia == "ARL"){
+                    edit_copia_arl = true;
+                }
+                if(copia == "AFP_Conocimiento"){
+                    edit_copia_conocimiento = true;
+                }
+            });
         }
         if(this.getAttribute('destinatario_principal') != "Otro"){
             datos_comunicado = {
@@ -1614,6 +1643,7 @@ $(document).ready(function(){
                 'edit_copia_eps':edit_copia_eps,
                 'edit_copia_afp':edit_copia_afp,
                 'edit_copia_arl':edit_copia_arl,
+                'edit_copia_conocimiento':edit_copia_conocimiento,
                 'n_siniestro_proforma_editar': this.getAttribute('numero_siniestro') !== 'null' ? this.getAttribute('numero_siniestro') : null,
                 'bandera_descarga':bandera_descarga,
             };
@@ -1662,6 +1692,7 @@ $(document).ready(function(){
                 'edit_copia_eps':edit_copia_eps,
                 'edit_copia_afp':edit_copia_afp,
                 'edit_copia_arl':edit_copia_arl,
+                'edit_copia_conocimiento':edit_copia_conocimiento,
                 'n_siniestro_proforma_editar': this.getAttribute('numero_siniestro') !== 'null' ? this.getAttribute('numero_siniestro') : null,
                 'bandera_descarga':bandera_descarga,
             };
@@ -1890,7 +1921,6 @@ $(document).ready(function(){
                 success: function(response){
                     if(response && response[0]){
                         $("#btn_guardar_actualizar_correspondencia").val('Actualizar');
-
                         $("#modalCorrespondencia #n_orden").val(response[0]?.N_orden);
                         $("#modalCorrespondencia #nombre_destinatario").val(response[0]?.Nombre_destinatario);
                         $("#modalCorrespondencia #direccion").val(response[0]?.Direccion_destinatario);
@@ -2359,12 +2389,24 @@ $(document).ready(function(){
             $("#documentos_pcl_editar").prop("checked", true);
             $("#otro_documento_pcl_editar").prop("checked", false);
             $("#formatoB_revisionpension_editar").prop("checked", false);
+            $("#reiteracion_documento_revisionpension_editar").prop("checked", false);
+            $("#suspension_de_mesada_editar").prop("checked", false);
+            $("#desistimiento_pcl_editar").prop("checked", false);
+            $("#cierre_mmm_pcl_editar").prop("checked", false);
+            $("#cierre_cita_pcl_editar").prop("checked", false);
+            $("#firmeza_pcl_editar").prop("checked", false);
             $("#documento_revisionpension_editar").prop("checked", false);
             $("#No_procede_recali_editar").prop("checked", false);
         }else if (tipo_descarga == "Formato_B_Revision_pension") {
             $("#documentos_pcl_editar").prop("checked", false);
             $("#otro_documento_pcl_editar").prop("checked", false);
             $("#formatoB_revisionpension_editar").prop("checked", true);
+            $("#reiteracion_documento_revisionpension_editar").prop("checked", false);
+            $("#suspension_de_mesada_editar").prop("checked", false);
+            $("#desistimiento_pcl_editar").prop("checked", false);
+            $("#cierre_mmm_pcl_editar").prop("checked", false);
+            $("#cierre_cita_pcl_editar").prop("checked", false);
+            $("#firmeza_pcl_editar").prop("checked", false);
             $("#documento_revisionpension_editar").prop("checked", false);
             $("#No_procede_recali_editar").prop("checked", false);
         }else if (tipo_descarga == "Documento_Revision_pension") {
@@ -2373,14 +2415,118 @@ $(document).ready(function(){
             $("#documentos_pcl_editar").prop("checked", false);
             $("#otro_documento_pcl_editar").prop("checked", false);
             $("#formatoB_revisionpension_editar").prop("checked", false);
+            $("#reiteracion_documento_revisionpension_editar").prop("checked", false);
+            $("#suspension_de_mesada_editar").prop("checked", false);
+            $("#cierre_mmm_pcl_editar").prop("checked", false);
+            $("#cierre_cita_pcl_editar").prop("checked", false);
+            $("#firmeza_pcl_editar").prop("checked", false);
+            $("#desistimiento_pcl_editar").prop("checked", false);
             $("#documento_revisionpension_editar").prop("checked", true);
+            $("#No_procede_recali_editar").prop("checked", false);
+        }else if (tipo_descarga == "Reiteracion_Documento_Revision_pension") {
+            $("#asunto").prop('readonly', false);
+            $("#asunto_editar").prop('readonly', false);
+            $("#documentos_pcl_editar").prop("checked", false);
+            $("#otro_documento_pcl_editar").prop("checked", false);
+            $("#formatoB_revisionpension_editar").prop("checked", false);
+            $("#documento_revisionpension_editar").prop("checked", false);
+            $("#reiteracion_documento_revisionpension_editar").prop("checked", true);
+            $("#cierre_mmm_pcl_editar").prop("checked", false);
+            $("#cierre_cita_pcl_editar").prop("checked", false);
+            $("#firmeza_pcl_editar").prop("checked", false);
+            $("#desistimiento_pcl_editar").prop("checked", false);
+            $("#suspension_de_mesada_editar").prop("checked", false);
+            $("#No_procede_recali_editar").prop("checked", false);
+        }else if (tipo_descarga == "Suspension_Mesada_Revision_pension") {
+            $("#asunto").prop('readonly', false);
+            $("#asunto_editar").prop('readonly', false);
+            $("#documentos_pcl_editar").prop("checked", false);
+            $("#otro_documento_pcl_editar").prop("checked", false);
+            $("#formatoB_revisionpension_editar").prop("checked", false);
+            $("#documento_revisionpension_editar").prop("checked", false);
+            $("#reiteracion_documento_revisionpension_editar").prop("checked", false);
+            $("#cierre_mmm_pcl_editar").prop("checked", false);
+            $("#cierre_cita_pcl_editar").prop("checked", false);
+            $("#firmeza_pcl_editar").prop("checked", false);
+            $("#desistimiento_pcl_editar").prop("checked", false);
+            $("#suspension_de_mesada_editar").prop("checked", true);
             $("#No_procede_recali_editar").prop("checked", false);
         }else if (tipo_descarga == "Documento_No_Recalificacion") {
             $("#documentos_pcl_editar").prop("checked", false);
             $("#otro_documento_pcl_editar").prop("checked", false);
             $("#formatoB_revisionpension_editar").prop("checked", false);
+            $("#reiteracion_documento_revisionpension_editar").prop("checked", false);
+            $("#suspension_de_mesada_editar").prop("checked", false);
             $("#documento_revisionpension_editar").prop("checked", false);
             $("#No_procede_recali_editar").prop("checked", true);
+            $("#desistimiento_pcl_editar").prop("checked", false);
+            $("#cierre_mmm_pcl_editar").prop("checked", false);
+            $("#cierre_cita_pcl_editar").prop("checked", false);
+            $("#firmeza_pcl_editar").prop("checked", false);
+            $('#btn_insertar_Origen_editar').removeClass('d-none')
+            $('#btn_insertar_nombreCIE10_editar').removeClass('d-none')
+            $('#btn_insertar_porPcl_editar').removeClass('d-none')
+            $('#btn_insertar_F_estructuracion_editar').removeClass('d-none')
+        }else if (tipo_descarga == "Desistimiento_PCL") {
+            $("#documentos_pcl_editar").prop("checked", false);
+            $("#otro_documento_pcl_editar").prop("checked", false);
+            $("#formatoB_revisionpension_editar").prop("checked", false);
+            $("#reiteracion_documento_revisionpension_editar").prop("checked", false);
+            $("#suspension_de_mesada_editar").prop("checked", false);
+            $("#documento_revisionpension_editar").prop("checked", false);
+            $("#desistimiento_pcl_editar").prop("checked", true);
+            $("#cierre_mmm_pcl_editar").prop("checked", false);
+            $("#cierre_cita_pcl_editar").prop("checked", false);
+            $("#firmeza_pcl_editar").prop("checked", false);
+            $("#No_procede_recali_editar").prop("checked", false);
+            $('#btn_insertar_Origen_editar').removeClass('d-none')
+            $('#btn_insertar_nombreCIE10_editar').removeClass('d-none')
+            $('#btn_insertar_porPcl_editar').removeClass('d-none')
+            $('#btn_insertar_F_estructuracion_editar').removeClass('d-none')
+        }else if (tipo_descarga == "Cierre_MMM_PCL") {
+            $("#documentos_pcl_editar").prop("checked", false);
+            $("#otro_documento_pcl_editar").prop("checked", false);
+            $("#formatoB_revisionpension_editar").prop("checked", false);
+            $("#reiteracion_documento_revisionpension_editar").prop("checked", false);
+            $("#suspension_de_mesada_editar").prop("checked", false);
+            $("#documento_revisionpension_editar").prop("checked", false);
+            $("#desistimiento_pcl_editar").prop("checked", false);
+            $("#cierre_mmm_pcl_editar").prop("checked", true);
+            $("#cierre_cita_pcl_editar").prop("checked", false);
+            $("#firmeza_pcl_editar").prop("checked", false);
+            $("#No_procede_recali_editar").prop("checked", false);
+            $('#btn_insertar_Origen_editar').removeClass('d-none')
+            $('#btn_insertar_nombreCIE10_editar').removeClass('d-none')
+            $('#btn_insertar_porPcl_editar').removeClass('d-none')
+            $('#btn_insertar_F_estructuracion_editar').removeClass('d-none')
+        }else if (tipo_descarga == "Cierre_Cita_PCL") {
+            $("#documentos_pcl_editar").prop("checked", false);
+            $("#otro_documento_pcl_editar").prop("checked", false);
+            $("#formatoB_revisionpension_editar").prop("checked", false);
+            $("#reiteracion_documento_revisionpension_editar").prop("checked", false);
+            $("#suspension_de_mesada_editar").prop("checked", false);
+            $("#documento_revisionpension_editar").prop("checked", false);
+            $("#desistimiento_pcl_editar").prop("checked", false);
+            $("#cierre_mmm_pcl_editar").prop("checked", false);
+            $("#cierre_cita_pcl_editar").prop("checked", true);
+            $("#firmeza_pcl_editar").prop("checked", false);
+            $("#No_procede_recali_editar").prop("checked", false);
+            $('#btn_insertar_Origen_editar').removeClass('d-none')
+            $('#btn_insertar_nombreCIE10_editar').removeClass('d-none')
+            $('#btn_insertar_porPcl_editar').removeClass('d-none')
+            $('#btn_insertar_F_estructuracion_editar').removeClass('d-none')
+        }else if (tipo_descarga == "Firmeza_PCL") {
+            $("#documentos_pcl_editar").prop("checked", false);
+            $("#otro_documento_pcl_editar").prop("checked", false);
+            $("#formatoB_revisionpension_editar").prop("checked", false);
+            $("#reiteracion_documento_revisionpension_editar").prop("checked", false);
+            $("#suspension_de_mesada_editar").prop("checked", false);
+            $("#documento_revisionpension_editar").prop("checked", false);
+            $("#desistimiento_pcl_editar").prop("checked", false);
+            $("#cierre_mmm_pcl_editar").prop("checked", false);
+            $("#cierre_cita_pcl_editar").prop("checked", false);
+            $("#firmeza_pcl_editar").prop("checked", true);
+            $("#No_procede_recali_editar").prop("checked", false);
             $('#btn_insertar_Origen_editar').removeClass('d-none')
             $('#btn_insertar_nombreCIE10_editar').removeClass('d-none')
             $('#btn_insertar_porPcl_editar').removeClass('d-none')
@@ -2389,6 +2535,12 @@ $(document).ready(function(){
             $("#documentos_pcl_editar").prop("checked", false);
             $("#otro_documento_pcl_editar").prop("checked", true);
             $("#formatoB_revisionpension_editar").prop("checked", false);
+            $("#reiteracion_documento_revisionpension_editar").prop("checked", false);
+            $("#suspension_de_mesada_editar").prop("checked", false);
+            $("#cierre_mmm_pcl_editar").prop("checked", false);
+            $("#desistimiento_pcl_editar").prop("checked", false);
+            $("#cierre_cita_pcl_editar").prop("checked", false);
+            $("#firmeza_pcl_editar").prop("checked", false);
             $("#documento_revisionpension_editar").prop("checked", false);
             $("#No_procede_recali_editar").prop("checked", false);
         }
@@ -2466,10 +2618,10 @@ $(document).ready(function(){
         //Valida si tiene alguna copia
         $("input[id^='edit_copia_']").each(function() {
             const checkboxValue = $(this).val();
-            if (agregar_copia.includes(checkboxValue)) {
-                $(this).prop('checked', true);
-            }else{
-                $(this).prop('checked', false);
+            if (agregar_copia) {
+                let copias = agregar_copia.split(',').map(copia => copia.trim());
+                const copiaaCheckear = copias.some(copia => copia === checkboxValue);
+                $(this).prop('checked', copiaaCheckear);
             }
         });
         $('input[type="radio"]').change(function(){
@@ -2783,65 +2935,88 @@ $(document).ready(function(){
     $("[name='tipo_documento_descarga_califi_editar']").on("change", function(){
         var opc_seleccionada = $(this).val();
         $("#asunto_editar").prop('readonly', true);
-        
+        $(".note-editable").attr("contenteditable", false);
         if (opc_seleccionada == "Documento_PCL") {
-            $("#asunto_editar").val("Solicitud de documentos Calificación de Pérdida de Capacidad laboral al Fondo de Pensiones Porvenir S.A.");
-
+            $("#asunto_editar").prop('readonly', false);
+            $(".note-editable").attr("contenteditable", true);
+            $("#asunto_editar").val("SOLICITUD DOCUMENTOS CALIFICACIÓN DE PÉRDIDA DE CAPACIDAD LABORAL");
             // Traemos la lista de los documentos solicitados y lo insertamos junto con el texto en el cuerpo del comunicado
-            // var id_evento = $('#newId_evento').val();
-            // var id_proceso = $('#Id_proceso').val();
-            // var id_asignacion = $('#newId_asignacion').val();
+            var id_evento = $('#newId_evento').val();
+            var id_proceso = $('#Id_proceso').val();
+            var id_asignacion = $('#newId_asignacion').val();
 
-            // let datos_lista_soli_docs = {
-            //     '_token': token,
-            //     'parametro':"listado_solicitud_documentos",
-            //     'id_proceso': id_proceso,
-            //     'id_evento': id_evento,
-            //     'id_asignacion': id_asignacion 
-            // };
-        
-            // $.ajax({
-            //     type:'POST',
-            //     url:'/selectoresModuloCalificacionPCL',
-            //     data: datos_lista_soli_docs,
-            //     success:function(data){
+            let datos_lista_soli_docs = {
+                '_token': token,
+                'parametro':"listado_solicitud_documentos",
+                'id_proceso': id_proceso,
+                'id_evento': id_evento,
+                'id_asignacion': id_asignacion 
+            };
+            $.ajax({
+                type:'POST',
+                url:'/selectoresModuloCalificacionPCL',
+                data: datos_lista_soli_docs,
+                success:function(data){
 
-            //         if (data.length > 0) {
-            //             var listado = '<ul>';
-            //             let listado_solicitud_documentos = Object.keys(data);
-            //             for (let i = 0; i < listado_solicitud_documentos.length; i++) {
-            //                 var documento = data[listado_solicitud_documentos[i]];
-            //                 var nombre = documento['Nombre_documento'] ? documento['Nombre_documento'] : '';
-            //                 var descripcion = documento['Descripcion'] ? documento['Descripcion'] : '';
+                    if (data.length > 0) {
+                        var listado = '<ul>';
+                        let listado_solicitud_documentos = Object.keys(data);
+                        for (let i = 0; i < listado_solicitud_documentos.length; i++) {
+                            var documento = data[listado_solicitud_documentos[i]];
+                            var nombre = documento['Nombre_documento'] ? documento['Nombre_documento'] : '';
+                            var descripcion = documento['Descripcion'] ? documento['Descripcion'] : '';
                             
-            //                 if (nombre || descripcion) {
-            //                     var sumar = i + 1;
-            //                     listado += '<li>' + sumar + '. ' + nombre + ' ' + descripcion + '</li>';
-            //                 }
-            //             }
+                            if (nombre || descripcion) {
+                                listado += '<li><b>'+nombre+'</b></li>';
+                            }
+                        }
     
-            //             listado += '</ul>';
+                        listado += '</ul>';
                         
-            //         } else {
-            //             listado = '';
-            //         }
-                    
-            //     }
-            // });
-            var texto_insertar = "<p>En <b>Seguros de Vida Alfa S.A.</b> siempre buscamos la protección y satisfacción de nuestros clientes. De acuerdo a tu solicitud de "+
-            "calificación de pérdida de capacidad laboral (PCL) radicada en la AFP Porvenir S.A., te informamos que el historial médico aportado "+
-            "ha sido revisado por el grupo interdisciplinario de calificación de <b>Seguros de Vida Alfa S.A.</b></p>"+
-            "<p>No obstante, a que la información suministrada es relevante, se hace necesario que sean aportados documentos adicionales con el fin "+
-            "de poder realizar la calificación de pérdida de capacidad laboral requerida, que a continuación relacionamos:</p>"+
-            "<p>{{$documentos_solicitados}}</p>"+
-            "<p>Esta documentación debe suministrarla al siguiente correo electrónico: servicioalcliente@segurosalfa.com.co "+
-            "en un término de tres (3) meses contados a partir del recibido de la presente comunicación, y a "+
-            "partir de ese momento se inicia nuevamente el estudio de tu solicitud. En el evento de no recibir la documentación médica "+
-            "actualizada, se considerará desistimiento de tu solicitud por parte de esta aseguradora.</p>"+
-            "<p>Cualquier inquietud o consulta al respecto, le invitamos a comunicarse a nuestras líneas de atención al cliente en Bogotá (601) 3 07 "+
-            "70 32 o a la línea nacional gratuita 01 8000 122 532, de lunes a viernes, de 8:00 a. m. a 8:00 p.m. - sábados de 8:00 a.m. a 12 m., o "+
-            "escríbanos a «servicioalcliente@segurosalfa.com.co» o a la dirección <b>Carrera 10 # 18-36, piso 4, Edificio José María Córdoba, Bogotá D.C.</b></p>";
-            $('#cuerpo_comunicado_editar').summernote('code', texto_insertar);
+                    } else {
+                        listado = '';
+                    }
+                    console.log('LISTADO ',listado)
+                    var texto_insertar = "<p>Respetado(a) Señor(a),</p>"+
+                        "<p>Reciba un cordial saludo de la Administradora de Fondos de Pensiones y Cesantías Protección S.A.</p>"+
+                        "<p>Con ocasión a la documentación médica radicada para el trámite de estudio de su prestación económica, respetuosamente, nos permitimos "+
+                        "indicarle que luego de evaluar el contenido de la documentación aportada por usted, no obstante, a que la información suministrada es relevante, "+
+                        "se hace necesario que allegue los documentos que se enuncian a continuación:</p>"
+                        +listado+
+                        "<p>Es indispensable el aporte de la historia clínica completa para la evaluación médica llevada a cabo por la Comisión Médico Laboral de Protección S.A., "+
+                        "quien establecerá los criterios necesarios para una adecuada revisión. Lo anterior se solicita de acuerdo a lo establecido en el literal a, del artículo 4 del "+
+                        "decreto 917 de 1999, que señala:"+
+                        '<p class="cuerpo_doc_revPen">“<strong>REQUISITOS Y PROCEDIMIENTOS PARA LA CALIFICACIÓN DE LA INVALIDEZ Y LA FUNDAMENTACIÓN DEL DICTAMEN.</strong><br>'+
+                        'Para efectos de la calificación de la invalidez, los calificadores se orientarán por los requisitos y procedimientos establecidos en el presente manual para emitir '+
+                        'un dictamen. Deben tener en cuenta que dicho dictamen es el documento que, con carácter probatorio, contiene el concepto experto que los calificadores emiten sobre '+
+                        'el grado de la incapacidad permanente parcial, la invalidez o la muerte de un afiliado y debe fundamentarse en: <br>'+
+                        'a) Consideraciones de orden fáctico sobre la situación que es objeto de evaluación, donde se relacionan los hechos ocurridos que dieron lugar al accidente, '+
+                        'la enfermedad o la muerte, indicando las circunstancias de modo, tiempo y lugar dentro de las cuales sucedieron; y el DIAGNOSTICO CLINICO de carácter técnico-científico, '+
+                        'soportado en la historia clínica, la historia ocupacional y con las ayudas de diagnóstico requeridas de acuerdo con la especificidad del problema…”</p>'+
+                        '<p class="texto_con_padding">A su vez, la ley 1507 de 2014, en su artículo 3, inciso 13 establece: </p>'+
+                        '<p class="cuerpo_doc_revPen">“Esta fecha (de estructuración) debe soportarse en la historia clínica, los exámenes clínicos y de ayuda diagnóstica y puede ser anterior '+
+                        'o corresponder a la fecha de la declaratoria de la perdida de la capacidad laboral” Aparte en paréntesis fuera del texto original.</p>'+
+                        '<p>Por lo tanto, esta Administradora le concede el término de <strong>un (1) mes</strong>  contado a partir de la recepción de la presente comunicación, vencido el mismo sin cumplir '+
+                        'con el requerimiento, se procederá a dar <strong>DESISTIMIENTO</strong> de su solicitud y archivo de la misma, de acuerdo con el artículo 17 de la ley 1437 de 2011, que señala:</p>'+
+                        '<p class="cuerpo_doc_revPen">“…Cuando en el curso de una actuación administrativa la autoridad advierta que el peticionario debe realizar una gestión de trámite a '+
+                        'su cargo, necesaria para adoptar una decisión de fondo, lo requerirá por una sola vez para que la efectúe en el término de un (1) mes, lapso durante el cual se '+
+                        'suspenderá el término para decidir.<br>'+
+                        '<strong>Se entenderá que el peticionario ha desistido de su solicitud o de la actuación cuando no satisfaga el requerimiento</strong>, salvo que antes de vencer el plazo concedido '+
+                        'solicite prórroga hasta por un término igual”.</p>'+
+                        "<p>Así las cosas, la anterior documentación es indispensable en los criterios que definen la calificación del estado de invalidez y no se puede realizar el dictamen "+
+                        'sin la presencia de los mismos. Por ello, mientras la documentación faltante no sea allegada y no sea posible realizar un análisis adecuado de las circunstancias de '+
+                        'hecho y de derecho, se entenderá que la solicitud no se ha recibido en debida forma, por lo que no será posible realizar la calificación de pérdida de capacidad '+
+                        'laboral y en el caso en que definitivamente usted decida no allegar la documentación faltante en el término señalado, la Administradora deberá proceder con el cierre '+
+                        'del trámite.</p>'+
+                        "<p>La documentación debe ser allegada a cualquiera de las Oficinas de Servicio de Protección S.A más cercana o remitirla al correo electrónico "+
+                        'documentos.calificacion@proteccion.com.co (El peso máximo del adjunto no podrá ser superior a 20 MB, por lo tanto, si excede esta capacidad deber remitir '+
+                        'la información en varios correos); así mismo aclaramos que, este correo electrónico es únicamente para recibir documentación.</p>'+
+                        "<p>Esperamos haber atendido satisfactoriamente su solicitud, permanecemos a su disposición para aclarar cualquier información adicional. Si tiene alguna duda "+
+                        "o quiere conocer más acerca de esta información, puede comunicarse con nuestro Asesor Virtual Pronto en nuestro Portal Web www.proteccion.com y App o comunicarse "+
+                        "con nuestra Línea de Servicio en Bogotá 7444464, en Medellín y Cali 5109099 Barranquilla 319 7999 Cartagena 6424999 y desde el resto del país 01 8000 52 8000.</p>";
+                    $('#cuerpo_comunicado_editar').summernote('code', texto_insertar);
+                }
+            });
 
             // Auto selección de la opción Afiliado (Destinatario Principal)
             $('#afiliado_comunicado_editar').click();
@@ -2850,13 +3025,22 @@ $(document).ready(function(){
             var seteo_nro_anexos = 0;
             $("#anexos_editar").val(seteo_nro_anexos);
 
-            // Selección automática de las copias a partes interesadas: Eps
+            // Selección automática de las copias a partes interesadas: Eps y AFP Conocimiento
+            $("#edit_copia_afiliado").prop('checked', false);
+            $("#edit_copia_empleador").prop('checked', false);
             $("#edit_copia_eps").prop('checked', true);
+            $("#edit_copia_arl").prop('checked', false);
+            $("#edit_copia_afp").prop('checked', false);
+            $("#edit_copia_conocimiento").prop('checked', true);
 
             // Selección automática del checkbox firmar
             $("#firmarcomunicado_editar").prop('checked', true);
 
         }else if (opc_seleccionada == "Formato_B_Revision_pension") {
+            if(idRol == 6){
+                $("#asunto_editar").prop('readonly', false);
+                $(".note-editable").attr("contenteditable", true);
+            }
             $("#asunto_editar").val("RATIFICACIÓN DEL ESTADO DE INVALIDEZ");
             var texto_insertar = "<p>Aprecido(a) {{$nombre_afiliado}}, </p>"+
             "<p>En <b>PROTECCIÓN</b> estamos para guiarle y acompañarle en cada momento de su vida. Como es de su conocimiento y de acuerdo con lo establecido "+ 
@@ -2870,6 +3054,13 @@ $(document).ready(function(){
 
             // Auto selección de la opción Afiliado (Destinatario Principal)
             $('#afiliado_comunicado_editar').click();
+            $("#edit_copia_afiliado").prop('checked', false);
+            $("#edit_copia_empleador").prop('checked', false);
+            $("#edit_copia_afp").prop('checked', false);
+            $("#edit_copia_eps").prop('checked', false);
+            $("#edit_copia_arl").prop('checked', false);
+            $("#edit_copia_conocimiento").prop('checked', false);
+            
 
             // Seteo automático del nro de anexos:
             var seteo_nro_anexos = 0;
@@ -2880,35 +3071,76 @@ $(document).ready(function(){
 
         }else if (opc_seleccionada == "Documento_Revision_pension") {
             $("#asunto_editar").prop('readonly', false);
-            $("#asunto_editar").val("SOLICITUD DE DOCUMENTOS COMPLEMENTARIOS");
-            var texto_insertar = '<p>Reciba un cordial saludo por parte de Seguros de Vida Alfa S.A.</p>'+
-            '<p>En cumplimiento de la normatividad vigente, Seguros de Vida Alfa S.A., se encuentra realizando la actualización de información de las '+ 
-            'condiciones de salud de los pensionados por invalidez, sustentada en el artículo 44 de la Ley 100 de 1993, que establece:</p>'+
-            '<p class="cuerpo_doc_revPen">“(...)<strong>ARTÍCULO 44. REVISIÓN DE LAS PENSIONES DE INVALIDEZ.</strong> El estado de invalidez podrá <br>'+
-            'revisarse: <br>'+
-            'a. Por solicitud de la entidad de previsión o seguridad social correspondiente cada tres (3) años, '+
-            'con el fin de ratificar, modificar o dejar sin efectos el dictamen que sirvió de base para la liquidación '+
-            'de la pensión que disfruta su beneficiario y proceder a la extinción, disminución o aumento de la '+
-            'misma, si a ello hubiera lugar.<br>'+
-            'Este nuevo dictamen se sujeta a las reglas de los artículos anteriores. <br>'+
-            'El pensionado tendrá un plazo de tres (3) meses contados a partir de la fecha de dicha solicitud, '+
-            'para someterse a la respectiva revisión del estado de invalidez. Salvo casos de fuerza mayor, si el '+
-            'pensionado no se presenta o impide dicha revisión dentro de dicho plazo, se suspenderá el pago de '+
-            'la pensión. Transcurridos doce (12) meses contados desde la misma fecha sin que el pensionado '+
-            'se presente o permita el examen, la respectiva pensión prescribirá. '+
-            'Para readquirir el derecho en forma posterior, el afiliado que alegue permanecer inválido deberá '+
-            'someterse a un nuevo dictamen. Los gastos de este nuevo dictamen serán pagados por el afiliado <br>'+
-            '(...)”</p>'+
-            '<p>De acuerdo con lo anterior y una vez revisado el expediente previsional de referencia, se estableció que es necesario que allegue '+
-            'esta documentación al siguiente correo electrónico: servicioalcliente@segurosalfa.com.co en '+
-            'un término de tres (3) meses contados a partir del recibido de la presente comunicación, los siguientes documentos:</p>'+
-            '<p>{{$documentos_solicitados}}</p>'+
-            '<p>Los documentos anteriormente mencionados deben ser solicitados en su EPS con su médico tratante; por otra parte, aclaramos que los '+
-            'mismos se deben radicar en papelería física.</p>'+
-            '<p>Cualquier inquietud o consulta al respecto, le invitamos a comunicarse a nuestras líneas de atención al cliente en Bogotá (601) 3 07 '+
-            '70 32 o a la línea nacional gratuita 01 8000 122 532, de lunes a viernes, de 8:00 a. m. a 8:00 p.m. - sábados de 8:00 a.m. a 12 m., o '+
-            'escríbanos a «servicioalcliente@segurosalfa.com.co» o a la dirección Carrera 10 # 18-36, piso 4, Edificio José María Córdoba, Bogotá D.C.</p>';
-            $('#cuerpo_comunicado_editar').summernote('code', texto_insertar);
+            $(".note-editable").attr("contenteditable", true);
+            $("#asunto_editar").val("SOLICITUD DE DOCUMENTOS PARA REVISIÓN DE ESTADO DE INVALIDEZ");
+            var id_evento = $('#newId_evento').val();
+            var id_proceso = $('#Id_proceso').val();
+            var id_asignacion = $('#newId_asignacion').val();
+
+            let datos_lista_soli_docs = {
+                '_token': token,
+                'parametro':"listado_solicitud_documentos",
+                'id_proceso': id_proceso,
+                'id_evento': id_evento,
+                'id_asignacion': id_asignacion 
+            };
+            $.ajax({
+                type:'POST',
+                url:'/selectoresModuloCalificacionPCL',
+                data: datos_lista_soli_docs,
+                success:function(data){
+                    if (data.length > 0) {
+                        var listado = '<ul>';
+                        let listado_solicitud_documentos = Object.keys(data);
+                        for (let i = 0; i < listado_solicitud_documentos.length; i++) {
+                            var documento = data[listado_solicitud_documentos[i]];
+                            var nombre = documento['Nombre_documento'] ? documento['Nombre_documento'] : '';
+                            var descripcion = documento['Descripcion'] ? documento['Descripcion'] : '';
+                            
+                            if (nombre || descripcion) {
+                                listado += '<li><b>'+nombre+'</b></li>';
+                            }
+                        }
+
+                        listado += '</ul>';
+                        
+                    } else {
+                        listado = '';
+                    }
+                    var texto_insertar = '<p>Respetado(a) Señor(a)</p>'+
+                        '<p>Reciba un cordial saludo de la Administradora de Fondos de Pensiones y Cesantías <b>PROTECCIÓN S.A.</b></p>'+
+                        '<p>En respuesta a la documentación médica radicada para la solicitud de estudio de su revisión del estado de invalidez, respetuosamente nos permitimos '+
+                        'indicar que luego de evaluar el contenido se evidenció que hace falta documentación referente a su Historia Clínica, por lo tanto, se hace necesario que '+
+                        'allegue los documentos que se enuncian a continuación:</p>'+
+                        listado+
+                        '<p>Solicitamos que, en un término no superior a <b>tres (3) meses</b>, sea recibida la información que define la calificación de tu estado de invalidez '+
+                        'a la oficina de <b>PROTECCIÓN</b> más cercana a su ciudad, o se envíe al correo electrónico documentos.calificacion@proteccion.com.co. De esta manera, '+
+                        'cumplido el tiempo indicado si la documentación solicitada no ha sido aportada, <b>se deberá suspender el pago de las mesadas pensionales</b> '+
+                        'y la misma sólo podrá reactivarse con la presentación de los documentos. En caso de no poder tenerla en ese lapso de tiempo por favor informar de manera '+
+                        'escrita el motivo, toda vez que esta documentación es necesaria para la revisión de su estado de invalidez.</p>'+
+                        '<p>Lo anterior, está fundamentado en el artículo 44 de la ley 100 de 1993, que al establecer las condiciones en las cuales se realiza el proceso de revisión '+
+                        'de las pensiones de invalidez ha establecido:</p>'+
+                        '<p class="cuerpo_doc_revPen">“[...]<strong>ARTÍCULO 44. REVISIÓN DE LAS PENSIONES DE INVALIDEZ.</strong> El estado de invalidez podrá <br>'+
+                        'revisarse: <br>'+
+                        'a. Por solicitud de la entidad de previsión o seguridad social correspondiente cada tres (3) años, '+
+                        'con el fin de ratificar, modificar o dejar sin efectos el dictamen que sirvió de base para la liquidación '+
+                        'de la pensión que disfruta su beneficiario y proceder a la extinción, disminución o aumento de la '+
+                        'misma, si a ello hubiera lugar.<br>'+
+                        'Este nuevo dictamen se sujeta a las reglas de los artículos anteriores. <br>'+
+                        'El pensionado tendrá un plazo de tres (3) meses contados a partir de la fecha de dicha solicitud, '+
+                        'para someterse a la respectiva revisión del estado de invalidez. Salvo casos de fuerza mayor, <strong>si el '+
+                        'pensionado no se presenta o impide dicha revisión dentro de dicho plazo, se suspenderá el pago de '+
+                        'la pensión.</strong> Transcurridos doce (12) meses contados desde la misma fecha sin que el pensionado '+
+                        'se presente o permita el examen, la respectiva pensión prescribirá. '+
+                        'Para readquirir el derecho en forma posterior, el afiliado que alegue permanecer inválido deberá '+
+                        'someterse a un nuevo dictamen. Los gastos de este nuevo dictamen serán pagados por el afiliado [...]”</p>'+
+                        '<p>Esperamos haber atendido satisfactoriamente su solicitud, permanecemos a su disposición para aclarar cualquier información adicional. Si tiene alguna '+
+                        'duda o quiere conocer más acerca de esta información, puede comunicarse con nuestro Asesor Virtual Pronto en nuestro Portal Web www.proteccion.com y App o '+
+                        'comunicarse con nuestra Línea de Servicio en Bogotá 7444464, en Medellín y Cali 5109099 Barranquilla 319 7999 Cartagena 6424999 y desde el resto del país '+
+                        '01 8000 52 8000.</p>';
+                        $('#cuerpo_comunicado_editar').summernote('code', texto_insertar);
+                    }
+            });
             // $('#btn_insertar_Detalle_calificacion').removeClass('d-none');
 
             // Auto selección de la opción Afiliado (Destinatario Principal)
@@ -2919,35 +3151,196 @@ $(document).ready(function(){
             $("#anexos_editar").val(seteo_nro_anexos);
 
             // Selección automática de las copias a partes interesadas: Eps
+            $("#edit_copia_afiliado").prop('checked', false);
+            $("#edit_copia_empleador").prop('checked', false);
+            $("#edit_copia_afp").prop('checked', false);
             $("#edit_copia_eps").prop('checked', true);
+            $("#edit_copia_arl").prop('checked', false);
+            $("#edit_copia_conocimiento").prop('checked', true);
+
+            // Selección automática del checkbox firmar
+            $("#firmarcomunicado_editar").prop('checked', true);
+
+        }else if (opc_seleccionada == "Reiteracion_Documento_Revision_pension") {
+            $("#asunto_editar").prop('readonly', false);
+            $(".note-editable").attr("contenteditable", true);
+            $("#asunto_editar").val("REITERACIÓN SOLICITUD DOCUMENTOS PARA REVISIÓN ESTADO DE INVALIDEZ");
+            var id_evento = $('#newId_evento').val();
+            var id_proceso = $('#Id_proceso').val();
+            var id_asignacion = $('#newId_asignacion').val();
+
+            let datos_lista_soli_docs = {
+                '_token': token,
+                'parametro':"listado_solicitud_documentos",
+                'id_proceso': id_proceso,
+                'id_evento': id_evento,
+                'id_asignacion': id_asignacion 
+            };
+            $.ajax({
+                type:'POST',
+                url:'/selectoresModuloCalificacionPCL',
+                data: datos_lista_soli_docs,
+                success:function(data){
+                    if (data.length > 0) {
+                        var listado = '<ul>';
+                        let listado_solicitud_documentos = Object.keys(data);
+                        for (let i = 0; i < listado_solicitud_documentos.length; i++) {
+                            var documento = data[listado_solicitud_documentos[i]];
+                            var nombre = documento['Nombre_documento'] ? documento['Nombre_documento'] : '';
+                            var descripcion = documento['Descripcion'] ? documento['Descripcion'] : '';
+                            
+                            if (nombre || descripcion) {
+                                listado += '<li><b>'+nombre+'</b></li>';
+                            }
+                        }
+
+                        listado += '</ul>';
+                        
+                    } else {
+                        listado = '';
+                    }
+                    // Obtener fecha del documento de solicitud de documentos de revisión pensión
+                    let datos = {
+                        '_token': token,
+                        'id_evento': id_evento,
+                        'id_asignacion': id_asignacion,
+                        'id_proceso': id_proceso,
+                        'tipo_documento': 'Reiteracion_Documento_Revision_pension'
+                    };
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '/getInfoComuCorres',
+                        data: datos,
+                        success: function (infoData) {
+                            let F_notificación_sol_doc_rev_pen = '(DIGITE LA FECHA DE PRIMER COMUNICADO)';
+                            if(infoData['F_notificacion_sol_doc_rev_pen']){
+                                F_notificación_sol_doc_rev_pen = infoData['F_notificacion_sol_doc_rev_pen']
+                            }
+                            var texto_insertar = '<p>Respetado(a) Señor(a)</p>'+
+                                '<p>Reciba un cordial saludo de la Administradora de Fondos de Pensiones y Cesantías <b>PROTECCIÓN S.A.</b></p>'+
+                                '<p>En respuesta a la documentación médica radicada para la solicitud de estudio de su revisión del estado de invalidez, respetuosamente nos permitimos '+
+                                'indicar que luego de evaluar el contenido se evidenció que hace falta documentación referente a su Historia Clínica, por lo tanto, se hace necesario que '+
+                                'allegue los documentos que se enuncian a continuación:</p>'+
+                                listado+
+                                '<p>Mediante {{$forma_envio}} del <b>'+F_notificación_sol_doc_rev_pen+'</b>, esta Administradora le solicitó la documentación anterior con la finalidad de '+
+                                'revisar su condición de invalidez, de igual forma, se le indicó que contaba con un término de tres (3) meses para aportarla o de lo contrario se '+
+                                'procedería con la suspensión de la mesada pensional.</p>'+
+                                '<p>Así las cosas, con el objetivo de evitarle la suspensión de la mesada pensional, se le reitera que cuenta con un último plazo de <b>un (1) mes para '+
+                                'que allegue la información solicitada, de lo contrario, procederemos con la suspensión, tal y como lo señala el literal a. del artículo 44 de la ley '+
+                                '100 de 1993.</b> Es muy importante que tenga presente que después de doce (12) meses sin adjuntar los documentos empezará a correr la prescripción de mesadas.</p>'+
+                                '<p>Finalmente, le informamos que la documentación puede ser aportada en cualquier momento en la oficina de <b>PROTECCIÓN</b> más cercana a su ciudad, o al '+
+                                'correo electrónico documentos.calificacion@proteccion.com.co, esto con el fin de realizar el procedimiento de revisión. El tamaño de los archivos no '+
+                                'puede ser superior a 20 MB, si excede este límite, debe remitirnos la información en varios correos.</p>'+
+                                '<p>Esperamos haber atendido satisfactoriamente su solicitud, permanecemos a su disposición para aclarar cualquier información adicional. Si tiene alguna '+
+                                'duda o quiere conocer más acerca de esta información, puede comunicarse con nuestro Asesor Virtual Pronto en nuestro Portal Web www.proteccion.com y App o '+
+                                'comunicarse con nuestra Línea de Servicio en Bogotá 7444464, en Medellín y Cali 5109099 Barranquilla 319 7999 Cartagena 6424999 y desde el resto del país '+
+                                '01 8000 52 8000.</p>';
+                            $('#cuerpo_comunicado_editar').summernote('code', texto_insertar);
+                        }
+                    })
+                }
+            });
+            // $('#btn_insertar_Detalle_calificacion').removeClass('d-none');
+
+            // Auto selección de la opción Afiliado (Destinatario Principal)
+            $('#afiliado_comunicado_editar').click();
+
+            // Seteo automático del nro de anexos:
+            var seteo_nro_anexos = 0;
+            $("#anexos_editar").val(seteo_nro_anexos);
+
+            // Selección automática de las copias a partes interesadas: Eps
+            $("#edit_copia_afiliado").prop('checked', false);
+            $("#edit_copia_empleador").prop('checked', false);
+            $("#edit_copia_afp").prop('checked', false);
+            $("#edit_copia_eps").prop('checked', true);
+            $("#edit_copia_arl").prop('checked', false);
+            $("#edit_copia_conocimiento").prop('checked', true);
+
+            // Selección automática del checkbox firmar
+            $("#firmarcomunicado_editar").prop('checked', true);
+
+        }else if (opc_seleccionada == "Suspension_Mesada_Revision_pension") {
+            $("#asunto_editar").prop('readonly', false);
+            $(".note-editable").attr("contenteditable", true);
+            $("#asunto_editar").val("INFORMACIÓN SOBRE SUSPENSIÓN DE MESADA PENSIONAL");
+            var id_evento = $('#newId_evento').val();
+            var id_proceso = $('#Id_proceso').val();
+            var id_asignacion = $('#newId_asignacion').val();
+
+            let datos = {
+                '_token': token,
+                'id_evento': id_evento,
+                'id_asignacion': id_asignacion,
+                'id_proceso': id_proceso,
+                'tipo_documento':'Suspension_Mesada_Revision_pension'
+            };
+            $.ajax({
+                type:'POST',
+                url:'/getInfoComuCorres',
+                data: datos,
+                success:function(data){
+                    let F_notificación_sol_doc_rev_pen = '(DIGITE LA FECHA DE PRIMER COMUNICADO)';
+                    let F_notificación_reiteracion_sol_doc_rev_pen = '(DIGITE LA FECHA DE PRIMER COMUNICADO)';
+                    if (data['F_notificacion_sol_doc_rev_pen']) {
+                        F_notificación_sol_doc_rev_pen = data['F_notificacion_sol_doc_rev_pen'];
+                    }
+                    if (data['F_notificacion_reiteracion_sol_doc_rev_pen']) {
+                        F_notificación_reiteracion_sol_doc_rev_pen = data['F_notificacion_reiteracion_sol_doc_rev_pen'];
+                    }
+                    var texto_insertar = '<p>Respetado(a) Señor(a)</p>'+
+                    '<p>Reciba un cordial saludo de la Administradora de Fondos de Pensiones y Cesantías <b>PROTECCIÓN S.A.</b></p>'+
+                    '<p>Mediante {{$forma_envio}} del <b>'+F_notificación_sol_doc_rev_pen+'</b>, esta Administradora le solicitó <b>una copia actualizada a la fecha de toda la historia '+
+                    'clínica incluyendo sus complementos</b> con la finalidad de revisar su condición de invalidez, para ese momento se le otorgó un término tres (3) meses para aportarla, '+
+                    'transcurrido este término, sin que se hubiere allegado la documentación, esta Administradora nuevamente mediante {{$forma_envio}} '+
+                    'del <b>'+F_notificación_reiteracion_sol_doc_rev_pen+'</b>, le otorgó un último plazo de un (1) mes para aportarla o de '+
+                    'lo contrario se procedería con la suspensión de la mesada pensional.</p>'+
+                    '<p>Así las cosas, habiendo transcurrido los términos otorgados para que pudiera allegar la historia clínica actualizada a la fecha y poder realizar de esta '+
+                    'manera el proceso de revisión del estado de invalidez, queremos informarle que hemos procedido con la suspensión de su mesada pensional, <b>tal y como lo señala '+
+                    'el literal a. del artículo 44 de la ley 100 de 1993.</b> Es muy importante que tenga presente que después de doce (12) meses sin adjuntar los documentos empezará '+
+                    'a correr la prescripción de mesadas.</p>'+
+                    '<p>Finalmente, le informamos que la documentación puede ser aportada en cualquier momento en la oficina de <b>PROTECCIÓN</b> más cercana a su ciudad, o al '+
+                    'correo electrónico documentos.calificacion@proteccion.com.co, esto con el fin de realizar el procedimiento de revisión. El tamaño de los archivos no puede '+
+                    'ser superior a 20 MB, si excede este límite, debe remitirnos la información en varios correos.</p>'+
+                    '<p>Esperamos haber atendido satisfactoriamente su solicitud, permanecemos a su disposición para aclarar cualquier información adicional. Si tiene alguna '+
+                    'duda o quiere conocer más acerca de esta información, puede comunicarse con nuestro Asesor Virtual Pronto en nuestro Portal Web www.proteccion.com y App o '+
+                    'comunicarse con nuestra Línea de Servicio en Bogotá 7444464, en Medellín y Cali 5109099 Barranquilla 319 7999 Cartagena 6424999 y desde el resto del país '+
+                    '01 8000 52 8000.</p>';
+                    $('#cuerpo_comunicado_editar').summernote('code', texto_insertar);
+                }
+            });
+            // $('#btn_insertar_Detalle_calificacion').removeClass('d-none');
+
+            // Auto selección de la opción Afiliado (Destinatario Principal)
+            $('#afiliado_comunicado_editar').click();
+
+            // Seteo automático del nro de anexos:
+            var seteo_nro_anexos = 0;
+            $("#anexos_editar").val(seteo_nro_anexos);
+
+            // Selección automática de las copias a partes interesadas:
+            $("#edit_copia_afiliado").prop('checked', false);
+            $("#edit_copia_empleador").prop('checked', false);
+            $("#edit_copia_afp").prop('checked', false);
+            $("#edit_copia_eps").prop('checked', false);
+            $("#edit_copia_arl").prop('checked', false);
+            $("#edit_copia_conocimiento").prop('checked', false);
 
             // Selección automática del checkbox firmar
             $("#firmarcomunicado_editar").prop('checked', true);
 
         }else if (opc_seleccionada == "Documento_No_Recalificacion") {
-            $("#asunto_editar").val("RESPUESTA A SOLICITUD DE RECALIFICACIÓN DE PCL");
+            $("#asunto_editar").prop('readonly', false);
+            $(".note-editable").attr("contenteditable", true);
+            $("#asunto_editar").val("RESPUESTA A SOLICITUD DE CALIFICACIÓN PÉRDIDA DE CAPACIDAD LABORAL");
 
-            // var texto_insertar = '<p>Reciba un cordial saludo, </p>'+
-            // '<p>Con ocasión de la solicitud de calificación de pérdida de capacidad laboral radicada por usted en la administradora de fondo de '+ 
-            // 'pensiones Porvenir, Seguros de Vida Alfa S.A., se permite dar respuesta en los términos que se describen a continuación. '+
-            // 'Una vez revisadas nuestras bases de datos y sistemas de información, se evidencia con respecto a su caso, que Seguros de Vida Alfa '+
-            // 'S.A. realizó calificación de la pérdida de capacidad laboral (PCL), con los diagnósticos de origen {{$OrigenPcl_dp}}: {{$CIE10Nombres}}, '+
-            // 'con un porcentaje del {{$PorcentajePcl_dp}} % y fecha de estructuración {{$F_estructuracionPcl_dp}}, la cual le fue remitida y le fue notificada.</p>'+
-            // '<p>Por tanto, en el momento no hay lugar a emitir nuevo dictamen de Calificación de Pérdida de Capacidad Laboral (PCL) por parte de '+
-            // 'Seguros Alfa; de acuerdo a lo establecido en el Decreto 1352 del 2013, Artículo 55:</p>'+
-            // '<p class="cuerpo_doc_revPen">“...la revisión de la pérdida de incapacidad permanente parcial por parte de las '+
-            // 'Juntas será procedente cuando el porcentaje sea inferior al 50% de pérdida de '+
-            // 'capacidad laboral a solicitud de la Administradora de Riesgos Laborales, los '+
-            // 'trabajadores o personas interesadas, mínimo al año siguiente de la calificación y '+
-            // 'siguiendo los procedimientos y términos de tiempo establecidos en el presente '+
-            // 'decreto...”</p>'+
-            // '<p>Esperamos de esta forma haber dado respuesta a su requerimiento y reiteramos nuestra voluntad de servicio. </p>';
-
-            var texto_insertar = '<p>Reciba un cordial saludo, </p>'+
-            '<p>Con ocasión de la solicitud de calificación de pérdida de capacidad laboral radicada por usted en la administradora de <b>Fondo de '+ 
-            'Pensiones Porvenir, Seguros de Vida Alfa S.A.</b>, se permite dar respuesta en los términos que se describen a continuación.</p>'+
-            '<p>(Sustentación de no recalificación)</p>'+
-            '<p>Esperamos de esta forma haber dado respuesta a su requerimiento y reiteramos nuestra voluntad de servicio. </p>';
+            var texto_insertar = '<p>Apreciado(a) {{$nombre_afiliado}},</p>'+
+            '<p>En Protección estamos para guiarle y acompañarle en cada momento de su vida. Con ocasión de la solicitud de calificación de pérdida de capacidad laboral '+
+            'radicada por usted, la Administradora de Fondo de Pensiones y Cesantías <b>PROTECCIÓN</b> se permite dar respuesta en los términos que se describen a continuación. '+
+            '<p>(Sustentación)</p>'+
+            '<p>Le agradecemos la confianza depositada en nosotros durante estos años y le recordamos que cuenta con nuestra asesoría. Ante cualquier duda, puede comunicarse '+
+            'a nuestra Línea de Servicio: Bogotá: 744 44 64, Medellín y Cali: 510 90 99 Barranquilla: 319 79 99, Cartagena: 642 49 99 y desde el resto del país: 01 8000 52 8000.</p>';
 
             $('#cuerpo_comunicado_editar').summernote('code', texto_insertar);
             $('#btn_insertar_Origen_editar').removeClass('d-none')
@@ -2965,11 +3358,205 @@ $(document).ready(function(){
 
             // Deselección automática de las copias a partes interesadas: Eps
             $("#edit_copia_eps").prop('checked', false);
+            $("#edit_copia_empleador").prop('checked', false);
+            $("#edit_copia_arl").prop('checked', false);
 
             // Selección automática del checkbox firmar
             $("#firmarcomunicado_editar").prop('checked', true);
-        }
-        else{
+        }else if (opc_seleccionada == "Desistimiento_PCL") {
+            $("#asunto_editar").prop('readonly', false);
+            $(".note-editable").attr("contenteditable", true);
+            $("#asunto_editar").val("DESISTIMIENTO TÁCITO DE SOLICITUD DE CALIFICACIÓN DE PCL");
+            // Traemos la lista de los documentos solicitados y lo insertamos junto con el texto en el cuerpo del comunicado
+            var id_evento = $('#newId_evento').val();
+            var id_proceso = $('#Id_proceso').val();
+            var id_asignacion = $('#newId_asignacion').val();
+
+            let datos_lista_soli_docs = {
+                '_token': token,
+                'parametro':"listado_solicitud_documentos",
+                'id_proceso': id_proceso,
+                'id_evento': id_evento,
+                'id_asignacion': id_asignacion 
+            };
+            $.ajax({
+                type:'POST',
+                url:'/selectoresModuloCalificacionPCL',
+                data: datos_lista_soli_docs,
+                success:function(data){
+
+                    if (data.length > 0) {
+                        var listado = '<ul>';
+                        let listado_solicitud_documentos = Object.keys(data);
+                        for (let i = 0; i < listado_solicitud_documentos.length; i++) {
+                            var documento = data[listado_solicitud_documentos[i]];
+                            var nombre = documento['Nombre_documento'] ? documento['Nombre_documento'] : '';
+                            var descripcion = documento['Descripcion'] ? documento['Descripcion'] : '';
+                            
+                            if (nombre || descripcion) {
+                                listado += '<li><b>'+nombre+'</b></li>';
+                            }
+                        }
+    
+                        listado += '</ul>';
+                        
+                    } else {
+                        listado = '';
+                    }
+                    var texto_insertar = "<p>Respetado(a) Señor(a),</p>"+
+                        "<p>Reciba un cordial saludo de la Administradora de Fondos de Pensiones y Cesantías Protección S.A.</p>"+
+                        "<p>Nos permitimos indicarle que luego de evaluar el contenido de la documentación aportada por usted, se evidenció que la misma se encontraba "+
+                        "incompleta, esto le fue informado en días pasados, y se indicó que era necesario que, en un término no superior a un (1) mes, allegara los documentos "+
+                        "que registraban faltantes anunciados a continuación:</p>"+
+                        listado+
+                        "<p>Vencido el plazo informado en dicha comunicación, se pudo constatar por parte de <b>PROTECCIÓN S.A.</b> que usted no aportó dentro del plazo concedido "+
+                        "la documentación requerida ni informó sobre la imposibilidad de obtener el documento o cumplir con la gestión.</p>"+
+                        "<p>Así las cosas y en aplicación del artículo 17 de la Ley 1755 de 2015, se procede a decretar el <b>DESISTIMIENTO</b> frente a su solicitud de calificación "+
+                        "de Pérdida de capacidad laboral (PCL) y en consecuencia se <u>ARCHIVA</u> la mencionada solicitud.</p>"+
+                        "<p>No obstante, usted cuenta con el derecho de presentar nuevamente la solicitud con el lleno de los requisitos legales. Si tiene alguna duda o quiere "+
+                        "conocer más acerca de esta información, puede escribirnos a clientes@proteccion.com.co o comunicarse con nuestra Línea de Servicio en Bogotá 7444464, en "+
+                        "Medellín y Cali 5109099 Barranquilla 319 7999 Cartagena 6424999 y desde el resto del país 01 8000 52 8000.</p>";
+                    $('#cuerpo_comunicado_editar').summernote('code', texto_insertar);
+                }
+            });
+
+            // Auto selección de la opción Afiliado (Destinatario Principal)
+            $('#afiliado_comunicado_editar').click();
+
+            // Seteo automático del nro de anexos:
+            var seteo_nro_anexos = 0;
+            $("#anexos_editar").val(seteo_nro_anexos);
+
+            // Selección automática de las copias a partes interesadas:
+            $("#edit_copia_afiliado").prop('checked', false);
+            $("#edit_copia_empleador").prop('checked', false);
+            $("#edit_copia_afp").prop('checked', false);
+            $("#edit_copia_eps").prop('checked', false);
+            $("#edit_copia_arl").prop('checked', false);
+            $("#edit_copia_conocimiento").prop('checked', false);
+
+            // Selección automática del checkbox firmar
+            $("#firmarcomunicado_editar").prop('checked', true);
+
+        }else if (opc_seleccionada == "Cierre_MMM_PCL") {
+            $("#asunto_editar").prop('readonly', false);
+            $(".note-editable").attr("contenteditable", true);
+            $("#asunto_editar").val("CIERRE ADMINISTRATIVO SOLICITUD DE CALIFICACIÓN PCL");
+            var texto_insertar = "<p>Respetado(a) Señor(a),</p>"+
+                "<p>Reciba un cordial saludo de la Administradora de Fondos de Pensiones y Cesantías <b>Protección S.A.</b></p>"+
+                "<p>Nos permitimos informarle que luego de evaluar el contenido de la documentación aportada por usted, se evidenció que aún se encuentra mediando "+
+                "tratamiento en su EPS, y aún no alcanza la mejoría medica máxima por lo que no es posible proceder con la calificación de su pérdida de capacidad laboral (PCL).</p>"+
+                "<p>Lo anterior debido al Anexo Técnico - Manual Único para la Calificación de la Pérdida de Capacidad Laboral y Ocupacional expedido por orden del Decreto 1507 "+
+                "de 2014 el cual establece en el Título Preliminar, lo siguiente:</p>"+
+                '<p class="cuerpo_doc_revPen"><b>4.6. MEJORÍA MÉDICA MÁXIMA “MMM”:</b> Punto en el cual la condición patológica se estabiliza sustancialmente y es poco probable que '+
+                'cambie, ya sea para mejorar o empeorar, en el próximo año, con o sin tratamiento (…)</p>'+
+                '<p class="cuerpo_doc_revPen"><b>5. METODOLOGÍA PARA LA DETERMINACIÓN DEL GRADO EN UNA CLASE DE DEFICIENCIA:</b> Se realizará cuando la persona objeto de calificación alcance la mejoría médica '+
+                'máxima (MMM) o cuando termine el proceso de rehabilitación integral y en todo caso antes de superar los quinientos cuarenta (540) días de haber ocurrido el '+
+                'accidente o diagnóstico de la enfermedad (…)</p>'+
+                "<p>Por tal motivo su trámite será finalizado hasta tanto culmine dicho tratamiento. Una vez este se encuentre terminado, solicitamos radicar de nuevo su "+
+                "solicitud, aportando historia clínica vigente y concepto de los médicos tratantes, documento con el cual se evaluará nuevamente el caso para poder emitir "+
+                "una calificación de pérdida de capacidad laboral.</p>"+
+                "<p>Así mismo, es importante aclarar que no procede el pago de incapacidades médicas a su nombre, puesto que dicho subsidio será otorgado únicamente por el "+
+                "Fondo de Pensiones <b>PROTECCIÓN S.A.</b>, a aquella persona afiliada remitida por su Entidad Promotora de Salud (EPS) con un pronóstico de recuperación favorable, "+
+                "evento que no ocurre en su situación particular.</p>"+
+                "<p>Esperamos haber atendido su solicitud, permanecemos a su disposición para aclarar cualquier información adicional. Si tiene alguna duda o quiere conocer "+
+                "más acerca de esta información, puede comunicarse con nuestro Asesor Virtual Pronto en nuestro Portal Web www.proteccion.com y App o comunicarse con nuestra "+
+                "Línea de Servicio en Bogotá 7444464, en Medellín y Cali 5109099 Barranquilla 319 7999 Cartagena 6424999 y desde el resto del país 01 8000 52 8000.</p>";
+            $('#cuerpo_comunicado_editar').summernote('code', texto_insertar);
+
+            // Auto selección de la opción Afiliado (Destinatario Principal)
+            $('#afiliado_comunicado_editar').click();
+
+            // Seteo automático del nro de anexos:
+            var seteo_nro_anexos = 0;
+            $("#anexos_editar").val(seteo_nro_anexos);
+
+            // Selección automática de las copias a partes interesadas:
+            $("#edit_copia_afiliado").prop('checked', false);
+            $("#edit_copia_empleador").prop('checked', false);
+            $("#edit_copia_afp").prop('checked', false);
+            $("#edit_copia_eps").prop('checked', false);
+            $("#edit_copia_arl").prop('checked', false);
+            $("#edit_copia_conocimiento").prop('checked', false);
+
+            // Selección automática del checkbox firmar
+            $("#firmarcomunicado_editar").prop('checked', true);
+
+        }else if (opc_seleccionada == "Cierre_Cita_PCL") {
+            $("#asunto_editar").prop('readonly', false);
+            $(".note-editable").attr("contenteditable", true);
+            $("#asunto_editar").val("CIERRE ADMINISTRATIVO SOLICITUD DE CALIFICACIÓN PCL");
+            var texto_insertar = "<p>Respetado(a) Señor(a),</p>"+
+                "<p>Reciba un cordial saludo de la Administradora de Fondos de Pensiones y Cesantías <b>PROTECCIÓN S.A.</b></p>"+
+                "<p>Una vez evaluada su solicitud de trámite ante el fondo de pensiones y teniendo presente la legislación actual vigente, decreto 2463 del 2001 y decreto 917/1999, "+
+                "encontramos que es indispensable que usted asista a las citas de evaluación funcional y aporte Historia Clínica solicitada.</p>"+
+                '<p>Por lo tanto, se evidencia que usted no asistió a la segunda cita de valoración funcional el día <b>DD/MM/AAAA</b>.</p>'+
+                '<p>En virtud de lo anterior nos permitimos informarle que, a partir de la fecha de notificación de la presente carta, hemos dado por terminada su reclamación '+
+                'ante el fondo, ya que ha operado el <b>DESISTIMIENTO</b> tácito de su trámite.</p>'+
+                '<p class="cuerpo_doc_revPen">“…Cuando en el curso de una actuación administrativa la autoridad advierta que el peticionario debe realizar una gestión de '+
+                'trámite a su cargo, necesaria para adoptar una decisión de fondo, lo requerirá por una sola vez para que la efectúe en el término de un (1) mes, lapso durante '+
+                'el cual se suspenderá el término para decidir.</p>'+
+                '<p><b>Se entenderá que el peticionario ha desistido de su solicitud o de la actuación cuando no satisfaga el requerimiento</b>, salvo que antes de vencer el plazo '+
+                'concedido solicite prórroga hasta por un término igual”.</p>'+
+                "<p>No obstante, lo anterior le informamos que la solicitud de reapertura de su caso puede ser presentada en cualquier momento con los documentos que se "+
+                "requieran para el estudio del mismo, con la finalidad de que exista un pronunciamiento de fondo. </p>"+
+                "<p>Si tiene alguna duda o quiere conocer más acerca de esta información, puede comunicarse con nuestro Asesor Virtual Pronto en nuestro Portal Web "+
+                "www.proteccion.com y App o comunicarse con nuestra Línea de Servicio en Bogotá 7444464, en Medellín y Cali 5109099 Barranquilla 319 7999 Cartagena 6424999 "+
+                "y desde el resto del país 01 8000 52 8000.</p>";
+            $('#cuerpo_comunicado_editar').summernote('code', texto_insertar);
+
+            // Auto selección de la opción Afiliado (Destinatario Principal)
+            $('#afiliado_comunicado_editar').click();
+
+            // Seteo automático del nro de anexos:
+            var seteo_nro_anexos = 0;
+            $("#anexos_editar").val(seteo_nro_anexos);
+
+            // Selección automática de las copias a partes interesadas:
+            $("#edit_copia_afiliado").prop('checked', false);
+            $("#edit_copia_empleador").prop('checked', false);
+            $("#edit_copia_afp").prop('checked', false);
+            $("#edit_copia_eps").prop('checked', false);
+            $("#edit_copia_arl").prop('checked', false);
+            $("#edit_copia_conocimiento").prop('checked', false);
+
+            // Selección automática del checkbox firmar
+            $("#firmarcomunicado_editar").prop('checked', true);
+
+        }else if (opc_seleccionada == "Firmeza_PCL") {
+            $("#asunto_editar").prop('readonly', false);
+            $(".note-editable").attr("contenteditable", true);
+            $("#asunto_editar").val("FIRMEZA DE DICTAMEN DE PÉRDIDA DE CAPACIDAD LABORAL");
+            var texto_insertar = "<p>Reciba un cordial saludo de <b>PROTECCIÓN S.A</b></p>"+
+                "<p>En atención al Artículo 45 del Decreto 1352 de 2013, nos permitimos informar que <b>PROTECCIÓN S.A.</b>, emitió el dictamen N° <b>{{$N_Dictamen}}</b> de Pérdida de "+
+                "Capacidad Laboral (PCL) el día <b>{{$F_visado_comite}}</b>, donde se determinó un porcentaje del <b>{{$PCL}}%</b>, origen <b>{{$Tipo_evento}} {{$Origen}}</b> y fecha de "+
+                "estructuración del <b>{{$Fecha_estructuracion}}</b> notificado efectivamente a todas las partes.</p>"+
+                "<p>Así la cosas, hechas las respectivas validaciones encontramos que ninguna de las partes interesadas manifestó desacuerdo contra el dictamen en los tiempos "+
+                "establecidos por la norma, por lo anterior, confirmamos que la calificación de Pérdida de Capacidad Laboral (PCL) realizada <b><u>se encuentra en firme.</b></u></p>"+
+                '<p>Le agradecemos la confianza depositada en nosotros durante estos años y le recordamos que cuenta con nuestra asesoría. Ante cualquier duda, puede comunicarse '+
+                'a nuestra Línea de Servicio: Bogotá: 744 44 64, Medellín y Cali: 510 90 99 Barranquilla: 319 79 99, Cartagena: 642 49 99 y resto del país: 01 8000 52 8000.</p>';
+            $('#cuerpo_comunicado_editar').summernote('code', texto_insertar);
+
+            // Auto selección de la opción Afiliado (Destinatario Principal)
+            $('#afiliado_comunicado_editar').click();
+
+            // Seteo automático del nro de anexos:
+            var seteo_nro_anexos = 0;
+            $("#anexos_editar").val(seteo_nro_anexos);
+
+            // Selección automática de las copias a partes interesadas:
+            $("#edit_copia_afiliado").prop('checked', false);
+            $("#edit_copia_empleador").prop('checked', true);
+            $("#edit_copia_afp").prop('checked', false);
+            $("#edit_copia_eps").prop('checked', true);
+            $("#edit_copia_arl").prop('checked', true);
+            $("#edit_copia_conocimiento").prop('checked', true);
+            
+
+            // Selección automática del checkbox firmar
+            $("#firmarcomunicado_editar").prop('checked', true);
+
+        }else{
             $("#asunto_editar").val("");
             $('#cuerpo_comunicado_editar').summernote('code', '');
             $('#btn_insertar_Origen_editar').addClass('d-none');
@@ -2984,8 +3571,13 @@ $(document).ready(function(){
             var seteo_nro_anexos = 0;
             $("#anexos_editar").val(seteo_nro_anexos);
 
-            // Selección automática de las copias a partes interesadas: Eps
+            // Selección automática de las copias a partes interesadas:
+            $("#edit_copia_afiliado").prop('checked', false);
+            $("#edit_copia_empleador").prop('checked', false);
+            $("#edit_copia_afp").prop('checked', false);
             $("#edit_copia_eps").prop('checked', false);
+            $("#edit_copia_arl").prop('checked', false);
+            $("#edit_copia_conocimiento").prop('checked', false);
 
             // Selección automática del checkbox firmar
             $("#firmarcomunicado_editar").prop('checked', false);
@@ -3171,16 +3763,16 @@ $(document).ready(function(){
         var EditComunicadosPcl = [];
 
         $('input[type="checkbox"]').each(function() {
-                var copiaComunicado2 = $(this).attr('id');            
+                var copiaComunicado2 = $(this).attr('id');
                 if (copiaComunicado2 === 'edit_copia_afiliado' || copiaComunicado2 === 'edit_copia_empleador' || 
                     copiaComunicado2 === 'edit_copia_eps' || copiaComunicado2 === 'edit_copia_afp' || 
-                    copiaComunicado2 === 'edit_copia_arl') {                
+                    copiaComunicado2 === 'edit_copia_arl' || copiaComunicado2 === 'edit_copia_conocimiento') {                
                     if ($(this).is(':checked')) {                
-                    var relacionCopiaValor2 = $(this).val();
-                    EditComunicadosPcl.push(relacionCopiaValor2);
+                        var relacionCopiaValor2 = $(this).val();
+                        EditComunicadosPcl.push(relacionCopiaValor2);
                     }
                 }
-        });       
+        });
         var tipo_descarga = $("[name='tipo_documento_descarga_califi_editar']").filter(":checked").val();
         cuerpo_comunicado = cuerpo_comunicado ? cuerpo_comunicado.replace(/"/g, "'") : '';
         let token = $('input[name=_token]').val();        
@@ -3218,8 +3810,22 @@ $(document).ready(function(){
             'agregar_copia_editar':EditComunicadosPcl,
             'N_siniestro':N_siniestro,
         }
-
-        document.querySelector("#Editar_comunicados").disabled = true;     
+        console.log('Copias a guardar',EditComunicadosPcl )
+        document.querySelector("#Editar_comunicados").disabled = true;
+        if(tipo_descarga === 'Cierre_Cita_PCL'){
+            if(cuerpo_comunicado.includes('DD/MM/AAAA')){
+                $("#mostrar_barra_actualizacion_comunicado").addClass('d-none');
+                $('.danger_editar_comunicado').removeClass('d-none');
+                $('.danger_editar_comunicado').append('<strong>"Para generar éste comunicado debe diligenciar la fecha de la segunda cita en el tercer párrafo</strong>');
+                setTimeout(function(){
+                    $('.danger_editar_comunicado').addClass('d-none');
+                    $('.danger_editar_comunicado').empty();
+                    $("#Editar_comunicados").prop('disabled', false);
+                    $("#Editar_comunicados").removeClass('d-none');
+                }, 3000);
+                return;
+            }
+        }
         $.ajax({
             type:'POST',
             url:'/actualizarComunicado',
@@ -3268,38 +3874,7 @@ $(document).ready(function(){
                     type:'POST',
                     url:'/generarPdf',
                     data: datos_comunicado,                                       
-                    success: function (response, status, xhr) {
-                        // console.log('entro a descargar documento');
-                        
-                        // Obtener el contenido codificado en base64 del PDF desde la respuesta
-                        // var base64Pdf = response.pdf;
-
-                        // // Decodificar base64 en un array de bytes
-                        // var binaryString = atob(base64Pdf);
-                        // var len = binaryString.length;
-                        // var bytes = new Uint8Array(len);
-    
-                        // for (var i = 0; i < len; i++) {
-                        //     bytes[i] = binaryString.charCodeAt(i);
-                        // }
-    
-                        // // Crear un Blob a partir del array de bytes
-                        // var blob = new Blob([bytes], { type: 'application/pdf' });
-
-                        // var nombre_pdf = response.nombre_pdf;
-
-                        // // console.log(nombre_pdf);                        
-                        // // Crear un enlace de descarga similar al ejemplo anterior
-                        // var link = document.createElement('a');
-                        // link.href = window.URL.createObjectURL(blob);
-                        // link.download = nombre_pdf;  // Reemplaza con el nombre deseado para el archivo PDF
-                
-                        // // Adjuntar el enlace al documento y activar el evento de clic
-                        // document.body.appendChild(link);
-                        // link.click();
-                
-                        // // Eliminar el enlace del documento
-                        // document.body.removeChild(link);                        
+                    success: function (response, status, xhr) {                 
                         if (respuesta.parametro == 'actualizar_comunicado') {
                             $("#mostrar_barra_actualizacion_comunicado").addClass('d-none');
                             $('.alerta_editar_comunicado').removeClass('d-none');
@@ -3642,68 +4217,92 @@ $(document).ready(function(){
     });
 
     /* Funcionalidad radio buttons Solicitud documentos Origen y Otro documento */
-    $("[name='tipo_documento_descarga_califi']").on("change", function(){
+    $("[name='tipo_documento_descarga_califi']").on("change", async function(){
         var opc_seleccionada = $(this).val();
         $("#asunto").prop('readonly', true);
-            
+        $(".note-editable").attr("contenteditable", false);
         if (opc_seleccionada == "Documento_PCL") {
-            $("#asunto").val("SOLICITUD DE DOCUMENTOS PARA CALIFICACIÓN DE PÉRDIDA DE LA CAPACIDAD LABORAL");
-
+            $("#asunto").prop('readonly', false);
+            $(".note-editable").attr("contenteditable", true);
+            $("#asunto").val("SOLICITUD DOCUMENTOS CALIFICACIÓN DE PÉRDIDA DE CAPACIDAD LABORAL");
             // Traemos la lista de los documentos solicitados y lo insertamos junto con el texto en el cuerpo del comunicado
-            // var id_evento = $('#newId_evento').val();
-            // var id_proceso = $('#Id_proceso').val();
-            // var id_asignacion = $('#newId_asignacion').val();
+            var id_evento = $('#newId_evento').val();
+            var id_proceso = $('#Id_proceso').val();
+            var id_asignacion = $('#newId_asignacion').val();
 
-            // let datos_lista_soli_docs = {
-            //     '_token': token,
-            //     'parametro':"listado_solicitud_documentos",
-            //     'id_proceso': id_proceso,
-            //     'id_evento': id_evento,
-            //     'id_asignacion': id_asignacion 
-            // };
-        
-            // $.ajax({
-            //     type:'POST',
-            //     url:'/selectoresModuloCalificacionPCL',
-            //     data: datos_lista_soli_docs,
-            //     success:function(data){
+            let datos_lista_soli_docs = {
+                '_token': token,
+                'parametro':"listado_solicitud_documentos",
+                'id_proceso': id_proceso,
+                'id_evento': id_evento,
+                'id_asignacion': id_asignacion 
+            };
+            $.ajax({
+                type:'POST',
+                url:'/selectoresModuloCalificacionPCL',
+                data: datos_lista_soli_docs,
+                success:function(data){
 
-            //         if (data.length > 0) {
-            //             var listado = '<ul>';
-            //             let listado_solicitud_documentos = Object.keys(data);
-            //             for (let i = 0; i < listado_solicitud_documentos.length; i++) {
-            //                 var documento = data[listado_solicitud_documentos[i]];
-            //                 var nombre = documento['Nombre_documento'] ? documento['Nombre_documento'] : '';
-            //                 var descripcion = documento['Descripcion'] ? documento['Descripcion'] : '';
+                    if (data.length > 0) {
+                        var listado = '<ul>';
+                        let listado_solicitud_documentos = Object.keys(data);
+                        for (let i = 0; i < listado_solicitud_documentos.length; i++) {
+                            var documento = data[listado_solicitud_documentos[i]];
+                            var nombre = documento['Nombre_documento'] ? documento['Nombre_documento'] : '';
+                            var descripcion = documento['Descripcion'] ? documento['Descripcion'] : '';
                             
-            //                 if (nombre || descripcion) {
-            //                     var sumar = i + 1;
-            //                     listado += '<li>' + sumar + '. ' + nombre + ' ' + descripcion + '</li>';
-            //                 }
-            //             }
+                            if (nombre || descripcion) {
+                                listado += '<li><b>'+nombre+'</b></li>';
+                            }
+                        }
     
-            //             listado += '</ul>';
-            //         } else {
-            //             var listado = '';
-            //         }
-            //         console.log('LISTADO : ', listado)
-                    
-            //     }
-            // });
-            var texto_insertar = "<p>En <b>Seguros de Vida Alfa S.A.</b> siempre buscamos la protección y satisfacción de nuestros clientes. De acuerdo a tu solicitud de "+
-            "calificación de pérdida de capacidad laboral (PCL) radicada en la AFP Porvenir S.A., te informamos que el historial médico aportado "+
-            "ha sido revisado por el grupo interdisciplinario de calificación de <b>Seguros de Vida Alfa S.A.</b></p>"+
-            "<p>No obstante, a que la información suministrada es relevante, se hace necesario que sean aportados documentos adicionales con el fin "+
-            "de poder realizar la calificación de pérdida de capacidad laboral requerida, que a continuación relacionamos:</p>"+
-            "<p>{{$documentos_solicitados}}</p>"+
-            "<p>Esta documentación debe suministrarla al siguiente correo electrónico: servicioalcliente@segurosalfa.com.co "+
-            "en un término de tres (3) meses contados a partir del recibido de la presente comunicación, y a "+
-            "partir de ese momento se inicia nuevamente el estudio de tu solicitud. En el evento de no recibir la documentación médica "+
-            "actualizada, se considerará desistimiento de tu solicitud por parte de esta aseguradora.</p>"+
-            "<p>Cualquier inquietud o consulta al respecto, le invitamos a comunicarse a nuestras líneas de atención al cliente en Bogotá (601) 3 07 "+
-            "70 32 o a la línea nacional gratuita 01 8000 122 532, de lunes a viernes, de 8:00 a. m. a 8:00 p.m. - sábados de 8:00 a.m. a 12 m., o "+
-            "escríbanos a «servicioalcliente@segurosalfa.com.co» o a la dirección <b>Carrera 10 # 18-36, piso 4, Edificio José María Córdoba, Bogotá D.C.</b></p>";
-            $('#cuerpo_comunicado').summernote('code', texto_insertar);
+                        listado += '</ul>';
+                        
+                    } else {
+                        listado = '';
+                    }
+                    console.log('LISTADO ',listado)
+                    var texto_insertar = "<p>Respetado(a) Señor(a),</p>"+
+                        "<p>Reciba un cordial saludo de la Administradora de Fondos de Pensiones y Cesantías Protección S.A.</p>"+
+                        "<p>Con ocasión a la documentación médica radicada para el trámite de estudio de su prestación económica, respetuosamente, nos permitimos "+
+                        "indicarle que luego de evaluar el contenido de la documentación aportada por usted, no obstante, a que la información suministrada es relevante, "+
+                        "se hace necesario que allegue los documentos que se enuncian a continuación:</p>"
+                        +listado+
+                        "<p>Es indispensable el aporte de la historia clínica completa para la evaluación médica llevada a cabo por la Comisión Médico Laboral de Protección S.A., "+
+                        "quien establecerá los criterios necesarios para una adecuada revisión. Lo anterior se solicita de acuerdo a lo establecido en el literal a, del artículo 4 del "+
+                        "decreto 917 de 1999, que señala:"+
+                        '<p class="cuerpo_doc_revPen">“<strong>REQUISITOS Y PROCEDIMIENTOS PARA LA CALIFICACIÓN DE LA INVALIDEZ Y LA FUNDAMENTACIÓN DEL DICTAMEN.</strong><br>'+
+                        'Para efectos de la calificación de la invalidez, los calificadores se orientarán por los requisitos y procedimientos establecidos en el presente manual para emitir '+
+                        'un dictamen. Deben tener en cuenta que dicho dictamen es el documento que, con carácter probatorio, contiene el concepto experto que los calificadores emiten sobre '+
+                        'el grado de la incapacidad permanente parcial, la invalidez o la muerte de un afiliado y debe fundamentarse en: <br>'+
+                        'a) Consideraciones de orden fáctico sobre la situación que es objeto de evaluación, donde se relacionan los hechos ocurridos que dieron lugar al accidente, '+
+                        'la enfermedad o la muerte, indicando las circunstancias de modo, tiempo y lugar dentro de las cuales sucedieron; y el DIAGNOSTICO CLINICO de carácter técnico-científico, '+
+                        'soportado en la historia clínica, la historia ocupacional y con las ayudas de diagnóstico requeridas de acuerdo con la especificidad del problema…”</p>'+
+                        '<p class="texto_con_padding">A su vez, la ley 1507 de 2014, en su artículo 3, inciso 13 establece: </p>'+
+                        '<p class="cuerpo_doc_revPen">“Esta fecha (de estructuración) debe soportarse en la historia clínica, los exámenes clínicos y de ayuda diagnóstica y puede ser anterior '+
+                        'o corresponder a la fecha de la declaratoria de la perdida de la capacidad laboral” Aparte en paréntesis fuera del texto original.</p>'+
+                        '<p>Por lo tanto, esta Administradora le concede el término de <strong>un (1) mes</strong>  contado a partir de la recepción de la presente comunicación, vencido el mismo sin cumplir '+
+                        'con el requerimiento, se procederá a dar <strong>DESISTIMIENTO</strong> de su solicitud y archivo de la misma, de acuerdo con el artículo 17 de la ley 1437 de 2011, que señala:</p>'+
+                        '<p class="cuerpo_doc_revPen">“…Cuando en el curso de una actuación administrativa la autoridad advierta que el peticionario debe realizar una gestión de trámite a '+
+                        'su cargo, necesaria para adoptar una decisión de fondo, lo requerirá por una sola vez para que la efectúe en el término de un (1) mes, lapso durante el cual se '+
+                        'suspenderá el término para decidir.<br>'+
+                        '<strong>Se entenderá que el peticionario ha desistido de su solicitud o de la actuación cuando no satisfaga el requerimiento</strong>, salvo que antes de vencer el plazo concedido '+
+                        'solicite prórroga hasta por un término igual”.</p>'+
+                        "<p>Así las cosas, la anterior documentación es indispensable en los criterios que definen la calificación del estado de invalidez y no se puede realizar el dictamen "+
+                        'sin la presencia de los mismos. Por ello, mientras la documentación faltante no sea allegada y no sea posible realizar un análisis adecuado de las circunstancias de '+
+                        'hecho y de derecho, se entenderá que la solicitud no se ha recibido en debida forma, por lo que no será posible realizar la calificación de pérdida de capacidad '+
+                        'laboral y en el caso en que definitivamente usted decida no allegar la documentación faltante en el término señalado, la Administradora deberá proceder con el cierre '+
+                        'del trámite.</p>'+
+                        "<p>La documentación debe ser allegada a cualquiera de las Oficinas de Servicio de Protección S.A más cercana o remitirla al correo electrónico "+
+                        'documentos.calificacion@proteccion.com.co (El peso máximo del adjunto no podrá ser superior a 20 MB, por lo tanto, si excede esta capacidad deber remitir '+
+                        'la información en varios correos); así mismo aclaramos que, este correo electrónico es únicamente para recibir documentación.</p>'+
+                        "<p>Esperamos haber atendido satisfactoriamente su solicitud, permanecemos a su disposición para aclarar cualquier información adicional. Si tiene alguna duda "+
+                        "o quiere conocer más acerca de esta información, puede comunicarse con nuestro Asesor Virtual Pronto en nuestro Portal Web www.proteccion.com y App o comunicarse "+
+                        "con nuestra Línea de Servicio en Bogotá 7444464, en Medellín y Cali 5109099 Barranquilla 319 7999 Cartagena 6424999 y desde el resto del país 01 8000 52 8000.</p>";
+                    $('#cuerpo_comunicado').summernote('code', texto_insertar);
+                }
+                
+            });
             
             // $('#btn_insertar_Detalle_calificacion').addClass('d-none');
 
@@ -3714,13 +4313,22 @@ $(document).ready(function(){
             var seteo_nro_anexos = 0;
             $("#anexos").val(seteo_nro_anexos);
 
-            // Selección automática de las copias a partes interesadas: Eps
+            // Selección automática de las copias a partes interesadas:
+            $("#copia_afiliado").prop('checked', false);
+            $("#copia_empleador").prop('checked', false);
+            $("#copia_afp").prop('checked', false);
             $("#copia_eps").prop('checked', true);
+            $("#copia_arl").prop('checked', false);
+            $("#copia_conocimiento").prop('checked', true);
 
             // Selección automática del checkbox firmar
             $("#firmarcomunicado").prop('checked', true);
 
         }else if (opc_seleccionada == "Formato_B_Revision_pension") {
+            if(idRol == 6){
+                $("#asunto").prop('readonly', false);
+                $(".note-editable").attr("contenteditable", true);
+            }
             $("#asunto").val("RATIFICACIÓN DEL ESTADO DE INVALIDEZ");
             var texto_insertar = "<p>Aprecido(a) {{$nombre_afiliado}}, </p>"+
             "<p>En <b>PROTECCIÓN</b> estamos para guiarle y acompañarle en cada momento de su vida. Como es de su conocimiento y de acuerdo con lo establecido "+ 
@@ -3736,6 +4344,13 @@ $(document).ready(function(){
             // Auto selección de la opción Afiliado (Destinatario Principal)
             $('#afiliado_comunicado').click();
 
+            // Selección automática de las copias a partes interesadas:
+            $("#copia_afiliado").prop('checked', false);
+            $("#copia_empleador").prop('checked', false);
+            $("#copia_afp").prop('checked', false);
+            $("#copia_eps").prop('checked', false);
+            $("#copia_arl").prop('checked', false);
+            $("#copia_conocimiento").prop('checked', false);
             // Seteo automático del nro de anexos:
             var seteo_nro_anexos = 0;
             $("#anexos").val(seteo_nro_anexos);
@@ -3745,35 +4360,79 @@ $(document).ready(function(){
             
         }else if (opc_seleccionada == "Documento_Revision_pension") {
             $("#asunto").prop('readonly', false);
-            $("#asunto").val("SOLICITUD DE DOCUMENTOS COMPLEMENTARIOS");
-            var texto_insertar = '<p>Reciba un cordial saludo por parte de Seguros de Vida Alfa S.A.</p>'+
-            '<p>En cumplimiento de la normatividad vigente, Seguros de Vida Alfa S.A., se encuentra realizando la actualización de información de las '+ 
-            'condiciones de salud de los pensionados por invalidez, sustentada en el artículo 44 de la Ley 100 de 1993, que establece:</p>'+
-            '<p class="cuerpo_doc_revPen">“(...)<strong>ARTÍCULO 44. REVISIÓN DE LAS PENSIONES DE INVALIDEZ.</strong> El estado de invalidez podrá <br>'+
-            'revisarse: <br>'+
-            'a. Por solicitud de la entidad de previsión o seguridad social correspondiente cada tres (3) años, '+
-            'con el fin de ratificar, modificar o dejar sin efectos el dictamen que sirvió de base para la liquidación '+
-            'de la pensión que disfruta su beneficiario y proceder a la extinción, disminución o aumento de la '+
-            'misma, si a ello hubiera lugar.<br>'+
-            'Este nuevo dictamen se sujeta a las reglas de los artículos anteriores. <br>'+
-            'El pensionado tendrá un plazo de tres (3) meses contados a partir de la fecha de dicha solicitud, '+
-            'para someterse a la respectiva revisión del estado de invalidez. Salvo casos de fuerza mayor, si el '+
-            'pensionado no se presenta o impide dicha revisión dentro de dicho plazo, se suspenderá el pago de '+
-            'la pensión. Transcurridos doce (12) meses contados desde la misma fecha sin que el pensionado '+
-            'se presente o permita el examen, la respectiva pensión prescribirá. '+
-            'Para readquirir el derecho en forma posterior, el afiliado que alegue permanecer inválido deberá '+
-            'someterse a un nuevo dictamen. Los gastos de este nuevo dictamen serán pagados por el afiliado <br>'+
-            '(...)”</p>'+
-            '<p>De acuerdo con lo anterior y una vez revisado el expediente previsional de referencia, se estableció que es necesario que allegue '+
-            'esta documentación al siguiente correo electrónico: servicioalcliente@segurosalfa.com.co en '+
-            'un término de tres (3) meses contados a partir del recibido de la presente comunicación, los siguientes documentos:</p>'+
-            '<p>{{$documentos_solicitados}}</p>'+
-            '<p>Los documentos anteriormente mencionados deben ser solicitados en su EPS con su médico tratante; por otra parte, aclaramos que los '+
-            'mismos se deben radicar en papelería física.</p>'+
-            '<p>Cualquier inquietud o consulta al respecto, le invitamos a comunicarse a nuestras líneas de atención al cliente en Bogotá (601) 3 07 '+
-            '70 32 o a la línea nacional gratuita 01 8000 122 532, de lunes a viernes, de 8:00 a. m. a 8:00 p.m. - sábados de 8:00 a.m. a 12 m., o '+
-            'escríbanos a «servicioalcliente@segurosalfa.com.co» o a la dirección <b>Carrera 10 # 18-36, piso 4, Edificio José María Córdoba, Bogotá D.C.</b></p>';
-            $('#cuerpo_comunicado').summernote('code', texto_insertar);
+            $(".note-editable").attr("contenteditable", true);
+            $("#asunto").prop('readonly', false);
+            $("#asunto").val("SOLICITUD DE DOCUMENTOS PARA REVISIÓN DE ESTADO DE INVALIDEZ");
+            var id_evento = $('#newId_evento').val();
+            var id_proceso = $('#Id_proceso').val();
+            var id_asignacion = $('#newId_asignacion').val();
+
+            let datos_lista_soli_docs = {
+                '_token': token,
+                'parametro':"listado_solicitud_documentos",
+                'id_proceso': id_proceso,
+                'id_evento': id_evento,
+                'id_asignacion': id_asignacion 
+            };
+            $.ajax({
+                type:'POST',
+                url:'/selectoresModuloCalificacionPCL',
+                data: datos_lista_soli_docs,
+                success:function(data){
+
+                    if (data.length > 0) {
+                        var listado = '<ul>';
+                        let listado_solicitud_documentos = Object.keys(data);
+                        for (let i = 0; i < listado_solicitud_documentos.length; i++) {
+                            var documento = data[listado_solicitud_documentos[i]];
+                            var nombre = documento['Nombre_documento'] ? documento['Nombre_documento'] : '';
+                            var descripcion = documento['Descripcion'] ? documento['Descripcion'] : '';
+                            
+                            if (nombre || descripcion) {
+                                listado += '<li><b>'+nombre+'</b></li>';
+                            }
+                        }
+    
+                        listado += '</ul>';
+                        
+                    } else {
+                        listado = '';
+                    }
+                    var texto_insertar = '<p>Respetado(a) Señor(a)</p>'+
+                        '<p>Reciba un cordial saludo de la Administradora de Fondos de Pensiones y Cesantías <b>PROTECCIÓN S.A.</b></p>'+
+                        '<p>En respuesta a la documentación médica radicada para la solicitud de estudio de su revisión del estado de invalidez, respetuosamente nos permitimos '+
+                        'indicar que luego de evaluar el contenido se evidenció que hace falta documentación referente a su Historia Clínica, por lo tanto, se hace necesario que '+
+                        'allegue los documentos que se enuncian a continuación:</p>'+
+                        listado+
+                        '<p>Solicitamos que, en un término no superior a <b>tres (3) meses</b>, sea recibida la información que define la calificación de tu estado de invalidez '+
+                        'a la oficina de <b>PROTECCIÓN</b> más cercana a su ciudad, o se envíe al correo electrónico documentos.calificacion@proteccion.com.co. De esta manera, '+
+                        'cumplido el tiempo indicado si la documentación solicitada no ha sido aportada, <b>se deberá suspender el pago de las mesadas pensionales</b> '+
+                        'y la misma sólo podrá reactivarse con la presentación de los documentos. En caso de no poder tenerla en ese lapso de tiempo por favor informar de manera '+
+                        'escrita el motivo, toda vez que esta documentación es necesaria para la revisión de su estado de invalidez.</p>'+
+                        '<p>Lo anterior, está fundamentado en el artículo 44 de la ley 100 de 1993, que al establecer las condiciones en las cuales se realiza el proceso de revisión '+
+                        'de las pensiones de invalidez ha establecido:</p>'+
+                        '<p class="cuerpo_doc_revPen">“[...]<strong>ARTÍCULO 44. REVISIÓN DE LAS PENSIONES DE INVALIDEZ.</strong> El estado de invalidez podrá <br>'+
+                        'revisarse: <br>'+
+                        'a. Por solicitud de la entidad de previsión o seguridad social correspondiente cada tres (3) años, '+
+                        'con el fin de ratificar, modificar o dejar sin efectos el dictamen que sirvió de base para la liquidación '+
+                        'de la pensión que disfruta su beneficiario y proceder a la extinción, disminución o aumento de la '+
+                        'misma, si a ello hubiera lugar.<br>'+
+                        'Este nuevo dictamen se sujeta a las reglas de los artículos anteriores. <br>'+
+                        'El pensionado tendrá un plazo de tres (3) meses contados a partir de la fecha de dicha solicitud, '+
+                        'para someterse a la respectiva revisión del estado de invalidez. Salvo casos de fuerza mayor, <strong>si el '+
+                        'pensionado no se presenta o impide dicha revisión dentro de dicho plazo, se suspenderá el pago de '+
+                        'la pensión.</strong> Transcurridos doce (12) meses contados desde la misma fecha sin que el pensionado '+
+                        'se presente o permita el examen, la respectiva pensión prescribirá. '+
+                        'Para readquirir el derecho en forma posterior, el afiliado que alegue permanecer inválido deberá '+
+                        'someterse a un nuevo dictamen. Los gastos de este nuevo dictamen serán pagados por el afiliado [...]”</p>'+
+                        '<p>Esperamos haber atendido satisfactoriamente su solicitud, permanecemos a su disposición para aclarar cualquier información adicional. Si tiene alguna '+
+                        'duda o quiere conocer más acerca de esta información, puede comunicarse con nuestro Asesor Virtual Pronto en nuestro Portal Web www.proteccion.com y App o '+
+                        'comunicarse con nuestra Línea de Servicio en Bogotá 7444464, en Medellín y Cali 5109099 Barranquilla 319 7999 Cartagena 6424999 y desde el resto del país '+
+                        '01 8000 52 8000.</p>';
+                    $('#cuerpo_comunicado').summernote('code', texto_insertar);
+                }
+            });
+            
             // $('#btn_insertar_Detalle_calificacion').removeClass('d-none');
 
             // Auto selección de la opción Afiliado (Destinatario Principal)
@@ -3783,36 +4442,201 @@ $(document).ready(function(){
             var seteo_nro_anexos = 0;
             $("#anexos").val(seteo_nro_anexos);
 
-            // Selección automática de las copias a partes interesadas: Eps
+            // Selección automática de las copias a partes interesadas:
+            $("#copia_afiliado").prop('checked', false);
+            $("#copia_empleador").prop('checked', false);
+            $("#copia_afp").prop('checked', false);
             $("#copia_eps").prop('checked', true);
+            $("#copia_arl").prop('checked', false);
+            $("#copia_conocimiento").prop('checked', true);
+
+            // Selección automática del checkbox firmar
+            $("#firmarcomunicado").prop('checked', true);
+            
+        }else if (opc_seleccionada == "Reiteracion_Documento_Revision_pension") {
+            $("#asunto").prop('readonly', false);
+            $(".note-editable").attr("contenteditable", true);
+            $("#asunto").prop('readonly', false);
+            $("#asunto").val("REITERACIÓN SOLICITUD DOCUMENTOS PARA REVISIÓN ESTADO DE INVALIDEZ");
+            var id_evento = $('#newId_evento').val();
+            var id_proceso = $('#Id_proceso').val();
+            var id_asignacion = $('#newId_asignacion').val();
+
+            let datos_lista_soli_docs = {
+                '_token': token,
+                'parametro':"listado_solicitud_documentos",
+                'id_proceso': id_proceso,
+                'id_evento': id_evento,
+                'id_asignacion': id_asignacion 
+            };
+            $.ajax({
+                type:'POST',
+                url:'/selectoresModuloCalificacionPCL',
+                data: datos_lista_soli_docs,
+                success:function(data){
+
+                    if (data.length > 0) {
+                        var listado = '<ul>';
+                        let listado_solicitud_documentos = Object.keys(data);
+                        for (let i = 0; i < listado_solicitud_documentos.length; i++) {
+                            var documento = data[listado_solicitud_documentos[i]];
+                            var nombre = documento['Nombre_documento'] ? documento['Nombre_documento'] : '';
+                            var descripcion = documento['Descripcion'] ? documento['Descripcion'] : '';
+                            
+                            if (nombre || descripcion) {
+                                listado += '<li><b>'+nombre+'</b></li>';
+                            }
+                        }
+    
+                        listado += '</ul>';
+                        
+                    } else {
+                        listado = '';
+                    }
+                    // Obtener fecha del documento de solicitud de documentos de revisión pensión
+                    let datos = {
+                        '_token': token,
+                        'id_evento': id_evento,
+                        'id_asignacion': id_asignacion,
+                        'id_proceso': id_proceso,
+                        'tipo_documento': 'Reiteracion_Documento_Revision_pension'
+                    };
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '/getInfoComuCorres',
+                        data: datos,
+                        success: function (infoData) {
+                            let F_notificación_sol_doc_rev_pen = '(DIGITE LA FECHA DE PRIMER COMUNICADO)';
+                            if(infoData['F_notificacion_sol_doc_rev_pen']){
+                                F_notificación_sol_doc_rev_pen = infoData['F_notificacion_sol_doc_rev_pen']
+                            }
+                            var texto_insertar = '<p>Respetado(a) Señor(a)</p>'+
+                                '<p>Reciba un cordial saludo de la Administradora de Fondos de Pensiones y Cesantías <b>PROTECCIÓN S.A.</b></p>'+
+                                '<p>En respuesta a la documentación médica radicada para la solicitud de estudio de su revisión del estado de invalidez, respetuosamente nos permitimos '+
+                                'indicar que luego de evaluar el contenido se evidenció que hace falta documentación referente a su Historia Clínica, por lo tanto, se hace necesario que '+
+                                'allegue los documentos que se enuncian a continuación:</p>'+
+                                listado+
+                                '<p>Mediante {{$forma_envio}} del <b>'+F_notificación_sol_doc_rev_pen+'</b>, esta Administradora le solicitó la documentación anterior con la finalidad de '+
+                                'revisar su condición de invalidez, de igual forma, se le indicó que contaba con un término de tres (3) meses para aportarla o de lo contrario se '+
+                                'procedería con la suspensión de la mesada pensional.</p>'+
+                                '<p>Así las cosas, con el objetivo de evitarle la suspensión de la mesada pensional, se le reitera que cuenta con un último plazo de <b>un (1) mes para '+
+                                'que allegue la información solicitada, de lo contrario, procederemos con la suspensión, tal y como lo señala el literal a. del artículo 44 de la ley '+
+                                '100 de 1993.</b> Es muy importante que tenga presente que después de doce (12) meses sin adjuntar los documentos empezará a correr la prescripción de mesadas.</p>'+
+                                '<p>Finalmente, le informamos que la documentación puede ser aportada en cualquier momento en la oficina de <b>PROTECCIÓN</b> más cercana a su ciudad, o al '+
+                                'correo electrónico documentos.calificacion@proteccion.com.co, esto con el fin de realizar el procedimiento de revisión. El tamaño de los archivos no '+
+                                'puede ser superior a 20 MB, si excede este límite, debe remitirnos la información en varios correos.</p>'+
+                                '<p>Esperamos haber atendido satisfactoriamente su solicitud, permanecemos a su disposición para aclarar cualquier información adicional. Si tiene alguna '+
+                                'duda o quiere conocer más acerca de esta información, puede comunicarse con nuestro Asesor Virtual Pronto en nuestro Portal Web www.proteccion.com y App o '+
+                                'comunicarse con nuestra Línea de Servicio en Bogotá 7444464, en Medellín y Cali 5109099 Barranquilla 319 7999 Cartagena 6424999 y desde el resto del país '+
+                                '01 8000 52 8000.</p>';
+                            $('#cuerpo_comunicado').summernote('code', texto_insertar);
+                        }
+                    });
+                }
+            });
+            
+            // $('#btn_insertar_Detalle_calificacion').removeClass('d-none');
+
+            // Auto selección de la opción Afiliado (Destinatario Principal)
+            $('#afiliado_comunicado').click();
+
+            // Seteo automático del nro de anexos:
+            var seteo_nro_anexos = 0;
+            $("#anexos").val(seteo_nro_anexos);
+
+            // Selección automática de las copias a partes interesadas:
+            $("#copia_afiliado").prop('checked', false);
+            $("#copia_empleador").prop('checked', false);
+            $("#copia_afp").prop('checked', false);
+            $("#copia_eps").prop('checked', true);
+            $("#copia_arl").prop('checked', false);
+            $("#copia_conocimiento").prop('checked', true);
+
+            // Selección automática del checkbox firmar
+            $("#firmarcomunicado").prop('checked', true);
+            
+        }else if (opc_seleccionada == "Suspension_Mesada_Revision_pension") {
+            $("#asunto").prop('readonly', false);
+            $(".note-editable").attr("contenteditable", true);
+            $("#asunto").prop('readonly', false);
+            $("#asunto").val("INFORMACIÓN SOBRE SUSPENSIÓN DE MESADA PENSIONAL");
+            var id_evento = $('#newId_evento').val();
+            var id_proceso = $('#Id_proceso').val();
+            var id_asignacion = $('#newId_asignacion').val();
+
+            let datos = {
+                '_token': token,
+                'id_evento': id_evento,
+                'id_asignacion': id_asignacion,
+                'id_proceso': id_proceso,
+                'tipo_documento':'Suspension_Mesada_Revision_pension'
+            };
+            $.ajax({
+                type:'POST',
+                url:'/getInfoComuCorres',
+                data: datos,
+                success:function(data){
+                    let F_notificación_sol_doc_rev_pen = '(DIGITE LA FECHA DE PRIMER COMUNICADO)';
+                    let F_notificación_reiteracion_sol_doc_rev_pen = '(DIGITE LA FECHA DE PRIMER COMUNICADO)';
+                    if (data['F_notificacion_sol_doc_rev_pen']) {
+                        F_notificación_sol_doc_rev_pen = data['F_notificacion_sol_doc_rev_pen'];
+                    }
+                    if (data['F_notificacion_reiteracion_sol_doc_rev_pen']) {
+                        F_notificación_reiteracion_sol_doc_rev_pen = data['F_notificacion_reiteracion_sol_doc_rev_pen'];
+                    }
+                    var texto_insertar = '<p>Respetado(a) Señor(a)</p>'+
+                    '<p>Reciba un cordial saludo de la Administradora de Fondos de Pensiones y Cesantías <b>PROTECCIÓN S.A.</b></p>'+
+                    '<p>Mediante {{$forma_envio}} del <b>'+F_notificación_sol_doc_rev_pen+'</b>, esta Administradora le solicitó <b>una copia actualizada a la fecha de toda la historia '+
+                    'clínica incluyendo sus complementos</b> con la finalidad de revisar su condición de invalidez, para ese momento se le otorgó un término tres (3) meses para aportarla, '+
+                    'transcurrido este término, sin que se hubiere allegado la documentación, esta Administradora nuevamente mediante {{$forma_envio}} '+
+                    'del <b>'+F_notificación_reiteracion_sol_doc_rev_pen+'</b>, le otorgó un último plazo de un (1) mes para aportarla o de '+
+                    'lo contrario se procedería con la suspensión de la mesada pensional.</p>'+
+                    '<p>Así las cosas, habiendo transcurrido los términos otorgados para que pudiera allegar la historia clínica actualizada a la fecha y poder realizar de esta '+
+                    'manera el proceso de revisión del estado de invalidez, queremos informarle que hemos procedido con la suspensión de su mesada pensional, <b>tal y como lo señala '+
+                    'el literal a. del artículo 44 de la ley 100 de 1993.</b> Es muy importante que tenga presente que después de doce (12) meses sin adjuntar los documentos empezará '+
+                    'a correr la prescripción de mesadas.</p>'+
+                    '<p>Finalmente, le informamos que la documentación puede ser aportada en cualquier momento en la oficina de <b>PROTECCIÓN</b> más cercana a su ciudad, o al '+
+                    'correo electrónico documentos.calificacion@proteccion.com.co, esto con el fin de realizar el procedimiento de revisión. El tamaño de los archivos no puede '+
+                    'ser superior a 20 MB, si excede este límite, debe remitirnos la información en varios correos.</p>'+
+                    '<p>Esperamos haber atendido satisfactoriamente su solicitud, permanecemos a su disposición para aclarar cualquier información adicional. Si tiene alguna '+
+                    'duda o quiere conocer más acerca de esta información, puede comunicarse con nuestro Asesor Virtual Pronto en nuestro Portal Web www.proteccion.com y App o '+
+                    'comunicarse con nuestra Línea de Servicio en Bogotá 7444464, en Medellín y Cali 5109099 Barranquilla 319 7999 Cartagena 6424999 y desde el resto del país '+
+                    '01 8000 52 8000.</p>';
+                    $('#cuerpo_comunicado').summernote('code', texto_insertar);
+                }
+            });
+            // $('#btn_insertar_Detalle_calificacion').removeClass('d-none');
+
+            // Auto selección de la opción Afiliado (Destinatario Principal)
+            $('#afiliado_comunicado').click();
+
+            // Seteo automático del nro de anexos:
+            var seteo_nro_anexos = 0;
+            $("#anexos").val(seteo_nro_anexos);
+
+            // Selección automática de las copias a partes interesadas:
+            $("#copia_afiliado").prop('checked', false);
+            $("#copia_empleador").prop('checked', false);
+            $("#copia_afp").prop('checked', false);
+            $("#copia_eps").prop('checked', false);
+            $("#copia_arl").prop('checked', false);
+            $("#copia_conocimiento").prop('checked', false);
 
             // Selección automática del checkbox firmar
             $("#firmarcomunicado").prop('checked', true);
             
         }else if (opc_seleccionada == "Documento_No_Recalificacion") {
-            $("#asunto").val("RESPUESTA A SOLICITUD DE RECALIFICACIÓN DE PCL");
+            $("#asunto").prop('readonly', false);
+            $(".note-editable").attr("contenteditable", true);
+            $("#asunto").val("RESPUESTA A SOLICITUD DE CALIFICACIÓN PÉRDIDA DE CAPACIDAD LABORAL");
 
-            // var texto_insertar = '<p>Reciba un cordial saludo, </p>'+
-            // '<p>Con ocasión de la solicitud de calificación de pérdida de capacidad laboral radicada por usted en la administradora de fondo de '+ 
-            // 'pensiones Porvenir, Seguros de Vida Alfa S.A., se permite dar respuesta en los términos que se describen a continuación. '+
-            // 'Una vez revisadas nuestras bases de datos y sistemas de información, se evidencia con respecto a su caso, que Seguros de Vida Alfa '+
-            // 'S.A. realizó calificación de la pérdida de capacidad laboral (PCL), con los diagnósticos de origen {{$OrigenPcl_dp}}: {{$CIE10Nombres}}, '+
-            // 'con un porcentaje del {{$PorcentajePcl_dp}} % y fecha de estructuración {{$F_estructuracionPcl_dp}}, la cual le fue remitida y le fue notificada.</p>'+
-            // '<p>Por tanto, en el momento no hay lugar a emitir nuevo dictamen de Calificación de Pérdida de Capacidad Laboral (PCL) por parte de '+
-            // 'Seguros Alfa; de acuerdo a lo establecido en el Decreto 1352 del 2013, Artículo 55:</p>'+
-            // '<p class="cuerpo_doc_revPen">“...la revisión de la pérdida de incapacidad permanente parcial por parte de las '+
-            // 'Juntas será procedente cuando el porcentaje sea inferior al 50% de pérdida de '+
-            // 'capacidad laboral a solicitud de la Administradora de Riesgos Laborales, los '+
-            // 'trabajadores o personas interesadas, mínimo al año siguiente de la calificación y '+
-            // 'siguiendo los procedimientos y términos de tiempo establecidos en el presente '+
-            // 'decreto...”</p>'+
-            // '<p>Esperamos de esta forma haber dado respuesta a su requerimiento y reiteramos nuestra voluntad de servicio. </p>';
-
-            var texto_insertar = '<p>Reciba un cordial saludo, </p>'+
-            '<p>Con ocasión de la solicitud de calificación de pérdida de capacidad laboral radicada por usted en la administradora de <b>Fondo de '+ 
-            'Pensiones Porvenir, Seguros de Vida Alfa S.A.</b>, se permite dar respuesta en los términos que se describen a continuación.</p>'+
-            '<p>(Sustentación de no recalificación)</p>'+
-            '<p>Esperamos de esta forma haber dado respuesta a su requerimiento y reiteramos nuestra voluntad de servicio. </p>';
+            var texto_insertar = '<p>Apreciado(a) {{$nombre_afiliado}},</p>'+
+            '<p>En Protección estamos para guiarle y acompañarle en cada momento de su vida. Con ocasión de la solicitud de calificación de pérdida de capacidad laboral '+
+            'radicada por usted, la Administradora de Fondo de Pensiones y Cesantías <b>PROTECCIÓN</b> se permite dar respuesta en los términos que se describen a continuación. '+
+            '<p>(Sustentación)</p>'+
+            '<p>Le agradecemos la confianza depositada en nosotros durante estos años y le recordamos que cuenta con nuestra asesoría. Ante cualquier duda, puede comunicarse '+
+            'a nuestra Línea de Servicio: Bogotá: 744 44 64, Medellín y Cali: 510 90 99 Barranquilla: 319 79 99, Cartagena: 642 49 99 y desde el resto del país: 01 8000 52 8000.</p>';
 
             $('#cuerpo_comunicado').summernote('code', texto_insertar);
             // $('#btn_insertar_Detalle_calificacion').removeClass('d-none');
@@ -3828,13 +4652,228 @@ $(document).ready(function(){
             var seteo_nro_anexos = 0;
             $("#anexos").val(seteo_nro_anexos);
 
-            // Deselección automática de las copias a partes interesadas: Eps
+            // Selección automática de las copias a partes interesadas:
+            $("#copia_afiliado").prop('checked', false);
+            $("#copia_empleador").prop('checked', false);
+            $("#copia_afp").prop('checked', false);
             $("#copia_eps").prop('checked', false);
+            $("#copia_arl").prop('checked', false);
+            $("#copia_conocimiento").prop('checked', false);
 
             // Selección automática del checkbox firmar
             $("#firmarcomunicado").prop('checked', true);
-        }        
-        else{
+        }else if (opc_seleccionada == "Desistimiento_PCL") {
+            $("#asunto").prop('readonly', false);
+            $(".note-editable").attr("contenteditable", true);
+            $("#asunto").val("DESISTIMIENTO TÁCITO DE SOLICITUD DE CALIFICACIÓN DE PCL");
+            // Traemos la lista de los documentos solicitados y lo insertamos junto con el texto en el cuerpo del comunicado
+            var id_evento = $('#newId_evento').val();
+            var id_proceso = $('#Id_proceso').val();
+            var id_asignacion = $('#newId_asignacion').val();
+
+            let datos_lista_soli_docs = {
+                '_token': token,
+                'parametro':"listado_solicitud_documentos",
+                'id_proceso': id_proceso,
+                'id_evento': id_evento,
+                'id_asignacion': id_asignacion 
+            };
+            $.ajax({
+                type:'POST',
+                url:'/selectoresModuloCalificacionPCL',
+                data: datos_lista_soli_docs,
+                success:function(data){
+
+                    if (data.length > 0) {
+                        var listado = '<ul>';
+                        let listado_solicitud_documentos = Object.keys(data);
+                        for (let i = 0; i < listado_solicitud_documentos.length; i++) {
+                            var documento = data[listado_solicitud_documentos[i]];
+                            var nombre = documento['Nombre_documento'] ? documento['Nombre_documento'] : '';
+                            var descripcion = documento['Descripcion'] ? documento['Descripcion'] : '';
+                            
+                            if (nombre || descripcion) {
+                                listado += '<li><b>'+nombre+'</b></li>';
+                            }
+                        }
+
+                        listado += '</ul>';
+                        
+                    } else {
+                        listado = '';
+                    }
+                    var texto_insertar = "<p>Respetado(a) Señor(a),</p>"+
+                        "<p>Reciba un cordial saludo de la Administradora de Fondos de Pensiones y Cesantías Protección S.A.</p>"+
+                        "<p>Nos permitimos indicarle que luego de evaluar el contenido de la documentación aportada por usted, se evidenció que la misma se encontraba "+
+                        "incompleta, esto le fue informado en días pasados, y se indicó que era necesario que, en un término no superior a un (1) mes, allegara los documentos "+
+                        "que registraban faltantes anunciados a continuación:</p>"+
+                        listado+
+                        "<p>Vencido el plazo informado en dicha comunicación, se pudo constatar por parte de <b>PROTECCIÓN S.A.</b> que usted no aportó dentro del plazo concedido "+
+                        "la documentación requerida ni informó sobre la imposibilidad de obtener el documento o cumplir con la gestión.</p>"+
+                        "<p>Así las cosas y en aplicación del artículo 17 de la Ley 1755 de 2015, se procede a decretar el <b>DESISTIMIENTO</b> frente a su solicitud de calificación "+
+                        "de Pérdida de capacidad laboral (PCL) y en consecuencia se <u>ARCHIVA</u> la mencionada solicitud.</p>"+
+                        "<p>No obstante, usted cuenta con el derecho de presentar nuevamente la solicitud con el lleno de los requisitos legales. Si tiene alguna duda o quiere "+
+                        "conocer más acerca de esta información, puede escribirnos a clientes@proteccion.com.co o comunicarse con nuestra Línea de Servicio en Bogotá 7444464, en "+
+                        "Medellín y Cali 5109099 Barranquilla 319 7999 Cartagena 6424999 y desde el resto del país 01 8000 52 8000.</p>";
+                    $('#cuerpo_comunicado').summernote('code', texto_insertar);
+                }
+            });
+            // $('#btn_insertar_Detalle_calificacion').removeClass('d-none');
+            // $('#btn_insertar_Origen').removeClass('d-none');
+            // $('#btn_insertar_nombreCIE10').removeClass('d-none');
+            // $('#btn_insertar_porPcl').removeClass('d-none');
+            // $('#btn_insertar_F_estructuracion').removeClass('d-none');
+
+            // Auto selección de la opción Afiliado (Destinatario Principal)
+            $('#afiliado_comunicado').click();
+
+            // Seteo automático del nro de anexos:
+            var seteo_nro_anexos = 0;
+            $("#anexos").val(seteo_nro_anexos);
+
+            // Selección automática de las copias a partes interesadas:
+            $("#copia_afiliado").prop('checked', false);
+            $("#copia_empleador").prop('checked', false);
+            $("#copia_afp").prop('checked', false);
+            $("#copia_eps").prop('checked', false);
+            $("#copia_arl").prop('checked', false);
+            $("#copia_conocimiento").prop('checked', false);
+
+            // Selección automática del checkbox firmar
+            $("#firmarcomunicado").prop('checked', true);
+        }else if (opc_seleccionada == "Cierre_MMM_PCL") {
+            $("#asunto").prop('readonly', false);
+            $(".note-editable").attr("contenteditable", true);
+            $("#asunto").val("CIERRE ADMINISTRATIVO SOLICITUD DE CALIFICACIÓN PCL");
+            var texto_insertar = "<p>Respetado(a) Señor(a),</p>"+
+                "<p>Reciba un cordial saludo de la Administradora de Fondos de Pensiones y Cesantías <b>PROTECCIÓN S.A.</b></p>"+
+                "<p>Nos permitimos informarle que luego de evaluar el contenido de la documentación aportada por usted, se evidenció que aún se encuentra mediando "+
+                "tratamiento en su EPS, y aún no alcanza la mejoría medica máxima por lo que no es posible proceder con la calificación de su pérdida de capacidad laboral (PCL).</p>"+
+                "<p>Lo anterior debido al Anexo Técnico - Manual Único para la Calificación de la Pérdida de Capacidad Laboral y Ocupacional expedido por orden del Decreto 1507 "+
+                "de 2014 el cual establece en el Título Preliminar, lo siguiente:</p>"+
+                '<p class="cuerpo_doc_revPen"><b>4.6. MEJORÍA MÉDICA MÁXIMA “MMM”:</b> Punto en el cual la condición patológica se estabiliza sustancialmente y es poco probable que '+
+                'cambie, ya sea para mejorar o empeorar, en el próximo año, con o sin tratamiento (…)</p>'+
+                '<p class="cuerpo_doc_revPen"><b>5. METODOLOGÍA PARA LA DETERMINACIÓN DEL GRADO EN UNA CLASE DE DEFICIENCIA:</b> Se realizará cuando la persona objeto de calificación alcance la mejoría médica '+
+                'máxima (MMM) o cuando termine el proceso de rehabilitación integral y en todo caso antes de superar los quinientos cuarenta (540) días de haber ocurrido el '+
+                'accidente o diagnóstico de la enfermedad (…)</p>'+
+                "<p>Por tal motivo su trámite será finalizado hasta tanto culmine dicho tratamiento. Una vez este se encuentre terminado, solicitamos radicar de nuevo su "+
+                "solicitud, aportando historia clínica vigente y concepto de los médicos tratantes, documento con el cual se evaluará nuevamente el caso para poder emitir "+
+                "una calificación de pérdida de capacidad laboral.</p>"+
+                "<p>Así mismo, es importante aclarar que no procede el pago de incapacidades médicas a su nombre, puesto que dicho subsidio será otorgado únicamente por el "+
+                "Fondo de Pensiones <b>PROTECCIÓN S.A.</b>, a aquella persona afiliada remitida por su Entidad Promotora de Salud (EPS) con un pronóstico de recuperación favorable, "+
+                "evento que no ocurre en su situación particular.</p>"+
+                "<p>Esperamos haber atendido su solicitud, permanecemos a su disposición para aclarar cualquier información adicional. Si tiene alguna duda o quiere conocer "+
+                "más acerca de esta información, puede comunicarse con nuestro Asesor Virtual Pronto en nuestro Portal Web www.proteccion.com y App o comunicarse con nuestra "+
+                "Línea de Servicio en Bogotá 7444464, en Medellín y Cali 5109099 Barranquilla 319 7999 Cartagena 6424999 y desde el resto del país 01 8000 52 8000.</p>";
+            $('#cuerpo_comunicado').summernote('code', texto_insertar);
+            // $('#btn_insertar_Detalle_calificacion').removeClass('d-none');
+            // $('#btn_insertar_Origen').removeClass('d-none');
+            // $('#btn_insertar_nombreCIE10').removeClass('d-none');
+            // $('#btn_insertar_porPcl').removeClass('d-none');
+            // $('#btn_insertar_F_estructuracion').removeClass('d-none');
+
+            // Auto selección de la opción Afiliado (Destinatario Principal)
+            $('#afiliado_comunicado').click();
+
+            // Seteo automático del nro de anexos:
+            var seteo_nro_anexos = 0;
+            $("#anexos").val(seteo_nro_anexos);
+
+            // Selección automática de las copias a partes interesadas:
+            $("#copia_afiliado").prop('checked', false);
+            $("#copia_empleador").prop('checked', false);
+            $("#copia_afp").prop('checked', false);
+            $("#copia_eps").prop('checked', false);
+            $("#copia_arl").prop('checked', false);
+            $("#copia_conocimiento").prop('checked', false);
+
+            // Selección automática del checkbox firmar
+            $("#firmarcomunicado").prop('checked', true);
+        }else if (opc_seleccionada == "Cierre_Cita_PCL") {
+            $("#asunto").prop('readonly', false);
+            $(".note-editable").attr("contenteditable", true);
+            $("#asunto").val("CIERRE ADMINISTRATIVO SOLICITUD DE CALIFICACIÓN PCL");
+            var texto_insertar = "<p>Respetado(a) Señor(a),</p>"+
+                "<p>Reciba un cordial saludo de la Administradora de Fondos de Pensiones y Cesantías <b>PROTECCIÓN S.A.</b></p>"+
+                "<p>Una vez evaluada su solicitud de trámite ante el fondo de pensiones y teniendo presente la legislación actual vigente, decreto 2463 del 2001 y decreto 917/1999, "+
+                "encontramos que es indispensable que usted asista a las citas de evaluación funcional y aporte Historia Clínica solicitada.</p>"+
+                '<p>Por lo tanto, se evidencia que usted no asistió a la segunda cita de valoración funcional el día <b>DD/MM/AAAA</b>.</p>'+
+                '<p>En virtud de lo anterior nos permitimos informarle que, a partir de la fecha de notificación de la presente carta, hemos dado por terminada su reclamación '+
+                'ante el fondo, ya que ha operado el <b>DESISTIMIENTO</b> tácito de su trámite.</p>'+
+                '<p class="cuerpo_doc_revPen">“…Cuando en el curso de una actuación administrativa la autoridad advierta que el peticionario debe realizar una gestión de '+
+                'trámite a su cargo, necesaria para adoptar una decisión de fondo, lo requerirá por una sola vez para que la efectúe en el término de un (1) mes, lapso durante '+
+                'el cual se suspenderá el término para decidir.</p>'+
+                '<p><b>Se entenderá que el peticionario ha desistido de su solicitud o de la actuación cuando no satisfaga el requerimiento</b>, salvo que antes de vencer el plazo '+
+                'concedido solicite prórroga hasta por un término igual”.</p>'+
+                "<p>No obstante, lo anterior le informamos que la solicitud de reapertura de su caso puede ser presentada en cualquier momento con los documentos que se "+
+                "requieran para el estudio del mismo, con la finalidad de que exista un pronunciamiento de fondo. </p>"+
+                "<p>Si tiene alguna duda o quiere conocer más acerca de esta información, puede comunicarse con nuestro Asesor Virtual Pronto en nuestro Portal Web "+
+                "www.proteccion.com y App o comunicarse con nuestra Línea de Servicio en Bogotá 7444464, en Medellín y Cali 5109099 Barranquilla 319 7999 Cartagena 6424999 "+
+                "y desde el resto del país 01 8000 52 8000.</p>";
+            $('#cuerpo_comunicado').summernote('code', texto_insertar);
+            // $('#btn_insertar_Detalle_calificacion').removeClass('d-none');
+            // $('#btn_insertar_Origen').removeClass('d-none');
+            // $('#btn_insertar_nombreCIE10').removeClass('d-none');
+            // $('#btn_insertar_porPcl').removeClass('d-none');
+            // $('#btn_insertar_F_estructuracion').removeClass('d-none');
+
+            // Auto selección de la opción Afiliado (Destinatario Principal)
+            $('#afiliado_comunicado').click();
+
+            // Seteo automático del nro de anexos:
+            var seteo_nro_anexos = 0;
+            $("#anexos").val(seteo_nro_anexos);
+
+            // Selección automática de las copias a partes interesadas:
+            $("#copia_afiliado").prop('checked', false);
+            $("#copia_empleador").prop('checked', false);
+            $("#copia_afp").prop('checked', false);
+            $("#copia_eps").prop('checked', false);
+            $("#copia_arl").prop('checked', false);
+            $("#copia_conocimiento").prop('checked', false);
+
+            // Selección automática del checkbox firmar
+            $("#firmarcomunicado").prop('checked', true);
+        }else if (opc_seleccionada == "Firmeza_PCL") {
+            $("#asunto").prop('readonly', false);
+            $(".note-editable").attr("contenteditable", true);
+            $("#asunto").val("FIRMEZA DE DICTAMEN DE PÉRDIDA DE CAPACIDAD LABORAL");
+            var texto_insertar = "<p>Reciba un cordial saludo de <b>PROTECCIÓN S.A</b></p>"+
+                "<p>En atención al Artículo 45 del Decreto 1352 de 2013, nos permitimos informar que <b>PROTECCIÓN S.A.</b>, emitió el dictamen N° <b>{{$N_Dictamen}}</b> de Pérdida de "+
+                "Capacidad Laboral (PCL) el día <b>{{$F_visado_comite}}</b>, donde se determinó un porcentaje del <b>{{$PCL}}%</b>, origen <b>{{$Tipo_evento}} {{$Origen}}</b> y fecha de "+
+                "estructuración del <b>{{$Fecha_estructuracion}}</b> notificado efectivamente a todas las partes.</p>"+
+                "<p>Así la cosas, hechas las respectivas validaciones encontramos que ninguna de las partes interesadas manifestó desacuerdo contra el dictamen en los tiempos "+
+                "establecidos por la norma, por lo anterior, confirmamos que la calificación de Pérdida de Capacidad Laboral (PCL) realizada <b><u>se encuentra en firme.</b></u></p>"+
+                '<p>Le agradecemos la confianza depositada en nosotros durante estos años y le recordamos que cuenta con nuestra asesoría. Ante cualquier duda, puede comunicarse '+
+                'a nuestra Línea de Servicio: Bogotá: 744 44 64, Medellín y Cali: 510 90 99 Barranquilla: 319 79 99, Cartagena: 642 49 99 y resto del país: 01 8000 52 8000.</p>';
+            $('#cuerpo_comunicado').summernote('code', texto_insertar);
+            // $('#btn_insertar_Detalle_calificacion').removeClass('d-none');
+            // $('#btn_insertar_Origen').removeClass('d-none');
+            // $('#btn_insertar_nombreCIE10').removeClass('d-none');
+            // $('#btn_insertar_porPcl').removeClass('d-none');
+            // $('#btn_insertar_F_estructuracion').removeClass('d-none');
+
+            // Auto selección de la opción Afiliado (Destinatario Principal)
+            $('#afiliado_comunicado').click();
+
+            // Seteo automático del nro de anexos:
+            var seteo_nro_anexos = 0;
+            $("#anexos").val(seteo_nro_anexos);
+
+            // Selección automática de las copias a partes interesadas:
+            $("#copia_afiliado").prop('checked', false);
+            $("#copia_empleador").prop('checked', true);
+            $("#copia_afp").prop('checked', false);
+            $("#copia_eps").prop('checked', true);
+            $("#copia_arl").prop('checked', true);
+            $("#copia_conocimiento").prop('checked', false);
+            
+
+            // Selección automática del checkbox firmar
+            $("#firmarcomunicado").prop('checked', true);
+        }else{
+            $("#asunto").prop('readonly', false);
+            $(".note-editable").attr("contenteditable", true);
             $("#asunto").val("");
             $('#cuerpo_comunicado').summernote('code', '');
             // $('#btn_insertar_Detalle_calificacion').addClass('d-none');
@@ -4020,10 +5059,10 @@ $(document).ready(function(){
         var copiaComunicadosPcl = [];
 
         $('input[type="checkbox"]').each(function() {
-            var copiaComunicado = $(this).attr('id');            
+            var copiaComunicado = $(this).attr('id');      
             if (copiaComunicado === 'copia_afiliado' || copiaComunicado === 'copia_empleador' || 
                 copiaComunicado === 'copia_eps' || copiaComunicado === 'copia_afp' || 
-                copiaComunicado === 'copia_arl') {                
+                copiaComunicado === 'copia_arl' || copiaComunicado === 'copia_conocimiento') {                
                 if ($(this).is(':checked')) {                
                 var relacionCopiaValor = $(this).val();
                 copiaComunicadosPcl.push(relacionCopiaValor);
@@ -4067,7 +5106,20 @@ $(document).ready(function(){
             'N_siniestro':N_siniestro,
         }
         // console.log("Cuerpo comunicado : ", cuerpo_comunicado);
-           
+        if(tipo_descarga === 'Cierre_Cita_PCL'){
+            if(cuerpo_comunicado.includes('DD/MM/AAAA')){
+                $("#mostrar_barra_creacion_comunicado").addClass('d-none');
+                $('.danger_comunicado').removeClass('d-none');
+                $('.danger_comunicado').append('<strong>"Para generar éste comunicado debe diligenciar la fecha de la segunda cita en el tercer párrafo</strong>');
+                setTimeout(function(){
+                    $('.danger_comunicado').addClass('d-none');
+                    $('.danger_comunicado').empty();
+                    $("#Generar_comunicados").prop('disabled', false);
+                    $("#Generar_comunicados").removeClass('d-none');
+                }, 3000);
+                return;
+            }
+        }
         $.ajax({
             type:'POST',
             url:'/registrarComunicado',
@@ -4115,44 +5167,11 @@ $(document).ready(function(){
                         'bandera_descarga':bandera_descarga,
                     };
                     
-                    // console.log(datos_comunicado);
                     $.ajax({
                         type:'POST',
                         url:'/generarPdf',
                         data: datos_comunicado,                                       
                         success: function (response, status, xhr) {
-                            // console.log('entro a descargar documento');
-                            
-                            // Obtener el contenido codificado en base64 del PDF desde la respuesta
-                            // var base64Pdf = response.pdf;
-    
-                            // // Decodificar base64 en un array de bytes
-                            // var binaryString = atob(base64Pdf);
-                            // var len = binaryString.length;
-                            // var bytes = new Uint8Array(len);
-        
-                            // for (var i = 0; i < len; i++) {
-                            //     bytes[i] = binaryString.charCodeAt(i);
-                            // }
-        
-                            // // Crear un Blob a partir del array de bytes
-                            // var blob = new Blob([bytes], { type: 'application/pdf' });
-    
-                            // var nombre_pdf = response.nombre_pdf;
-    
-                            // // console.log(nombre_pdf);                        
-                            // // Crear un enlace de descarga similar al ejemplo anterior
-                            // var link = document.createElement('a');
-                            // link.href = window.URL.createObjectURL(blob);
-                            // link.download = nombre_pdf;  // Reemplaza con el nombre deseado para el archivo PDF
-                    
-                            // // Adjuntar el enlace al documento y activar el evento de clic
-                            // document.body.appendChild(link);
-                            // link.click();
-                    
-                            // // Eliminar el enlace del documento
-                            // document.body.removeChild(link);
-
                             if (respuesta.parametro == 'agregar_comunicado') {
                                 $("#mostrar_barra_creacion_comunicado").addClass('d-none');
                                 $('.alerta_comunicado').removeClass('d-none');
