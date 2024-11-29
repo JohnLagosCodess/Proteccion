@@ -5072,12 +5072,7 @@ $(document).ready(function(){
                 }
             }
         });
-        var tipo_descarga = $("[name='tipo_documento_descarga_califi_editar']").filter(":checked").val();
-        if($("[name='tipo_documento_descarga_califi_editar']").filter(":checked").val() == 'Formato_B_Revision_pension'){
-            tipo_descarga = 'RATIFICACIÓN PENSIÓN'
-        }
-        console.log($("[name='tipo_documento_descarga_califi_editar']").filter(":checked").val());
-        console.log(tipo_descarga);
+        var tipo_descarga = $("[name='tipo_documento_descarga_califi']").filter(":checked").val();
         let token = $('input[name=_token]').val();  
         var datos_generarComunicado = {
             '_token': token,
