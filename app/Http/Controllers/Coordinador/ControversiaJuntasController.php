@@ -37,7 +37,7 @@ use PhpOffice\PhpWord\Style\Image;
 
 class ControversiaJuntasController extends Controller
 {
-    use GenerarRadicados,PDF;
+    use GenerarRadicados;
     protected $globalService;
 
     public function __construct(GlobalService $globalService)
