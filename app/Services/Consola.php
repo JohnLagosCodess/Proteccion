@@ -36,8 +36,6 @@ class Consola extends ServiceBus{
      * @param string Nombre del servicio
      */
     public function agregarParametros(string $nombreServicio){
-        $this->format();
-        
         return $this->agregarcomandos[$nombreServicio] ?? [];
     }
 

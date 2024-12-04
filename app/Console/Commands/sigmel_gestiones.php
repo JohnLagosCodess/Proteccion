@@ -46,13 +46,13 @@ class sigmel_gestiones extends Command
         foreach ($this->registarServicios as $nombre => $servicio) {
             $this->servicebus->registrarServicioConsola($nombre, $servicio);
 
-             $opciones = $this->servicebus->agregarParametros($nombre);
-             foreach ($opciones as $atributo => $comando) {
-                 foreach ($comando as $nombre => $descripcion) {
-                     $this->addOption($nombre, null, InputOption::VALUE_OPTIONAL, $descripcion);
-                 }
-             }
-         }
+            $opciones = $this->servicebus->agregarParametros($nombre);
+            foreach ($opciones as $atributo => $comando) {
+                foreach ($comando as $nombre => $descripcion) {
+                    $this->addOption($nombre, null, InputOption::VALUE_OPTIONAL, $descripcion);
+                }
+            }
+        }
     }
 
     /**
@@ -86,6 +86,7 @@ class sigmel_gestiones extends Command
         }
 
         try {
+            //Invoca al servicio registrado por el usuario
             $resultado = $this->servicebus->despacharConsola($nombre_servicio, $opciones);
 
             if($this->format == "string"){
