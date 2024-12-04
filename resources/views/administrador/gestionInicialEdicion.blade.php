@@ -590,7 +590,7 @@
                                                 <div class="col-3 afi_columna_municipio_info_afiliado d-none">
                                                     <div class="form-group" style="display:flex; flex-direction:column;">
                                                         <label for="afi_municipio_info_afiliado" class="col-form-label">Ciudad afiliado<span style="color:red;">(*)</span></label>
-                                                        <select class="afi_municipio_info_afiliado custom-select" name="afi_municipio_info_afiliado" id="afi_municipio_info_afiliado" disabled>
+                                                        <select class="afi_municipio_info_afiliado custom-select" name="afi_municipio_info_afiliado" id="afi_municipio_info_afiliado">
                                                             <?php if(!empty($array_datos_info_afiliados[0]->Id_municipio_benefi)):?>
                                                                 <option value="{{$array_datos_info_afiliados[0]->Id_municipio_benefi}}" selected>{{$array_datos_info_afiliados[0]->Nombre_municipio_benefi}}</option>
                                                             <?php endif?>
@@ -667,7 +667,7 @@
                                                     <div class="col-3 columna_ciudad_apoderado d-none">
                                                         <div class="form-group">
                                                             <label for="ciudad_apoderado" class="col-form-label">Ciudad apoderado <span style="color:red;">(*)</span></label>
-                                                            <select class="ciudad_apoderado custom-select" name="ciudad_apoderado" id="ciudad_apoderado" disabled>
+                                                            <select class="ciudad_apoderado custom-select" name="ciudad_apoderado" id="ciudad_apoderado">
                                                                 <?php if(!empty($array_datos_info_afiliados[0]->Id_municipio_apoderado)):?>
                                                                     <option value="{{$array_datos_info_afiliados[0]->Id_municipio_apoderado}}" selected>{{$array_datos_info_afiliados[0]->Nombre_municipio_apoderado}}</option>
                                                                 <?php endif?>

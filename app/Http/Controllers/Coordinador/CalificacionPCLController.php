@@ -676,6 +676,30 @@ class CalificacionPCLController extends Controller
             }
 
             // insercion de datos a la tabla de sigmel_informacion_accion_eventos
+
+            if ($request->fecha_primera_cita == 'undefined' || empty($request->fecha_primera_cita)) {
+                $fecha_primera_cita = NULL; // Asignamos NULL si no hay fecha válida
+            }else{
+                $fecha_primera_cita = $request->fecha_primera_cita;
+            }
+
+            if($request->incumple_primera_cita == 'undefined' || empty($request->incumple_primera_cita)){
+                $incumple_primera_cita = NULL;
+            }else{
+                $incumple_primera_cita = $request->incumple_primera_cita;
+            }
+
+            if ($request->fecha_segunda_cita == 'undefined' || empty($request->fecha_segunda_cita)) {
+                $fecha_segunda_cita = NULL; // Asignamos NULL si no hay fecha válida
+            }else{
+                $fecha_segunda_cita = $request->fecha_segunda_cita;
+            }
+
+            if($request->incumple_segunda_cita == 'undefined' || empty($request->incumple_segunda_cita)){
+                $incumple_segunda_cita = NULL;
+            }else{
+                $incumple_segunda_cita = $request->incumple_segunda_cita;
+            }
                           
             $datos_info__registrarCalifcacionPcl= [
                 'ID_evento' => $request->newId_evento,
@@ -683,10 +707,10 @@ class CalificacionPCLController extends Controller
                 'Id_proceso' => $request->Id_proceso,
                 // 'Modalidad_calificacion' => $request->modalidad_calificacion,
                 'fuente_informacion' => $request->fuente_informacion,
-                'F_primera_cita' => $request->fecha_primera_cita,
-                'Causal_incumplimiento_primera_cita' => $request->incumple_primera_cita,
-                'F_segunda_cita' => $request->fecha_segunda_cita,
-                'Causal_incumplimiento_segunda_cita' => $request->incumple_segunda_cita,
+                'F_primera_cita' => $fecha_primera_cita,
+                'Causal_incumplimiento_primera_cita' => $incumple_primera_cita,
+                'F_segunda_cita' => $fecha_segunda_cita,
+                'Causal_incumplimiento_segunda_cita' => $incumple_segunda_cita,
                 'F_accion' => $date_time,
                 'Accion' => $request->accion,
                 'F_Alerta' => $request->fecha_alerta,
@@ -706,10 +730,10 @@ class CalificacionPCLController extends Controller
                 'Aud_Id_proceso' => $request->Id_proceso,
                 // 'Aud_Modalidad_calificacion' => $request->modalidad_calificacion,
                 'Aud_fuente_informacion' => $request->fuente_informacion,
-                'Aud_F_primera_cita' => $request->fecha_primera_cita,
-                'Aud_Causal_incumplimiento_primera_cita' => $request->incumple_primera_cita,
-                'Aud_F_segunda_cita' => $request->fecha_segunda_cita,
-                'Aud_Causal_incumplimiento_segunda_cita' => $request->incumple_segunda_cita,
+                'Aud_F_primera_cita' => $fecha_primera_cita,
+                'Aud_Causal_incumplimiento_primera_cita' => $incumple_primera_cita,
+                'Aud_F_segunda_cita' => $fecha_segunda_cita,
+                'Aud_Causal_incumplimiento_segunda_cita' => $incumple_segunda_cita,
                 'Aud_F_accion' => $date_time,
                 'Aud_Accion' => $request->accion,
                 'Aud_F_Alerta' => $request->fecha_alerta,
@@ -1244,6 +1268,30 @@ class CalificacionPCLController extends Controller
             }
 
             // actualizacion de datos a la tabla de sigmel_informacion_accion_eventos
+
+            if ($request->fecha_primera_cita == 'undefined' || empty($request->fecha_primera_cita)) {
+                $fecha_primera_cita = NULL; // Asignamos NULL si no hay fecha válida
+            }else{
+                $fecha_primera_cita = $request->fecha_primera_cita;
+            }
+
+            if($request->incumple_primera_cita == 'undefined' || empty($request->incumple_primera_cita)){
+                $incumple_primera_cita = NULL;
+            }else{
+                $incumple_primera_cita = $request->incumple_primera_cita;
+            }
+
+            if ($request->fecha_segunda_cita == 'undefined' || empty($request->fecha_segunda_cita)) {
+                $fecha_segunda_cita = NULL; // Asignamos NULL si no hay fecha válida
+            }else{
+                $fecha_segunda_cita = $request->fecha_segunda_cita;
+            }
+
+            if($request->incumple_segunda_cita == 'undefined' || empty($request->incumple_segunda_cita)){
+                $incumple_segunda_cita = NULL;
+            }else{
+                $incumple_segunda_cita = $request->incumple_segunda_cita;
+            }
             
             $datos_info_actualizarCalifcacionPcl= [
                 'ID_evento' => $request->newId_evento,
@@ -1251,10 +1299,10 @@ class CalificacionPCLController extends Controller
                 'Id_proceso' => $request->Id_proceso,
                 // 'Modalidad_calificacion' => $request->modalidad_calificacion,
                 'fuente_informacion' => $request->fuente_informacion,
-                'F_primera_cita' => $request->fecha_primera_cita,
-                'Causal_incumplimiento_primera_cita' => $request->incumple_primera_cita,
-                'F_segunda_cita' => $request->fecha_segunda_cita,
-                'Causal_incumplimiento_segunda_cita' => $request->incumple_segunda_cita,
+                'F_primera_cita' => $fecha_primera_cita,
+                'Causal_incumplimiento_primera_cita' => $incumple_primera_cita,
+                'F_segunda_cita' => $fecha_segunda_cita,
+                'Causal_incumplimiento_segunda_cita' => $incumple_segunda_cita,
                 'F_accion' => $date_time,
                 'Accion' => $request->accion,
                 'F_Alerta' => $request->fecha_alerta,
@@ -1274,10 +1322,10 @@ class CalificacionPCLController extends Controller
                 'Aud_Id_proceso' => $request->Id_proceso,
                 // 'Aud_Modalidad_calificacion' => $request->modalidad_calificacion,
                 'Aud_fuente_informacion' => $request->fuente_informacion,
-                'Aud_F_primera_cita' => $request->fecha_primera_cita,
-                'Aud_Causal_incumplimiento_primera_cita' => $request->incumple_primera_cita,
-                'Aud_F_segunda_cita' => $request->fecha_segunda_cita,
-                'Aud_Causal_incumplimiento_segunda_cita' => $request->incumple_segunda_cita,
+                'Aud_F_primera_cita' => $fecha_primera_cita,
+                'Aud_Causal_incumplimiento_primera_cita' => $incumple_primera_cita,
+                'Aud_F_segunda_cita' => $fecha_segunda_cita,
+                'Aud_Causal_incumplimiento_segunda_cita' => $incumple_segunda_cita,
                 'Aud_F_accion' => $date_time,
                 'Aud_Accion' => $request->accion,
                 'Aud_F_Alerta' => $request->fecha_alerta,
