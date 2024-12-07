@@ -188,7 +188,7 @@
             ?>
             <div class="footer_content" style="text-align:center;">
                 <span style="position: absolute; width: 100%; text-align:center; top: 10px; left:0px; color:#4D4D4D; font-weight:bold; font-size: 11px;">
-                    {{$Nombre_afiliado }} - {{$T_documento_afiliado}} {{$N_documento_afiliado}} - SINIESTRO OKIS: {{$N_siniestro}} 
+                    {{$Nombre_afiliado }} - {{$T_documento_afiliado}} {{$N_documento_afiliado}} - SINIESTRO: {{$N_siniestro}} 
                 </span>
                 <img src="data:image/png;base64,{{ $footer_base64 }}" class="footer_image" style="display: block;">
             </div>
