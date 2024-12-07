@@ -287,6 +287,7 @@
                 @endif
             </tbody>
         </table>
+        <br><br>
         <section class="fuente_todo_texto">            
             <?php
                 $patron1 = '/\{\{\$Nombre_afiliado\}\}/';   
