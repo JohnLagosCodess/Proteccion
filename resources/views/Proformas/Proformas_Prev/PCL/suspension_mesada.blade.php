@@ -48,7 +48,8 @@
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
-            align-items: center; 
+            align-items: center;
+            font-family: sans-serif;
         }
         /* #footer .page{
             text-align: right;
@@ -80,11 +81,7 @@
             width: auto;
             height: 150px;
         }
-        .tabla_footer{
-            width: 100%;
-            font-family: sf-pro-display-black, sans-serif;
-            font-size: 12px;
-        }
+        
         .color_letras_alfa{
             color: #184F56;
             font-weight: bold;
@@ -150,9 +147,16 @@
         }
         .copias{
             font-size: 10px;
+            font-style: italic;
         }     
         .derecha{
             float: right;
+        }
+
+        .qr_proteccion{
+            width: auto;
+            height: 150px;
+            padding-left: 30px;
         }
     </style>
 </head>
@@ -212,6 +216,7 @@
                 <tr>
                     <td style="width:100%; display:table; justify-content: space-between;">
                         <p class="fuente_todo_texto paddingTexto derecha"><span class="negrita">{{$ciudad}}, {{$fecha}}</span></p>
+                        <br><br>
                         <div>
                             <div class="fuente_todo_texto paddingTexto">
                                 <span class="negrita">Señor(a): </span><br>
@@ -219,14 +224,14 @@
                             </div>
                             <div class="fuente_todo_texto paddingTexto">{{$Email_destinatario}}</div>
                             <div class="fuente_todo_texto paddingTexto">{{$Direccion_destinatario}}</div>
-                            <div class="fuente_todo_texto paddingTexto">{{$Telefono_destinatario}}</div>
+                            <div class="fuente_todo_texto paddingTexto">Tel. {{$Telefono_destinatario}}</div>
                             <div class="fuente_todo_texto paddingTexto"><?php if($Ciudad_destinatario == "Bogota D.C."): ?>{{$Ciudad_destinatario}}<?php else: ?>{{$Ciudad_destinatario.' - '.$Departamento_destinatario}}<?php endif ?></div>
                         </div>   
                     </td>
                 </tr>
             </tbody>
         </table>
-        <br>
+        <br><br>
         <table class="tabla1">
             <tbody>
                 <tr>
@@ -234,18 +239,18 @@
                         <div style="float:right; text-align: right;">
                             <span class="negrita">Asunto: {{$asunto}}</span><br> 
                             @if($Tipo_afiliado === 27)
-                                <span class="negrita">Beneficiario:</span> {{$Nombre_beneficiario}} {{$T_documento_beneficiario}} {{$N_documento_beneficiario}}<br>
-                                <span class="negrita">Afiliado:</span> {{$Nombre_afiliado}} {{$T_documento_afiliado}} {{$N_documento_afiliado}}<br>
+                                <span>Beneficiario:</span> <b>{{$Nombre_beneficiario}} {{$T_documento_beneficiario}}. {{$N_documento_beneficiario}}</b><br>
+                                <span>Afiliado:</span> <b>{{$Nombre_afiliado}} {{$T_documento_afiliado}}. {{$N_documento_afiliado}}</b><br>
                             @endif
                             @if($Tipo_afiliado === 26 || $Tipo_afiliado === 28 || $Tipo_afiliado === 29) 
-                                <span class="negrita">Afiliado:</span> {{$Nombre_afiliado}} {{$T_documento_afiliado}} {{$N_documento_afiliado}}<br>
+                                <span>Afiliado:</span> <b>{{$Nombre_afiliado}} {{$T_documento_afiliado}}. {{$N_documento_afiliado}}</b><br>
                             @endif
                         </div>
                     </td>
                 </tr>
             </tbody>
         </table>
-        <br>
+        <br><br>
         <section class="fuente_todo_texto" style="clear: both;">   
             <br>         
             <?php
@@ -261,14 +266,15 @@
                 print_r($cuerpo);
             ?>
         </section>
-        <br>
+        <br><br>
         <section class="fuente_todo_texto">
             Cordialmente,
             <br>
             <br>
+            <br>
             <strong>PROTECCIÓN S.A.</strong>
         </section>  
-        <br>
+        <br><br>
         <table class="tabla1 fuente_todo_texto" style="text-align: justify;">                               
             @if (count($Agregar_copia) > 0)
                 <tr>
@@ -352,15 +358,23 @@
             <span class="fuente_cuadro_inferior"><span class="negrita">Siniestro: {{$N_siniestro}}</span></span><br>
         </div>
         <br>
-        <section>
-            <p class="fuente_todo_texto">Le invitamos a actualizar sus datos.</p>
-            <p class="fuente_todo_texto">Al autorizar sus datos, accedes a la oferta que tenemos para usted y para la construcción de su futuro a través del ahorro.</p>
-            <p class="fuente_todo_texto">Actualízalos en el siguiente QR:</p>
+        <section class="fuente_todo_texto">
+            <p>Le invitamos a actualizar sus datos.</p>
+            <p>Al autorizar sus datos, accede a la oferta que tenemos para usted y para la construcción de su futuro a través del ahorro.</p>
+            <p>Actualizarlos en el siguiente QR:</p>
+            <?php
+                $imagenPath_footer = public_path('/images/logos_preformas/QR_proteccion.png');
+                $imagenData_footer = file_get_contents($imagenPath_footer);
+                $imagenBase64_footer = base64_encode($imagenData_footer);
+            ?>
+            <div style="text-align: center;">
+                <img src="data:image/png;base64,{{ $imagenBase64_footer }}" class="qr_proteccion">
+            </div>
         </section>
-        <br>
+        {{-- <br>
         <div style="text-align:center;">
             <img src="data:image/png;base64,{{ base64_encode($codigoQR) }}" alt="Código QR" >
-        </div>
+        </div> --}}
     </div>
     <script type="text/php">
         if ( isset($pdf) ) {

@@ -13,13 +13,10 @@
 
         #header {
             position: fixed; 
-            /* esta ligado con el primer valor del margin */
             top: -2.2cm;
             left: 0cm;
             width: 100%;
-            /* height: 100px; */
-            text-align: center; 
-            /* background: green; */
+            text-align: center;  
         }
         .codigo_qr{
             /* position: absolute; */
@@ -31,10 +28,10 @@
 
         .logo_header{
             /* position: absolute; */
-            max-width: 100%;
+            max-width: 60%;
             height: auto;
             /* left: 535px; */
-            max-height: 75px; 
+            max-height: 60px; 
         } 
         #footer{
             position: fixed;

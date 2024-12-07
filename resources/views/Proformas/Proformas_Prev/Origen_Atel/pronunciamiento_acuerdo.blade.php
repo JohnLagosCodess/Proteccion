@@ -237,7 +237,7 @@
                 </tr>
             </tbody>
         </table>
-        {{-- <br> --}}
+        <br><br>
         <table class="tabla1">
             <tbody>
                 <tr>
@@ -252,7 +252,7 @@
                 </tr>
             </tbody>
         </table>
-        <br>
+        <br><br>
         <section class="fuente_todo_texto">
             <table class='tabla_acuerdo_origen'>
                 <tbody>
@@ -290,10 +290,14 @@
                 </span>
             </div>
         </div>
-        <br>
+        <br><br>
         <section class="fuente_todo_texto">
             Cordialmente,
-            <div class="firma">
+            <br>
+            <br>
+            <br>
+            <strong>PROTECCIÓN S.A.</strong>
+            {{-- <div class="firma">
                 <?=$Firma_cliente?>
             </div>
             <div class="fuente_todo_texto">
@@ -304,9 +308,9 @@
                 <span class="negrita">Seguro Alfa S.A. y Seguro de Vida Alfa S.A.</span>
                 {{-- <br>
                 <span class="negrita">Anexo: {{$nro_anexos}}</span> --}}
-            </div>
+            </div> --}}
         </section>
-        <br>
+        <br><br>
         <section class="fuente_todo_texto">
             {{-- <span class="negrita">Elboró:</span> {{$nombre_usuario}} --}}
             <table style="text-align: justify; width:100%; margin-left: -3px;">

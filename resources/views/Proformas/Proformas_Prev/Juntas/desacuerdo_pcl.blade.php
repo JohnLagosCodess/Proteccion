@@ -48,6 +48,7 @@
             flex-direction: column;
             justify-content: flex-end;
             align-items: center; 
+            font-family: sans-serif;
         }
         #footer .page{
             text-align: right;
@@ -123,16 +124,11 @@
             page-break-before: always;
         }
         .cuadro{
-            position: absolute;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-35px);
-            margin: auto;
             border: 2px solid black;
             width: 4cm;
             padding: 1px;
-            height: 60px;
-        }      
+            height: auto;
+        }       
         .fuente_cuadro_inferior{
             font-family: sans-serif;
             font-size: 10px;
@@ -145,6 +141,7 @@
 
         .copias{
             font-size: 10px;
+            font-style: italic;
         }
         .firma > *{
             display: block;
@@ -187,7 +184,7 @@
             <div class="footer_content" style="text-align:center;">
                 <span style="position: absolute; width: 100%; text-align:center; top: 10px; left:0px; color:#4D4D4D; font-weight:bold; font-size: 11px;">
                     @if($info_afiliado->Tipo_afiliado == 27)
-                        {{$info_afiliado->Nombre_afiliado_benefi}} - {{$info_afiliado->t_doc_beneficiario}} {{$info_afiliado->Nro_identificacion_benefi}} - SINIESTROsss: {{$N_siniestro}} 
+                        {{$info_afiliado->Nombre_afiliado_benefi}} - {{$info_afiliado->t_doc_beneficiario}} {{$info_afiliado->Nro_identificacion_benefi}} - SINIESTRO: {{$N_siniestro}} 
                     @else
                         {{$nombre_afiliado}} - {{$t_documento}} {{$n_documento}} - SINIESTRO: {{$N_siniestro}} 
                     @endif
@@ -211,7 +208,7 @@
             <span class="fuente_todo_texto">Señores: <br><strong>{{$nombre_junta}}</strong></span><br>
             <span class="fuente_todo_texto">{{$email_junta}}</span><br>
             <span class="fuente_todo_texto">{{$direccion_junta}}</span><br>
-            <span class="fuente_todo_texto">{{$telefono_junta}}</span><br>
+            <span class="fuente_todo_texto">Tel. {{$telefono_junta}}</span><br>
             @if($ciudad_junta == "Bogota D.C.")
                 <span class="fuente_todo_texto">{{$ciudad_junta}}</span>
             @else
@@ -219,7 +216,7 @@
             @endif
             
         </div>
-        <br>
+        <br><br>
         <div style="float: right;text-align: right; width:97%; margin-top:30px; margin-bottom:30px;">
             <div class="col-6">
                 <span class="fuente_todo_texto negrita"> Asunto: {{$asunto}}</span><br>
@@ -229,7 +226,7 @@
                 @endif
             </div>
         </div>
-        <div class="fuente_todo_texto" style="margin-bottom: 2em">
+        <div class="fuente_todo_texto" style="margin-bottom: 2em; text-align: justify;">
             @php
                 $target = [
                     "diagnosticos" => '{{$cie10_nombre_cie10_jrci}}',
@@ -254,11 +251,14 @@
             @endphp
 
         </div>
+        <br><br>
         <div class="fuente_todo_texto firma">
-            <span>Cordialmente,</span><br><br>
+            <span>Cordialmente,</span><br><br><br>
             <span><strong>PROTECCIÓN S.A.</strong></span>
         </div>
+
         @if(!empty($Agregar_copia))
+            <br><br>
             <div class="copias">
                 @foreach ($Agregar_copia as $copias => $valor)
                     @if($copias == "Afiliado")
@@ -269,8 +269,10 @@
                 @endforeach
             </div>
         @endif
+        <br>
+        <br>
         <div class="radicado">
-            <div class="cuadro fuente_cuadro_inferior" >
+            <div class="cuadro fuente_cuadro_inferior" style="margin: 0 auto">
                 <span class="fuente_cuadro_inferior"><span class="negrita">Nro. Radicado: <br>{{$nro_radicado}}</span></span><br>
                 <span class="fuente_cuadro_inferior"><span class="negrita">{{$t_documento}} {{$n_documento}}</span></span><br>
                 <span class="fuente_cuadro_inferior"><span class="negrita">Siniestro: {{$N_siniestro}}</span></span><br>

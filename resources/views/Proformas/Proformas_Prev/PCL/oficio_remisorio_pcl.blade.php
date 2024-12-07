@@ -53,6 +53,7 @@
             flex-direction: column;
             justify-content: flex-end;
             align-items: center; 
+            font-family: sans-serif;
         }
         #footer .page{
             text-align: center;
@@ -252,6 +253,7 @@
                 <tr>
                     <td style="width:100%; display:table; justify-content: space-between;">
                         <p class="fuente_todo_texto paddingTexto derecha"><span class="negrita">{{$Ciudad_correspondencia}}, {{$F_correspondecia}}</span></p>
+                        <br><br>
                         <div>
                             <div class="fuente_todo_texto paddingTexto">
                                 <span>Señor(a)</span><br>
@@ -259,14 +261,14 @@
                             </div>
                             <div class="fuente_todo_texto paddingTexto">{{$Email_afiliado_noti}}</div>
                             <div class="fuente_todo_texto paddingTexto">{{$direccion_destinatario_principal}}</div>
-                            <div class="fuente_todo_texto paddingTexto">{{$telefono_destinatario_principal}}</div>
+                            <div class="fuente_todo_texto paddingTexto">Tel. {{$telefono_destinatario_principal}}</div>
                             <div class="fuente_todo_texto paddingTexto">{{$ciudad_destinatario_principal}}</div>
                         </div>   
                     </td>
                 </tr>
             </tbody>
         </table>
-        <br>
+        <br><br>
         <table class="tabla1">
             <tbody>
                 <tr>
@@ -299,6 +301,7 @@
                 @endif
             </tbody>
         </table>
+        <br><br>
         <section class="fuente_todo_texto">            
             <?php
                 $patron1 = '/\{\{\$Nombre_afiliado\}\}/';   
@@ -321,12 +324,13 @@
                 print_r($Cuerpo_comunicado_correspondencia);
             ?>
         </section>
+        <br><br>
         <section class="fuente_todo_texto">            
             Cordialmente,
-            <br><br>
+            <br><br><br>
             <b>PROTECCIÓN S.A.</b>                                    
         </section>        
-        <br>
+        <br><br>
         <section class="fuente_todo_texto">
             <table class="tabla1" style="text-align: justify;">                               
                 @if (empty($Copia_afiliado_correspondencia) && empty($Copia_empleador_correspondecia) && empty($Copia_eps_correspondecia) && empty($Copia_afp_correspondecia) && empty($Copia_arl_correspondecia))
@@ -475,7 +479,7 @@
                                 <li>Una carta en la que expliques los hechos relacionados con tu caso y los motivos de tu inconformidad, debidamente firmada.</li>
                                 <li>Copia de esta notificación firmada.</li>
                                 <li>Copia de tu documento de identidad.</li>
-                                <li>Si tu apelación o la notificación del dictamen es firmada por una persona diferente a ti, deberás aportar copia de la cedula de 
+                                <li>Si tu apelación o la notificación del dictamen es firmada por una persona diferente a ti, deberás aportar copia de la cédula de 
                                     la persona que firma y poder autenticado en notaria.
                                 </li>
                             </ol>

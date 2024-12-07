@@ -800,11 +800,11 @@
                                                             <td><select class="custom-select" id="status_notificacion_{{$comunicados->N_radicado}}" data-deshabilitar={{$deshabilitarSelector ?? '1'}} style="width:100%;" data-deshabilitar={{$deshabilitarSelector ?? '1'}} data-default={{$comunicados->Estado_Notificacion}}></select></td>
                                                             <td><textarea class="form-control nota-col" name="nota_comunicado_{{$comunicados->N_radicado}}" id="nota_comunicado_{{$comunicados->N_radicado}}" cols="70" rows="3" style="resize:none; width:200px;">{{$comunicados->Nota}}</textarea></td> {{-- campo Nota--}}
                                                             <td style="display: flex; flex-direction:row; justify-content:space-around;">
-                                                                @if ($comunicados->Tipo_descarga == "Acuerdo" || $comunicados->Tipo_descarga == "Desacuerdo")
+                                                                @if ($comunicados->Tipo_descarga == "ACUERDO PCL" || $comunicados->Tipo_descarga == "DESACUERDO PCL")
                                                                     <form id="archivo_{{$comunicados->Id_Comunicado}}" data-archivo="{{json_encode($comunicados)}}" method="POST">
                                                                         @csrf
                                                                         <div class="d-none">
-                                                                            @if ($comunicados->Tipo_descarga == "Acuerdo")
+                                                                            @if ($comunicados->Tipo_descarga == "ACUERDO PCL")
                                                                                 {{-- tipo de proforma --}}
                                                                                 <input type="hidden" id="bandera_tipo_proforma" value="proforma_acuerdo">
                                                                                 {{-- Tipo de documento --}}
@@ -826,7 +826,7 @@
                                                                                 {{-- Id del comunicado a editar --}}
                                                                                 <input type="hidden" id="id_comunicado_a_editar" value="<?php if(!empty($comunicados->Id_Comunicado)){echo $comunicados->Id_Comunicado;}?>">
 
-                                                                            @elseif ($comunicados->Tipo_descarga == "Desacuerdo")
+                                                                            @elseif ($comunicados->Tipo_descarga == "DESACUERDO PCL")
 
                                                                                 {{-- Nombre entidad calificadora --}}
                                                                                 <input type="hidden" id="nom_entidad_califi" value="<?php if(!empty($info_pronuncia[0]->Nombre_entidad)){echo $info_pronuncia[0]->Nombre_entidad;}?>">

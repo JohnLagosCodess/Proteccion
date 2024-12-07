@@ -48,6 +48,7 @@
             flex-direction: column;
             justify-content: flex-end;
             align-items: center; 
+            font-family: sans-serif;
         }
         #footer .page{
             text-align: right;
@@ -123,15 +124,10 @@
             page-break-before: always;
         }
         .cuadro{
-            position: absolute;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-35px);
-            margin: auto;
             border: 2px solid black;
             width: 4cm;
             padding: 1px;
-            height: 60px;
+            height: auto;
         }      
         .fuente_cuadro_inferior{
             font-family: sans-serif;
@@ -211,10 +207,10 @@
             <span class="fuente_todo_texto">Señores: <br><strong>{{$nombre_junta}}</strong></span><br>
             <span class="fuente_todo_texto">{{$email_comunicado}}</span><br>
             <span class="fuente_todo_texto">{{$direccion_junta}}</span><br>
-            <span class="fuente_todo_texto">{{$telefono_junta}}</span><br>
+            <span class="fuente_todo_texto">Tel. {{$telefono_junta}}</span><br>
             <span class="fuente_todo_texto">{{$ciudad_junta}} - {{$departamento_junta}}</span>
         </div>
-        <br>
+        <br><br>
         <div style="float: right;text-align: right; width:97%; margin-top:30px; margin-bottom:30px;">
             <div class="col-6">
                 <span class="fuente_todo_texto negrita"> Asunto: {{$asunto}}</span><br>
@@ -224,7 +220,7 @@
                 @endif
             </div>
         </div>
-        <div class="fuente_todo_texto" style="margin-bottom: 2em">
+        <div class="fuente_todo_texto" style="margin-bottom: 2em; text-align: justify;">
             <?php 
                 $patron1 = '/\{\{\$nro_dictamen\}\}/';
                 $patron2 = '/\{\{\$f_dictamen_jrci\}\}/';
@@ -335,11 +331,13 @@
                 print_r($cuerpo);
             ?>
         </div>
+        <br><br>
         <div class="fuente_todo_texto firma">
-            <span>Cordialmente,</span><br><br>
+            <span>Cordialmente,</span><br><br><br>
             <span><strong>PROTECCIÓN S.A.</strong></span>
         </div>
         @if(!empty($Agregar_copia))
+            <br><br>
             <div class="copias">
                 @foreach ($Agregar_copia as $copias => $valor)
                     @if($copias == "Afiliado")
@@ -350,12 +348,13 @@
                 @endforeach
             </div>
         @endif
+        <br>
+        <div class="cuadro fuente_cuadro_inferior" style="margin: 0 auto">
+            <span class="fuente_cuadro_inferior"><span class="negrita">Nro. Radicado: <br>{{$nro_radicado}}</span></span><br>
+            <span class="fuente_cuadro_inferior"><span class="negrita">{{$tipo_identificacion}} {{$num_identificacion}}</span></span><br>
+            <span class="fuente_cuadro_inferior"><span class="negrita">Siniestro: {{$N_siniestro}}</span></span><br>
+        </div>
         <div class="radicado">
-            <div class="cuadro fuente_cuadro_inferior" >
-                <span class="fuente_cuadro_inferior"><span class="negrita">Nro. Radicado: <br>{{$nro_radicado}}</span></span><br>
-                <span class="fuente_cuadro_inferior"><span class="negrita">{{$tipo_identificacion}} {{$num_identificacion}}</span></span><br>
-                <span class="fuente_cuadro_inferior"><span class="negrita">Siniestro: {{$N_siniestro}}</span></span><br>
-            </div>
         </div>
     </div>
     <div class="page_break"></div>

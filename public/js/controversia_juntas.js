@@ -1,4 +1,4 @@
-//import proformas from "./plantilla_proformas.js";
+// import proformas from "./plantilla_proformas.js";
 
 $(document).ready(function(){
 
@@ -3579,7 +3579,8 @@ $(document).ready(function(){
     //Captura Formulario Correspondencia
     $('#form_correspondencia_juntas').submit(function (e){
         e.preventDefault();              
-        
+        $('#ActualizarCorrespondencia').prop('disabled', true);
+        $('#GuardarCorrespondencia').prop('disabled', true);
         var newId_evento = $('#newId_evento').val();
         var Id_proceso = $('#Id_proceso').val();
         var newId_asignacion  = $('#newId_asignacion').val();

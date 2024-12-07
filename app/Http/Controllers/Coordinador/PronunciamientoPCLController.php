@@ -589,6 +589,16 @@ class PronunciamientoPCLController extends Controller
             }
             $id_dest_principal = $nombre_entidad;
         }
+
+        // validacion para guardar el tipo de descarga
+        if ($request->decision_pr == 'Acuerdo') {
+            $tipo_descargapro = 'ACUERDO PCL';
+        } else if ($request->decision_pr == 'Desacuerdo') {
+            $tipo_descargapro = 'DESACUERDO PCL';            
+        } else {
+            $tipo_descargapro = $request->decision_pr;
+        }
+        
         //valida la acción del botón
         if ($request->bandera_pronuncia_guardar_actualizar == 'Guardar') {
             //Se asignan los IDs de destinatario por cada posible destinatario
@@ -668,7 +678,7 @@ class PronunciamientoPCLController extends Controller
                 'Agregar_copia' => $agregar_copias_comu,
                 'Anexos' => $request->n_anexos,
                 'Forma_envio' => $request->forma_envio,
-                'Tipo_descarga' => $request->decision_pr,
+                'Tipo_descarga' => $tipo_descargapro,
                 'Reemplazado' => 0,
                 'Otro_destinatario' => 1,
                 'Modulo_creacion' => 'pronunciamientoPCL',
@@ -867,7 +877,7 @@ class PronunciamientoPCLController extends Controller
                 'Anexos' => $request->n_anexos,
                 'Forma_envio' => $request->forma_envio,
                 'Agregar_copia' => $agregar_copias_comu,
-                'Tipo_descarga' => $request->decision_pr,
+                'Tipo_descarga' => $tipo_descargapro,
                 'Modulo_creacion' => 'pronunciamientoPCL',
                 'Reemplazado' => 0,
                 //En pronunciamientos el destinatario es el primer calificador

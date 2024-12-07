@@ -54,6 +54,7 @@
             flex-direction: column;
             justify-content: flex-end;
             align-items: center; 
+            font-family: sans-serif;
         }
 
         #footer .page{
@@ -256,22 +257,22 @@
                 <tr>
                     <td style="width:100%; display:table; justify-content: space-between;">
                         <p class="fuente_todo_texto paddingTexto derecha"><span class="negrita">{{$ciudad}}, {{$fecha}}</span></p>
-                        <br>
+                        <br><br>
                         <div>
                             <div class="fuente_todo_texto paddingTexto">
-                                <span>Señor(a)</span><br>
+                                <span class="negrita">Señor(a)</span><br>
                                 <b>{{$nombre_destinatario_principal}}</b>
                             </div>
                             <div class="fuente_todo_texto paddingTexto">{{$email_destinatario_principal}}</div>
                             <div class="fuente_todo_texto paddingTexto">{{$direccion_destinatario_principal}}</div>
-                            <div class="fuente_todo_texto paddingTexto">{{$telefono_destinatario_principal}}</div>
+                            <div class="fuente_todo_texto paddingTexto">Tel. {{$telefono_destinatario_principal}}</div>
                             <div class="fuente_todo_texto paddingTexto">{{$ciudad_destinatario_principal}}</div>
                         </div>   
                     </td>
                 </tr>
             </tbody>
         </table>
-        <br>
+        <br><br>
         <table class="tabla_asunto">
             <tbody>
                 <tr>
@@ -326,13 +327,13 @@
                 print_r($cuerpo);
             ?>
         </section>
+        <br><br> 
         <section class="fuente_todo_texto">
-            <br>        
             Cordialmente,
-            <br><br>
+            <br><br><br>
             <b>PROTECCIÓN S.A.</b>                        
         </section>
-        <br>
+        <br><br>
         <section class="fuente_todo_texto">
             <table style="text-align: justify; width:100%; margin-left: -3px;">
                 @if (count($Agregar_copia) == 0)
@@ -415,6 +416,8 @@
             </table>
         </section>
         <br>
+        <br>
+        <br>
         <div class="cuadro_radicado fuente_cuadro_radicado" style="margin: 0 auto">
             <span class="fuente_cuadro_radicado"><span class="negrita">Nro. Radicado : <br>{{$nro_radicado}}</span></span><br>
             <span class="fuente_cuadro_radicado"><span class="negrita">{{$tipo_doc_afiliado}} {{$nro_identificacion_afiliado}}</span></span><br>
@@ -463,8 +466,8 @@
         <br><br>
         <section class="fuente_todo_texto">
             <p>Le invitamos a actualizar sus datos.</p>
-            <p>Al autorizar sus datos, accedes a la oferta que tenemos para usted y para la construcción de su futuro a través del ahorro.</p>
-            <p>Actualízalos en el siguiente QR:</p>
+            <p>Al autorizar sus datos, accede a la oferta que tenemos para usted y para la construcción de su futuro a través del ahorro.</p>
+            <p>Actualizarlos en el siguiente QR:</p>
             <?php
                 $imagenPath_footer = public_path('/images/logos_preformas/QR_proteccion.png');
                 $imagenData_footer = file_get_contents($imagenPath_footer);

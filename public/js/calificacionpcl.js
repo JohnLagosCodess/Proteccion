@@ -528,23 +528,50 @@ $(document).ready(function(){
             Funcionalidad para dejar los siguientes campos required cuando se ejecute las siguientes acciones:
 
             Acción: REPORTAR PROGRAMACIÓN 1RA CITA - MÉDICO LABORAL (id 44)
-                Campos: Fecha de 1ra cita y Causal de incumplimiento 1ra cita
+                Campos: Fecha de 1ra cita 
+            Acción: REPORTAR INASISTENCIA 1RA CITA - REPROGRAMAR (id 29)
+                Campos: Causal de incumplimiento 1ra cita
             Acción: REPROGRAMAR 2DA CITA - MÉDICO LABORAL (id 51)
-                Campos: Fecha de 2da cita y Causal de incumplimiento 2da cita
+                Campos: Fecha de 2da cita
+            Acción: CERRAR POR INASISTENCIA A CITAS (id 12)
+                Campos: Causal de incumplimiento 2da cita
             Cualquier otra opción: Se quitan los required y se oculta la viñeta (*)
         */
         if ($(this).val() == 44) {
             $("#fecha_primera_cita").prop('required', true);
+            $(".obligatorio_fecha_pri_cita").removeClass('d-none');
+
+            /* Activacion alerta para indicar sobre la creacion de obligatoriedad de los campos */
+            var nombre_accion = $(this).find('option:selected').text();
+            var texto_alerta = `Señor usuario(a): La acción seleccionada: <b>${nombre_accion}</b> marcó como obligatorio los campos: <b>Fecha de 1ra cita</b>. 
+            Por favor diligéncielos para poder guardar y/o actualizar la información.`;
+
+            Swal.fire({
+                title: 'Campos Requeridos',
+                html: texto_alerta, // Usa 'html' para interpretar etiquetas HTML
+                icon: 'info',
+                confirmButtonText: 'Aceptar',
+                confirmButtonColor: '#17A2B8',
+                willOpen: () => {
+                    // Elimina cualquier problema relacionado con el foco
+                    document.activeElement.blur();
+                }
+            });
+
+            $("#incumple_primera_cita").prop('required', false);
+            $(".obligatorio_causal_pri_cita").addClass('d-none');
+            $("#fecha_segunda_cita").prop('required', false);
+            $(".obligatorio_fecha_seg_cita").addClass('d-none');
+            $("#incumple_segunda_cita").prop('required', false);
+            $(".obligatorio_causal_seg_cita").addClass('d-none');
+
+        }else if($(this).val() == 29){
             $("#incumple_primera_cita").prop('required', true);
-            $(".obligatorio_primera_cita").removeClass('d-none');
-
-            $("#fecha_segunda_cita").prop('required', false);
-            $("#incumple_segunda_cita").prop('required', false);
-            $(".obligatorio_segunda_cita").addClass('d-none');
+            $(".obligatorio_causal_pri_cita").removeClass('d-none');
 
             /* Activacion alerta para indicar sobre la creacion de obligatoriedad de los campos */
             var nombre_accion = $(this).find('option:selected').text();
-            var texto_alerta = `Señor usuario(a): La acción seleccionada: <b>${nombre_accion}</b> marcó como obligatorio los campos: <b>Fecha de 1ra cita</b> y <b>Causal de incumplimiento 1ra cita</b>. 
+            var texto_alerta = `Señor usuario(a): La acción seleccionada: <b>${nombre_accion}</b> marcó como obligatorio los campos: <b>Causal de incumplimiento 1ra cita</b>. 
             Por favor diligéncielos para poder guardar y/o actualizar la información.`;
 
             Swal.fire({
@@ -559,18 +586,25 @@ $(document).ready(function(){
                 }
             });
 
-        }else if($(this).val() == 51){
+            $("#fecha_primera_cita").prop('required', false);
+            $(".obligatorio_fecha_pri_cita").addClass('d-none');
+            $("#fecha_segunda_cita").prop('required', false);
+            $(".obligatorio_fecha_seg_cita").addClass('d-none');
+            $("#incumple_segunda_cita").prop('required', false);
+            $(".obligatorio_causal_seg_cita").addClass('d-none');
+
+        }
+        else if($(this).val() == 51){
             $("#fecha_segunda_cita").prop('required', true);
-            $("#incumple_segunda_cita").prop('required', true);
-            $(".obligatorio_segunda_cita").removeClass('d-none');
+            $(".obligatorio_fecha_seg_cita").removeClass('d-none');
 
-            $("#fecha_primera_cita").prop('required', false);
-            $("#incumple_primera_cita").prop('required', false);
-            $(".obligatorio_primera_cita").addClass('d-none');
+            // $("#fecha_primera_cita").prop('required', false);
+            // $("#incumple_primera_cita").prop('required', false);
+            // $(".obligatorio_primera_cita").addClass('d-none');
 
             /* Activacion alerta para indicar sobre la creacion de obligatoriedad de los campos */
             var nombre_accion = $(this).find('option:selected').text();
-            var texto_alerta = `Señor usuario(a): La acción seleccionada: <b>${nombre_accion}</b> marcó como obligatorio los campos: <b>Fecha de 2da cita</b> y <b>Causal de incumplimiento 2da cita</b>. 
+            var texto_alerta = `Señor usuario(a): La acción seleccionada: <b>${nombre_accion}</b> marcó como obligatorio los campos: <b>Fecha de 2da cita</b>. 
             Por favor diligéncielos para poder guardar y/o actualizar la información.`;
 
             Swal.fire({
@@ -585,13 +619,52 @@ $(document).ready(function(){
                 }
             });
 
-        }else{
             $("#fecha_primera_cita").prop('required', false);
+            $(".obligatorio_fecha_pri_cita").addClass('d-none');
             $("#incumple_primera_cita").prop('required', false);
-            $("#fecha_segunda_cita").prop('required', false);
+            $(".obligatorio_causal_pri_cita").addClass('d-none');
             $("#incumple_segunda_cita").prop('required', false);
-            $(".obligatorio_primera_cita").addClass('d-none');
-            $(".obligatorio_segunda_cita").addClass('d-none');
+            $(".obligatorio_causal_seg_cita").addClass('d-none');
+
+        }else if($(this).val() == 12){
+            $("#incumple_segunda_cita").prop('required', true);
+            $(".obligatorio_causal_seg_cita").removeClass('d-none');
+
+            /* Activacion alerta para indicar sobre la creacion de obligatoriedad de los campos */
+            var nombre_accion = $(this).find('option:selected').text();
+            var texto_alerta = `Señor usuario(a): La acción seleccionada: <b>${nombre_accion}</b> marcó como obligatorio los campos: <b>Causal de incumplimiento 2da cita</b>. 
+            Por favor diligéncielos para poder guardar y/o actualizar la información.`;
+
+            Swal.fire({
+                title: 'Campos Requeridos',
+                html: texto_alerta, // Usa 'html' para interpretar etiquetas HTML
+                icon: 'info',
+                confirmButtonText: 'Aceptar',
+                confirmButtonColor: '#17A2B8',
+                willOpen: () => {
+                    // Elimina cualquier problema relacionado con el foco
+                    document.activeElement.blur();
+                }
+            });
+
+            $("#fecha_primera_cita").prop('required', false);
+            $(".obligatorio_fecha_pri_cita").addClass('d-none');
+            $("#incumple_primera_cita").prop('required', false);
+            $(".obligatorio_causal_pri_cita").addClass('d-none');
+            $("#fecha_segunda_cita").prop('required', false);
+            $(".obligatorio_fecha_seg_cita").addClass('d-none');
+
+        }
+        else{
+            $("#fecha_primera_cita").prop('required', false);
+            $(".obligatorio_fecha_pri_cita").addClass('d-none');
+            $("#incumple_primera_cita").prop('required', false);
+            $(".obligatorio_causal_pri_cita").addClass('d-none');
+            $("#fecha_segunda_cita").prop('required', false);
+            $(".obligatorio_fecha_seg_cita").addClass('d-none');
+            $("#incumple_segunda_cita").prop('required', false);
+            $(".obligatorio_causal_seg_cita").addClass('d-none');
+
         }
 
     });
@@ -2967,7 +3040,7 @@ $(document).ready(function(){
                             var descripcion = documento['Descripcion'] ? documento['Descripcion'] : '';
                             
                             if (nombre || descripcion) {
-                                listado += '<li><b>'+nombre+'</b></li>';
+                                listado += '<li><b>'+descripcion+'</b></li>';
                             }
                         }
     
@@ -2990,11 +3063,11 @@ $(document).ready(function(){
                         'un dictamen. Deben tener en cuenta que dicho dictamen es el documento que, con carácter probatorio, contiene el concepto experto que los calificadores emiten sobre '+
                         'el grado de la incapacidad permanente parcial, la invalidez o la muerte de un afiliado y debe fundamentarse en: <br>'+
                         'a) Consideraciones de orden fáctico sobre la situación que es objeto de evaluación, donde se relacionan los hechos ocurridos que dieron lugar al accidente, '+
-                        'la enfermedad o la muerte, indicando las circunstancias de modo, tiempo y lugar dentro de las cuales sucedieron; y el DIAGNOSTICO CLINICO de carácter técnico-científico, '+
+                        'la enfermedad o la muerte, indicando las circunstancias de modo, tiempo y lugar dentro de las cuales sucedieron; y el DIAGNÓSTICO CLÍNICO de carácter técnico-científico, '+
                         'soportado en la historia clínica, la historia ocupacional y con las ayudas de diagnóstico requeridas de acuerdo con la especificidad del problema…”</p>'+
                         '<p class="texto_con_padding">A su vez, la ley 1507 de 2014, en su artículo 3, inciso 13 establece: </p>'+
                         '<p class="cuerpo_doc_revPen">“Esta fecha (de estructuración) debe soportarse en la historia clínica, los exámenes clínicos y de ayuda diagnóstica y puede ser anterior '+
-                        'o corresponder a la fecha de la declaratoria de la perdida de la capacidad laboral” Aparte en paréntesis fuera del texto original.</p>'+
+                        'o corresponder a la fecha de la declaratoria de la perdida de la capacidad laboral”.</p>'+
                         '<p>Por lo tanto, esta Administradora le concede el término de <strong>un (1) mes</strong>  contado a partir de la recepción de la presente comunicación, vencido el mismo sin cumplir '+
                         'con el requerimiento, se procederá a dar <strong>DESISTIMIENTO</strong> de su solicitud y archivo de la misma, de acuerdo con el artículo 17 de la ley 1437 de 2011, que señala:</p>'+
                         '<p class="cuerpo_doc_revPen">“…Cuando en el curso de una actuación administrativa la autoridad advierta que el peticionario debe realizar una gestión de trámite a '+
@@ -3012,7 +3085,7 @@ $(document).ready(function(){
                         'la información en varios correos); así mismo aclaramos que, este correo electrónico es únicamente para recibir documentación.</p>'+
                         "<p>Esperamos haber atendido satisfactoriamente su solicitud, permanecemos a su disposición para aclarar cualquier información adicional. Si tiene alguna duda "+
                         "o quiere conocer más acerca de esta información, puede comunicarse con nuestro Asesor Virtual Pronto en nuestro Portal Web www.proteccion.com y App o comunicarse "+
-                        "con nuestra Línea de Servicio en Bogotá 7444464, en Medellín y Cali 5109099 Barranquilla 319 7999 Cartagena 6424999 y desde el resto del país 01 8000 52 8000.</p>";
+                        "con nuestra Línea de Servicio en Bogotá 7444464, en Medellín y Cali 5109099, Barranquilla 319 7999, Cartagena 6424999 y desde el resto del país 01 8000 52 8000.</p>";
                     $('#cuerpo_comunicado_editar').summernote('code', texto_insertar);
                 }
             });
@@ -3097,7 +3170,7 @@ $(document).ready(function(){
                             var descripcion = documento['Descripcion'] ? documento['Descripcion'] : '';
                             
                             if (nombre || descripcion) {
-                                listado += '<li><b>'+nombre+'</b></li>';
+                                listado += '<li><b>'+descripcion+'</b></li>';
                             }
                         }
 
@@ -3121,7 +3194,7 @@ $(document).ready(function(){
                         'de las pensiones de invalidez ha establecido:</p>'+
                         '<p class="cuerpo_doc_revPen">“[...]<strong>ARTÍCULO 44. REVISIÓN DE LAS PENSIONES DE INVALIDEZ.</strong> El estado de invalidez podrá <br>'+
                         'revisarse: <br>'+
-                        'a. Por solicitud de la entidad de previsión o seguridad social correspondiente cada tres (3) años, '+
+                        'a) Por solicitud de la entidad de previsión o seguridad social correspondiente cada tres (3) años, '+
                         'con el fin de ratificar, modificar o dejar sin efectos el dictamen que sirvió de base para la liquidación '+
                         'de la pensión que disfruta su beneficiario y proceder a la extinción, disminución o aumento de la '+
                         'misma, si a ello hubiera lugar.<br>'+
@@ -3189,7 +3262,7 @@ $(document).ready(function(){
                             var descripcion = documento['Descripcion'] ? documento['Descripcion'] : '';
                             
                             if (nombre || descripcion) {
-                                listado += '<li><b>'+nombre+'</b></li>';
+                                listado += '<li><b>'+descripcion+'</b></li>';
                             }
                         }
 
@@ -3288,7 +3361,7 @@ $(document).ready(function(){
                     if (data['F_notificacion_reiteracion_sol_doc_rev_pen']) {
                         F_notificación_reiteracion_sol_doc_rev_pen = data['F_notificacion_reiteracion_sol_doc_rev_pen'];
                     }
-                    var texto_insertar = '<p>Respetado(a) Señor(a)</p>'+
+                    var texto_insertar = '<p>Respetado(a) Señor(a),</p>'+
                     '<p>Reciba un cordial saludo de la Administradora de Fondos de Pensiones y Cesantías <b>PROTECCIÓN S.A.</b></p>'+
                     '<p>Mediante {{$forma_envio}} del <b>'+F_notificación_sol_doc_rev_pen+'</b>, esta Administradora le solicitó <b>una copia actualizada a la fecha de toda la historia '+
                     'clínica incluyendo sus complementos</b> con la finalidad de revisar su condición de invalidez, para ese momento se le otorgó un término tres (3) meses para aportarla, '+
@@ -3339,7 +3412,7 @@ $(document).ready(function(){
             'radicada por usted, la Administradora de Fondo de Pensiones y Cesantías <b>PROTECCIÓN</b> se permite dar respuesta en los términos que se describen a continuación. '+
             '<p>(Sustentación)</p>'+
             '<p>Le agradecemos la confianza depositada en nosotros durante estos años y le recordamos que cuenta con nuestra asesoría. Ante cualquier duda, puede comunicarse '+
-            'a nuestra Línea de Servicio: Bogotá: 744 44 64, Medellín y Cali: 510 90 99 Barranquilla: 319 79 99, Cartagena: 642 49 99 y desde el resto del país: 01 8000 52 8000.</p>';
+            'a nuestra Línea de Servicio: Bogotá: 744 44 64, Medellín y Cali: 510 90 99, Barranquilla: 319 79 99, Cartagena: 642 49 99 y desde el resto del país: 01 8000 52 8000.</p>';
 
             $('#cuerpo_comunicado_editar').summernote('code', texto_insertar);
             $('#btn_insertar_Origen_editar').removeClass('d-none')
@@ -3393,7 +3466,7 @@ $(document).ready(function(){
                             var descripcion = documento['Descripcion'] ? documento['Descripcion'] : '';
                             
                             if (nombre || descripcion) {
-                                listado += '<li><b>'+nombre+'</b></li>';
+                                listado += '<li><b>'+descripcion+'</b></li>';
                             }
                         }
     
@@ -3414,7 +3487,7 @@ $(document).ready(function(){
                         "de Pérdida de capacidad laboral (PCL) y en consecuencia se <u>ARCHIVA</u> la mencionada solicitud.</p>"+
                         "<p>No obstante, usted cuenta con el derecho de presentar nuevamente la solicitud con el lleno de los requisitos legales. Si tiene alguna duda o quiere "+
                         "conocer más acerca de esta información, puede escribirnos a clientes@proteccion.com.co o comunicarse con nuestra Línea de Servicio en Bogotá 7444464, en "+
-                        "Medellín y Cali 5109099 Barranquilla 319 7999 Cartagena 6424999 y desde el resto del país 01 8000 52 8000.</p>";
+                        "Medellín y Cali 5109099, Barranquilla 319 7999, Cartagena 6424999 y desde el resto del país 01 8000 52 8000.</p>";
                     $('#cuerpo_comunicado_editar').summernote('code', texto_insertar);
                 }
             });
@@ -3444,15 +3517,15 @@ $(document).ready(function(){
             var texto_insertar = "<p>Respetado(a) Señor(a),</p>"+
                 "<p>Reciba un cordial saludo de la Administradora de Fondos de Pensiones y Cesantías <b>Protección S.A.</b></p>"+
                 "<p>Nos permitimos informarle que luego de evaluar el contenido de la documentación aportada por usted, se evidenció que aún se encuentra mediando "+
-                "tratamiento en su EPS, y aún no alcanza la mejoría medica máxima por lo que no es posible proceder con la calificación de su pérdida de capacidad laboral (PCL).</p>"+
+                "tratamiento en su EPS, y aún no alcanza la mejoría médica máxima por lo que no es posible proceder con la calificación de su pérdida de capacidad laboral (PCL).</p>"+
                 "<p>Lo anterior debido al Anexo Técnico - Manual Único para la Calificación de la Pérdida de Capacidad Laboral y Ocupacional expedido por orden del Decreto 1507 "+
-                "de 2014 el cual establece en el Título Preliminar, lo siguiente:</p>"+
+                "de 2014, el cual establece en el Título Preliminar, lo siguiente:</p>"+
                 '<p class="cuerpo_doc_revPen"><b>4.6. MEJORÍA MÉDICA MÁXIMA “MMM”:</b> Punto en el cual la condición patológica se estabiliza sustancialmente y es poco probable que '+
                 'cambie, ya sea para mejorar o empeorar, en el próximo año, con o sin tratamiento (…)</p>'+
                 '<p class="cuerpo_doc_revPen"><b>5. METODOLOGÍA PARA LA DETERMINACIÓN DEL GRADO EN UNA CLASE DE DEFICIENCIA:</b> Se realizará cuando la persona objeto de calificación alcance la mejoría médica '+
                 'máxima (MMM) o cuando termine el proceso de rehabilitación integral y en todo caso antes de superar los quinientos cuarenta (540) días de haber ocurrido el '+
                 'accidente o diagnóstico de la enfermedad (…)</p>'+
-                "<p>Por tal motivo su trámite será finalizado hasta tanto culmine dicho tratamiento. Una vez este se encuentre terminado, solicitamos radicar de nuevo su "+
+                "<p>Por tal motivo su trámite será finalizado hasta tanto, culmine dicho tratamiento. Una vez este se encuentre terminado, solicitamos radicar de nuevo su "+
                 "solicitud, aportando historia clínica vigente y concepto de los médicos tratantes, documento con el cual se evaluará nuevamente el caso para poder emitir "+
                 "una calificación de pérdida de capacidad laboral.</p>"+
                 "<p>Así mismo, es importante aclarar que no procede el pago de incapacidades médicas a su nombre, puesto que dicho subsidio será otorgado únicamente por el "+
@@ -3485,17 +3558,17 @@ $(document).ready(function(){
             $("#asunto_editar").prop('readonly', false);
             $(".note-editable").attr("contenteditable", true);
             $("#asunto_editar").val("CIERRE ADMINISTRATIVO SOLICITUD DE CALIFICACIÓN PCL");
-            var texto_insertar = "<p>Respetado(a) Señor(a),</p>"+
+            var texto_insertar = "<p>Respetado(a) Señor(a):</p>"+
                 "<p>Reciba un cordial saludo de la Administradora de Fondos de Pensiones y Cesantías <b>PROTECCIÓN S.A.</b></p>"+
                 "<p>Una vez evaluada su solicitud de trámite ante el fondo de pensiones y teniendo presente la legislación actual vigente, decreto 2463 del 2001 y decreto 917/1999, "+
                 "encontramos que es indispensable que usted asista a las citas de evaluación funcional y aporte Historia Clínica solicitada.</p>"+
                 '<p>Por lo tanto, se evidencia que usted no asistió a la segunda cita de valoración funcional el día <b>DD/MM/AAAA</b>.</p>'+
-                '<p>En virtud de lo anterior nos permitimos informarle que, a partir de la fecha de notificación de la presente carta, hemos dado por terminada su reclamación '+
+                '<p>En virtud de lo anterior, nos permitimos informarle que, a partir de la fecha de notificación de la presente carta, hemos dado por terminada su reclamación '+
                 'ante el fondo, ya que ha operado el <b>DESISTIMIENTO</b> tácito de su trámite.</p>'+
                 '<p class="cuerpo_doc_revPen">“…Cuando en el curso de una actuación administrativa la autoridad advierta que el peticionario debe realizar una gestión de '+
                 'trámite a su cargo, necesaria para adoptar una decisión de fondo, lo requerirá por una sola vez para que la efectúe en el término de un (1) mes, lapso durante '+
                 'el cual se suspenderá el término para decidir.</p>'+
-                '<p><b>Se entenderá que el peticionario ha desistido de su solicitud o de la actuación cuando no satisfaga el requerimiento</b>, salvo que antes de vencer el plazo '+
+                '<p class="cuerpo_doc_revPen"><b>Se entenderá que el peticionario ha desistido de su solicitud o de la actuación cuando no satisfaga el requerimiento</b>, salvo que antes de vencer el plazo '+
                 'concedido solicite prórroga hasta por un término igual”.</p>'+
                 "<p>No obstante, lo anterior le informamos que la solicitud de reapertura de su caso puede ser presentada en cualquier momento con los documentos que se "+
                 "requieran para el estudio del mismo, con la finalidad de que exista un pronunciamiento de fondo. </p>"+
@@ -4251,7 +4324,7 @@ $(document).ready(function(){
                             var descripcion = documento['Descripcion'] ? documento['Descripcion'] : '';
                             
                             if (nombre || descripcion) {
-                                listado += '<li><b>'+nombre+'</b></li>';
+                                listado += '<li><b>'+descripcion+'</b></li>';
                             }
                         }
     
@@ -4260,7 +4333,7 @@ $(document).ready(function(){
                     } else {
                         listado = '';
                     }
-                    console.log('LISTADO ',listado)
+                    
                     var texto_insertar = "<p>Respetado(a) Señor(a),</p>"+
                         "<p>Reciba un cordial saludo de la Administradora de Fondos de Pensiones y Cesantías Protección S.A.</p>"+
                         "<p>Con ocasión a la documentación médica radicada para el trámite de estudio de su prestación económica, respetuosamente, nos permitimos "+
@@ -4275,11 +4348,11 @@ $(document).ready(function(){
                         'un dictamen. Deben tener en cuenta que dicho dictamen es el documento que, con carácter probatorio, contiene el concepto experto que los calificadores emiten sobre '+
                         'el grado de la incapacidad permanente parcial, la invalidez o la muerte de un afiliado y debe fundamentarse en: <br>'+
                         'a) Consideraciones de orden fáctico sobre la situación que es objeto de evaluación, donde se relacionan los hechos ocurridos que dieron lugar al accidente, '+
-                        'la enfermedad o la muerte, indicando las circunstancias de modo, tiempo y lugar dentro de las cuales sucedieron; y el DIAGNOSTICO CLINICO de carácter técnico-científico, '+
+                        'la enfermedad o la muerte, indicando las circunstancias de modo, tiempo y lugar dentro de las cuales sucedieron; y el DIAGNÓSTICO CLÍNICO de carácter técnico-científico, '+
                         'soportado en la historia clínica, la historia ocupacional y con las ayudas de diagnóstico requeridas de acuerdo con la especificidad del problema…”</p>'+
                         '<p class="texto_con_padding">A su vez, la ley 1507 de 2014, en su artículo 3, inciso 13 establece: </p>'+
                         '<p class="cuerpo_doc_revPen">“Esta fecha (de estructuración) debe soportarse en la historia clínica, los exámenes clínicos y de ayuda diagnóstica y puede ser anterior '+
-                        'o corresponder a la fecha de la declaratoria de la perdida de la capacidad laboral” Aparte en paréntesis fuera del texto original.</p>'+
+                        'o corresponder a la fecha de la declaratoria de la perdida de la capacidad laboral”.</p>'+
                         '<p>Por lo tanto, esta Administradora le concede el término de <strong>un (1) mes</strong>  contado a partir de la recepción de la presente comunicación, vencido el mismo sin cumplir '+
                         'con el requerimiento, se procederá a dar <strong>DESISTIMIENTO</strong> de su solicitud y archivo de la misma, de acuerdo con el artículo 17 de la ley 1437 de 2011, que señala:</p>'+
                         '<p class="cuerpo_doc_revPen">“…Cuando en el curso de una actuación administrativa la autoridad advierta que el peticionario debe realizar una gestión de trámite a '+
@@ -4297,7 +4370,7 @@ $(document).ready(function(){
                         'la información en varios correos); así mismo aclaramos que, este correo electrónico es únicamente para recibir documentación.</p>'+
                         "<p>Esperamos haber atendido satisfactoriamente su solicitud, permanecemos a su disposición para aclarar cualquier información adicional. Si tiene alguna duda "+
                         "o quiere conocer más acerca de esta información, puede comunicarse con nuestro Asesor Virtual Pronto en nuestro Portal Web www.proteccion.com y App o comunicarse "+
-                        "con nuestra Línea de Servicio en Bogotá 7444464, en Medellín y Cali 5109099 Barranquilla 319 7999 Cartagena 6424999 y desde el resto del país 01 8000 52 8000.</p>";
+                        "con nuestra Línea de Servicio en Bogotá 7444464, en Medellín y Cali 5109099, Barranquilla 319 7999, Cartagena 6424999 y desde el resto del país 01 8000 52 8000.</p>";
                     $('#cuerpo_comunicado').summernote('code', texto_insertar);
                 }
                 
@@ -4388,7 +4461,7 @@ $(document).ready(function(){
                             var descripcion = documento['Descripcion'] ? documento['Descripcion'] : '';
                             
                             if (nombre || descripcion) {
-                                listado += '<li><b>'+nombre+'</b></li>';
+                                listado += '<li><b>'+descripcion+'</b></li>';
                             }
                         }
     
@@ -4412,7 +4485,7 @@ $(document).ready(function(){
                         'de las pensiones de invalidez ha establecido:</p>'+
                         '<p class="cuerpo_doc_revPen">“[...]<strong>ARTÍCULO 44. REVISIÓN DE LAS PENSIONES DE INVALIDEZ.</strong> El estado de invalidez podrá <br>'+
                         'revisarse: <br>'+
-                        'a. Por solicitud de la entidad de previsión o seguridad social correspondiente cada tres (3) años, '+
+                        'a) Por solicitud de la entidad de previsión o seguridad social correspondiente cada tres (3) años, '+
                         'con el fin de ratificar, modificar o dejar sin efectos el dictamen que sirvió de base para la liquidación '+
                         'de la pensión que disfruta su beneficiario y proceder a la extinción, disminución o aumento de la '+
                         'misma, si a ello hubiera lugar.<br>'+
@@ -4483,7 +4556,7 @@ $(document).ready(function(){
                             var descripcion = documento['Descripcion'] ? documento['Descripcion'] : '';
                             
                             if (nombre || descripcion) {
-                                listado += '<li><b>'+nombre+'</b></li>';
+                                listado += '<li><b>'+descripcion+'</b></li>';
                             }
                         }
     
@@ -4584,7 +4657,7 @@ $(document).ready(function(){
                     if (data['F_notificacion_reiteracion_sol_doc_rev_pen']) {
                         F_notificación_reiteracion_sol_doc_rev_pen = data['F_notificacion_reiteracion_sol_doc_rev_pen'];
                     }
-                    var texto_insertar = '<p>Respetado(a) Señor(a)</p>'+
+                    var texto_insertar = '<p>Respetado(a) Señor(a),</p>'+
                     '<p>Reciba un cordial saludo de la Administradora de Fondos de Pensiones y Cesantías <b>PROTECCIÓN S.A.</b></p>'+
                     '<p>Mediante {{$forma_envio}} del <b>'+F_notificación_sol_doc_rev_pen+'</b>, esta Administradora le solicitó <b>una copia actualizada a la fecha de toda la historia '+
                     'clínica incluyendo sus complementos</b> con la finalidad de revisar su condición de invalidez, para ese momento se le otorgó un término tres (3) meses para aportarla, '+
@@ -4635,7 +4708,7 @@ $(document).ready(function(){
             'radicada por usted, la Administradora de Fondo de Pensiones y Cesantías <b>PROTECCIÓN</b> se permite dar respuesta en los términos que se describen a continuación. '+
             '<p>(Sustentación)</p>'+
             '<p>Le agradecemos la confianza depositada en nosotros durante estos años y le recordamos que cuenta con nuestra asesoría. Ante cualquier duda, puede comunicarse '+
-            'a nuestra Línea de Servicio: Bogotá: 744 44 64, Medellín y Cali: 510 90 99 Barranquilla: 319 79 99, Cartagena: 642 49 99 y desde el resto del país: 01 8000 52 8000.</p>';
+            'a nuestra Línea de Servicio: Bogotá: 744 44 64, Medellín y Cali: 510 90 99, Barranquilla: 319 79 99, Cartagena: 642 49 99 y desde el resto del país: 01 8000 52 8000.</p>';
 
             $('#cuerpo_comunicado').summernote('code', texto_insertar);
             // $('#btn_insertar_Detalle_calificacion').removeClass('d-none');
@@ -4713,7 +4786,7 @@ $(document).ready(function(){
                         "de Pérdida de capacidad laboral (PCL) y en consecuencia se <u>ARCHIVA</u> la mencionada solicitud.</p>"+
                         "<p>No obstante, usted cuenta con el derecho de presentar nuevamente la solicitud con el lleno de los requisitos legales. Si tiene alguna duda o quiere "+
                         "conocer más acerca de esta información, puede escribirnos a clientes@proteccion.com.co o comunicarse con nuestra Línea de Servicio en Bogotá 7444464, en "+
-                        "Medellín y Cali 5109099 Barranquilla 319 7999 Cartagena 6424999 y desde el resto del país 01 8000 52 8000.</p>";
+                        "Medellín y Cali 5109099, Barranquilla 319 7999, Cartagena 6424999 y desde el resto del país 01 8000 52 8000.</p>";
                     $('#cuerpo_comunicado').summernote('code', texto_insertar);
                 }
             });
@@ -4747,15 +4820,15 @@ $(document).ready(function(){
             var texto_insertar = "<p>Respetado(a) Señor(a),</p>"+
                 "<p>Reciba un cordial saludo de la Administradora de Fondos de Pensiones y Cesantías <b>PROTECCIÓN S.A.</b></p>"+
                 "<p>Nos permitimos informarle que luego de evaluar el contenido de la documentación aportada por usted, se evidenció que aún se encuentra mediando "+
-                "tratamiento en su EPS, y aún no alcanza la mejoría medica máxima por lo que no es posible proceder con la calificación de su pérdida de capacidad laboral (PCL).</p>"+
+                "tratamiento en su EPS, y aún no alcanza la mejoría médica máxima por lo que no es posible proceder con la calificación de su pérdida de capacidad laboral (PCL).</p>"+
                 "<p>Lo anterior debido al Anexo Técnico - Manual Único para la Calificación de la Pérdida de Capacidad Laboral y Ocupacional expedido por orden del Decreto 1507 "+
-                "de 2014 el cual establece en el Título Preliminar, lo siguiente:</p>"+
+                "de 2014, el cual establece en el Título Preliminar, lo siguiente:</p>"+
                 '<p class="cuerpo_doc_revPen"><b>4.6. MEJORÍA MÉDICA MÁXIMA “MMM”:</b> Punto en el cual la condición patológica se estabiliza sustancialmente y es poco probable que '+
                 'cambie, ya sea para mejorar o empeorar, en el próximo año, con o sin tratamiento (…)</p>'+
                 '<p class="cuerpo_doc_revPen"><b>5. METODOLOGÍA PARA LA DETERMINACIÓN DEL GRADO EN UNA CLASE DE DEFICIENCIA:</b> Se realizará cuando la persona objeto de calificación alcance la mejoría médica '+
                 'máxima (MMM) o cuando termine el proceso de rehabilitación integral y en todo caso antes de superar los quinientos cuarenta (540) días de haber ocurrido el '+
                 'accidente o diagnóstico de la enfermedad (…)</p>'+
-                "<p>Por tal motivo su trámite será finalizado hasta tanto culmine dicho tratamiento. Una vez este se encuentre terminado, solicitamos radicar de nuevo su "+
+                "<p>Por tal motivo su trámite será finalizado hasta tanto, culmine dicho tratamiento. Una vez este se encuentre terminado, solicitamos radicar de nuevo su "+
                 "solicitud, aportando historia clínica vigente y concepto de los médicos tratantes, documento con el cual se evaluará nuevamente el caso para poder emitir "+
                 "una calificación de pérdida de capacidad laboral.</p>"+
                 "<p>Así mismo, es importante aclarar que no procede el pago de incapacidades médicas a su nombre, puesto que dicho subsidio será otorgado únicamente por el "+
@@ -4792,17 +4865,17 @@ $(document).ready(function(){
             $("#asunto").prop('readonly', false);
             $(".note-editable").attr("contenteditable", true);
             $("#asunto").val("CIERRE ADMINISTRATIVO SOLICITUD DE CALIFICACIÓN PCL");
-            var texto_insertar = "<p>Respetado(a) Señor(a),</p>"+
+            var texto_insertar = "<p>Respetado(a) Señor(a):</p>"+
                 "<p>Reciba un cordial saludo de la Administradora de Fondos de Pensiones y Cesantías <b>PROTECCIÓN S.A.</b></p>"+
                 "<p>Una vez evaluada su solicitud de trámite ante el fondo de pensiones y teniendo presente la legislación actual vigente, decreto 2463 del 2001 y decreto 917/1999, "+
                 "encontramos que es indispensable que usted asista a las citas de evaluación funcional y aporte Historia Clínica solicitada.</p>"+
                 '<p>Por lo tanto, se evidencia que usted no asistió a la segunda cita de valoración funcional el día <b>DD/MM/AAAA</b>.</p>'+
-                '<p>En virtud de lo anterior nos permitimos informarle que, a partir de la fecha de notificación de la presente carta, hemos dado por terminada su reclamación '+
+                '<p>En virtud de lo anterior, nos permitimos informarle que, a partir de la fecha de notificación de la presente carta, hemos dado por terminada su reclamación '+
                 'ante el fondo, ya que ha operado el <b>DESISTIMIENTO</b> tácito de su trámite.</p>'+
                 '<p class="cuerpo_doc_revPen">“…Cuando en el curso de una actuación administrativa la autoridad advierta que el peticionario debe realizar una gestión de '+
                 'trámite a su cargo, necesaria para adoptar una decisión de fondo, lo requerirá por una sola vez para que la efectúe en el término de un (1) mes, lapso durante '+
                 'el cual se suspenderá el término para decidir.</p>'+
-                '<p><b>Se entenderá que el peticionario ha desistido de su solicitud o de la actuación cuando no satisfaga el requerimiento</b>, salvo que antes de vencer el plazo '+
+                '<p class="cuerpo_doc_revPen"><b>Se entenderá que el peticionario ha desistido de su solicitud o de la actuación cuando no satisfaga el requerimiento</b>, salvo que antes de vencer el plazo '+
                 'concedido solicite prórroga hasta por un término igual”.</p>'+
                 "<p>No obstante, lo anterior le informamos que la solicitud de reapertura de su caso puede ser presentada en cualquier momento con los documentos que se "+
                 "requieran para el estudio del mismo, con la finalidad de que exista un pronunciamiento de fondo. </p>"+

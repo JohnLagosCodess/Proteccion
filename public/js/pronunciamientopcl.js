@@ -1007,13 +1007,21 @@ $(document).ready(function(){
      // Funcionalidad para el llenado del asunto y habilitar boton PDF para descarga 
 
     $("[name='decision_pr']").on("change", function(){
-    var opc_seleccionada = $(this).val();
+        var primer_calificadorpro = $('#primer_calificador').val();
+        if (primer_calificadorpro == 1) {
+            var calificadorpro = 'ARL';
+        } else if (primer_calificadorpro == 2){
+            var calificadorpro = 'AFP';            
+        } else {
+            var calificadorpro = 'EPS';
+        }                
+        var opc_seleccionada = $(this).val();
 
         if (opc_seleccionada == 'Acuerdo') {
             $('#asunto_cali').val('ADHESIÓN Y EN SUBSIDIO APELACIÓN DICTAMEN PÉRDIDA CAPACIDAD LABORAL');
             var texto_insertar = "<p>Respetados Señores,</p>\
             <p>En días pasados fuimos notificados de la calificación de <b>PÉRDIDA DE CAPACIDAD LABORAL</b> del (la) señor(a) <b>{{$Nombre_afiliado}}</b>, identificado(a) con <b>{{$Tipo_documento}}</b> N° <b>{{$Nro_documento}}</b>, le informamos que la <b>AFP PROTECCIÓN</b> está <b>DE ACUERDO</b> con esta calificación y no interpondrá recursos de ley.</p>\
-            <p>Igualmente informamos a <b>{{$Entidad_califi}}</b> que en caso de que el paciente o alguna de las demás partes interesadas interponga alguno de los recursos de ley a que tiene derecho dentro de los términos legales previstos, y el dictamen sea modificado, manifestamos nuestro desacuerdo y solicitamos a la EPS dar trámite al recurso de apelación subsidiariamente interpuesto por <b>AFP PROTECCIÓN</b>; adicionalmente solicitamos nos informen por escrito y se nos tenga en cuenta como parte del proceso.</p>\
+            <p>Igualmente informamos a <b>{{$Entidad_califi}}</b> que en caso de que el paciente o alguna de las demás partes interesadas interponga alguno de los recursos de ley a que tiene derecho dentro de los términos legales previstos, y el dictamen sea modificado, manifestamos nuestro desacuerdo y solicitamos a la <b>"+ calificadorpro +"</b> dar trámite al recurso de apelación subsidiariamente interpuesto por <b>AFP PROTECCIÓN</b>; adicionalmente solicitamos nos informen por escrito y se nos tenga en cuenta como parte del proceso.</p>\
             <p>En caso que ninguna de las demás partes interesadas interponga los recursos de ley a que tienen derecho, <b>AFP PROTECCIÓN</b> renuncia al recurso subsidiario de apelación.</p>";
 
             $('#sustenta_cali').summernote('code', texto_insertar);
