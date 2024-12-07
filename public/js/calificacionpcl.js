@@ -3287,7 +3287,10 @@ $(document).ready(function(){
                         success: function (infoData) {
                             let F_notificación_sol_doc_rev_pen = '(DIGITE LA FECHA DE PRIMER COMUNICADO)';
                             if(infoData['F_notificacion_sol_doc_rev_pen']){
-                                F_notificación_sol_doc_rev_pen = infoData['F_notificacion_sol_doc_rev_pen']
+                                F_notificación_sol_doc_rev_pen = infoData['F_notificacion_sol_doc_rev_pen'];
+
+                                var partesFecha = F_notificación_sol_doc_rev_pen.split("-");
+                                F_notificación_sol_doc_rev_pen = `${partesFecha[2]}/${partesFecha[1]}/${partesFecha[0]}`;
                             }
                             var texto_insertar = '<p>Respetado(a) Señor(a)</p>'+
                                 '<p>Reciba un cordial saludo de la Administradora de Fondos de Pensiones y Cesantías <b>PROTECCIÓN S.A.</b></p>'+
@@ -3360,6 +3363,9 @@ $(document).ready(function(){
                     }
                     if (data['F_notificacion_reiteracion_sol_doc_rev_pen']) {
                         F_notificación_reiteracion_sol_doc_rev_pen = data['F_notificacion_reiteracion_sol_doc_rev_pen'];
+
+                        var partesFecha = F_notificación_reiteracion_sol_doc_rev_pen.split("-");
+                        F_notificación_reiteracion_sol_doc_rev_pen = `${partesFecha[2]}/${partesFecha[1]}/${partesFecha[0]}`;
                     }
                     var texto_insertar = '<p>Respetado(a) Señor(a),</p>'+
                     '<p>Reciba un cordial saludo de la Administradora de Fondos de Pensiones y Cesantías <b>PROTECCIÓN S.A.</b></p>'+
@@ -4581,7 +4587,10 @@ $(document).ready(function(){
                         success: function (infoData) {
                             let F_notificación_sol_doc_rev_pen = '(DIGITE LA FECHA DE PRIMER COMUNICADO)';
                             if(infoData['F_notificacion_sol_doc_rev_pen']){
-                                F_notificación_sol_doc_rev_pen = infoData['F_notificacion_sol_doc_rev_pen']
+                                F_notificación_sol_doc_rev_pen = infoData['F_notificacion_sol_doc_rev_pen'];
+
+                                var partesFecha = F_notificación_sol_doc_rev_pen.split("-");
+                                F_notificación_sol_doc_rev_pen = `${partesFecha[2]}/${partesFecha[1]}/${partesFecha[0]}`;
                             }
                             var texto_insertar = '<p>Respetado(a) Señor(a)</p>'+
                                 '<p>Reciba un cordial saludo de la Administradora de Fondos de Pensiones y Cesantías <b>PROTECCIÓN S.A.</b></p>'+
@@ -4656,6 +4665,9 @@ $(document).ready(function(){
                     }
                     if (data['F_notificacion_reiteracion_sol_doc_rev_pen']) {
                         F_notificación_reiteracion_sol_doc_rev_pen = data['F_notificacion_reiteracion_sol_doc_rev_pen'];
+
+                        var partesFecha = F_notificación_reiteracion_sol_doc_rev_pen.split("-");
+                        F_notificación_reiteracion_sol_doc_rev_pen = `${partesFecha[2]}/${partesFecha[1]}/${partesFecha[0]}`;
                     }
                     var texto_insertar = '<p>Respetado(a) Señor(a),</p>'+
                     '<p>Reciba un cordial saludo de la Administradora de Fondos de Pensiones y Cesantías <b>PROTECCIÓN S.A.</b></p>'+
