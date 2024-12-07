@@ -2607,7 +2607,7 @@ class ControversiaJuntasController extends Controller
 
         /* Tipos de controversia primera calificación */
         $datos_tipo_controversia = sigmel_informacion_controversia_juntas_eventos::on('sigmel_gestiones')
-        ->select('Contro_origen', 'Contro_pcl', 'Contro_diagnostico', 'Contro_f_estructura', 'Contro_m_califi','N_dictamen_controvertido','Nombre_parametro','Origen_jrci_emitido','Nombre_evento')
+        ->select('Contro_origen','N_dictamen_jrci_emitido','Contro_pcl', 'Contro_diagnostico', 'Contro_f_estructura', 'Contro_m_califi','N_dictamen_controvertido','Nombre_parametro','Origen_jrci_emitido','Nombre_evento')
         ->leftjoin("sigmel_gestiones.sigmel_informacion_eventos as sie","sie.ID_evento",'sigmel_informacion_controversia_juntas_eventos.ID_evento')
         ->leftjoin("sigmel_gestiones.sigmel_lista_tipo_eventos as ste","ste.Id_Evento","Tipo_evento")
         ->leftjoin("sigmel_gestiones.sigmel_lista_parametros as slp","slp.Id_Parametro","Origen_jrci_emitido")
@@ -2658,7 +2658,7 @@ class ControversiaJuntasController extends Controller
         ->where([
             ['side.ID_evento', '=', $id_evento],
             ['side.Id_Asignacion', '=', $id_asignacion],
-            ['side.Item_servicio', '=', 'Controvertido Juntas'],
+            ['side.Item_servicio', '=', 'Emitido JRCI'],
             ['side.Estado', '=', 'Activo'],
         ])
         ->get();
@@ -2752,7 +2752,7 @@ class ControversiaJuntasController extends Controller
                 'Agregar_copia' => $Agregar_copias,
                 "ciudad_junta" => $ciudad_junta,
                 "departamento_junta" => $departamento_junta,
-                "n_dictamen" => $datos_tipo_controversia[0]->N_dictamen_controvertido ?? null,
+                "n_dictamen" => $datos_tipo_controversia[0]->N_dictamen_jrci_emitido ?? null,
                 "f_dictamen_jcri" => date("d/m/Y", strtotime($f_dictamen_jrci_emitido)),
                 "nombre_afiliado" => $nombre_afiliado,
                 'afiliado_principal' => afiliado_principal($id_evento),
@@ -2760,8 +2760,8 @@ class ControversiaJuntasController extends Controller
                 "n_documento" => $num_identificacion,
                 "pcl_jrci" => $porcentaje_pcl_jrci_emitido ,
                 'fecha_sustentacion_jrci' => fechaFormateada($fecha_sustent_jrci ? $fecha_sustent_jrci : $date),
-                "tipo_evento" => $datos_tipo_controversia[0]->Nombre_evento,
-                "origen_jrci" => $datos_tipo_controversia[0]->Nombre_parametro ?? null,
+                "tipo_evento" => strtoupper($datos_tipo_controversia[0]->Nombre_evento),
+                "origen_jrci" => strtoupper($datos_tipo_controversia[0]->Nombre_parametro) ?? null,
                 "f_estructuracion_jrci" => date("d/m/Y", strtotime($f_estructuracion_contro_jrci_emitido)),
                 "sustentacion_jrci" => nl2br($sustentacion_concepto_jrci)  . nl2br($sustentacion_concepto_jrci1),
                 "asunto" => $asunto,
