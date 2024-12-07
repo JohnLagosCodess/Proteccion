@@ -177,6 +177,7 @@
                     
                     <td style="width:100%; display:table; justify-content: space-between;">
                         <p class="fuente_todo_texto paddingTexto derecha"><span class="negrita">Bogotá D.C., {{$fecha}}</span></p>
+                        <br><br>
                         <div>
                             <span class="fuente_todo_texto paddingTexto"><span class="negrita">Señor(a):</span><br>{{$nombre}}</span><br>
                             <span class="fuente_todo_texto paddingTexto">{{$email_destinatario}}</span><br>
@@ -188,7 +189,7 @@
                 </tr>
             </tbody>
         </table>
-        <br>
+        <br><br>
         <table class="tabla1">
             <tbody>
                 <tr>
@@ -220,6 +221,7 @@
                 </tr>
             </tbody>
         </table>
+        <br><br>
         <section class="fuente_todo_texto">
             <?php 
                 $patron1 = '/\{\{\$nombre_junta\}\}/';
@@ -233,9 +235,14 @@
                 print_r($cuerpo);
             ?>
         </section>
+        <br><br>
         <section class="fuente_todo_texto">
             Cordialmente,
-            <div class="firma">
+            <br>
+            <br>
+            <br>
+            <strong>PROTECCIÓN S.A.</strong>
+            {{-- <div class="firma">
                 <?=$Firma_cliente?>
             </div>
             <div class="fuente_todo_texto">
@@ -244,9 +251,9 @@
                 <span class="negrita">Convenio Codess - Seguros de Vida Alfa</span>
                 <br>
                 <span class="negrita">Seguros alfa S.A. y seguros de vida Alfa S.A.</span>
-            </div>
+            </div> --}}
         </section>
-        <br>
+        <br><br>
         {{-- <section class="fuente_todo_texto">
             <span class="negrita">Elboró:</span> {{$nombre_usuario}}
             <table style="text-align: justify; width:100%; margin-left: -3px;">

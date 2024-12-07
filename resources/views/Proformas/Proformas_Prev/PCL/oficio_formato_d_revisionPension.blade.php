@@ -53,6 +53,7 @@
             flex-direction: column;
             justify-content: flex-end;
             align-items: center; 
+            font-family: sans-serif;
         }
         #footer .page{
             text-align: center;
@@ -234,6 +235,7 @@
                 <tr>
                     <td style="width:100%; display:table; justify-content: space-between;">
                         <p class="fuente_todo_texto paddingTexto derecha"><span class="negrita">{{$Ciudad_correspondencia}}, {{$F_correspondecia}}</span></p>
+                        <br><br>
                         <div>
                             <div class="fuente_todo_texto paddingTexto">
                                 <span class="negrita">Señor(a):</span><br>
@@ -241,14 +243,14 @@
                             </div>
                             <div class="fuente_todo_texto paddingTexto">{{$Email_afiliado_noti}}</div>
                             <div class="fuente_todo_texto paddingTexto">{{$direccion_destinatario_principal}}</div>
-                            <div class="fuente_todo_texto paddingTexto">{{$telefono_destinatario_principal}}</div>
+                            <div class="fuente_todo_texto paddingTexto">Tel. {{$telefono_destinatario_principal}}</div>
                             <div class="fuente_todo_texto paddingTexto">{{$ciudad_destinatario_principal}}</div>
                         </div>    
                     </td>
                 </tr>
             </tbody>
         </table>
-        <br>
+        <br><br>
         <table class="tabla1">
             <tbody>
                 <tr>
@@ -281,6 +283,7 @@
                 @endif
             </tbody>
         </table>
+        <br><br>
         <section class="fuente_todo_texto">            
             <?php
                 $patron1 = '/\{\{\$Nombre_afiliado\}\}/';   
@@ -328,18 +331,20 @@
             Le agradecemos la confianza depositada en nosotros durante estos años y le recordamos que cuenta con nuestra asesoría. Ante cualquier 
             duda, puede comunicarse a nuestra Línea de Servicio: Bogotá: 744 44 64, Medellín y Cali: 510 90 99 Barranquilla: 319 79 99, 
             Cartagena: 642 49 99 y resto del país: 01 8000 52 8000.
-        </p>        
+        </p>      
+        <br><br>  
         <section class="fuente_todo_texto">            
             Cordialmente,
-            <br><br>
+            <br><br><br>
             <b>PROTECCIÓN S.A.</b>           
         </section>
-        <br>
+        <br><br>
         <section class="fuente_todo_texto">
             <table class="tabla1" style="text-align: justify;">                              
                 @if (empty($Copia_afiliado_correspondencia) && empty($Copia_empleador_correspondecia) && empty($Copia_eps_correspondecia) && empty($Copia_afp_correspondecia) && empty($Copia_arl_correspondecia) && empty($Copia_afp_conocimiento_correspondencia))
                     <tr>
-                        <td class="copias"><span class="negrita ">Copia: </span>No se registran copias</td>                                                                                
+                        {{-- <td class="copias"><span class="negrita ">Copia: </span>No se registran copias</td>--}}
+                        <td class="copias"><span class="negrita "></td>
                     </tr>
                 @else
                     <tr>
@@ -417,7 +422,7 @@
         <br>
         <section>
             <div class="fuente_todo_texto">
-                Para nosotros es importante saber si recibiste esta notificación para poder continuar 
+                Para nosotros es importante saber si recibió esta notificación para poder continuar 
                 con tu proceso. Firma esta carta y envíala al correo documentos.calificacion@proteccion.com.co.
             </div>
         </section>
@@ -458,10 +463,10 @@
             Le invitamos a actualizar sus datos.
         </p>
         <p class="fuente_todo_texto" style="text-align: justify;">
-            Al autorizar sus datos, accedes a la oferta que tenemos para usted y para la construcción de su futuro a través del ahorro.
+            Al autorizar sus datos, accede a la oferta que tenemos para usted y para la construcción de su futuro a través del ahorro.
         </p>
         <p class="fuente_todo_texto" style="text-align: justify;">
-            Actualízalos en el siguiente QR:
+            Actualizarlos en el siguiente QR:
         </p>
         <br>
         <section>

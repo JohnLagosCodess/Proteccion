@@ -157,7 +157,7 @@ class ReporteTrazabilidadPclController extends Controller
                 DB::raw("date_format(F_emision_1ra_conducta, '%d/%m/%Y') as F_emision_1ra_conducta"),
                 'Dias_control_1ra_conducnta',
                 'Control_1ra_conducta',
-                'Nueva_F_radicacion',
+                DB::raw("date_format(Nueva_F_radicacion, '%d/%m/%Y') as Nueva_F_radicacion"),
                 'Complementos',
                 DB::raw("date_format(F_sol_complementos, '%d/%m/%Y') as F_sol_complementos"),
                 'Medio_envio_complementos',

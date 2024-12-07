@@ -54,6 +54,7 @@
             flex-direction: column;
             justify-content: flex-end;
             align-items: center; 
+            font-family: sans-serif;
         }
 
         #footer .page{
@@ -212,11 +213,11 @@
     <div id="footer"> 
         <?php if($footer == null): ?>
             <div style="text-align:center;">
-                {{-- @if($Tipo_afiliado == 26 || $Tipo_afiliado == 28 || $Tipo_afiliado == 29)
+                @if($Tipo_afiliado == 26 || $Tipo_afiliado == 28 || $Tipo_afiliado == 29)
                 @elseif($Tipo_afiliado == 27)
                 <span style="color: #3C3C3C; margin-top:2px;">{{$Nombre_afiliado}} - {{$T_documento_noti_benefi}} {{$NroIden_afiliado_noti_benefi}} - SINIESTRO: {{$N_siniestro}}</span>
-                @endif --}}
-                <span style="color: #3C3C3C; margin-top:2px;">{{$Nombre_afiliado}} - {{$tipo_doc_afiliado}} {{$nro_identificacion_afiliado}} - SINIESTRO: {{$N_siniestro}}</span>
+                @endif
+                {{-- <span style="color: #3C3C3C; margin-top:2px;">{{$Nombre_afiliado}} - {{$tipo_doc_afiliado}} {{$nro_identificacion_afiliado}} - SINIESTRO: {{$N_siniestro}}</span> --}}
             </div>
         <?php else: ?>
             <?php 
@@ -226,7 +227,7 @@
                 $footer_base64 = base64_encode($footer_data);
             ?>
             <div class="footer_content" style="text-align:center;">
-                {{-- @if($Tipo_afiliado == 26 || $Tipo_afiliado == 28 || $Tipo_afiliado == 29)
+                @if($Tipo_afiliado == 26 || $Tipo_afiliado == 28 || $Tipo_afiliado == 29)
                     <span style="position: absolute; width: 100%; text-align:center; top: 10px; left:0px; color:#4D4D4D; font-weight:bold; font-size: 11px;">
                         {{$Nombre_afiliado}} - {{$tipo_doc_afiliado}} {{$nro_identificacion_afiliado}} - SINIESTRO: {{$N_siniestro}} 
                     </span>
@@ -234,10 +235,10 @@
                     <span style="position: absolute; width: 100%; text-align:center; top: 10px; left:0px; color:#4D4D4D; font-weight:bold; font-size: 11px;">
                         {{$Nombre_afiliado_noti_benefi}} - {{$T_documento_noti_benefi}} {{$NroIden_afiliado_noti_benefi}} - SINIESTRO: {{$N_siniestro}} 
                     </span>
-                @endif --}}
-                <span style="position: absolute; width: 100%; text-align:center; top: 10px; left:0px; color:#4D4D4D; font-weight:bold; font-size: 11px;">
+                @endif
+                {{-- <span style="position: absolute; width: 100%; text-align:center; top: 10px; left:0px; color:#4D4D4D; font-weight:bold; font-size: 11px;">
                     {{$Nombre_afiliado}} - {{$tipo_doc_afiliado}} {{$nro_identificacion_afiliado}} - SINIESTRO: {{$N_siniestro}} 
-                </span>
+                </span> --}}
                 <img src="data:image/png;base64,{{ $footer_base64 }}" class="footer_image" style="display: block;">
             </div>
         <?php endif ?>
@@ -256,7 +257,7 @@
                 <tr>
                     <td style="width:100%; display:table; justify-content: space-between;">
                         <p class="fuente_todo_texto paddingTexto derecha"><span class="negrita">{{$Ciudad_correspon}}, {{$Fecha_correspondencia}}</span></p>
-                        <br>
+                        <br><br>
                         <div>
                             <div class="fuente_todo_texto paddingTexto">
                                 <span>Señores</span><br>
@@ -264,14 +265,14 @@
                             </div>
                             <div class="fuente_todo_texto paddingTexto">{{$Email_entidad}}</div>
                             <div class="fuente_todo_texto paddingTexto">{{$Direccion_entidad}}</div>
-                            <div class="fuente_todo_texto paddingTexto">{{$Telefonos_entidad}}</div>
+                            <div class="fuente_todo_texto paddingTexto">Tel. {{$Telefonos_entidad}}</div>
                             <div class="fuente_todo_texto paddingTexto">{{$Dpto_Ciudad_entidad}}</div>
                         </div>   
                     </td>
                 </tr>
             </tbody>
         </table>
-        <br>
+        <br><br>
         <table class="tabla_asunto">
             <tbody>
                 <tr>
@@ -330,18 +331,20 @@
                 print_r($cuerpo);
             ?>
         </section>
+        <br><br>
         <section class="fuente_todo_texto">
             <br>        
             Cordialmente,
-            <br><br>
+            <br><br><br>
             <b>PROTECCIÓN S.A.</b>                        
         </section>
-        <br>
+        <br><br>
         <section class="fuente_todo_texto">
             <table style="text-align: justify; width:100%; margin-left: -3px;">
                 @if (count($Agregar_copia) == 0)
                     <tr>
-                        <td class="copias"><span class="negrita">Copia: </span>No se registran copias</td>      
+                        {{-- <td class="copias"><span class="negrita">Copia: </span>No se registran copias</td> --}}
+                        <td class="copias"><span class="negrita"></td>
                     </tr>
                 @else
                     <tr>

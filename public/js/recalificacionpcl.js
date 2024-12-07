@@ -5514,7 +5514,7 @@ $(document).ready(function(){
     oficioformatoc.change(function(){
         if ($(this).prop('checked')) {
             $("#Asunto").val("NOTIFICACIÓN RESULTADO DE REVISIÓN PENSIONAL");
-            var texto_insertar = "<p>Apreciado(a) {{$Nombre_afiliado}} </p>"+
+            var texto_insertar = "<p>Apreciado(a) {{$Nombre_afiliado}}, </p>"+
            "<p>En <b>PROTECCIÓN</b> estamos para guiarle y acompañarle en cada momento de su vida. Agradecemos "+ 
            "la respuesta que hemos recibido a nuestra solicitud de actualización de historia clínica con el fin de revisar sus condiciones de salud.</p>"+
            "<p>De la revisión que ha realizado nuestro Grupo Interdisciplinario de Calificación de Invalidez se ha "+
@@ -5581,7 +5581,7 @@ $(document).ready(function(){
     oficioformatod.change(function(){
         if ($(this).prop('checked')) {
             $("#Asunto").val("NOTIFICACIÓN RESULTADO DE REVISIÓN PENSIONAL");
-            var texto_insertar = "<p>Apreciado(a) {{$Nombre_afiliado}} </p>"+
+            var texto_insertar = "<p>Apreciado(a) {{$Nombre_afiliado}}, </p>"+
             "<p>En <b>PROTECCIÓN</b> estamos para guiarle y acompañarle en cada momento de su vida. Agradecemos "+ 
             "la respuesta que hemos recibido a nuestra solicitud de actualización de historia clínica con el fin de revisar sus condiciones de salud.</p>"+
             "<p>De la revisión que ha realizado nuestro Grupo Interdisciplinario de Calificación de Invalidez se ha "+ 
@@ -5650,7 +5650,7 @@ $(document).ready(function(){
     oficioformatoe.change(function(){
         if ($(this).prop('checked')) {
             $("#Asunto").val("REMISIÓN A JUNTA REGIONAL PARA REVISIÓN DE ESTADO DE INVALIDEZ");
-            var texto_insertar = "<p>Apreciado(a) {{$Nombre_afiliado}} </p>"+
+            var texto_insertar = "<p>Apreciado(a) {{$Nombre_afiliado}}, </p>"+
            "<p>En <b>PROTECCIÓN</b> estamos para guiarle y acompañarle en cada momento de su vida. Agradecemos "+ 
            "la respuesta que hemos recibido a nuestra solicitud de actualización de historia clínica con el fin de revisar sus condiciones de salud.</p>"+
            "<p>De la revisión que ha realizado nuestro Grupo Interdisciplinario de Calificación de Invalidez se ha "+
@@ -5677,10 +5677,8 @@ $(document).ready(function(){
             $('#btn_insertar_Origen').removeClass('d-none');
             // $('#btn_insertar_Detalle_calificacion').removeClass('d-none');
 
-            // Selección automática de las copias a partes interesadas: Empleador, Eps, Arl
-            $("#empleador").prop('checked', true);
-            $("#eps").prop('checked', true);
-            $("#arl").prop('checked', true);
+            // Selección automática de las copias a partes interesadas: Eps            
+            $("#eps").prop('checked', true);            
 
             // Seteo automático del nro de anexos:
             var seteo_nro_anexos = 1;

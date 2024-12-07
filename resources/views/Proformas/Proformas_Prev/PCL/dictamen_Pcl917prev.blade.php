@@ -1171,7 +1171,7 @@
         <div class="content2">
             <section class="border_section">
                 <div class="dato_dinamico_font"><b>Sustentación de la Fecha de estructuración:</b></div>
-                <div class="dato_dinamico_font">{{$Sustentacion_F_estructuracion_dp}}</div>
+                <div class="dato_dinamico_font"><?php echo nl2br($Sustentacion_F_estructuracion_dp); ?></div>
             </section>
         </div>
         <div class="content2">

@@ -209,6 +209,7 @@
                 <tr>
                     <td style="width:100%; display:table; justify-content: space-between;">
                         <p class="fuente_todo_texto paddingTexto derecha"><span class="negrita">{{$Ciudad_correspondencia}} {{$F_correspondecia}}</span></p>
+                        <br><br>
                         <div>
                             <div class="fuente_todo_texto paddingTexto">
                                 <span class="negrita">Señor(a): </span><br>
@@ -223,7 +224,7 @@
                 </tr>
             </tbody>
         </table>
-        <br>
+        <br><br>
         <table class="tabla1">
             <tbody>
                 <tr>
@@ -238,6 +239,7 @@
                 </tr>
             </tbody>
         </table>
+        <br><br>
         <section class="fuente_todo_texto">            
             <?php
                 $patron1 = '/\{\{\$Nombre_afiliado\}\}/';   
@@ -257,17 +259,20 @@
                 print_r($Cuerpo_comunicado_correspondencia);
             ?>
         </section>
+        <br><br>
         <section class="fuente_todo_texto">
             Cordialmente,
-            <div class="firma">
+            {{-- <div class="firma">
                 <?=$Firma_cliente?>
-            </div>
+            </div> --}}
+            <br><br><br>
+            <b>PROTECCIÓN S.A.</b>   
         </section>   
-        <p class="fuente_todo_texto" style="text-align: justify;">
+        {{-- <p class="fuente_todo_texto" style="text-align: justify;">
             Departamento de medicina laboral <br>
             Convenio Seguro de Vida Alfa <br>
             Seguro Alfa S.A. y Seguro de Vida Alfa S.A.
-        </p>
+        </p> --}}
         {{-- <section>        
             <div class="fuente_todo_texto">                
                 <b>Anexos:</b> {{$Anexos_correspondecia}}
@@ -275,7 +280,7 @@
                 <b>Elaboró:</b> {{$Elaboro_correspondecia}}
             </div>
         </section>           --}}
-        <br>
+        <br><br>
         <section class="fuente_todo_texto">
             <table class="tabla1" style="text-align: justify; margin-bottom:3px">                              
                 @if (empty($Copia_afiliado_correspondecia) && empty($Copia_empleador_correspondecia) && empty($Copia_eps_correspondecia) && empty($Copia_afp_correspondecia) && empty($Copia_arl_correspondecia) && empty($copiaEmail_empresa_noti))

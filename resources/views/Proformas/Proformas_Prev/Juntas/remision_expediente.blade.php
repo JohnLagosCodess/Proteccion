@@ -213,7 +213,7 @@
                 </tr>
             </tbody>
         </table>
-        <br>
+        <br><br>
         <table class="tabla1">
             <tbody>
                 <tr>

@@ -32,12 +32,12 @@ $(document).ready(function () {
 
         var tipo_evento = event.type;
         if (tipo_evento == 'keyup' || tipo_evento == 'change') {
-            if ($(this).val() < fecha_descarga) {
+            if ($(this).val() > fecha_descarga) {
                 // Eliminar cualquier alerta previa
                 if ($(this).next('i').length) {
                     $(this).next('i').remove();
                 }
-                let alerta = '<i style="color:red;">La fecha ingresada debe ser igual o superior a la fecha actual.</i>';
+                let alerta = '<i style="color:red;">La fecha ingresada debe ser igual o inferior a la fecha actual.</i>';
                 $(this).after(alerta);
 
                 $('#btn_generar_reporte').prop('disabled', true);

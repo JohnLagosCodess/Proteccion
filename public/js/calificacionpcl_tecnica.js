@@ -4447,6 +4447,7 @@ $(document).ready(function(){
     var oficioremisoriopcl = $('#oficiopcl');
     var porcentaje_pcl_Obstenta = $("#porcentaje_pcl").val();      
     // Validar porcentaje de pcl para el valor de la variable en el cuerpo del comunicado        
+    console.log(porcentaje_pcl_Obstenta);    
     if (porcentaje_pcl_Obstenta < 50) {
         var Obsenta_No = "<b> NO </b>";        
     } else {
