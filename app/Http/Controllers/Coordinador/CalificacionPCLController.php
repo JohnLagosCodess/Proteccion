@@ -3262,23 +3262,6 @@ class CalificacionPCLController extends Controller
         }
         elseif($request->tipo_documento_descarga_califi_editar == "Documento_PCL"){
 
-            if($tipo_afiliado === 27){
-                $Nombre_destinatario = $informacion_afiliado[0]->Nombre_afiliado_benefi;
-                $T_documento_destinatario = $informacion_afiliado[0]->Tipo_de_identificacion_afiliado;
-                $N_documento_destinatario = $informacion_afiliado[0]->Nro_identificacion_benefi;
-                $Direccion_destinatario = $informacion_afiliado[0]->Direccion_benefi;
-                $Telefono_destinatario = $informacion_afiliado[0]->Telefono_benefi;
-                $Email_destinatario = $informacion_afiliado[0]->Email_benefi;
-            }
-            else{
-                $Nombre_destinatario = $informacion_afiliado[0]->Nombre_afiliado;
-                $T_documento_destinatario = $informacion_afiliado[0]->Tipo_de_identificacion_afiliado_beneficiario;
-                $N_documento_destinatario = $informacion_afiliado[0]->Nro_identificacion;
-                $Direccion_destinatario = $informacion_afiliado[0]->Direccion;
-                $Telefono_destinatario = $informacion_afiliado[0]->Telefono_contacto;
-                $Email_destinatario = $informacion_afiliado[0]->Email;
-            }
-
             $dato_fecha_evento = sigmel_informacion_eventos::on('sigmel_gestiones')
             ->select('F_evento')
             ->where([['ID_evento', $ID_evento]])
@@ -3556,23 +3539,6 @@ class CalificacionPCLController extends Controller
         }
         elseif($request->tipo_documento_descarga_califi_editar == "Formato_B_Revision_pension"){
 
-            if($tipo_afiliado === 27){
-                $Nombre_destinatario = $informacion_afiliado[0]->Nombre_afiliado_benefi;
-                $T_documento_destinatario = $informacion_afiliado[0]->Tipo_de_identificacion_afiliado;
-                $N_documento_destinatario = $informacion_afiliado[0]->Nro_identificacion_benefi;
-                $Direccion_destinatario = $informacion_afiliado[0]->Direccion_benefi;
-                $Telefono_destinatario = $informacion_afiliado[0]->Telefono_benefi;
-                $Email_destinatario = $informacion_afiliado[0]->Email_benefi;
-            }
-            else{
-                $Nombre_destinatario = $informacion_afiliado[0]->Nombre_afiliado;
-                $T_documento_destinatario = $informacion_afiliado[0]->Tipo_de_identificacion_afiliado_beneficiario;
-                $N_documento_destinatario = $informacion_afiliado[0]->Nro_identificacion;
-                $Direccion_destinatario = $informacion_afiliado[0]->Direccion;
-                $Telefono_destinatario = $informacion_afiliado[0]->Telefono_contacto;
-                $Email_destinatario = $informacion_afiliado[0]->Email;
-            }
-            
             //El destinatario principal de esta proforma es el Afiliado
             $dato_fecha_evento = sigmel_informacion_eventos::on('sigmel_gestiones')
             ->select('F_evento')
@@ -3833,23 +3799,6 @@ class CalificacionPCLController extends Controller
 
         }
         elseif($request->tipo_documento_descarga_califi_editar == "Documento_Revision_pension"){
-
-            if($tipo_afiliado === 27){
-                $Nombre_destinatario = $informacion_afiliado[0]->Nombre_afiliado_benefi;
-                $T_documento_destinatario = $informacion_afiliado[0]->Tipo_de_identificacion_afiliado;
-                $N_documento_destinatario = $informacion_afiliado[0]->Nro_identificacion_benefi;
-                $Direccion_destinatario = $informacion_afiliado[0]->Direccion_benefi;
-                $Telefono_destinatario = $informacion_afiliado[0]->Telefono_benefi;
-                $Email_destinatario = $informacion_afiliado[0]->Email_benefi;
-            }
-            else{
-                $Nombre_destinatario = $informacion_afiliado[0]->Nombre_afiliado;
-                $T_documento_destinatario = $informacion_afiliado[0]->Tipo_de_identificacion_afiliado_beneficiario;
-                $N_documento_destinatario = $informacion_afiliado[0]->Nro_identificacion;
-                $Direccion_destinatario = $informacion_afiliado[0]->Direccion;
-                $Telefono_destinatario = $informacion_afiliado[0]->Telefono_contacto;
-                $Email_destinatario = $informacion_afiliado[0]->Email;
-            }
 
             $dato_fecha_evento = sigmel_informacion_eventos::on('sigmel_gestiones')
             ->select('F_evento')
@@ -4133,23 +4082,6 @@ class CalificacionPCLController extends Controller
         }
         elseif($request->tipo_documento_descarga_califi_editar == "Reiteracion_Documento_Revision_pension"){
 
-            if($tipo_afiliado === 27){
-                $Nombre_destinatario = $informacion_afiliado[0]->Nombre_afiliado_benefi;
-                $T_documento_destinatario = $informacion_afiliado[0]->Tipo_de_identificacion_afiliado;
-                $N_documento_destinatario = $informacion_afiliado[0]->Nro_identificacion_benefi;
-                $Direccion_destinatario = $informacion_afiliado[0]->Direccion_benefi;
-                $Telefono_destinatario = $informacion_afiliado[0]->Telefono_benefi;
-                $Email_destinatario = $informacion_afiliado[0]->Email_benefi;
-            }
-            else{
-                $Nombre_destinatario = $informacion_afiliado[0]->Nombre_afiliado;
-                $T_documento_destinatario = $informacion_afiliado[0]->Tipo_de_identificacion_afiliado_beneficiario;
-                $N_documento_destinatario = $informacion_afiliado[0]->Nro_identificacion;
-                $Direccion_destinatario = $informacion_afiliado[0]->Direccion;
-                $Telefono_destinatario = $informacion_afiliado[0]->Telefono_contacto;
-                $Email_destinatario = $informacion_afiliado[0]->Email;
-            }
-
             $dato_fecha_evento = sigmel_informacion_eventos::on('sigmel_gestiones')
             ->select('F_evento')
             ->where([['ID_evento', $ID_evento]])
@@ -4427,23 +4359,6 @@ class CalificacionPCLController extends Controller
         }
         elseif($request->tipo_documento_descarga_califi_editar == "Suspension_Mesada_Revision_pension"){
 
-            if($tipo_afiliado === 27){
-                $Nombre_destinatario = $informacion_afiliado[0]->Nombre_afiliado_benefi;
-                $T_documento_destinatario = $informacion_afiliado[0]->Tipo_de_identificacion_afiliado;
-                $N_documento_destinatario = $informacion_afiliado[0]->Nro_identificacion_benefi;
-                $Direccion_destinatario = $informacion_afiliado[0]->Direccion_benefi;
-                $Telefono_destinatario = $informacion_afiliado[0]->Telefono_benefi;
-                $Email_destinatario = $informacion_afiliado[0]->Email_benefi;
-            }
-            else{
-                $Nombre_destinatario = $informacion_afiliado[0]->Nombre_afiliado;
-                $T_documento_destinatario = $informacion_afiliado[0]->Tipo_de_identificacion_afiliado_beneficiario;
-                $N_documento_destinatario = $informacion_afiliado[0]->Nro_identificacion;
-                $Direccion_destinatario = $informacion_afiliado[0]->Direccion;
-                $Telefono_destinatario = $informacion_afiliado[0]->Telefono_contacto;
-                $Email_destinatario = $informacion_afiliado[0]->Email;
-            }
-            
             $dato_fecha_evento = sigmel_informacion_eventos::on('sigmel_gestiones')
             ->select('F_evento')
             ->where([['ID_evento', $ID_evento]])
@@ -4722,23 +4637,6 @@ class CalificacionPCLController extends Controller
 
         }
         elseif($request->tipo_documento_descarga_califi_editar == "Documento_No_Recalificacion"){
-
-            if($tipo_afiliado === 27){
-                $Nombre_destinatario = $informacion_afiliado[0]->Nombre_afiliado_benefi;
-                $T_documento_destinatario = $informacion_afiliado[0]->Tipo_de_identificacion_afiliado;
-                $N_documento_destinatario = $informacion_afiliado[0]->Nro_identificacion_benefi;
-                $Direccion_destinatario = $informacion_afiliado[0]->Direccion_benefi;
-                $Telefono_destinatario = $informacion_afiliado[0]->Telefono_benefi;
-                $Email_destinatario = $informacion_afiliado[0]->Email_benefi;
-            }
-            else{
-                $Nombre_destinatario = $informacion_afiliado[0]->Nombre_afiliado;
-                $T_documento_destinatario = $informacion_afiliado[0]->Tipo_de_identificacion_afiliado_beneficiario;
-                $N_documento_destinatario = $informacion_afiliado[0]->Nro_identificacion;
-                $Direccion_destinatario = $informacion_afiliado[0]->Direccion;
-                $Telefono_destinatario = $informacion_afiliado[0]->Telefono_contacto;
-                $Email_destinatario = $informacion_afiliado[0]->Email;
-            }
 
             $dato_fecha_evento = sigmel_informacion_eventos::on('sigmel_gestiones')
             ->select('F_evento')
@@ -5128,23 +5026,6 @@ class CalificacionPCLController extends Controller
         }
         elseif($request->tipo_documento_descarga_califi_editar == "Desistimiento_PCL"){
 
-            if($tipo_afiliado === 27){
-                $Nombre_destinatario = $informacion_afiliado[0]->Nombre_afiliado_benefi;
-                $T_documento_destinatario = $informacion_afiliado[0]->Tipo_de_identificacion_afiliado;
-                $N_documento_destinatario = $informacion_afiliado[0]->Nro_identificacion_benefi;
-                $Direccion_destinatario = $informacion_afiliado[0]->Direccion_benefi;
-                $Telefono_destinatario = $informacion_afiliado[0]->Telefono_benefi;
-                $Email_destinatario = $informacion_afiliado[0]->Email_benefi;
-            }
-            else{
-                $Nombre_destinatario = $informacion_afiliado[0]->Nombre_afiliado;
-                $T_documento_destinatario = $informacion_afiliado[0]->Tipo_de_identificacion_afiliado_beneficiario;
-                $N_documento_destinatario = $informacion_afiliado[0]->Nro_identificacion;
-                $Direccion_destinatario = $informacion_afiliado[0]->Direccion;
-                $Telefono_destinatario = $informacion_afiliado[0]->Telefono_contacto;
-                $Email_destinatario = $informacion_afiliado[0]->Email;
-            }
-
             $dato_fecha_evento = sigmel_informacion_eventos::on('sigmel_gestiones')
             ->select('F_evento')
             ->where([['ID_evento', $ID_evento]])
@@ -5422,23 +5303,6 @@ class CalificacionPCLController extends Controller
 
         }
         elseif($request->tipo_documento_descarga_califi_editar == "Cierre_MMM_PCL"){
-
-            if($tipo_afiliado === 27){
-                $Nombre_destinatario = $informacion_afiliado[0]->Nombre_afiliado_benefi;
-                $T_documento_destinatario = $informacion_afiliado[0]->Tipo_de_identificacion_afiliado;
-                $N_documento_destinatario = $informacion_afiliado[0]->Nro_identificacion_benefi;
-                $Direccion_destinatario = $informacion_afiliado[0]->Direccion_benefi;
-                $Telefono_destinatario = $informacion_afiliado[0]->Telefono_benefi;
-                $Email_destinatario = $informacion_afiliado[0]->Email_benefi;
-            }
-            else{
-                $Nombre_destinatario = $informacion_afiliado[0]->Nombre_afiliado;
-                $T_documento_destinatario = $informacion_afiliado[0]->Tipo_de_identificacion_afiliado_beneficiario;
-                $N_documento_destinatario = $informacion_afiliado[0]->Nro_identificacion;
-                $Direccion_destinatario = $informacion_afiliado[0]->Direccion;
-                $Telefono_destinatario = $informacion_afiliado[0]->Telefono_contacto;
-                $Email_destinatario = $informacion_afiliado[0]->Email;
-            }
 
             $dato_fecha_evento = sigmel_informacion_eventos::on('sigmel_gestiones')
             ->select('F_evento')
@@ -5718,23 +5582,6 @@ class CalificacionPCLController extends Controller
         }
         elseif($request->tipo_documento_descarga_califi_editar == "Cierre_Cita_PCL"){
 
-            if($tipo_afiliado === 27){
-                $Nombre_destinatario = $informacion_afiliado[0]->Nombre_afiliado_benefi;
-                $T_documento_destinatario = $informacion_afiliado[0]->Tipo_de_identificacion_afiliado;
-                $N_documento_destinatario = $informacion_afiliado[0]->Nro_identificacion_benefi;
-                $Direccion_destinatario = $informacion_afiliado[0]->Direccion_benefi;
-                $Telefono_destinatario = $informacion_afiliado[0]->Telefono_benefi;
-                $Email_destinatario = $informacion_afiliado[0]->Email_benefi;
-            }
-            else{
-                $Nombre_destinatario = $informacion_afiliado[0]->Nombre_afiliado;
-                $T_documento_destinatario = $informacion_afiliado[0]->Tipo_de_identificacion_afiliado_beneficiario;
-                $N_documento_destinatario = $informacion_afiliado[0]->Nro_identificacion;
-                $Direccion_destinatario = $informacion_afiliado[0]->Direccion;
-                $Telefono_destinatario = $informacion_afiliado[0]->Telefono_contacto;
-                $Email_destinatario = $informacion_afiliado[0]->Email;
-            }
-            
             $dato_fecha_evento = sigmel_informacion_eventos::on('sigmel_gestiones')
             ->select('F_evento')
             ->where([['ID_evento', $ID_evento]])
@@ -6013,23 +5860,6 @@ class CalificacionPCLController extends Controller
         }
         elseif($request->tipo_documento_descarga_califi_editar == "Firmeza_PCL"){
 
-            if($tipo_afiliado === 27){
-                $Nombre_destinatario = $informacion_afiliado[0]->Nombre_afiliado_benefi;
-                $T_documento_destinatario = $informacion_afiliado[0]->Tipo_de_identificacion_afiliado;
-                $N_documento_destinatario = $informacion_afiliado[0]->Nro_identificacion_benefi;
-                $Direccion_destinatario = $informacion_afiliado[0]->Direccion_benefi;
-                $Telefono_destinatario = $informacion_afiliado[0]->Telefono_benefi;
-                $Email_destinatario = $informacion_afiliado[0]->Email_benefi;
-            }
-            else{
-                $Nombre_destinatario = $informacion_afiliado[0]->Nombre_afiliado;
-                $T_documento_destinatario = $informacion_afiliado[0]->Tipo_de_identificacion_afiliado_beneficiario;
-                $N_documento_destinatario = $informacion_afiliado[0]->Nro_identificacion;
-                $Direccion_destinatario = $informacion_afiliado[0]->Direccion;
-                $Telefono_destinatario = $informacion_afiliado[0]->Telefono_contacto;
-                $Email_destinatario = $informacion_afiliado[0]->Email;
-            }
-            
             $informacion_submodulo = $this->globalService->retornarInformacionCalTec_Reca($ID_evento,$Id_Asignacion,$Id_proceso);
             $f_visado_comite = $informacion_submodulo[0] ? date("d/m/Y", strtotime($informacion_submodulo[0])) : null;
             $n_dictamen = null;

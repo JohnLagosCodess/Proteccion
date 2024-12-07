@@ -185,7 +185,7 @@
     <div id="footer">        
         <?php if($footer == null): ?>
             <div style="text-align:center;">
-                <span style="color: #4D4D4D; margin-top:2px;">{{$Nombre_destinatario}} - {{$T_documento_destinatario}} {{$N_documento_destinatario}} - Siniestro: {{$N_siniestro}} </span>
+                <span style="color: #4D4D4D; margin-top:2px;">{{$Nombre_afiliado}} - {{$T_documento_afiliado}} {{$N_documento_afiliado}} - Siniestro: {{$N_siniestro}} </span>
             </div>
         <?php else: ?>
             <?php 
@@ -196,7 +196,7 @@
             ?>
             <div class="footer_content" style="text-align:center;">
                 <span style="position: absolute; width: 100%; text-align:center; top: 10px; left:0px; color:#4D4D4D; font-weight:bold; font-size: 11px;">
-                    {{$Nombre_destinatario}} - {{$T_documento_destinatario}} {{$N_documento_destinatario}} - SINIESTRO: {{$N_siniestro}} 
+                    {{$Nombre_afiliado}} - {{$T_documento_afiliado}} {{$N_documento_afiliado}} - SINIESTRO: {{$N_siniestro}} 
                 </span>
                 <img src="data:image/png;base64,{{ $footer_base64 }}" class="footer_image" style="display: block;">
             </div>
@@ -354,7 +354,7 @@
         <br>
         <div class="cuadro fuente_cuadro_inferior" style="margin: 0 auto; page-break-inside: avoid;">
             <span class="fuente_cuadro_inferior"><span class="negrita">Nro. Radicado: <br>{{$nro_radicado}}</span></span><br>
-            <span class="fuente_cuadro_inferior"><span class="negrita">{{$T_documento_destinatario.' '.$N_documento_destinatario}}</span></span><br>
+            <span class="fuente_cuadro_inferior"><span class="negrita">{{$T_documento_beneficiario.' '.$N_documento_beneficiario}}</span></span><br>
             <span class="fuente_cuadro_inferior"><span class="negrita">Siniestro: {{$N_siniestro}}</span></span><br>
         </div>
         <br>

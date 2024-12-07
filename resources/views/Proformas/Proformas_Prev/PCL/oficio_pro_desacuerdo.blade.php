@@ -350,7 +350,12 @@
                     $texto_modificado = str_replace('{{$Fecha_dictamen_primer_calificador}}', $Fecha_calificador, $texto_modificado);
                     $texto_modificado = str_replace('{{$PorcentajePcl}}', $Porcentaje_pcl, $texto_modificado);
                     $texto_modificado = str_replace('{{$Tipo_evento}}', strtoupper($Tipo_evento), $texto_modificado);
-                    $texto_modificado = str_replace('{{$Origen}}', strtoupper($T_origen), $texto_modificado);
+                    if ($T_origen == 'Común') {
+                        $T_origenU = 'COMÚN';
+                    } else {
+                        $T_origenU = strtoupper($T_origen);
+                    }
+                    $texto_modificado = str_replace('{{$Origen}}', $T_origenU, $texto_modificado);
                     $texto_modificado = str_replace('{{$F_estructuracionPcl}}', $Fecha_estruturacion, $texto_modificado);
 
 
