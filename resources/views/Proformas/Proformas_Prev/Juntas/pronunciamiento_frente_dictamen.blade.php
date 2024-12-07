@@ -141,6 +141,7 @@
 
         .copias{
             font-size: 10px;
+            font-style: italic;
         }
         .firma > *{
             display: block;
