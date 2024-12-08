@@ -4336,7 +4336,7 @@ class CalificacionPCLController extends Controller
             $pdf->loadView('/Proformas/Proformas_Prev/PCL/reiteracion_solicitud_documentos_revpen', $data);
 
             // $nombre_pdf = "PCL_OFICIO_REV_{$Id_comunicado}_{$Id_Asignacion}_{$N_identificacion}.pdf";
-            $nombre_pdf = "PCL_OFICIO_REIT_REV_{$Id_comunicado}_{$Id_Asignacion}_{$N_identificacion}_{$indicativo}.pdf";
+            $nombre_pdf = "PCL_REITERDOC_RV_{$Id_comunicado}_{$Id_Asignacion}_{$N_identificacion}_{$indicativo}.pdf";
 
             $output = $pdf->output();
 
@@ -4615,7 +4615,7 @@ class CalificacionPCLController extends Controller
             $pdf->loadView('/Proformas/Proformas_Prev/PCL/suspension_mesada', $data);
 
             // $nombre_pdf = "PCL_OFICIO_REV_{$Id_comunicado}_{$Id_Asignacion}_{$N_identificacion}.pdf";
-            $nombre_pdf = "PCL_OFICIO_SUSP_MES_{$Id_comunicado}_{$Id_Asignacion}_{$N_identificacion}_{$indicativo}.pdf";
+            $nombre_pdf = "PCL_SUSPMESADA_{$Id_comunicado}_{$Id_Asignacion}_{$N_identificacion}_{$indicativo}.pdf";
 
             $output = $pdf->output();
 
@@ -5280,7 +5280,7 @@ class CalificacionPCLController extends Controller
             $pdf = app('dompdf.wrapper');
             $pdf->loadView('/Proformas/Proformas_Prev/PCL/desistimiento_pcl', $data);
 
-            $nombre_pdf = "PCL_SOL_DES_{$Id_comunicado}_{$Id_Asignacion}_{$N_identificacion}_{$indicativo}.pdf";
+            $nombre_pdf = "PCL_DESMTO_{$Id_comunicado}_{$Id_Asignacion}_{$N_identificacion}_{$indicativo}.pdf";
 
             $output = $pdf->output();
 
@@ -5558,7 +5558,7 @@ class CalificacionPCLController extends Controller
             $pdf = app('dompdf.wrapper');
             $pdf->loadView('/Proformas/Proformas_Prev/PCL/cierre_mmm_pcl', $data);
 
-            $nombre_pdf = "PCL_SOL_CIERRE_MMM_{$Id_comunicado}_{$Id_Asignacion}_{$N_identificacion}_{$indicativo}.pdf";
+            $nombre_pdf = "PCL_CIERRE_MMM_{$Id_comunicado}_{$Id_Asignacion}_{$N_identificacion}_{$indicativo}.pdf";
 
             $output = $pdf->output();
 
@@ -5836,7 +5836,7 @@ class CalificacionPCLController extends Controller
             $pdf = app('dompdf.wrapper');
             $pdf->loadView('/Proformas/Proformas_Prev/PCL/cierre_cita_pcl', $data);
 
-            $nombre_pdf = "PCL_SOL_CIERRE_CITA_{$Id_comunicado}_{$Id_Asignacion}_{$N_identificacion}_{$indicativo}.pdf";
+            $nombre_pdf = "PCL_CIERRE_CITA_{$Id_comunicado}_{$Id_Asignacion}_{$N_identificacion}_{$indicativo}.pdf";
 
             $output = $pdf->output();
 
@@ -6135,7 +6135,7 @@ class CalificacionPCLController extends Controller
             $pdf = app('dompdf.wrapper');
             $pdf->loadView('/Proformas/Proformas_Prev/PCL/firmeza_pcl', $data);
 
-            $nombre_pdf = "PCL_SOL_CIERRE_CITA_{$Id_comunicado}_{$Id_Asignacion}_{$N_identificacion}_{$indicativo}.pdf";
+            $nombre_pdf = "PCL_FIRMEZA_{$Id_comunicado}_{$Id_Asignacion}_{$N_identificacion}_{$indicativo}.pdf";
 
             $output = $pdf->output();
 
