@@ -684,6 +684,7 @@ $(document).ready(function(){
             contentType: false,
             success:function(response){
                 if (response.parametro == 'agregarCalificacionJuntas') {
+                    $("#alerta_accion_ejecutando").addClass('d-none');
                     $('.alerta_calificacion').removeClass('d-none');
                     if (response.parametro_1 == "guardo") {
                         $('.alerta_calificacion').append('<strong>'+response.mensaje_1+' Y '+response.mensaje_2+'</strong>');

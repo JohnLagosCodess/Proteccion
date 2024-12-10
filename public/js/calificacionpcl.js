@@ -1073,6 +1073,7 @@ $(document).ready(function(){
             success:function(response){
                 if (response.parametro == 'agregarCalificacionPcl') {
                     $('.alerta_calificacion').removeClass('d-none');
+                    $("#alerta_accion_ejecutando").addClass('d-none');
                     if (response.parametro_1 == "guardo") {
                         $('.alerta_calificacion').append('<strong>'+response.mensaje_1+' Y '+response.mensaje_2+'</strong>');
                     } else {

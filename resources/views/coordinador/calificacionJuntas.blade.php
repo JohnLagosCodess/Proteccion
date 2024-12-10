@@ -396,7 +396,11 @@
                             <div class="alerta_calificacion alert alert-success mt-2 mr-auto d-none" role="alert"></div>
                         </div>
                         <input type="hidden" id="bandera_accion_guardar_actualizar" value="Actualizar">
-                    @endif                    
+                    @endif 
+                    <div class="row mt-1 alert alert-info h6 d-none" id="alerta_accion_ejecutando">
+                        <span class="spinner-border spinner-border-sm mr-1" role="status" aria-hidden="true"></span>
+                         Actualizando informacion, por favor espere...
+                    </div>                   
                 </div>
             </div>
         </form>

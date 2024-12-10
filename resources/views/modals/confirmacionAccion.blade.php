@@ -36,10 +36,6 @@
             </p>
         </div>
         <div class="row alert alert-danger h5 d-none" id="alerta_accion"></div>
-        <div class="row alert alert-info h5 d-none" id="alerta_accion_ejecutando">
-            <span class="spinner-border spinner-border-sm mr-1" role="status" aria-hidden="true"></span>
-             Actualizando informacion, por favor espere...
-        </div>
       </div>
     <x-slot name="footerSlot">
         <div class="col-12 d-flex justify-content-end">

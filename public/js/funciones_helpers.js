@@ -682,12 +682,9 @@ $(document).ready(function () {
                     $("#alerta_accion_ejecutando").removeClass('d-none');
 
                     let id_formulario = getId_formulario();
-                    $(`#${id_formulario}`).submit();
+                    $(`#${id_formulario}`).trigger('submit');
+                    $("#c_no_accion").trigger('click');
 
-                    setTimeout(() => {
-                        $("#alerta_accion_ejecutando").addClass('d-none');
-                        location.reload();
-                    }, 1500);
 
                 } else {
                     $("#alerta_accion").removeClass('d-none');
