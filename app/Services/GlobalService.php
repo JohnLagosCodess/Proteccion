@@ -539,27 +539,35 @@ class GlobalService
         $query = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_afiliado_eventos as siae');
         //Si el afiliado cuenta con apoderado, traemos la información del apoderado
         if ($apoderado) {
-            $query->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm', 'siae.Id_departamento_apoderado', '=', 'sldm.Id_departamento')
-                ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm2', 'siae.Id_municipio_apoderado', '=', 'sldm2.Id_municipios');
+            $query->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm', function ($join) {
+                $join->on('siae.Id_departamento_apoderado', '=', 'sldm.Id_departamento')
+                     ->on('siae.Id_municipio_apoderado', '=', 'sldm.Id_municipios');
+                });
         } else {
-            $query->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm', 'siae.Id_departamento', '=', 'sldm.Id_departamento')
-                ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm2', 'siae.Id_municipio', '=', 'sldm2.Id_municipios');
+            $query->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm', function ($join) {
+                $join->on('siae.Id_departamento', '=', 'sldm.Id_departamento')
+                     ->on('siae.Id_municipio', '=', 'sldm.Id_municipios');
+                });
         }
         $query->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slp','siae.Tipo_documento_apoderado','slp.Id_Parametro')
             ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slp2','siae.Tipo_documento','slp2.Id_Parametro')
             ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slp3','siae.Tipo_documento_benefi','slp3.Id_Parametro')
-            ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm3','siae.Id_departamento_benefi','sldm3.Id_departamento')
-            ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm4','siae.Id_municipio_benefi','sldm4.Id_municipios')
-            ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm5', 'siae.Id_departamento', '=', 'sldm5.Id_departamento')
-            ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm6', 'siae.Id_municipio', '=', 'sldm6.Id_municipios');;
+            ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm2', function ($join) {
+                $join->on('siae.Id_departamento_benefi', '=', 'sldm2.Id_departamento')
+                     ->on('siae.Id_municipio_benefi', '=', 'sldm2.Id_municipios');
+            })
+            ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm3', function ($join) {
+                $join->on('siae.Id_departamento', '=', 'sldm3.Id_departamento')
+                     ->on('siae.Id_municipio', '=', 'sldm3.Id_municipios');
+            });
         $query->select(
             'siae.*',
             'sldm.Nombre_departamento as Departamento_destinatario',
-            'sldm2.Nombre_municipio as Ciudad_destinatario',
-            'sldm3.Nombre_departamento as Departamento_afiliado', //Este es el departamento del afiliado cuando el tipo de afiliado es beneficiario
-            'sldm4.Nombre_municipio as Ciudad_afiliado', //Esta es la ciudad del afiliado cuando el tipo de afiliado es beneficiario
-            'sldm5.Nombre_departamento as Departamento_afiliado_sin_beneficiario', 
-            'sldm6.Nombre_municipio as Ciudad_afiliado_sin_beneficiario', 
+            'sldm.Nombre_municipio as Ciudad_destinatario',
+            'sldm2.Nombre_departamento as Departamento_afiliado', //Este es el departamento del afiliado cuando el tipo de afiliado es beneficiario
+            'sldm2.Nombre_municipio as Ciudad_afiliado', //Esta es la ciudad del afiliado cuando el tipo de afiliado es beneficiario
+            'sldm3.Nombre_departamento as Departamento_afiliado_sin_beneficiario', 
+            'sldm3.Nombre_municipio as Ciudad_afiliado_sin_beneficiario', 
             'slp.Nombre_parametro as Tipo_de_identificacion_apoderado',
             'slp2.Nombre_parametro as Tipo_de_identificacion_afiliado_beneficiario',
             'slp3.Nombre_parametro as Tipo_de_identificacion_afiliado'
