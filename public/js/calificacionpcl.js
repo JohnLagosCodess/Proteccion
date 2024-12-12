@@ -1073,6 +1073,7 @@ $(document).ready(function(){
             success:function(response){
                 if (response.parametro == 'agregarCalificacionPcl') {
                     $('.alerta_calificacion').removeClass('d-none');
+                    $("#alerta_accion_ejecutando").addClass('d-none');
                     if (response.parametro_1 == "guardo") {
                         $('.alerta_calificacion').append('<strong>'+response.mensaje_1+' Y '+response.mensaje_2+'</strong>');
                     } else {
@@ -2470,7 +2471,7 @@ $(document).ready(function(){
             $("#firmeza_pcl_editar").prop("checked", false);
             $("#documento_revisionpension_editar").prop("checked", false);
             $("#No_procede_recali_editar").prop("checked", false);
-        }else if (tipo_descarga == "Formato_B_Revision_pension") {
+        }else if (tipo_descarga == "RATIFICACIÓN PENSIÓN") {
             $("#documentos_pcl_editar").prop("checked", false);
             $("#otro_documento_pcl_editar").prop("checked", false);
             $("#formatoB_revisionpension_editar").prop("checked", true);
@@ -3852,6 +3853,9 @@ $(document).ready(function(){
                 }
         });
         var tipo_descarga = $("[name='tipo_documento_descarga_califi_editar']").filter(":checked").val();
+        if($("[name='tipo_documento_descarga_califi_editar']").filter(":checked").val() == 'Formato_B_Revision_pension'){
+            tipo_descarga = 'RATIFICACIÓN PENSIÓN'
+        }
         cuerpo_comunicado = cuerpo_comunicado ? cuerpo_comunicado.replace(/"/g, "'") : '';
         let token = $('input[name=_token]').val();        
         var datos_actualizarComunicado = {
@@ -5154,7 +5158,6 @@ $(document).ready(function(){
             }
         });
         var tipo_descarga = $("[name='tipo_documento_descarga_califi']").filter(":checked").val();
-        
         let token = $('input[name=_token]').val();  
         var datos_generarComunicado = {
             '_token': token,

@@ -2607,7 +2607,7 @@ class ControversiaJuntasController extends Controller
 
         /* Tipos de controversia primera calificación */
         $datos_tipo_controversia = sigmel_informacion_controversia_juntas_eventos::on('sigmel_gestiones')
-        ->select('Contro_origen','N_dictamen_jrci_emitido', 'Contro_pcl', 'Contro_diagnostico', 'Contro_f_estructura', 'Contro_m_califi','N_dictamen_controvertido','Nombre_parametro','Origen_jrci_emitido','Nombre_evento')
+        ->select('Contro_origen','N_dictamen_jrci_emitido','Contro_pcl', 'Contro_diagnostico', 'Contro_f_estructura', 'Contro_m_califi','N_dictamen_controvertido','Nombre_parametro','Origen_jrci_emitido','Nombre_evento')
         ->leftjoin("sigmel_gestiones.sigmel_informacion_eventos as sie","sie.ID_evento",'sigmel_informacion_controversia_juntas_eventos.ID_evento')
         ->leftjoin("sigmel_gestiones.sigmel_lista_tipo_eventos as ste","ste.Id_Evento","Tipo_evento")
         ->leftjoin("sigmel_gestiones.sigmel_lista_parametros as slp","slp.Id_Parametro","Origen_jrci_emitido")

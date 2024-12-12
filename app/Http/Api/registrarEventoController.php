@@ -91,7 +91,7 @@ class registrarEventoController extends Controller
                 "validar" => ["required", 'integer', 'digits_between:1,30']
             ],
             'ciudad_afiliado' => [
-                "validar" => ["required", 'integer', 'digits_between:1,10'],
+                "validar" => ["required", 'string', 'digits_between:1,10'],
                 "verificar_ciudad" => ""
             ],
             'nit_eps' => [
@@ -108,7 +108,8 @@ class registrarEventoController extends Controller
                 "remplazar" => "1:Correo electrónico,2:Email"
             ],
             'apoderado' => [
-                "validar" => ['required', 'integer', "in:1,2"]
+                "validar" => ['nullable', 'integer', "in:1,2"],
+                "remplazar" => "1:Si,2:No"
             ],
             'n_identificacion_apoderado' => [
                 "validar" => ["nullable", 'string', 'max:25']
@@ -129,7 +130,7 @@ class registrarEventoController extends Controller
                 "validar" => ["nullable", 'integer', 'digits_between:1,30']
             ],
             'ciudad_apoderado' => [
-                "validar" => ["nullable", 'integer', 'digits_between:1,10'],
+                "validar" => ["nullable", 'string', 'digits_between:1,10'],
                 "verificar_ciudad" => ""
             ],
             'n_identificacion_beneficiario' => [
@@ -151,7 +152,7 @@ class registrarEventoController extends Controller
                 "validar" => ["nullable", 'integer', 'digits_between:1,30']
             ],
             'ciudad_beneficiario' => [
-                "validar" => ["nullable", 'integer', 'digits_between:1,10'],
+                "validar" => ["nullable", 'string', 'digits_between:1,10'],
                 "verificar_ciudad" => ""
             ],
         ],
@@ -339,6 +340,7 @@ class registrarEventoController extends Controller
         $municipio_existe = $this->tools["get_municipio"]($this->request->{$campo});
 
         if(!empty($this->request->{$campo}) && is_null($municipio_existe)){
+            Log::channel('log_api')->error("Ciudad no encontrada " . $this->request->{$campo} );
             $this->estado_ejecucion = "Fallo";
             $this->msg_validacion = $this->getMensaje(101, [
                 "campos_faltantes" => "La ciudad <{$this->request->$campo}> registrada para el campo $campo no fue encontrada"
@@ -392,7 +394,7 @@ class registrarEventoController extends Controller
             'F_nacimiento' => $this->request->fecha_nacimiento,
             'Email' => $this->request->email_afiliado,
             'Telefono_contacto' =>  $this->request->telefono_celular,
-            'Apoderado'=> $this->request->apoderado,
+            'Apoderado'=> $this->request->apoderado ?? 'No',
             'Tipo_documento_apoderado' => $this->request->tipo_documento_apoderado ?? null,
             'Nro_identificacion_apoderado' => $this->request->n_identificacion_apoderado ?? null,
             'Nombre_apoderado' => $this->request->nombre_apoderado ?? null,

@@ -1559,7 +1559,7 @@ class CoordinadorController extends Controller
                         ELSE siae.Nro_identificacion 
                     END as Documento_destinatario"),
                 'siae.Medio_notificacion as Medio_notificacion_destinatario','siae.Entidad_conocimiento', 'siae.Id_afp_entidad_conocimiento','siae.Apoderado',
-                'siae.Tipo_documento_apoderado','siae.Tipo_documento_benefi')
+                'siae.Tipo_documento_apoderado','siae.Tipo_documento_benefi','siae.Nro_identificacion as Documento_afiliado')
             ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm', 'siae.Id_departamento', '=', 'sldm.Id_departamento')
             ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as ci', 'siae.Id_municipio', '=', 'ci.Id_municipios')
             ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as db', 'siae.Id_departamento_benefi', '=', 'db.Id_departamento')//departamento apoderado
