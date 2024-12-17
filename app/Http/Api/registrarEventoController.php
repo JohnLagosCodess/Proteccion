@@ -21,6 +21,7 @@ use App\Models\sigmel_informacion_eventos;
 use App\Models\sigmel_informacion_afiliado_eventos;
 use App\Models\sigmel_informacion_laboral_eventos;
 use App\Models\sigmel_informacion_pericial_eventos;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Auth;
 
@@ -165,12 +166,12 @@ class registrarEventoController extends Controller
             ],
             'servicio' => [
                 "validar" => ['required', 'string', "in:1,2,3,4,5,6,7,8,9"],
-                "remplazar" => "1:1,2:2,3:3,4:6,5:7,6:8,7:9,8:12,9:13",
                 "validar_servicio" => [
-                        1 => [1,2,3],
-                        2 => [6,7,8,9],
-                        3 => [12,13]
-                    ]
+                    1 => [1,2,3],
+                    2 => [4,5,6,7],
+                    3 => [8,9]
+                ],
+                "remplazar" => "1:1,2:2,3:3,4:6,5:7,6:8,7:9,8:12,9:13",
             ],
             'fecha_radicacion' => [
                 "validar" => ['required', 'date']
@@ -280,8 +281,12 @@ class registrarEventoController extends Controller
             if ($this->estado_ejecucion == "Fallo") {
                 return response()->json($this->msg_validacion);
             }
+            
+            $response = Cache::lock("runtime_radicacion_Ws")->block(10,function(){
+                return $this->procesar_solicitud();
+            });
 
-            return response()->json($this->procesar_solicitud());
+            return response()->json($response);
 
         } catch (\Throwable $th) {
 
@@ -772,17 +777,14 @@ class registrarEventoController extends Controller
      * @return void
      */
     private function validar_servicio($campo, $target){
-        if($this->request->input("servicio") != $this->request->servicio){
-            return;
-        }
-
+        if($this->request->input("servicio") != $this->request->servicio) return;
+        
         if (isset($target[$this->request->proceso]) && !in_array($this->request->servicio, $target[$this->request->proceso])) {
-    
             $this->estado_ejecucion = "Fallo";
             $this->msg_validacion = $this->getMensaje(101, [
                 "campos_faltantes" => "El servicio seleccionado no corresponde al proceso {$this->request->proceso} seleccionado. Por favor verifique."
             ]);
-    }
+        }
     }
 
     /**
@@ -813,6 +815,8 @@ class registrarEventoController extends Controller
      * @return Void
      */
     private function debug($debug):void{
+        Log::channel('log_api')->debug("TEST: ",["test" => $debug]);
+
         if(is_array($debug)){
             echo "<pre>";
             print_r($debug);
