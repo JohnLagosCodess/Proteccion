@@ -91,6 +91,41 @@
     border-collapse: collapse;
 }
 
+.th_cuerpo{
+    background-color: #F1F1F1;
+}
+
+/* Aplica solo al ol con la clase "lista-exponencial"  para proforma DP1/2 - SOL. DICTAMEN JRCI*/
+ol.lista-exponencial {
+    counter-reset: list-counter;
+}
+
+ol.lista-exponencial li {
+    list-style: none;
+    position: relative;
+    padding-left: 20px;
+}
+
+ol.lista-exponencial li:before {
+    content: counter(list-counter) " ";
+    counter-increment: list-counter;
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: 0.8em; /* Tamaño más pequeño para simular exponente */
+    vertical-align: super; /* Posición en estilo exponencial */
+    font-weight: bold;
+}
+
+.decreto1072 {
+    font-size: 0.7em; /* Tamaño más pequeño */
+    position: relative; /* Permite ajustar la posición manualmente */
+    top: -0.3em; /* Ajusta la altura para alinearlo como exponente */
+}
+.cursiva {
+    font-style: italic;
+}
+
 .cuerpo_doc_revPen {
     padding-left: 100px;
     padding-right: 100px;

@@ -21,6 +21,7 @@ use App\Models\sigmel_informacion_eventos;
 use App\Models\sigmel_informacion_afiliado_eventos;
 use App\Models\sigmel_informacion_laboral_eventos;
 use App\Models\sigmel_informacion_pericial_eventos;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Auth;
 
@@ -280,8 +281,12 @@ class registrarEventoController extends Controller
             if ($this->estado_ejecucion == "Fallo") {
                 return response()->json($this->msg_validacion);
             }
+            
+            $response = Cache::lock("runtime_radicacion_Ws")->block(10,function(){
+                return $this->procesar_solicitud();
+            });
 
-            return response()->json($this->procesar_solicitud());
+            return response()->json($response);
 
         } catch (\Throwable $th) {
 
@@ -771,7 +776,7 @@ class registrarEventoController extends Controller
      * @var Array|String Atributos sobre los cuales estara interactuando la accion
      * @return void
      */
-    private function validar_servicio($campo, $target){
+    private function validar_se222rviciossss($campo, $target){
         if($this->request->input("servicio") != $this->request->servicio){
             return;
         }

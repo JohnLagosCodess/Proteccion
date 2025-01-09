@@ -65,6 +65,9 @@ class LoginController extends Controller
         }
     }
 
+    /**
+     * Realiza el cambio de clave para un usuario en especifico
+     */
     public function cambiar_clave(Request $request)
     {
         $request->validate([
@@ -94,7 +97,7 @@ class LoginController extends Controller
             ]);
 
            
-            return view('autenticacion.login')->with('success', 'Contraseña actualizada de manera correcta, por favor inicie sesion nuevamente.');
+            return view('ingenieria.cambiar_clave')->with('success', 'Contraseña actualizada de manera correcta, debera iniciar sesion nuevamente. En un momento sera redireccionado al inicio de sesion.');
 
         } catch (\Exception $e) {
             return redirect()->route('login')->withErrors(['error' => 'Hubo un problema con el token. Intenta nuevamente.']);

@@ -304,13 +304,16 @@ class DeterminacionOrigenATEL extends Controller
         ->where([['ID_evento',$Id_evento_dto_atel]])
         ->get();
 
+        $Id_servicio = 1;
+        $arraylistado_documentos = DB::select('CALL psrvistadocumentos(?,?,?)',array($Id_evento_dto_atel,$Id_servicio,$Id_asignacion_dto_atel));
+
         return view('coordinador.determinacionOrigenATEL', compact('user', 'array_datos_calificacion_origen', 
         'motivo_solicitud_actual', 'datos_apoderado_actual', 
         'array_datos_info_laboral', 'listado_documentos_solicitados', 
         'dato_articulo_12', 'array_datos_diagnostico_motcalifi','info_evento',
         'array_datos_examenes_interconsultas', 'array_datos_historico_laboral', 'datos_bd_DTO_ATEL', 
         'nombre_del_evento_guardado','array_comite_interdisciplinario', 'consecutivo', 
-        'array_comunicados_correspondencia', 'afp_afiliado', 'info_afp_conocimiento', 'caso_notificado', 'N_siniestro_evento', 'datos_forma_envio', 'nombre_destinatario_principal_correspondencia'));
+        'array_comunicados_correspondencia', 'afp_afiliado', 'info_afp_conocimiento', 'caso_notificado', 'N_siniestro_evento', 'datos_forma_envio', 'nombre_destinatario_principal_correspondencia', 'arraylistado_documentos', 'Id_servicio'));
 
     }
 
@@ -587,6 +590,25 @@ class DeterminacionOrigenATEL extends Controller
             return response()->json($datos_status_notificacion_corresp);
         }
 
+        if ($parametro == "docs_complementarios") {
+
+            $datos_tipos_documentos_familia = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_lista_documentos as sld')
+            ->leftJoin('sigmel_gestiones.sigmel_registro_documentos_eventos as srde', 'sld.Id_Documento', '=', 'srde.Id_Documento')
+            ->select('sld.Nro_documento', 'sld.Nombre_documento')
+            ->where([
+                ['srde.ID_evento', $request->evento],
+                ['srde.Id_servicio', $request->servicio],
+                ['srde.Id_Documento', $request->tipo_correspondencia],
+                ['sld.Estado', 'activo']
+            ])
+            // ->whereIn('srde.Id_Documento', [19, 20, 21, 22, 23])
+            ->groupBy('sld.Nro_documento')
+            ->get();
+
+            $info_datos_tipos_documentos_familia = json_decode(json_encode($datos_tipos_documentos_familia, true));
+            return response()->json($info_datos_tipos_documentos_familia);
+        }
+
     }
 
     public function GuardaroActualizarInfoDTOTAEL(Request $request){
@@ -775,12 +797,15 @@ class DeterminacionOrigenATEL extends Controller
         //Copias y destinatario de un dictamen segun la ficha PBS054
         $info_afp_conocimiento = $this->globalService->retornarcuentaConAfpConocimiento($request->ID_Evento);
         if(!empty($info_afp_conocimiento[0]->Entidad_conocimiento) && $info_afp_conocimiento[0]->Entidad_conocimiento == "Si"){
-            $agregar_copias_dml = "Afiliado, Empleador, EPS, ARL, AFP_Conocimiento";
+            // $agregar_copias_dml = "Afiliado, Empleador, EPS, ARL, AFP_Conocimiento";
+            $agregar_copias_dml = "Afiliado, EPS, ARL";
         }
         else{
-            $agregar_copias_dml = "Afiliado, Empleador, EPS, ARL";
+            // $agregar_copias_dml = "Afiliado, Empleador, EPS, ARL";
+            $agregar_copias_dml = "Afiliado, EPS, ARL";
         }
-        $Destinatario = 'Afp';
+        // $Destinatario = 'Afp';
+        $Destinatario = 'Afiliado';
 
         $Id_Dto_ATEL = $request->Id_Dto_ATEL;
         if ($Id_Dto_ATEL == "") {
@@ -1181,7 +1206,8 @@ class DeterminacionOrigenATEL extends Controller
 
         // Caso 1: Arl, Caso 2: Afp, Caso 3: Eps, Caso 4: Afiliado, Caso 5: Empleador.
         if ($otrodestinariop == '') {
-            $Destinatario = 'Afp';
+            // $Destinatario = 'Afp';
+            $Destinatario = 'Afiliado';
         } else {
             switch ($tipo_destinatario_principal) {
                 case '1':

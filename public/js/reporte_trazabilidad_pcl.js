@@ -70,7 +70,13 @@ $(document).ready(function () {
             type: 'POST',
             url: '/consultaReporteTrazabilidadPcl',
             data: datos_consulta_reporte_traza_pcl,
-            
+            beforeSend:  function() {
+                $('.resultado_validacion').removeClass('d-none');
+                $('.resultado_validacion').addClass('alert-info');
+                $('#llenar_mensaje_validacion').empty();
+                var string_texto = '<span>Generando reporte por favor espere.</span>';
+                $('#llenar_mensaje_validacion').append(string_texto);
+            },
             success: function(data) {
                 if (data.parametro == "falta_un_parametro") {
                     /* Mostrar contenedor mensaje de que no hay información */
@@ -91,11 +97,7 @@ $(document).ready(function () {
                 }
                 else{
                     var cantidad_registros = data.cantidad;
-                    // $('.resultado_validacion').removeClass('d-none');
-                    // $('.resultado_validacion').addClass('alert-info');
-                    // $('#llenar_mensaje_validacion').empty();
-                    // var string_texto = '<span>Se encontraron <b>'+cantidad_registros+'</b> registros, esto tardará un tiempo en cargar los resultados. Por favor espere.</span>';
-                    // $('#llenar_mensaje_validacion').append(string_texto);
+                    
 
                     $('#div_info_numero_registros').removeClass('d-none');
                     $("#total_registros_reporte").empty();
@@ -105,6 +107,11 @@ $(document).ready(function () {
                         $('#mostrar_boton_descarga').removeClass('d-none');
                     }
                 }
+            },
+            complete: function(){
+                $('.resultado_validacion').addClass('d-none');
+                $('.resultado_validacion').removeClass('alert-info');
+                $('#llenar_mensaje_validacion').empty();
             }
         });
     });

@@ -1,6 +1,10 @@
 $(document).ready(function(){
     
     var idRol = $("#id_rol").val();
+    var Id_evento_expediente = $("#newId_evento").val();
+    var Id_proceso_expediente = $("#Id_proceso").val();
+    var Id_asignacion_expediente = $("#newId_asignacion").val();
+    var Id_servicio_expediente =  $("#Id_servicio").val();
 
     $(".primer_calificador").select2({
         placeholder:"Seleccione una opción",
@@ -92,6 +96,13 @@ $(document).ready(function(){
         placeholder:"Seleccione una opción",
         allowClear:false
     });
+    
+    $(".listado_tipos_documentos_guias").select2({      
+        width: '100%',
+        placeholder:"Seleccione una opción",
+        allowClear:false
+    });
+
     $(".fuente_informacion").select2({      
         width: '100%',
         placeholder:"Seleccione una opción",
@@ -822,6 +833,70 @@ $(document).ready(function(){
             }         
         });
     });
+
+    /* INICIO FUNCIONALIDAD DEL CARGUE DE DOCUMENTOS COMPLEMENTARIOS (GUIA) */
+    // seteo del id, nombre del documento familia, id evento, id servicio
+    $("#CargarDocumento_guias").prop('disabled', true);
+    $("#listado_tipos_documentos_guias").change(function(){
+        var id_doc_familia_seleccionado = $(this).val();
+        var nombre_doc_familia_seleccionado = $(this).find("option:selected").text().replace(/^\d+\s*-\s*/, '');
+        $("#id_doc_familia_guias").val(id_doc_familia_seleccionado);
+        $("#nombre_doc_familia_guias").val(nombre_doc_familia_seleccionado);
+
+        var evento = $("#newId_evento").val();
+        var servicio = $("#Id_servicio").val();
+        $("#id_evento_familia_guias").val(evento);
+        $("#id_servicio_familia_guias").val(servicio);
+        
+        if (id_doc_familia_seleccionado != "") {
+            $("#CargarDocumento_guias").prop('disabled', false);
+        }
+    });
+    
+    /* Envío de información del documento familia */
+    $("#CargarDocumento_guias").click(function(){
+        
+        let formData = new FormData();
+        formData.append('_token', $('input[name=_token]').val());
+        formData.append('id_doc_familia', $("#id_doc_familia_guias").val());
+        formData.append('nombre_doc_familia', $("#nombre_doc_familia_guias").val());
+        formData.append('id_evento_familia', $("#id_evento_familia_guias").val());
+        formData.append('id_servicio_familia', $("#id_servicio_familia_guias").val());
+        formData.append('doc_subir', $("#doc_subir_guias")[0].files[0]);
+    
+        $.ajax({
+            url: "/cargaDocumentosComplementarios",
+            method: 'POST',
+            data: formData,
+            processData: false, // No procesar los datos automáticamente
+            contentType: false, // Establecer contentType en false
+            success:function(response){
+                if (response.parametro == "fallo") {
+                    if (response.otro != undefined) {
+                        $('#listadodocumento_'+response.otro).val('');
+                    }else{
+                        $('#doc_subir_guias').val('');
+                    }
+                    $('.mostrar_fallo_doc_familia').removeClass('d-none');
+                    $('.mostrar_fallo_doc_familia').append('<strong>'+response.mensaje+'</strong>');
+                    setTimeout(function(){
+                        $('.mostrar_fallo_doc_familia').addClass('d-none');
+                        $('.mostrar_fallo_doc_familia').empty();
+                    }, 6000);
+                }else if (response.parametro == "exito") {
+                    $('.mostrar_exito_doc_familia').removeClass('d-none');
+                    $('.mostrar_exito_doc_familia').append('<strong>'+response.mensaje+'</strong>');
+                    setTimeout(function(){
+                        $('.mostrar_exito_doc_familia').addClass('d-none');
+                        $('.mostrar_exito_doc_familia').empty();
+                    }, 6000);
+                }else{}
+
+            }         
+        });
+    });
+
+    /* FIN FUNCIONALIDAD DEL CARGUE DE DOCUMENTOS COMPLEMENTARIOS (GUIA) */
 
     //Se crea el resumable usando Resumable.js, el cual tiene como fin crear los chunks y enviarlos al endpoint('target') especificado 
     let resumable = new Resumable({
@@ -2405,6 +2480,12 @@ $(document).ready(function(){
         $('#cuerpo_comunicado').summernote('editor.insertText', etiqueta_nombre_junta);
     });
 
+    $("#btn_insertar_fecha_envio_jrci").click(function(e){
+        e.preventDefault();
+        var etiqueta_fecha_envio_jrci = "{{$fecha_envio_jrci}}";
+        $('#cuerpo_comunicado').summernote('editor.insertText', etiqueta_fecha_envio_jrci);
+    });
+
     $("#btn_insertar_nro_orden_pago").click(function(e){
         e.preventDefault();
         var etiqueta_nro_orden_pago = "{{$nro_orden_pago}}";
@@ -2477,6 +2558,30 @@ $(document).ready(function(){
         $('#cuerpo_comunicado').summernote('editor.insertText', etiqueta_telefono_afiliado);
     });
 
+    $("#btn_insertar_origen").click(function(e){
+        e.preventDefault();
+        var etiqueta_origen = "{{$origen}}";
+        $('#cuerpo_comunicado').summernote('editor.insertText', etiqueta_origen);
+    });
+
+    $("#btn_insertar_porcentajepcl").click(function(e){
+        e.preventDefault();
+        var etiqueta_porcentajepcl = "{{$porcentajepcl}}";
+        $('#cuerpo_comunicado').summernote('editor.insertText', etiqueta_porcentajepcl);
+    });
+
+    $("#btn_insertar_radicado_entrada_controversia_primera_calificacion").click(function(e){
+        e.preventDefault();
+        var etiqueta_radicado_entrada_controversia_primera_calificacion = "{{$radicado_entrada_controversia_primera_calificacion}}";
+        $('#cuerpo_comunicado').summernote('editor.insertText', etiqueta_radicado_entrada_controversia_primera_calificacion);
+    }); 
+    
+    $("#btn_insertar_observaciones").click(function(e){
+        e.preventDefault();
+        var etiqueta_observaciones = "{{$observaciones}}";
+        $('#cuerpo_comunicado').summernote('editor.insertText', etiqueta_observaciones);
+    });
+
     // $("#btn_insertar_nombre_documento").click(function(e){
     //     e.preventDefault();
     //     var etiqueta_nombre_documento = "{{$nombre_documento}}";
@@ -2488,6 +2593,12 @@ $(document).ready(function(){
         var etiqueta_correo_solicitud_informacion = "{{$correo_solicitud_informacion}}";
         $('#cuerpo_comunicado').summernote('editor.insertText', etiqueta_correo_solicitud_informacion);
     });
+
+    $("#btn_insertar_dictamen_controvertido").click(function(e){
+        e.preventDefault();
+        var etiqueta_numero_dictamen_controvertido = "{{$num_dictamen_controvertido}}";
+        $('#cuerpo_comunicado').summernote('editor.insertText', etiqueta_numero_dictamen_controvertido);
+    });
     
     /* Funcionalidad para los radio buttons de Oficion Juntas afiliado, Oficio Juntas JRCI, 
         Expediente JRCI, Devol. Expediente JRCI, Solicitud Dictamen JRCI, Otro Documento */
@@ -2496,24 +2607,29 @@ $(document).ready(function(){
 
         if(opc_seleccionada == "Oficio_Afiliado"){
             // mostrar mensaje(s) importante(s)
-            $("#mensaje_asunto").removeClass('d-none');
-            $("#rellenar_asunto").html('Para mostrar todo el asunto dentro del documento, debe incluir la etiqueta Nombre Junta Regional dentro del campo Asunto.');
+            $("#mensaje_asunto").addClass('d-none');
+            $("#rellenar_asunto").html('');
             $("#mensaje_cuerpo").removeClass('d-none');
             $("#rellenar_cuerpo").html('');
-            $("#rellenar_cuerpo").html('Para mostrar todo el cuerpo del comunicado dentro del documento, debe incluir la etiqueta Nombre Junta Regional dentro del campo Cuerpo del comunicado.');
+            $("#rellenar_cuerpo").html('Para mostrar todo el cuerpo del comunicado dentro del documento, debe incluir las etiquetas Nombre Afiliado, Nombre Junta Regional y Fecha Envió JRCI dentro del campo Cuerpo del comunicado.');
 
             // botones proforma ADJUNTAR OFICIO AL AFILIADO
-            $("#btn_insertar_nombre_junta_regional_asunto").prop('disabled', false);
+            $("#btn_insertar_nombre_junta_regional_asunto").prop('disabled', true);
             $("#btn_insertar_nombre_junta_regional").prop('disabled', false);
+            $("#btn_insertar_fecha_envio_jrci").prop('disabled', false);
             // botones proforma REMISIÓN DE EXPEDIENTE PARA TRÁMITE DE CONTROVERSIA
             $("#btn_insertar_nro_orden_pago").prop('disabled', true);
             $("#btn_insertar_fecha_notifi_afiliado").prop('disabled', true);
             $("#btn_insertar_fecha_radi_contro_pri_cali").prop('disabled', true);
             $("#btn_insertar_tipo_doc_afiliado").prop('disabled', true);
             $("#btn_insertar_documento_afiliado").prop('disabled', true);
-            $("#btn_insertar_nombre_afiliado").prop('disabled', true);
+            $("#btn_insertar_nombre_afiliado").prop('disabled', false);
             $("#btn_insertar_fecha_estructuracion").prop('disabled', true);
             $("#btn_insertar_tipo_evento").prop('disabled', true);
+            $("#btn_insertar_origen").prop('disabled', true);
+            $("#btn_insertar_porcentajepcl").prop('disabled', true);
+            $("#btn_insertar_radicado_entrada_controversia_primera_calificacion").prop('disabled', true);     
+            $("#btn_insertar_observaciones").prop('disabled', true);                        
             $("#btn_insertar_nombres_cie10").prop('disabled', true);
             $("#btn_insertar_tipo_controversia_pri_cali").prop('disabled', true);
             $("#btn_insertar_direccion_afiliado").prop('disabled', true);
@@ -2522,9 +2638,15 @@ $(document).ready(function(){
             // $("#btn_insertar_nombre_documento").prop('disabled', true);
             // botón preforma: ACLARACIÓN E INFORMACIÓN SOBRE RECURSO DE REPOSICIÓN EN SUBSIDIO DE APELACIÓN
             $("#btn_insertar_correo_solicitud_info").prop('disabled', true);
-
-            $("#asunto").val("REMISIÓN DEL CASO A {{$nombre_junta_asunto}}");
-            var texto_insertar = "<p>Cordial saludo:</p><p>Dando respuesta a inconformidad presentada frente a calificación de la Pérdida de la Capacidad Laboral emitida por esta aseguradora, dentro de los términos estipulados en la normatividad vigente, se informa: que hoy los documentos concernientes a su caso han sido enviados a la {{$nombre_junta}}, la cual, le citará a la valoración correspondiente.</p><p>Recuerde por favor, que las Juntas Regionales de Calificación de Invalidez son entidades independientes y autónomas de las compañías de seguros, cuyos procesos y procedimientos son ajenos a nuestra entidad, por lo tanto, cualquier requerimiento ante la misma debe ser tratado directamente con la Junta Regional de Calificación de Invalidez.</p><p>Cualquier inquietud o consulta al respecto, le invitamos a comunicarse a nuestras líneas de atención al cliente en Bogotá (601) 3 07 70 32 o a la línea nacional gratuita 01 8000 122 532, de lunes a viernes, de 8:00 a. m. a 8:00 p. m. - sábados de 8:00 a.m. a 12 m., o escríbanos a «servicio al cliente@segurosalfa.com.co» o a la dirección Carrera 10 # 18-36 piso 4 Edificio José María Córdoba, Bogotá D.C.</p>";
+            $("#btn_insertar_dictamen_controvertido").prop('disabled', true);
+            if (idRol == 6) {
+                $(".note-editable").attr("contenteditable", true);
+                $("#asunto").val("INFORMACIÓN DE LA REMISIÓN DE SU EXPEDIENTE A LA JUNTA REGIONAL").prop('readonly', false);
+            } else {
+                $(".note-editable").attr("contenteditable", false);
+                $("#asunto").val("INFORMACIÓN DE LA REMISIÓN DE SU EXPEDIENTE A LA JUNTA REGIONAL").prop('readonly', true);
+            }
+            var texto_insertar = "<p>Apreciado(a) {{$nombre_afiliado}},</p><p>En <b>PROTECCIÓN S.A.</b> estamos para guiarle y acompañarle en cada momento de su vida. Le informamos que el expediente de su caso relacionado con la pérdida de capacidad laboral fue radicado para una nueva calificación en la <b>{{$nombre_junta}}</b> el <b>{{$fecha_envio_jrci}}</b> debido a su desacuerdo con el dictamen emitido o a que alguna de las partes interesadas en su proceso (EPS, ARL o Empleador) presentó recurso de apelación.</p><p>Es importante que tenga presente que las Juntas de Calificación son entidades gubernamentales independientes, por lo tanto, <b>PROTECCIÓN S.A.</b> no tiene facultades en esta parte del proceso. Los médicos de dichos organismos tienen las siguientes responsabilidades:</p><ul><li>Asignar su cita de valoración, la cual puede ser presencial o por teleconsulta.</li><li>Brindar información relacionada con su proceso.</li><li>Emitir y notificar el dictamen a usted y las partes involucradas en su proceso.</li></ul><p><b>Tener presente:</b></p><p>Los datos aportados en la controversia serán los que la {{$nombre_junta}} utilice para contactarlo y asignarle su cita de valoración, si esta cambia debe informarla a las entidades del sistema de seguridad social.</p><p><b>PROTECCIÓN S.A.</b> cuenta con 5 días hábiles para dar traslado del expediente a la Junta regional de Calificación. Estos días se cuentan a partir de que se cumplan las siguientes condiciones:</p><ul><li>La notificación fue recibida de manera exitosa por las partes interesadas en su proceso (Afiliado, EPS, ARL y Empleador).</li><li>El plazo de 10 días hábiles que tiene cada parte para apelar haya finalizado. Es importante que recuerde que el cumplimiento de estos 10 días hábiles no es igual para todos, pues estos empiezan a contar a partir de que cada parte mencionada anteriormente nos confirme la recepción del dictamen.</li></ul><p>Si requiere información adicional o tiene alguna inquietud, puede comunicarse con nuestro asesor virtual a través de proteccion.com o llamar a nuestra Línea de Servicio en Bogotá (601) 744 44 64, Medellín (604) 510 90 99, Cali (602) 386 00 80, Barranquilla (605) 319 79 99, Cartagena (605) 642 49 99 - WhatsApp +57 310 220 5575 y desde el resto del país 018000528000.</p>";
             $('#cuerpo_comunicado').summernote('code', texto_insertar);
 
             // Auto selección de la opción Afiliado (Destinatario Principal)
@@ -2534,8 +2656,14 @@ $(document).ready(function(){
             var seteo_nro_anexos = 0;
             $("#anexos").val(seteo_nro_anexos);
 
-            // Deselección automática de las copias a partes interesadas: Afiliado
+            // Deselección automática de las copias a partes interesadas: todas
             $("#copia_afiliado").prop('checked', false);
+            $("#copia_empleador").prop('checked', false);
+            $("#copia_eps").prop('checked', false);
+            $("#copia_afp").prop('checked', false);
+            $("#copia_arl").prop('checked', false);
+            $("#copia_jrci").prop('checked', false);
+            $("#copia_jnci").prop('checked', false);
 
             // Selección automática del checkbox firmar
             $("#firmarcomunicado").prop('checked', true);
@@ -2550,8 +2678,10 @@ $(document).ready(function(){
             $("#rellenar_cuerpo").html('');
 
             // botones proforma ADJUNTAR OFICIO AL AFILIADO
+            $(".note-editable").attr("contenteditable", false);
             $("#btn_insertar_nombre_junta_regional_asunto").prop('disabled', true);
             $("#btn_insertar_nombre_junta_regional").prop('disabled', true);
+            $("#btn_insertar_fecha_envio_jrci").prop('disabled', true);
             //  botones proforma REMISIÓN DE EXPEDIENTE PARA TRÁMITE DE CONTROVERSIA
             $("#btn_insertar_nro_orden_pago").prop('disabled', true);
             $("#btn_insertar_fecha_notifi_afiliado").prop('disabled', true);
@@ -2561,6 +2691,10 @@ $(document).ready(function(){
             $("#btn_insertar_nombre_afiliado").prop('disabled', true);
             $("#btn_insertar_fecha_estructuracion").prop('disabled', true);
             $("#btn_insertar_tipo_evento").prop('disabled', true);
+            $("#btn_insertar_origen").prop('disabled', true);
+            $("#btn_insertar_porcentajepcl").prop('disabled', true);
+            $("#btn_insertar_radicado_entrada_controversia_primera_calificacion").prop('disabled', true);
+            $("#btn_insertar_observaciones").prop('disabled', true);
             $("#btn_insertar_nombres_cie10").prop('disabled', true);
             $("#btn_insertar_tipo_controversia_pri_cali").prop('disabled', true);
             $("#btn_insertar_direccion_afiliado").prop('disabled', true);
@@ -2569,8 +2703,9 @@ $(document).ready(function(){
             // $("#btn_insertar_nombre_documento").prop('disabled', true);
             // botón preforma: ACLARACIÓN E INFORMACIÓN SOBRE RECURSO DE REPOSICIÓN EN SUBSIDIO DE APELACIÓN
             $("#btn_insertar_correo_solicitud_info").prop('disabled', true);
+            $("#btn_insertar_dictamen_controvertido").prop('disabled', true);
 
-            $("#asunto").val('N/A');
+            $("#asunto").val('N/A').prop('readonly', true);
             $('#cuerpo_comunicado').summernote('code', 'N/A');
 
             // Auto selección de la opción JRCI (Destinatario Principal)
@@ -2580,44 +2715,63 @@ $(document).ready(function(){
             var seteo_nro_anexos = 0;
             $("#anexos").val(seteo_nro_anexos);
 
-            // Deselección automática de las copias a partes interesadas: Afiliado
+            // Deselección automática de las copias a partes interesadas: todas
             $("#copia_afiliado").prop('checked', false);
-
+            $("#copia_empleador").prop('checked', false);
+            $("#copia_eps").prop('checked', false);
+            $("#copia_afp").prop('checked', false);
+            $("#copia_arl").prop('checked', false);
+            $("#copia_jrci").prop('checked', false);
+            $("#copia_jnci").prop('checked', false);
+            
             // Selección automática del checkbox firmar
             $("#firmarcomunicado").prop('checked', true);
 
-        }else if(opc_seleccionada == "Remision_Expediente_JRCI"){
+        }
+        else if(opc_seleccionada == "Remision_Expediente_JRCI"){
 
             // mostrar mensaje(s) importante(s)
             $("#mensaje_asunto").addClass('d-none');
             $("#rellenar_asunto").html('');
             $("#mensaje_cuerpo").removeClass('d-none');
             $("#rellenar_cuerpo").html('');
-            $("#rellenar_cuerpo").html('Para mostrar todo el cuerpo del comunicado dentro del documento, debe incluir las etiquetas N° Orden pago, Fecha Notificación al Afiliado, Fecha Radicación Controversia Primera Calificación, Tipo Documento Afiliado, Documento Afiliado, Nombre Afiliado, Fecha Estructuración, Tipo de Evento, Nombres CIE-10, Tipo Controversia Primera Calificación, Dirección Afiliado, Teléfono Afiliado, dentro del campo Cuerpo del comunicado.');
+            $("#rellenar_cuerpo").html('Para mostrar todo el cuerpo del comunicado dentro del documento, debe incluir las etiquetas N° Orden pago, Fecha Notificación al Afiliado, Fecha Radicación Controversia Primera Calificación, Nombre Afiliado, Fecha Estructuración, Tipo de Evento, Origen, Porcentaje PCL, Nombres CIE-10, Tipo Controversia Primera Calificación y Observaciones, dentro del campo Cuerpo del comunicado.');
 
             // botones proforma ADJUNTAR OFICIO AL AFILIADO
             $("#btn_insertar_nombre_junta_regional_asunto").prop('disabled', true);
             $("#btn_insertar_nombre_junta_regional").prop('disabled', true);
+            $("#btn_insertar_fecha_envio_jrci").prop('disabled', true);
             //  botones proforma REMISIÓN DE EXPEDIENTE PARA TRÁMITE DE CONTROVERSIA
             $("#btn_insertar_nro_orden_pago").prop('disabled', false);
             $("#btn_insertar_fecha_notifi_afiliado").prop('disabled', false);
             $("#btn_insertar_fecha_radi_contro_pri_cali").prop('disabled', false);
-            $("#btn_insertar_tipo_doc_afiliado").prop('disabled', false);
-            $("#btn_insertar_documento_afiliado").prop('disabled', false);
+            $("#btn_insertar_tipo_doc_afiliado").prop('disabled', true);
+            $("#btn_insertar_documento_afiliado").prop('disabled', true);
             $("#btn_insertar_nombre_afiliado").prop('disabled', false);
             $("#btn_insertar_fecha_estructuracion").prop('disabled', false);
             $("#btn_insertar_tipo_evento").prop('disabled', false);
+            $("#btn_insertar_origen").prop('disabled', false);
+            $("#btn_insertar_porcentajepcl").prop('disabled', false);
+            $("#btn_insertar_radicado_entrada_controversia_primera_calificacion").prop('disabled', true);
+            $("#btn_insertar_observaciones").prop('disabled', false);
             $("#btn_insertar_nombres_cie10").prop('disabled', false);
             $("#btn_insertar_tipo_controversia_pri_cali").prop('disabled', false);
-            $("#btn_insertar_direccion_afiliado").prop('disabled', false);
-            $("#btn_insertar_telefono_afiliado").prop('disabled', false);
+            $("#btn_insertar_direccion_afiliado").prop('disabled', true);
+            $("#btn_insertar_telefono_afiliado").prop('disabled', true);
             // botón preforma RESPUESTA A DEVOLUCIÓN DE EXPEDIENTE
             // $("#btn_insertar_nombre_documento").prop('disabled', true);
             // botón preforma: ACLARACIÓN E INFORMACIÓN SOBRE RECURSO DE REPOSICIÓN EN SUBSIDIO DE APELACIÓN
             $("#btn_insertar_correo_solicitud_info").prop('disabled', true);
-
-            $("#asunto").val("REMISIÓN DE EXPEDIENTE PARA TRÁMITE DE CONTROVERSIA");
-            var texto_insertar = "<p>Respetados señores, cordial saludo:</p><p>En aras de tramitar el recurso y/o controversia presentada en tiempo por la parte interesada contra el dictamen de calificación de PÉRDIDA DE CAPACIDAD LABORAL, remitimos el expediente del afiliado con la documentación exigida por el artículo 30 del Decreto 1352 de 2013 (historia clínica, constancia de notificación, dictamen médico laboral, controversia, etc.) para su valoración.</p><p>Según lo dispone el artículo 20 del mismo decreto, el valor de los honorarios corresponde a un (1) salario mínimo mensual legal vigente, el cual fue cancelado por esta aseguradora. Para los efectos, adjuntamos orden de pago de honorarios No {{$nro_orden_pago}}.</p><p>Finalmente, indicamos que la fecha de notificación del dictamen lo fue el {{$fecha_notificacion_afiliado}} y la radicación del desacuerdo el {{$fecha_radicacion_controversia_primera_calificacion}}, razón por la cual es procedente tramitar el recurso.</p><p>Los datos del afiliado son los siguientes:</p><table class='tabla_cuerpo_remision_expediente'><tbody><tr><td class='bg'><b>TIPO Y No. DE IDENTIFICACIÓN</b></td><td><p>{{$tipo_documento_afiliado}}{{$documento_afiliado}}<br></p></td></tr><tr><td class='bg'><b>NOMBRE COMPLETO</b></td><td><p>{{$nombre_afiliado}}<br></p></td></tr><tr><td class='bg'><b>FECHA DE ESTRUCTURACIÓN Y TIPO DE EVENTO</b></td><td><p>PCL {{$porcentaje_pcl}}-{{$fecha_estructuracion}}-{{$tipo_evento}}<br></p></td></tr><tr><td class='bg'><b>DIAGNÓSTICO</b></td><td><p>{{$nombres_cie10}}<br></p></td></tr><tr><td class='bg'><b>CONTROVERSIA POR</b></td><td><p>{{$tipo_controversia_primera_calificacion}}<br></p></td></tr><tr><td class='bg'><b>DIRECCIÓN Y TELÉFONO DEL ASEGURADO</b></td><td><p>{{$direccion_afiliado}} {{$telefono_afiliado}}<br></p></td></tr><tr><td class='bg'><b>OBSERVACIONES</b></td><td><p>{{$observaciones}}</p></td></tr></tbody></table><p>En virtud de lo señalado en el Artículo 2 del Decreto 1352 de 2013 que establece:</p><p>Artículo 2. Personas interesadas. Para efectos del presente decreto, se entenderá como personas interesadas en el dictamen y de obligatoria notificación o comunicación como mínimo las siguientes:</p><ul><li><span style=''>La persona objeto de dictamen o sus beneficiarios en caso de muerte.</span></li><li><span style=''>La Entidad Promotora de Salud.</span></li><li><span style=''>La Administradora de Riesgos Laborales.</span></li><li><span style=''>La Administradora del Fondo de Pensiones o Administradora de Régimen de Prima Media.</span></li><li><span style=''>El Empleador.</span></li><li><span style=''>La Compañía de Seguro que asuma el riesgo de invalidez, sobrevivencia y muerte. (Subrayado fuera del texto original).</span></li></ul><p>Cualquier inquietud o consulta al respecto, le invitamos a comunicarse a nuestras líneas de atención al cliente en Bogotá (601) 3 07 70 32 o a la línea nacional gratuita 01 8000 122 532, de lunes a viernes, de 8:00 a. m. a 8:00 p. m. - sábados de 8:00 a.m. a 12 m., o escríbanos a «servicio al cliente@segurosalfa.com.co» o a la dirección Carrera 10 # 18-36 piso 4 Edificio José María Córdoba, Bogotá D.C.</p>";
+            $("#btn_insertar_dictamen_controvertido").prop('disabled', true);
+            if (idRol == 6) {
+                $(".note-editable").attr("contenteditable", true);
+                $("#asunto").val("REMISIÓN DE EXPEDIENTE PARA TRÁMITE DE CONTROVERSIA PCL").prop('readonly', false);
+            } else {
+                $(".note-editable").attr("contenteditable", false);
+                $("#asunto").val("REMISIÓN DE EXPEDIENTE PARA TRÁMITE DE CONTROVERSIA PCL").prop('readonly', true);
+            }
+            var texto_insertar = "<p>Saludo cordial,</p><p>En aras de tramitar el recurso y/o controversia presentada en tiempo por la parte interesada contra el dictamen de calificación de <b>PÉRDIDA DE CAPACIDAD LABORAL</b>, remitimos el expediente del afiliado con la documentación exigida por el artículo 30 del Decreto 1352 de 2013 para su valoración. Se anexa a la presente remisión el soporte técnico con el cual se fundamentó el proceso de calificación del afiliado en mención: copia historia clínica, dictamen, sustentación del dictamen.</p><p>Adicional, también se anexa soporte de SIAFP en donde se encuentra el historial de vinculaciones del afiliado en las diferentes AFP. Por lo tanto, si la fecha de estructuración otorgada por el médico calificador de la Junta está en vigencias que no correspondan al Fondo de Pensiones Protección S.A, el dictamen emitido deberá ser notificado también a la entidad que corresponda, de acuerdo al historial de vinculaciones.</p><p>Según lo dispone el artículo 20 del mismo decreto, el valor de los honorarios corresponde a un (1) salario mínimo mensual legal vigente, el cual fue cancelado por <b>PROTECCIÓN S.A.</b> Para los efectos, adjuntamos orden de pago de honorarios No. <b>{{$nro_orden_pago}}</b>. La fecha de notificación del dictamen lo fue el <b>{{$fecha_notificacion_afiliado}}</b> y la radicación del desacuerdo el <b>{{$fecha_radicacion_controversia_primera_calificacion}}</b>, razón por la cual es procedente tramitar el recurso.</p><p>Los datos de la controversia son los siguientes:</p><table class='tabla_cuerpo'><tr><td class='th_cuerpo'><b>AFILIADO</b></td><td>{{$nombre_afiliado}}</td></tr><tr><td class='th_cuerpo'><b>PCL, FECHA DE ESTRUCTURACIÓN Y TIPO DE EVENTO</b></td><td>PCL {{$porcentaje_pcl}}% - FE: {{$fecha_estructuracion}} - {{$tipo_evento}} {{$origen}}</td></tr><tr><td class='th_cuerpo'><b>DIAGNÓSTICOS CALIFICADOS</b></td><td>{{$nombres_cie10}}</td></tr><tr><td class='th_cuerpo'><b>CONTROVERSIA POR</b></td><td>{{$tipo_controversia_primera_calificacion}}</td></tr><tr><td class='th_cuerpo'><b>OBSERVACIONES</b></td><td>{{$observaciones}}</td></tr></table><p>Lo anterior teniendo en cuenta lo dispuesto en el Artículo 2, del decreto 1352, indica lo siguiente:</p><p><b>Artículo 2</b> “Personas interesadas”: Para efectos del presente decreto, se entenderá como personas interesadas en el dictamen y de obligatoria notificación o comunicación como mínimo las siguientes (subrayas y negrillas fuera del texto):</p>"+
+            "<ol class='justificarUl'><li>La persona objeto de dictamen o sus beneficiarios en caso de muerte.</li><li>La Entidad Promotora de Salud.</li><li>La Administradora de Riegos Laborales.</li><li><b>La Administradora del Fondo de Pensiones o Administradora de Régimen de Prima Media.</b></li><li>El Empleador.</li><li><b>La Compañía de Seguro que asuma el riesgo de invalidez, sobrevivencia y muerte.</b></li></ol><p>De acuerdo con lo anteriormente expuesto, solicitamos a la <b>{{$nombre_junta}}</b>, revise el caso y califique la Pérdida de Capacidad Laboral con base en la documentación técnica aportada. Por favor enviar al correo electrónico RecepcionDocumental@proteccion.com.co. cualquier información relacionada con la recolección y/o notificación del dictamen o a alguno de nuestros centros de correspondencia:</p><ul class='justificarUl'><li>En la ciudad de Medellín: Calle 49 No. 63-100 Edificio Torre Protección Piso 1.</li><li>En la ciudad de Bogotá: Calle 84A #10-50 Centro de correspondencia piso 2.</li></ul><p>Agradecemos su gestión y pronta respuesta.</p>";
             $('#cuerpo_comunicado').summernote('code', texto_insertar);
 
             // Auto selección de la opción JRCI (Destinatario Principal)
@@ -2627,32 +2781,45 @@ $(document).ready(function(){
             var seteo_nro_anexos = 0;
             $("#anexos").val(seteo_nro_anexos);
 
-            // selección automática de las copias a partes interesadas: Afiliado
-            $("#copia_afiliado").prop('checked', true);
-
+            // selección automática de las copias a partes interesadas: todas
+            $("#copia_afiliado").prop('checked', false);
+            $("#copia_empleador").prop('checked', false);
+            $("#copia_eps").prop('checked', false);
+            $("#copia_afp").prop('checked', false);
+            $("#copia_arl").prop('checked', false);
+            $("#copia_jrci").prop('checked', false);
+            $("#copia_jnci").prop('checked', false);
+            
             // Selección automática del checkbox firmar
             $("#firmarcomunicado").prop('checked', true);
 
-        }else if(opc_seleccionada == "Devolucion_Expediente_JRCI"){
+        }
+        else if(opc_seleccionada == "Devolucion_Expediente_JRCI"){
             // mostrar mensaje(s) importante(s)
             $("#mensaje_asunto").addClass('d-none');
             $("#rellenar_asunto").html('');
             $("#mensaje_cuerpo").removeClass('d-none');
             $("#rellenar_cuerpo").html('');
-            $("#rellenar_cuerpo").html('Para mostrar todo el cuerpo del comunicado dentro del documento, debe incluir la etiqueta Nombre Junta Regional dentro del campo Cuerpo del comunicado.');
+            $("#rellenar_cuerpo").html('Para mostrar todo el cuerpo del comunicado dentro del documento, debe incluir la etiqueta Nombre Junta Regional, Fecha Envió JRCI, Tipo Documento Afiliado, Documento Afiliado, Nombre Afiliado y N° Dictamen controvertido dentro del campo Cuerpo del comunicado.');
 
             // botones proforma ADJUNTAR OFICIO AL AFILIADO
+            $(".note-editable").attr("contenteditable", true);
             $("#btn_insertar_nombre_junta_regional_asunto").prop('disabled', true);
             $("#btn_insertar_nombre_junta_regional").prop('disabled', false);
+            $("#btn_insertar_fecha_envio_jrci").prop('disabled', false);
             //  botones proforma REMISIÓN DE EXPEDIENTE PARA TRÁMITE DE CONTROVERSIA
             $("#btn_insertar_nro_orden_pago").prop('disabled', true);
             $("#btn_insertar_fecha_notifi_afiliado").prop('disabled', true);
             $("#btn_insertar_fecha_radi_contro_pri_cali").prop('disabled', true);
-            $("#btn_insertar_tipo_doc_afiliado").prop('disabled', true);
-            $("#btn_insertar_documento_afiliado").prop('disabled', true);
-            $("#btn_insertar_nombre_afiliado").prop('disabled', true);
+            $("#btn_insertar_tipo_doc_afiliado").prop('disabled', false);
+            $("#btn_insertar_documento_afiliado").prop('disabled', false);
+            $("#btn_insertar_nombre_afiliado").prop('disabled', false);
             $("#btn_insertar_fecha_estructuracion").prop('disabled', true);
             $("#btn_insertar_tipo_evento").prop('disabled', true);
+            $("#btn_insertar_origen").prop('disabled', true);
+            $("#btn_insertar_porcentajepcl").prop('disabled', true);
+            $("#btn_insertar_radicado_entrada_controversia_primera_calificacion").prop('disabled', true);
+            $("#btn_insertar_observaciones").prop('disabled', true);
             $("#btn_insertar_nombres_cie10").prop('disabled', true);
             $("#btn_insertar_tipo_controversia_pri_cali").prop('disabled', true);
             $("#btn_insertar_direccion_afiliado").prop('disabled', true);
@@ -2661,16 +2828,11 @@ $(document).ready(function(){
             // $("#btn_insertar_nombre_documento").prop('disabled', false);
             // botón preforma: ACLARACIÓN E INFORMACIÓN SOBRE RECURSO DE REPOSICIÓN EN SUBSIDIO DE APELACIÓN
             $("#btn_insertar_correo_solicitud_info").prop('disabled', true);
+            $("#btn_insertar_dictamen_controvertido").prop('disabled', false);
 
-            $("#asunto").val("RESPUESTA A DEVOLUCIÓN DE EXPEDIENTE");
-            var texto_insertar = "<p>Reciban un cordial saludo,</p>\
-            <p>En respuesta a la solicitud radicada por ustedes, esta aseguradora se permite dar respuesta en los términos que se describen a continuación:</p>\
-            <p>Una vez revisadas nuestras bases y sistemas de información evidenciamos que el día (Anotar Fecha de envío de expediente) esta compañía solicitó a ustedes calificación de (Anotar la causal de controversia) en virtud de la controversia interpuesta por el usuario en asunto.</p>\
-            <p>Ahora bien, con respecto a la solicitud emitida por ustedes, nos permitimos informar que recibimos el expediente en devolución, motivo por el cual el grupo interdisciplinario de Seguros de Vida Alfa realizó la respectiva verificación por lo que remitimos nuevamente el expediente completo con la documentación solicitada:</p>\
-            <p style='color:red;'>Nota: En este espacio del documento debe crear la tabla de Documento y No. Folio.<p>\
-            <p>Por lo anterior, solicitamos amablemente a la Honorable {{$nombre_junta}} para que se realice el trámite correspondiente según la normatividad vigente teniendo en cuenta que la afiliada se encuentra en términos legales para dirimir la controversia interpuesta.</p>\
-            <p>Agradecemos la atención prestada y reiteramos nuestra voluntad de servicio.</p>\
-            ";
+            $("#asunto").val("RESPUESTA A DEVOLUCIÓN DE EXPEDIENTE").prop('readonly', false);
+            var texto_insertar = "<p>Saludo cordial,</p><p>En respuesta a la solicitud radicada por ustedes, la <b>Administradora de Fondos de Pensiones y Cesantías PROTECCIÓN S.A.</b> se permite dar respuesta en los términos que se describen a continuación:</p><p>Una vez revisadas nuestras bases y sistemas de información evidenciamos que esta compañía solicitó a ustedes calificación de pérdida de capacidad laboral en virtud de la siguiente controversia interpuesta:</p><table class='tabla_cuerpo'><tr><th class='th_cuerpo'><b>Identificación</b></th><th class='th_cuerpo'><b>Nombre</b></th><th class='th_cuerpo'><b>Dictamen N°</b></th><th class='th_cuerpo'><b>Fecha radicación Expediente</b></th></tr><tr><td>{{$tipo_documento_afiliado}}. {{$documento_afiliado}}</td><td>{{$nombre_afiliado}}</td><td>{{$num_dictamen_controvertido}}</td><td>{{$fecha_envio_jrci}}</td></tr></table><p>Ahora bien, con respecto a la solicitud emitida por ustedes, nos permitimos informar que recibimos el expediente en devolución, motivo por el cual el grupo interdisciplinario de PROTECCIÓN S.A, realizó la respectiva verificación, por lo que remitimos nuevamente el expediente completo con la documentación solicitada:</p><p>(Enumere y describa los documentos solicitados por la Junta incluyendo el N° de folios)</p>"+
+            "<p>Por lo anterior, solicitamos amablemente a la Honorable {{$nombre_junta}} para que se realice el trámite correspondiente según la normatividad vigente teniendo en cuenta que el (la) afiliado(a) se encuentra en términos legales para dirimir la controversia interpuesta.</p><p>Por favor enviar al correo electrónico RecepcionDocumental@proteccion.com.co. cualquier información relacionada con la recolección y/o notificación del dictamen o a alguno de nuestros centros de correspondencia:</p><ul class='justificarUl'><li>En la ciudad de Medellín: Calle 49 No. 63-100 Edificio Torre Protección Piso 1.</li><li>En la ciudad de Bogotá: Calle 84A #10-50 Centro de correspondencia piso 2</li></ul><p>Agradecemos su gestión y pronta respuesta.</p>";
             $('#cuerpo_comunicado').summernote('code', texto_insertar);
 
             // Auto selección de la opción JRCI (Destinatario Principal)
@@ -2680,24 +2842,362 @@ $(document).ready(function(){
             var seteo_nro_anexos = 0;
             $("#anexos").val(seteo_nro_anexos);
 
-            // Selección automática de las copias a partes interesadas: Afiliado
-            $("#copia_afiliado").prop('checked', true);
-
+            // Selección automática de las copias a partes interesadas: todas
+            $("#copia_afiliado").prop('checked', false);
+            $("#copia_empleador").prop('checked', false);
+            $("#copia_eps").prop('checked', false);
+            $("#copia_afp").prop('checked', false);
+            $("#copia_arl").prop('checked', false);
+            $("#copia_jrci").prop('checked', false);
+            $("#copia_jnci").prop('checked', false);
+            
             // Selección automática del checkbox firmar
             $("#firmarcomunicado").prop('checked', true);
 
-        }else if(opc_seleccionada == "Solicitud_Dictamen_JRCI"){
+        }
+        else if(opc_seleccionada == "Solicitud_Dictamen_JRCI"){
             // mostrar mensaje(s) importante(s)
             $("#mensaje_asunto").addClass('d-none');
             $("#rellenar_asunto").html('');
             $("#mensaje_cuerpo").removeClass('d-none');
             $("#rellenar_cuerpo").html('');
-            $("#rellenar_cuerpo").html('Para mostrar todo el cuerpo del comunicado dentro del documento, debe incluir las etiquetas Nombre Afiliado, Correo Solicitud Información, dentro del campo Cuerpo del comunicado.');
+            $("#rellenar_cuerpo").html('Para mostrar todo el cuerpo del comunicado dentro del documento, debe incluir las etiquetas Fecha Envió JRCI, Tipo Documento Afiliado, Documento Afiliado, Nombre Afiliado y N° Dictamen Controvertido dentro del campo Cuerpo del comunicado.');
 
             // botones proforma ADJUNTAR OFICIO AL AFILIADO
             $("#btn_insertar_nombre_junta_regional_asunto").prop('disabled', true);
             $("#btn_insertar_nombre_junta_regional").prop('disabled', true);
+            $("#btn_insertar_fecha_envio_jrci").prop('disabled', false);
             //  botones proforma REMISIÓN DE EXPEDIENTE PARA TRÁMITE DE CONTROVERSIA
+            $("#btn_insertar_nro_orden_pago").prop('disabled', true);
+            $("#btn_insertar_fecha_notifi_afiliado").prop('disabled', true);
+            $("#btn_insertar_fecha_radi_contro_pri_cali").prop('disabled', true);
+            $("#btn_insertar_tipo_doc_afiliado").prop('disabled', false);
+            $("#btn_insertar_documento_afiliado").prop('disabled', false);
+            $("#btn_insertar_nombre_afiliado").prop('disabled', false);
+            $("#btn_insertar_fecha_estructuracion").prop('disabled', true);
+            $("#btn_insertar_tipo_evento").prop('disabled', true);
+            $("#btn_insertar_origen").prop('disabled', true);
+            $("#btn_insertar_porcentajepcl").prop('disabled', true);
+            $("#btn_insertar_radicado_entrada_controversia_primera_calificacion").prop('disabled', true);
+            $("#btn_insertar_observaciones").prop('disabled', true);
+            $("#btn_insertar_nombres_cie10").prop('disabled', true);
+            $("#btn_insertar_tipo_controversia_pri_cali").prop('disabled', true);
+            $("#btn_insertar_direccion_afiliado").prop('disabled', true);
+            $("#btn_insertar_telefono_afiliado").prop('disabled', true);
+            // botón preforma RESPUESTA A DEVOLUCIÓN DE EXPEDIENTE
+            // $("#btn_insertar_nombre_documento").prop('disabled', true);
+            // botón preforma: ACLARACIÓN E INFORMACIÓN SOBRE RECURSO DE REPOSICIÓN EN SUBSIDIO DE APELACIÓN
+            $("#btn_insertar_correo_solicitud_info").prop('disabled', true);
+            $("#btn_insertar_dictamen_controvertido").prop('disabled', false);
+            if (idRol == 6) {
+                $(".note-editable").attr("contenteditable", true);
+                $("#asunto").val("DERECHO DE PETICIÓN DE VENCIMIENTO DE EMISIÓN DE DICTAMEN").prop('readonly', false);
+            } else {
+                $(".note-editable").attr("contenteditable", false);
+                $("#asunto").val("DERECHO DE PETICIÓN DE VENCIMIENTO DE EMISIÓN DE DICTAMEN").prop('readonly', true);                
+            }
+            var texto_insertar = "<p>Saludo cordial,</p><p>Por conducto de la presente, la <b>Administradora de Fondos de Pensiones y Cesantías PROTECCIÓN S.A.</b>, en uso de los derechos fundamentales previstos en los artículos 20<span class='decreto1072'>1</span> y 23<span class='decreto1072'>2</span> de la Constitución Nacional, acude a su Despacho con el fin de solicitarle se sirva de manera inmediata remitir a esta Administradora notificación del dictamen de pérdida de capacidad laboral que a continuación se enuncia:</p><table class='tabla_cuerpo'><tr><th class='th_cuerpo'><b>Identificación</b></th><th class='th_cuerpo'><b>Nombre</b></th><th class='th_cuerpo'><b>Dictamen N°</b></th><th class='th_cuerpo'><b>Fecha radicación Expediente</b></th></tr><tr><td>{{$tipo_documento_afiliado}}. {{$documento_afiliado}}</td><td>{{$nombre_afiliado}}</td><td>{{$num_dictamen_controvertido}}</td><td>{{$fecha_envio_jrci}}</td></tr></table><ol id='lista_arti_sol_dict' class='lista-exponencial'><li><p><b>Artículo 20.</b> Se garantiza a toda persona la libertad de expresar y difundir su pensamiento y opiniones, la de informar y recibir información veraz e imparcial, y la de fundar medios masivos de comunicación. Estos son libres y tienen responsabilidad social. Se garantiza el derecho a la rectificación en condiciones de equidad. No habrá censura.</p></li><li><p><b>Artículo 23.</b> Toda persona tiene derecho a presentar peticiones respetuosas a las autoridades por motivos de interés general o particular y a obtener pronta resolución. El legislador podrá reglamentar su ejercicio ante organizaciones privadas para garantizar los derechos fundamentales.</p></li><li><p>Por medio del cual se expide el Decreto Único Reglamentario del Sector Trabajo.</p></li></ol><p>El artículo 2.2.5.1.36 y siguientes del Decreto 1072 de 2015<span class='decreto1072'>3</span> prevé el procedimiento interno que deben seguir la Juntas de calificación de invalidez para la emisión de los dictámenes de pérdida de capacidad laboral, así mismo prevé los términos que deben seguir las Juntas de calificación para garantizar la correcta ejecución del debido proceso.</p>"+
+            "<p>De tal disposición normativa se concluye que el proceso de calificación del origen y/o pérdida de capacidad laboral, tiene una duración aproximada de 28 días incluyendo el término para notificación del dictamen, esto en el caso en el que no se requieran pruebas o valoración por especialistas, y en caso de que el (la) afiliado(a) no haya asistido a la valoración inicial.</p><p>Pese a todo lo anterior, encontramos que el término para emitir el solicitado dictamen se encuentra más que fenecido sin que se nos haya notificado decisión alguna.</p><p> Así las cosas y con el acostumbrado respeto solicitamos se sirva:</p><ol class='justificarUl'><li>Remitir con destino a esta Administradora notificación del dictamen del (la) afiliado(a) previamente referenciado.</li><li>Informar con destino a esta Administradora si cada dictamen fue emitido en el debido término que dispone la normatividad vigente, en caso de no ser así informar las razones de hecho y de derecho debidamente justificadas por las cuales se tardó la emisión de cada dictamen.</li><li>En caso de no hallar procedente la emisión de algún dictamen, informar con destino a esta Administradora los motivos y especificar puntualmente el estado actual en que se encuentra cada trámite y la fecha estimada de emisión de dictamen.</li><li>Si la tardanza para emitir algún dictamen tiene que ver con que se debe adelantar algún trámite adicional de nuestra parte, informar con destino a esta Administradora cuál es la gestión que debiera realizarse por parte de Protección S.A.</li><li>En caso de no haber sido emitido aún el correspondiente dictamen comentado se sirva indicar de forma cierta, concreta y razonable, y, atendiendo a los principios de oportunidad y razonabilidad la fecha exacta en que procederá con su emisión y/o notificación.</li></ol><p>Para efectos de notificación de la respuesta rogamos tener el correo electrónico RecepcionDocumental@proteccion.com.co</p><p>Agradecemos su gestión y pronta respuesta.</p>";
+            $('#cuerpo_comunicado').summernote('code', texto_insertar);
+
+            // Auto selección de la opción JRCI (Destinatario Principal)
+            $('#jrci_comunicado').click();
+
+            // Seteo automático del nro de anexos:
+            var seteo_nro_anexos = 0;
+            $("#anexos").val(seteo_nro_anexos);
+
+            // Deselección automática de las copias a partes interesadas: todas
+            $("#copia_afiliado").prop('checked', true);
+            $("#copia_empleador").prop('checked', false);
+            $("#copia_eps").prop('checked', false);
+            $("#copia_afp").prop('checked', false);
+            $("#copia_arl").prop('checked', false);
+            $("#copia_jrci").prop('checked', false);
+            $("#copia_jnci").prop('checked', false);            
+
+            // Selección automática del checkbox firmar
+            $("#firmarcomunicado").prop('checked', true);
+
+        }
+        else if(opc_seleccionada == "Solicitud_Acta_Ejecutoria_JRCI"){
+            // mostrar mensaje(s) importante(s)
+            $("#mensaje_asunto").addClass('d-none');
+            $("#rellenar_asunto").html('');
+            $("#mensaje_cuerpo").removeClass('d-none');
+            $("#rellenar_cuerpo").html('');
+            $("#rellenar_cuerpo").html('Para mostrar todo el cuerpo del comunicado dentro del documento, debe incluir las etiquetas Tipo Documento Afiliado, Documento Afiliado, Nombre Afiliado y N° Dictamen Controvertido dentro del campo Cuerpo del comunicado.');
+
+            // botones proforma ADJUNTAR OFICIO AL AFILIADO
+            $("#btn_insertar_nombre_junta_regional_asunto").prop('disabled', true);
+            $("#btn_insertar_nombre_junta_regional").prop('disabled', true);
+            $("#btn_insertar_fecha_envio_jrci").prop('disabled', true);
+            //  botones proforma REMISIÓN DE EXPEDIENTE PARA TRÁMITE DE CONTROVERSIA
+            $("#btn_insertar_nro_orden_pago").prop('disabled', true);
+            $("#btn_insertar_fecha_notifi_afiliado").prop('disabled', true);
+            $("#btn_insertar_fecha_radi_contro_pri_cali").prop('disabled', true);
+            $("#btn_insertar_tipo_doc_afiliado").prop('disabled', false);
+            $("#btn_insertar_documento_afiliado").prop('disabled', false);
+            $("#btn_insertar_nombre_afiliado").prop('disabled', false);
+            $("#btn_insertar_fecha_estructuracion").prop('disabled', true);
+            $("#btn_insertar_tipo_evento").prop('disabled', true);
+            $("#btn_insertar_origen").prop('disabled', true);
+            $("#btn_insertar_porcentajepcl").prop('disabled', true);
+            $("#btn_insertar_radicado_entrada_controversia_primera_calificacion").prop('disabled', true);
+            $("#btn_insertar_observaciones").prop('disabled', true);
+            $("#btn_insertar_nombres_cie10").prop('disabled', true);
+            $("#btn_insertar_tipo_controversia_pri_cali").prop('disabled', true);
+            $("#btn_insertar_direccion_afiliado").prop('disabled', true);
+            $("#btn_insertar_telefono_afiliado").prop('disabled', true);
+            // botón preforma RESPUESTA A DEVOLUCIÓN DE EXPEDIENTE
+            // $("#btn_insertar_nombre_documento").prop('disabled', true);
+            // botón preforma: ACLARACIÓN E INFORMACIÓN SOBRE RECURSO DE REPOSICIÓN EN SUBSIDIO DE APELACIÓN
+            $("#btn_insertar_correo_solicitud_info").prop('disabled', true);
+            $("#btn_insertar_dictamen_controvertido").prop('disabled', false);
+            if (idRol == 6) {
+                $(".note-editable").attr("contenteditable", true);
+                $("#asunto").val("DERECHO DE PETICIÓN DE CONSTANCIA DE EJECUTORIA DE DICTAMEN PCL").prop('readonly', false);
+            } else {
+                $(".note-editable").attr("contenteditable", false);
+                $("#asunto").val("DERECHO DE PETICIÓN DE CONSTANCIA DE EJECUTORIA DE DICTAMEN PCL").prop('readonly', true);                
+            }
+            var texto_insertar = "<p>Saludo cordial,</p><p>Por conducto de la presente, la <b>Administradora de Fondos de Pensiones y Cesantías Protección S.A.</b>, en uso de los derechos fundamentales previstos en los artículos 20<span class='decreto1072'>1</span> y 23<span class='decreto1072'>2</span> de la Constitución Nacional, acude a su Despacho con el fin de solicitarle se sirva expedir y remitir a esta Administradora constancia de ejecutoria del dictamen de pérdida de capacidad laboral que a continuación se enuncia:</p><table class='tabla_cuerpo'><tr><th class='th_cuerpo'><b>Identificación</b></th><th class='th_cuerpo'><b>Nombre</b></th><th class='th_cuerpo'><b>Dictamen N°</b></th></tr><tr><td>{{$tipo_documento_afiliado}}. {{$documento_afiliado}}</td><td>{{$nombre_afiliado}}</td><td>{{$num_dictamen_controvertido}}</td></tr></table><ol id='lista_arti_sol_dict' class='lista-exponencial'><li><p><b>Artículo 20.</b> Se garantiza a toda persona la libertad de expresar y difundir su pensamiento y opiniones, la de informar y recibir información veraz e imparcial, y la de fundar medios masivos de comunicación. Estos son libres y tienen responsabilidad social. Se garantiza el derecho a la rectificación en condiciones de equidad. No habrá censura.</p></li><li><p><b>Artículo 23.</b> Toda persona tiene derecho a presentar peticiones respetuosas a las autoridades por motivos de interés general o particular y a obtener pronta resolución. El legislador podrá reglamentar su ejercicio ante organizaciones privadas para garantizar los derechos fundamentales.</p></li><li><p>Por medio del cual se expide el Decreto Único Reglamentario del Sector Trabajo.</p></li></ol>"+
+            "<p>Para lo anterior deberá tenerse en cuenta que el artículo 2.2.5.1.43 del Decreto 1072 de 2015<span class='decreto1072'>3</span> precisa sobre la firmeza de los dictámenes emitidos:</p><ol class='justificarUl'><p class='cursiva'><b>Artículo 2.2.5.1.43. Firmeza de los dictámenes.</b> Los dictámenes adquieren firmeza cuando:</p><li class='cursiva'>Contra el dictamen no se haya interpuesto el recurso de reposición y/o apelación dentro del término de diez (10) días siguientes a su notificación;</li><li class='cursiva'>Se hayan resuelto los recursos interpuestos y se hayan notificado o comunicado en los términos establecidos en el presente capítulo;</li><li class='cursiva'>Una vez resuelta la solicitud de aclaración o complementación del dictamen proferido por la Junta Nacional y se haya comunicado a todos los interesados.</li></ol>"+
+            "<p>Luego, si para el caso previamente referenciado se hayan cumplidos los requisitos para predicar la firmeza del dictamen resulta necesario entonces que se expida la respectiva constancia de ejecutoria y en caso contrario resulta pertinente informar las razones por las cuales no procede aún su expedición.</p><p>Así las cosas y con el acostumbrado respeto solicitamos se sirva:</p><ol class='justificarUl'><li>Remitir con destino a esta Administradora copia de la constancia de ejecutoria para el caso previamente referenciado.</li><li>Informar con destino a esta Administradora si la constancia de ejecutoria fue expedida en el debido término que dispone la normatividad vigente, en caso de no ser así informar las razones de hecho y de derecho por las cuales se tardó la expedición de la constancia de ejecutoria.</li><li>En caso de no hallar procedente la expedición de alguna constancia de ejecutoria, informar con destino a esta Administradora los motivos.</li><li>Si la imposibilidad para expedir la constancia de ejecutoria tiene que ver con que el interviniente interpuso recursos contra el dictamen emitido, informar con destino a esta Administradora cuál es la parte impugnante y si se requiere de alguna gestión por parte de esta Administradora.</li></ol><p>Para efectos de notificación de la respuesta rogamos tener el correo electrónico RecepcionDocumental@proteccion.com.co</p><p>Agradecemos su gestión y pronta respuesta.</p>";
+            $('#cuerpo_comunicado').summernote('code', texto_insertar);
+
+            // Auto selección de la opción JRCI (Destinatario Principal)
+            $('#jrci_comunicado').click();
+
+            // Seteo automático del nro de anexos:
+            var seteo_nro_anexos = 0;
+            $("#anexos").val(seteo_nro_anexos);
+
+            // Deselección automática de las copias a partes interesadas: todas
+            $("#copia_afiliado").prop('checked', true);
+            $("#copia_empleador").prop('checked', false);
+            $("#copia_eps").prop('checked', false);
+            $("#copia_afp").prop('checked', false);
+            $("#copia_arl").prop('checked', false);
+            $("#copia_jrci").prop('checked', false);
+            $("#copia_jnci").prop('checked', false);            
+
+            // Selección automática del checkbox firmar
+            $("#firmarcomunicado").prop('checked', true);
+
+        }
+        else if(opc_seleccionada == "Solicitud_Pago_Honorarios_JNCI"){
+            // mostrar mensaje(s) importante(s)
+            $("#mensaje_asunto").addClass('d-none');
+            $("#rellenar_asunto").html('');
+            $("#mensaje_cuerpo").removeClass('d-none');
+            $("#rellenar_cuerpo").html('');
+            $("#rellenar_cuerpo").html('Para mostrar todo el cuerpo del comunicado dentro del documento, debe incluir las etiquetas Tipo Documento Afiliado, Documento Afiliado, Nombre Afiliado y N° Dictamen Controvertido dentro del campo Cuerpo del comunicado.');
+
+            // botones proforma ADJUNTAR OFICIO AL AFILIADO
+            $("#btn_insertar_nombre_junta_regional_asunto").prop('disabled', true);
+            $("#btn_insertar_nombre_junta_regional").prop('disabled', true);
+            $("#btn_insertar_fecha_envio_jrci").prop('disabled', true);
+            //  botones proforma REMISIÓN DE EXPEDIENTE PARA TRÁMITE DE CONTROVERSIA
+            $("#btn_insertar_nro_orden_pago").prop('disabled', true);
+            $("#btn_insertar_fecha_notifi_afiliado").prop('disabled', true);
+            $("#btn_insertar_fecha_radi_contro_pri_cali").prop('disabled', true);
+            $("#btn_insertar_tipo_doc_afiliado").prop('disabled', false);
+            $("#btn_insertar_documento_afiliado").prop('disabled', false);
+            $("#btn_insertar_nombre_afiliado").prop('disabled', false);
+            $("#btn_insertar_fecha_estructuracion").prop('disabled', true);
+            $("#btn_insertar_tipo_evento").prop('disabled', true);
+            $("#btn_insertar_origen").prop('disabled', true);
+            $("#btn_insertar_porcentajepcl").prop('disabled', true);
+            $("#btn_insertar_radicado_entrada_controversia_primera_calificacion").prop('disabled', true);
+            $("#btn_insertar_observaciones").prop('disabled', true);
+            $("#btn_insertar_nombres_cie10").prop('disabled', true);
+            $("#btn_insertar_tipo_controversia_pri_cali").prop('disabled', true);
+            $("#btn_insertar_direccion_afiliado").prop('disabled', true);
+            $("#btn_insertar_telefono_afiliado").prop('disabled', true);
+            // botón preforma RESPUESTA A DEVOLUCIÓN DE EXPEDIENTE
+            // $("#btn_insertar_nombre_documento").prop('disabled', true);
+            // botón preforma: ACLARACIÓN E INFORMACIÓN SOBRE RECURSO DE REPOSICIÓN EN SUBSIDIO DE APELACIÓN
+            $("#btn_insertar_correo_solicitud_info").prop('disabled', true);
+            $("#btn_insertar_dictamen_controvertido").prop('disabled', false);
+            if (idRol == 6) {
+                $(".note-editable").attr("contenteditable", true);
+                $("#asunto").val("DERECHO DE PETICIÓN DE CONSIGNACIÓN A FAVOR DE LA JUNTA NACIONAL").prop('readonly', false);
+            } else {
+                $(".note-editable").attr("contenteditable", false);
+                $("#asunto").val("DERECHO DE PETICIÓN DE CONSIGNACIÓN A FAVOR DE LA JUNTA NACIONAL").prop('readonly', true);                
+            }
+            var texto_insertar = "<p>Saludo cordial,</p><p>Por conducto de la presente, la <b>Administradora de Fondos de Pensiones y Cesantías PROTECCIÓN S.A</b>., en uso de los derechos fundamentales previstos en los artículos 20<span class='decreto1072'>1</span> y 23<span class='decreto1072'>2</span> de la Constitución Nacional, acude a su Despacho con el fin de solicitarle se sirva expedir y remitir a esta Administradora nos remitan pronunciamiento respecto a la apelación que Protección realizó frente al dictamen emitido por su entidad, teniendo en cuenta que se apeló dentro de los términos:</p><table class='tabla_cuerpo'><tr><th class='th_cuerpo'><b>Identificación</b></th><th class='th_cuerpo'><b>Nombre</b></th><th class='th_cuerpo'><b>Dictamen N°</b></th></tr><tr><td>{{$tipo_documento_afiliado}}. {{$documento_afiliado}}</td><td>{{$nombre_afiliado}}</td><td>{{$num_dictamen_controvertido}}</td></tr></table>"+
+            "<ol id='lista_arti_sol_dict' class='lista-exponencial'><li><p><b>Artículo 20.</b> Se garantiza a toda persona la libertad de expresar y difundir su pensamiento y opiniones, la de informar y recibir información veraz e imparcial, y la de fundar medios masivos de comunicación. Estos son libres y tienen responsabilidad social. Se garantiza el derecho a la rectificación en condiciones de equidad. No habrá censura.</p></li><li><p><b>Artículo 23.</b> Toda persona tiene derecho a presentar peticiones respetuosas a las autoridades por motivos de interés general o particular y a obtener pronta resolución. El legislador podrá reglamentar su ejercicio ante organizaciones privadas para garantizar los derechos fundamentales.</p></li><li><p>Por medio del cual se expide el Decreto Único Reglamentario del Sector Trabajo.</p></li></ol><p>Para lo anterior deberá tenerse en cuenta que el artículo 43 del Decreto 1353 de 2013<span class='decreto1072'>3</span> precisa sobre los recursos de reposición y apelación presentados:</p>"+
+            "<ol class='justificarUl'><p class='cursiva'><b>ARTÍCULO 43. Recurso de reposición y apelación.</b> Contra el dictamen emitido por la Junta Regional de Calificación de Invalidez proceden los recursos de reposición y/o apelación, presentados por cualquiera de los interesados ante la Junta Regional de Calificación de Invalidez que lo profirió, directamente o por intermedio de sus apoderados dentro de los diez (10) días siguientes a su notificación, sin que requiera de formalidades especiales, exponiendo los motivos de inconformidad, acreditando las pruebas que se pretendan hacer valer y la respectiva consignación de los honorarios de la Junta Nacional si se presenta en subsidio el de apelación.</p><p class='cursiva'>El recurso de reposición deberá ser resuelto por las Juntas Regionales dentro de los diez (10) días calendario siguientes a su recepción y no tendrá costo, en caso de que lleguen varios recursos sobre un mismo dictamen este término empezará a contarse desde la fecha en que haya llegado el último recurso dentro de los tiempos establecidos en el inciso anterior.</p><p class='cursiva'>Cuando se trate de personas jurídicas, los recursos deben interponerse por el representante legal o su apoderado debidamente constituido.</p><p class='cursiva'>La Junta Regional de Calificación de Invalidez no remitirá el expediente a la Junta Nacional si no se allega la consignación de los honorarios de esta última e informará dicha anomalía a las autoridades competentes para la respectiva investigación y sanciones a la entidad responsable del pago. De igual forma, informará a las partes interesadas la imposibilidad de envío a la Junta Nacional hasta que no sea presentada la consignación de dichos honorarios.</p></ol>"+
+            "<p>Luego, si para el caso previamente referenciado se hayan cumplidos los requisitos para resolver el recurso de apelación presentado por esta Administradora, resulta necesario entonces que se expida la respectiva solicitud de pago de honorarios a favor de la Junta Nacional de Calificación de Invalidez de Colombia y en caso contrario resulta pertinente informar las razones por las cuales no procede aún su expedición.</p><p>Así las cosas y con el acostumbrado respeto solicitamos se sirva:</p><ol class='justificarUl'><li>Remitir con destino a esta Administradora solicitud de pago de honorarios a favor de la Junta Nacional de Calificación de Invalidez de Colombia.</li><li>Informar con destino a esta Administradora si la solicitud de pago de honorarios a favor de la Junta Nacional de Calificación de Invalidez de Colombia fue expedida, en caso de no ser así informar las razones de hecho y de derecho por las cuales se tardó la expedición de la solicitud de pago de honorarios.</li><li>En caso de no hallar procedente la expedición de alguna solicitud de pago de honorarios a favor de la Junta Nacional de Calificación de Invalidez de Colombia, informar con destino a esta Administradora los motivos.</li></ol><p>Para efectos de notificación de la respuesta rogamos tener el correo electrónico RecepcionDocumental@proteccion.com.co.</p><p>Agradecemos su gestión y pronta respuesta.</p>";
+            $('#cuerpo_comunicado').summernote('code', texto_insertar);
+
+            // Auto selección de la opción JRCI (Destinatario Principal)
+            $('#jrci_comunicado').click();
+
+            // Seteo automático del nro de anexos:
+            var seteo_nro_anexos = 0;
+            $("#anexos").val(seteo_nro_anexos);
+
+            // Deselección automática de las copias a partes interesadas: todas
+            $("#copia_afiliado").prop('checked', true);
+            $("#copia_empleador").prop('checked', false);
+            $("#copia_eps").prop('checked', false);
+            $("#copia_afp").prop('checked', false);
+            $("#copia_arl").prop('checked', false);
+            $("#copia_jrci").prop('checked', false);
+            $("#copia_jnci").prop('checked', false);            
+
+            // Selección automática del checkbox firmar
+            $("#firmarcomunicado").prop('checked', true);
+
+        }
+        else if(opc_seleccionada == "Solicitud_Remision_Expediente_JNCI"){
+            // mostrar mensaje(s) importante(s)
+            $("#mensaje_asunto").addClass('d-none');
+            $("#rellenar_asunto").html('');
+            $("#mensaje_cuerpo").removeClass('d-none');
+            $("#rellenar_cuerpo").html('');
+            $("#rellenar_cuerpo").html('Para mostrar todo el cuerpo del comunicado dentro del documento, debe incluir las etiquetas Fecha Envió JRCI, Tipo Documento Afiliado, Documento Afiliado, Nombre Afiliado y N° Dictamen Controvertido dentro del campo Cuerpo del comunicado.');
+
+            // botones proforma ADJUNTAR OFICIO AL AFILIADO
+            $("#btn_insertar_nombre_junta_regional_asunto").prop('disabled', true);
+            $("#btn_insertar_nombre_junta_regional").prop('disabled', true);
+            $("#btn_insertar_fecha_envio_jrci").prop('disabled', false);
+            //  botones proforma REMISIÓN DE EXPEDIENTE PARA TRÁMITE DE CONTROVERSIA
+            $("#btn_insertar_nro_orden_pago").prop('disabled', true);
+            $("#btn_insertar_fecha_notifi_afiliado").prop('disabled', true);
+            $("#btn_insertar_fecha_radi_contro_pri_cali").prop('disabled', true);
+            $("#btn_insertar_tipo_doc_afiliado").prop('disabled', false);
+            $("#btn_insertar_documento_afiliado").prop('disabled', false);
+            $("#btn_insertar_nombre_afiliado").prop('disabled', false);
+            $("#btn_insertar_fecha_estructuracion").prop('disabled', true);
+            $("#btn_insertar_tipo_evento").prop('disabled', true);
+            $("#btn_insertar_origen").prop('disabled', true);
+            $("#btn_insertar_porcentajepcl").prop('disabled', true);
+            $("#btn_insertar_radicado_entrada_controversia_primera_calificacion").prop('disabled', true);
+            $("#btn_insertar_observaciones").prop('disabled', true);
+            $("#btn_insertar_nombres_cie10").prop('disabled', true);
+            $("#btn_insertar_tipo_controversia_pri_cali").prop('disabled', true);
+            $("#btn_insertar_direccion_afiliado").prop('disabled', true);
+            $("#btn_insertar_telefono_afiliado").prop('disabled', true);
+            // botón preforma RESPUESTA A DEVOLUCIÓN DE EXPEDIENTE
+            // $("#btn_insertar_nombre_documento").prop('disabled', true);
+            // botón preforma: ACLARACIÓN E INFORMACIÓN SOBRE RECURSO DE REPOSICIÓN EN SUBSIDIO DE APELACIÓN
+            $("#btn_insertar_correo_solicitud_info").prop('disabled', true);
+            $("#btn_insertar_dictamen_controvertido").prop('disabled', false);
+            if (idRol == 6) {
+                $(".note-editable").attr("contenteditable", true);
+                $("#asunto").val("DERECHO DE PETICIÓN DE REMISIÓN DE EXPEDIENTE A JUNTA NACIONAL").prop('readonly', false);
+            } else {
+                $(".note-editable").attr("contenteditable", false);
+                $("#asunto").val("DERECHO DE PETICIÓN DE REMISIÓN DE EXPEDIENTE A JUNTA NACIONAL").prop('readonly', true);                
+            }
+            var texto_insertar = "<p>Saludo cordial,</p><p>Por conducto de la presente, la <b>Administradora de Fondos de Pensiones y Cesantías Protección S.A.</b>, en uso de los derechos fundamentales previstos en los artículos 20<span class='decreto1072'>1</span> y 23<span class='decreto1072'>2</span> de la Constitución Nacional, acude a su Despacho con el fin de solicitarle se sirva de manera inmediata remitir con destino a la Junta nacional de calificación de invalidez el dictamen que fueron debidamente impugnados para que se surta debidamente su trámite de apelación.</p><table class='tabla_cuerpo'><tr><th class='th_cuerpo'><b>Identificación</b></th><th class='th_cuerpo'><b>Nombre</b></th><th class='th_cuerpo'><b>Dictamen N°</b></th><th class='th_cuerpo'><b>Fecha radicación Expediente</b></th></tr><tr><td>{{$tipo_documento_afiliado}}. {{$documento_afiliado}}</td><td>{{$nombre_afiliado}}</td><td>{{$num_dictamen_controvertido}}</td><td>{{$fecha_envio_jrci}}</td></tr></table><ol id='lista_arti_sol_dict' class='lista-exponencial'><li><p><b>Artículo 20.</b> Se garantiza a toda persona la libertad de expresar y difundir su pensamiento y opiniones, la de informar y recibir información veraz e imparcial, y la de fundar medios masivos de comunicación. Estos son libres y tienen responsabilidad social. Se garantiza el derecho a la rectificación en condiciones de equidad. No habrá censura.</p></li><li><p><b>Artículo 23.</b> Toda persona tiene derecho a presentar peticiones respetuosas a las autoridades por motivos de interés general o particular y a obtener pronta resolución. El legislador podrá reglamentar su ejercicio ante organizaciones privadas para garantizar los derechos fundamentales.</p></li><li><p>Por medio del cual se expide el Decreto Único Reglamentario del Sector Trabajo.</p></li></ol><p>De conformidad con el artículo 2.2.5.1.41 del Decreto 1072 de 2015<span class='decreto1072'>3</span> el trámite de la apelación de los dictámenes debe surtirse de manera breve y expedita, así:</p>"+
+            "<ol class='justificarUl'><p class='cursiva'>Artículo 2.2.5.1.41. Recurso de reposición y apelación. (...)</p><p class='cursiva'>El recurso de reposición deberá ser resuelto por las Juntas Regionales dentro de los diez (10) días calendario siguientes a su recepción y no tendrá costo, en caso de que lleguen varios recursos sobre un mismo dictamen este término empezará a contarse desde la fecha en que haya llegado el último recurso dentro de los tiempos establecidos en el inciso anterior.(...)</p><p class='cursiva'>La Junta Regional de Calificación de Invalidez no remitirá el expediente a la Junta Nacional si no se allega la consignación de los honorarios de esta última e informará dicha anomalía a las autoridades competentes para la respectiva investigación y sanciones a la entidad responsable del pago. De igual forma, informará a las partes interesadas la imposibilidad de envío a la Junta Nacional hasta que no sea presentada la consignación de dichos honorarios.(...)</p><p class='cursiva'>Presentado el recurso de apelación en tiempo, el director administrativo y financiero de la Junta Regional de Calificación de Invalidez remitirá todo el expediente con la documentación que sirvió de fundamento para el dictamen dentro de los dos (2) días hábiles siguientes a la Junta Nacional de Calificación de Invalidez, salvo en el caso en que falte la consignación de los honorarios de la Junta Nacional.(...)”</p></ol>"+
+            "<p>Visto lo anterior se concluye que el trámite que debe impartirse a los recursos tanto de reposición como de apelación debe ceñirse a un término claro y perentorio. No obstante, encontramos que en el caso anterior el término para remitir la alzada se encuentra más que fenecido sin que se nos haya notificado su debida remisión a pesar de incluso haberse acreditado debidamente el pago de honorarios.</p><p>Así las cosas y con el acostumbrado respeto solicitamos se sirva:</p><ol class='justificarUl'><li>Remitir de inmediato el expediente que fue objeto de apelación ante la Junta Nacional de calificación de invalidez.</li><li>Informar con destino a esta Administradora cuando se surta cada remisión. E informar si cada apelación fue remitida en el debido término que dispone la normatividad vigente, en caso de no ser así informar las razones de hecho y de derecho debidamente justificadas por las cuales se tardó la remisión ante la Junta Nacional de calificación de invalidez.</li><li>En caso de no hallar procedente la remisión de algún expediente ante la Junta Nacional de calificación de invalidez, informar con destino a esta Administradora los motivos y especificar puntualmente el estado actual en que se encuentra cada trámite y la fecha estimada de remisión.</li><li>Si la tardanza para emitir algún dictamen tiene que ver con que se debe adelantar algún trámite adicional de nuestra parte, informar con destino a esta Administradora cuál es la gestión que debiera realizarse por parte de <b>PROTECCIÓN S.A.</b></li></ol><p>Para efectos de notificación de la respuesta rogamos tener el correo electrónico RecepcionDocumental@proteccion.com.co.</p><p>Agradecemos su gestión y pronta respuesta.</p>";
+            $('#cuerpo_comunicado').summernote('code', texto_insertar);
+
+            // Auto selección de la opción JRCI (Destinatario Principal)
+            $('#jrci_comunicado').click();
+
+            // Seteo automático del nro de anexos:
+            var seteo_nro_anexos = 0;
+            $("#anexos").val(seteo_nro_anexos);
+
+            // Deselección automática de las copias a partes interesadas: todas
+            $("#copia_afiliado").prop('checked', true);
+            $("#copia_empleador").prop('checked', false);
+            $("#copia_eps").prop('checked', false);
+            $("#copia_afp").prop('checked', false);
+            $("#copia_arl").prop('checked', false);
+            $("#copia_jrci").prop('checked', false);
+            $("#copia_jnci").prop('checked', false);            
+
+            // Selección automática del checkbox firmar
+            $("#firmarcomunicado").prop('checked', true);
+
+        }
+        else if(opc_seleccionada == "Cierre_Terminos"){
+            // mostrar mensaje(s) importante(s)
+            $("#mensaje_asunto").addClass('d-none');
+            $("#rellenar_asunto").html('');
+            $("#mensaje_cuerpo").removeClass('d-none');
+            $("#rellenar_cuerpo").html('');
+            $("#rellenar_cuerpo").html('Para mostrar todo el cuerpo del comunicado dentro del documento, debe incluir las etiquetas Fecha Notificación al Afiliado, Fecha Radicación Controversia Primera Calificación, Nombre Afiliado, Fecha Estructuración, Tipo de Evento, Origen y Porcentaje PCL, dentro del campo Cuerpo del comunicado.');
+
+            // botones proforma ADJUNTAR CIERRE FUERA DE TERMINOS
+            $("#btn_insertar_nombre_junta_regional_asunto").prop('disabled', true);
+            $("#btn_insertar_nombre_junta_regional").prop('disabled', true);
+            $("#btn_insertar_fecha_envio_jrci").prop('disabled', true);
+            // botones proforma REMISIÓN DE EXPEDIENTE PARA TRÁMITE DE CONTROVERSIA
+            $("#btn_insertar_nro_orden_pago").prop('disabled', true);
+            $("#btn_insertar_fecha_notifi_afiliado").prop('disabled', false);
+            $("#btn_insertar_fecha_radi_contro_pri_cali").prop('disabled', false);
+            $("#btn_insertar_tipo_doc_afiliado").prop('disabled', true);
+            $("#btn_insertar_documento_afiliado").prop('disabled', true);
+            $("#btn_insertar_nombre_afiliado").prop('disabled', false);
+            $("#btn_insertar_fecha_estructuracion").prop('disabled', false);
+            $("#btn_insertar_tipo_evento").prop('disabled', false);
+            $("#btn_insertar_origen").prop('disabled', false);
+            $("#btn_insertar_porcentajepcl").prop('disabled', false);
+            $("#btn_insertar_radicado_entrada_controversia_primera_calificacion").prop('disabled', true);
+            $("#btn_insertar_observaciones").prop('disabled', true);
+            $("#btn_insertar_nombres_cie10").prop('disabled', true);
+            $("#btn_insertar_tipo_controversia_pri_cali").prop('disabled', true);
+            $("#btn_insertar_direccion_afiliado").prop('disabled', true);
+            $("#btn_insertar_telefono_afiliado").prop('disabled', true);
+            // botón preforma RESPUESTA A DEVOLUCIÓN DE EXPEDIENTE
+            // $("#btn_insertar_nombre_documento").prop('disabled', true);
+            // botón preforma: ACLARACIÓN E INFORMACIÓN SOBRE RECURSO DE REPOSICIÓN EN SUBSIDIO DE APELACIÓN
+            $("#btn_insertar_correo_solicitud_info").prop('disabled', true);
+            $("#btn_insertar_dictamen_controvertido").prop('disabled', true);
+            if (idRol == 6) {
+                $(".note-editable").attr("contenteditable", true);
+                $("#asunto").val("RESPUESTA AL RECURSO DE APELACIÓN PRESENTADO").prop('readonly', false);
+
+            } else {
+                $(".note-editable").attr("contenteditable", false);
+                $("#asunto").val("RESPUESTA AL RECURSO DE APELACIÓN PRESENTADO").prop('readonly', true);                
+            }
+            var texto_insertar = "<p>Apreciado(a) {{$nombre_afiliado}},</p><p>En <b>PROTECCIÓN S.A.</b> estamos para guiarle y acompañarle en cada momento de su vida. Realizamos las validaciones correspondientes y le informamos que no es posible remitir su caso a la Junta Regional de Calificación. Lo anterior debido a que usted presentó el recurso de apelación frente al dictamen de calificación de pérdida de capacidad laboral por fuera del plazo que indica la ley.</p><p>Como le informamos en una comunicación anterior y de acuerdo a lo que determina Artículo 41 de la ley 100 de 1993, modificado por el artículo 142 del decreto 019 de 2012, la apelación del dictamen debía presentarse dentro de los 10 días hábiles siguientes a la recepción de la notificación del dictamen.</p><p><b>PROTECCIÓN S.A.</b> le notificó la calificación de pérdida de capacidad laboral el día {{$fecha_notificacion_afiliado}} y su apelación contra este dictamen se radicó el {{$fecha_radicacion_controversia_primera_calificacion}}, quedando por fuera del plazo establecido por la ley.</p><p>Su dictamen de calificación de la pérdida de capacidad laboral se mantiene con el resultado inicial:</p><table class='tabla_cuerpo'><tr><th class='th_cuerpo'>Porcentaje de pérdida de capacidad laboral</th><th class='th_cuerpo'>Origen</th><th class='th_cuerpo'>Fecha de estructuración</th></tr><tr><td>{{$porcentajepcl}}</td><td>{{$tipo_evento}} {{$origen}}</td><td>{{$fecha_estructuracion}}</td></tr></table><p>Le agradecemos la confianza depositada en nosotros durante estos años y le reiteramos nuestro deseo de seguir acompañándole en su camino.</p><p>Si requiere información adicional o tiene alguna inquietud, puede comunicarse con nuestro asesor virtual a través de proteccion.com o llamar a nuestra Línea de Servicio en Bogotá (601) 744 44 64, Medellín (604) 510 90 99, Cali (602) 386 00 80, Barranquilla (605) 319 79 99, Cartagena (605) 642 49 99 - WhatsApp +57 310 220 5575 y desde el resto del país 018000528000.</p>";
+            $('#cuerpo_comunicado').summernote('code', texto_insertar);
+
+            // Auto selección de la opción Afiliado (Destinatario Principal)
+            $('#afiliado_comunicado').click();
+
+            // Seteo automático del nro de anexos:
+            var seteo_nro_anexos = 0;
+            $("#anexos").val(seteo_nro_anexos);
+
+            // Deselección automática de las copias a partes interesadas: todas
+            $("#copia_afiliado").prop('checked', false);
+            $("#copia_empleador").prop('checked', false);
+            $("#copia_eps").prop('checked', false);
+            $("#copia_afp").prop('checked', false);
+            $("#copia_arl").prop('checked', false);
+            $("#copia_jrci").prop('checked', false);
+            $("#copia_jnci").prop('checked', false);
+            
+            // Selección automática del checkbox firmar
+            $("#firmarcomunicado").prop('checked', true);
+            
+        }
+        else if(opc_seleccionada == "Sol_Faltante_Contro"){
+            // mostrar mensaje(s) importante(s)
+            $("#mensaje_asunto").addClass('d-none');
+            $("#rellenar_asunto").html('');
+            $("#mensaje_cuerpo").removeClass('d-none');
+            $("#rellenar_cuerpo").html('');
+            $("#rellenar_cuerpo").html('Para mostrar todo el cuerpo del comunicado dentro del documento, debe incluir la etiqueta Nombre  Afiliado dentro del campo Cuerpo del comunicado.');
+
+            // botones proforma ADJUNTAR CIERRE FUERA DE TERMINOS
+            $(".note-editable").attr("contenteditable", true);
+            $("#btn_insertar_nombre_junta_regional_asunto").prop('disabled', true);
+            $("#btn_insertar_nombre_junta_regional").prop('disabled', true);
+            $("#btn_insertar_fecha_envio_jrci").prop('disabled', true);
+            // botones proforma REMISIÓN DE EXPEDIENTE PARA TRÁMITE DE CONTROVERSIA
             $("#btn_insertar_nro_orden_pago").prop('disabled', true);
             $("#btn_insertar_fecha_notifi_afiliado").prop('disabled', true);
             $("#btn_insertar_fecha_radi_contro_pri_cali").prop('disabled', true);
@@ -2706,6 +3206,10 @@ $(document).ready(function(){
             $("#btn_insertar_nombre_afiliado").prop('disabled', false);
             $("#btn_insertar_fecha_estructuracion").prop('disabled', true);
             $("#btn_insertar_tipo_evento").prop('disabled', true);
+            $("#btn_insertar_origen").prop('disabled', true);
+            $("#btn_insertar_porcentajepcl").prop('disabled', true);
+            $("#btn_insertar_radicado_entrada_controversia_primera_calificacion").prop('disabled', true);
+            $("#btn_insertar_observaciones").prop('disabled', true);
             $("#btn_insertar_nombres_cie10").prop('disabled', true);
             $("#btn_insertar_tipo_controversia_pri_cali").prop('disabled', true);
             $("#btn_insertar_direccion_afiliado").prop('disabled', true);
@@ -2713,31 +3217,138 @@ $(document).ready(function(){
             // botón preforma RESPUESTA A DEVOLUCIÓN DE EXPEDIENTE
             // $("#btn_insertar_nombre_documento").prop('disabled', true);
             // botón preforma: ACLARACIÓN E INFORMACIÓN SOBRE RECURSO DE REPOSICIÓN EN SUBSIDIO DE APELACIÓN
-            $("#btn_insertar_correo_solicitud_info").prop('disabled', false);
+            $("#btn_insertar_correo_solicitud_info").prop('disabled', true);
+            $("#btn_insertar_dictamen_controvertido").prop('disabled', true);
 
-            $("#asunto").val("ACLARACIÓN E INFORMACIÓN SOBRE RECURSO DE REPOSICIÓN EN SUBSIDIO DE APELACIÓN");
-            var texto_insertar = "<p>Respetados señores, cordial saludo:</p>\
-            <p>Revisadas nuestras bases de datos y sistemas de información evidenciamos que su entidad remitió a la AFP Porvenir, notificación del dictamen de calificación de Pérdida de Capacidad Laboral (PCL) el pasado (Anote Fecha de notificación del Dictamen de JRCI) acaecido al señor {{$nombre_afiliado}}, por lo que esta entidad remitió estos comunicados a Seguros de Vida Alfa, como aseguradora que expidió su seguro previsional.</p>\
-            <p>Al respecto, el equipo interdisciplinario de calificación procedió a revisar sus comunicaciones y evidenció que dentro de dicha notificación no se adjuntó el Dictamen, por lo que el día (Anote Fecha de solicitud de Dictamen) se solicitó a los correos {{$correo_solicitud_informacion}}, el envío del mismo con el fin de verificar cada una de las razones de hecho y de derecho de la decisión tomada por ustedes.</p>\
-            <p>En consecuencia, se observa que después de esta petición no se tiene radicación o aclaración sobre lo antes mencionado, por lo que se solicita amablemente emitir estado de caso sobre la notificación y el recurso emitido, toda vez que en su momento no se tuvo como verificar lo calificado por ustedes a favor del señor {{$nombre_afiliado}}.</p>\
-            <p>Dicha notificación se puede realizar en la dirección Carrera 10 # 18 - 36 Edificio Córdoba Piso 4 en Bogotá.</p>\
-            ";
-            $('#cuerpo_comunicado').summernote('code', texto_insertar);
+            $("#asunto").val("SOLICITUD DE DOCUMENTACIÓN FALTANTE PARA TRÁMITE DE JUNTAS").prop('readonly', false);
+            let token = $('input[name=_token]').val(); 
+            let datos_sol_documentos = {
+                '_token': token,
+                'Id_evento_sol':  Id_evento_expediente,
+                'Id_proceso_sol':  Id_proceso_expediente,
+                'Id_asignacion_sol':  Id_asignacion_expediente,
+                'parametro': 'lista_sol_documentos'
+            };
+            $.ajax({
+                type:'POST',
+                url: '/selectoresJuntas',
+                data:datos_sol_documentos,
+                success:function(solDocumentos){
+                    let listaDocumentos = "<ul class='justificarUl'>";
+                    solDocumentos.forEach(function (documentosLista){
+                        listaDocumentos += `<li><b>${documentosLista.Nombre_documento}: ${documentosLista.Descripcion}</b></li>`;
+                    });
+                    listaDocumentos += "</ul>";
+                    var texto_insertar = "<p>Apreciado(a) {{$nombre_afiliado}}, </p><p>En <b>PROTECCIÓN S.A.</b> estamos para guiarle y acompañarle en cada momento de su vida. Realizamos las validaciones correspondientes y le informamos que no es posible remitir su caso a la Junta Regional de Calificación. Lo anterior debido a que usted no presentó los siguientes documentos y que son requerimiento para continuar con la revisión del mismo:"+
+                    listaDocumentos+
+                    "</p><p>En este sentido, se requiere aportar los documentos solicitados para proceder con la apelación radicada, los documentos se deben enviar al correo documentos.calificacion@proteccion.com.co.</p><p>Si requiere información adicional o tiene alguna inquietud, puede comunicarse con nuestro asesor virtual a través de proteccion.com o llamar a nuestra Línea de Servicio en Bogotá (601) 744 44 64, Medellín (604) 510 90 99, Cali (602) 386 00 80, Barranquilla (605) 319 79 99, Cartagena (605) 642 49 99 - WhatsApp +57 310 220 5575 y desde el resto del país 018000528000.</p>";
+                    $('#cuerpo_comunicado').summernote('code', texto_insertar);
+                }
+            });
 
-            // Auto selección de la opción JRCI (Destinatario Principal)
-            $('#jrci_comunicado').click();
+            // Auto selección de la opción Afiliado (Destinatario Principal)
+            $('#afiliado_comunicado').click();
 
             // Seteo automático del nro de anexos:
             var seteo_nro_anexos = 0;
             $("#anexos").val(seteo_nro_anexos);
 
-            // Deselección automática de las copias a partes interesadas: Afiliado
+            // Deselección automática de las copias a partes interesadas: todas
             $("#copia_afiliado").prop('checked', false);
+            $("#copia_empleador").prop('checked', false);
+            $("#copia_eps").prop('checked', false);
+            $("#copia_afp").prop('checked', false);
+            $("#copia_arl").prop('checked', false);
+            $("#copia_jrci").prop('checked', false);
+            $("#copia_jnci").prop('checked', false);            
 
             // Selección automática del checkbox firmar
             $("#firmarcomunicado").prop('checked', true);
+            
+        }
+        else if(opc_seleccionada == "Cierre_Doc_Noaportada"){
+            // mostrar mensaje(s) importante(s)
+            $("#mensaje_asunto").addClass('d-none');
+            $("#rellenar_asunto").html('');
+            $("#mensaje_cuerpo").removeClass('d-none');
+            $("#rellenar_cuerpo").html('');
+            $("#rellenar_cuerpo").html('Para mostrar todo el cuerpo del comunicado dentro del documento, debe incluir la etiqueta Nombre  Afiliado y Radicado Entrada Controversia Primera Calificación dentro del campo Cuerpo del comunicado.');
 
-        }else{
+            // botones proforma ADJUNTAR CIERRE FUERA DE TERMINOS
+            $(".note-editable").attr("contenteditable", true);
+            $("#btn_insertar_nombre_junta_regional_asunto").prop('disabled', true);
+            $("#btn_insertar_nombre_junta_regional").prop('disabled', true);
+            $("#btn_insertar_fecha_envio_jrci").prop('disabled', true);
+            // botones proforma REMISIÓN DE EXPEDIENTE PARA TRÁMITE DE CONTROVERSIA
+            $("#btn_insertar_nro_orden_pago").prop('disabled', true);
+            $("#btn_insertar_fecha_notifi_afiliado").prop('disabled', true);
+            $("#btn_insertar_fecha_radi_contro_pri_cali").prop('disabled', true);
+            $("#btn_insertar_tipo_doc_afiliado").prop('disabled', true);
+            $("#btn_insertar_documento_afiliado").prop('disabled', true);
+            $("#btn_insertar_nombre_afiliado").prop('disabled', false);
+            $("#btn_insertar_fecha_estructuracion").prop('disabled', true);
+            $("#btn_insertar_tipo_evento").prop('disabled', true);
+            $("#btn_insertar_origen").prop('disabled', true);
+            $("#btn_insertar_porcentajepcl").prop('disabled', true);
+            $("#btn_insertar_radicado_entrada_controversia_primera_calificacion").prop('disabled', false);
+            $("#btn_insertar_observaciones").prop('disabled', true);
+            $("#btn_insertar_nombres_cie10").prop('disabled', true);
+            $("#btn_insertar_tipo_controversia_pri_cali").prop('disabled', true);
+            $("#btn_insertar_direccion_afiliado").prop('disabled', true);
+            $("#btn_insertar_telefono_afiliado").prop('disabled', true);
+            // botón preforma RESPUESTA A DEVOLUCIÓN DE EXPEDIENTE
+            // $("#btn_insertar_nombre_documento").prop('disabled', true);
+            // botón preforma: ACLARACIÓN E INFORMACIÓN SOBRE RECURSO DE REPOSICIÓN EN SUBSIDIO DE APELACIÓN
+            $("#btn_insertar_correo_solicitud_info").prop('disabled', true);
+            $("#btn_insertar_dictamen_controvertido").prop('disabled', true);
+
+            $("#asunto").val("CIERRE DE CASO POR DOCUMENTACIÓN NO APORTADA").prop('readonly', false);
+            let token = $('input[name=_token]').val(); 
+            let datos_sol_documentos = {
+                '_token': token,
+                'Id_evento_sol':  Id_evento_expediente,
+                'Id_proceso_sol':  Id_proceso_expediente,
+                'Id_asignacion_sol':  Id_asignacion_expediente,
+                'parametro': 'lista_sol_documentos'
+            };
+            $.ajax({
+                type:'POST',
+                url: '/selectoresJuntas',
+                data:datos_sol_documentos,
+                success:function(solDocumentos){
+                    let listaDocumentos = "<ul class='justificarUl'>";
+                    solDocumentos.forEach(function (documentosLista){
+                        listaDocumentos += `<li><b>${documentosLista.Nombre_documento}: ${documentosLista.Descripcion}</b></li>`;
+                    });
+                    listaDocumentos += "</ul>";
+                    var texto_insertar = "<p>Apreciado(a) {{$nombre_afiliado}}, </p><p>En <b>PROTECCIÓN S.A.</b> estamos para guiarle y acompañarle en cada momento de su vida. Hemos estado atentos a su caso <b>{{$radicado_entrada_controversia_primera_calificacion}}</b> para poder brindarle una solución. Sin embargo, a la fecha no hemos recibido los soportes necesarios que le solicitamos en tres comunicaciones pasadas y que son requerimiento para continuar con la revisión del mismo:"+
+                    listaDocumentos+
+                    "</p><p>En este sentido, nos permitimos notificarle el <b>cierre de su solicitud</b> y le invitamos a que reúna los documentos y creé un nuevo caso a través de Pronto, nuestro Asesor Virtual.</p><p>Si requiere información adicional o tiene alguna inquietud, puede comunicarse con nuestro asesor virtual a través de proteccion.com o llamar a nuestra Línea de Servicio en Bogotá (601) 744 44 64, Medellín (604) 510 90 99, Cali (602) 386 00 80, Barranquilla (605) 319 79 99, Cartagena (605) 642 49 99 - WhatsApp +57 310 220 5575 y desde el resto del país 018000528000.</p>";
+                    $('#cuerpo_comunicado').summernote('code', texto_insertar);
+                }
+            });
+
+            // Auto selección de la opción Afiliado (Destinatario Principal)
+            $('#afiliado_comunicado').click();
+
+            // Seteo automático del nro de anexos:
+            var seteo_nro_anexos = 0;
+            $("#anexos").val(seteo_nro_anexos);
+
+            // Deselección automática de las copias a partes interesadas: todas
+            $("#copia_afiliado").prop('checked', false);
+            $("#copia_empleador").prop('checked', false);
+            $("#copia_eps").prop('checked', false);
+            $("#copia_afp").prop('checked', false);
+            $("#copia_arl").prop('checked', false);
+            $("#copia_jrci").prop('checked', false);
+            $("#copia_jnci").prop('checked', false);
+            
+            // Selección automática del checkbox firmar
+            $("#firmarcomunicado").prop('checked', true);
+            
+        }
+        else{
             // mostrar mensaje(s) importante(s)
             $("#mensaje_asunto").addClass('d-none');
             $("#rellenar_asunto").html('');
@@ -2745,8 +3356,10 @@ $(document).ready(function(){
             $("#rellenar_cuerpo").html('');
 
             // botones proforma ADJUNTAR OFICIO AL AFILIADO
+            $(".note-editable").attr("contenteditable", false);
             $("#btn_insertar_nombre_junta_regional_asunto").prop('disabled', true);
             $("#btn_insertar_nombre_junta_regional").prop('disabled', true);
+            $("#btn_insertar_fecha_envio_jrci").prop('disabled', true);
             //  botones proforma REMISIÓN DE EXPEDIENTE PARA TRÁMITE DE CONTROVERSIA
             $("#btn_insertar_nro_orden_pago").prop('disabled', true);
             $("#btn_insertar_fecha_notifi_afiliado").prop('disabled', true);
@@ -2756,6 +3369,10 @@ $(document).ready(function(){
             $("#btn_insertar_nombre_afiliado").prop('disabled', true);
             $("#btn_insertar_fecha_estructuracion").prop('disabled', true);
             $("#btn_insertar_tipo_evento").prop('disabled', true);
+            $("#btn_insertar_origen").prop('disabled', true);
+            $("#btn_insertar_porcentajepcl").prop('disabled', true);
+            $("#btn_insertar_radicado_entrada_controversia_primera_calificacion").prop('disabled', true);
+            $("#btn_insertar_observaciones").prop('disabled', true);
             $("#btn_insertar_nombres_cie10").prop('disabled', true);
             $("#btn_insertar_tipo_controversia_pri_cali").prop('disabled', true);
             $("#btn_insertar_direccion_afiliado").prop('disabled', true);
@@ -2764,8 +3381,9 @@ $(document).ready(function(){
             // $("#btn_insertar_nombre_documento").prop('disabled', true);
             // botón preforma: ACLARACIÓN E INFORMACIÓN SOBRE RECURSO DE REPOSICIÓN EN SUBSIDIO DE APELACIÓN
             $("#btn_insertar_correo_solicitud_info").prop('disabled', true);
+            $("#btn_insertar_dictamen_controvertido").prop('disabled', true);
 
-            $("#asunto").val('');
+            $("#asunto").val('')
             $('#cuerpo_comunicado').summernote('code', '');
 
             // Quitar auto selección de la opción JRCI (Destinatario Principal)
@@ -2775,9 +3393,15 @@ $(document).ready(function(){
             var seteo_nro_anexos = 0;
             $("#anexos").val(seteo_nro_anexos);
 
-            // Deselección automática de las copias a partes interesadas: Afiliado
+            // Deselección automática de las copias a partes interesadas: todas
             $("#copia_afiliado").prop('checked', false);
-
+            $("#copia_empleador").prop('checked', false);
+            $("#copia_eps").prop('checked', false);
+            $("#copia_afp").prop('checked', false);
+            $("#copia_arl").prop('checked', false);
+            $("#copia_jrci").prop('checked', false);
+            $("#copia_jnci").prop('checked', false);
+            
             // Deselección automática del checkbox firmar
             $("#firmarcomunicado").prop('checked', false);
 
@@ -3298,20 +3922,38 @@ $(document).ready(function(){
             { 
                 "data": function(row) {
                     if (row.Tipo_descarga === "Oficio_Afiliado") {
-                        return "Oficio Afiliado";
+                        return "RADICACIÓN EXPEDIENTE AFILIADO";
                     }
                     else if(row.Tipo_descarga === 'Oficio_Juntas_JRCI'){
                         return "Oficio Juntas JRCI";
                     }
                     else if(row.Tipo_descarga === 'Remision_Expediente_JRCI'){
-                        return "Remisión Expediente JRCI";
+                        return "REMISIÓN EXPEDIENTE JRCI";
                     }
                     else if(row.Tipo_descarga === 'Devolucion_Expediente_JRCI'){
-                        return "Devolución Expediente JRCI";
+                        return "DEVOLUCIÓN EXPEDIENTE JRCI";
                     }
                     else if(row.Tipo_descarga === 'Solicitud_Dictamen_JRCI'){
-                        return "Solicitud Dictamen JRCI";
+                        return "DP1/2 - SOL. DICTAMEN JRCI";
                     }
+                    else if(row.Tipo_descarga === 'Solicitud_Acta_Ejecutoria_JRCI'){
+                        return "DP3 - SOL. ACTA EJECUTORIA JRCI";
+                    }
+                    else if(row.Tipo_descarga === 'Solicitud_Pago_Honorarios_JNCI'){
+                        return "DP4 - SOL. PAGO HONORARIOS JNCI";
+                    }
+                    else if(row.Tipo_descarga === 'Solicitud_Remision_Expediente_JNCI'){
+                        return "DP5 - SOL. REMISIÓN EXPEDIENTE JNCI";
+                    }                                        
+                    else if(row.Tipo_descarga === 'Cierre_Terminos'){
+                        return "CIERRE FUERA DE TÉRMINOS";
+                    }
+                    else if(row.Tipo_descarga === 'Sol_Faltante_Contro'){
+                        return "SOL. FALTANTES CONTROVERSIA";
+                    }
+                    else if(row.Tipo_descarga === 'Cierre_Doc_Noaportada'){
+                        return "CIERRE DOC. NO APORTADA";
+                    }                    
                     else if(row.Tipo_descarga === "Otro_Documento") {
                         return "Otro Documento";
                     }
@@ -3680,6 +4322,69 @@ $(document).ready(function(){
                 $("#check_principal").prop('disabled', true).prop('required', true);
             }
         });
+
+        /* Aqui se programará algunas cosas de la ficha PBS 082 */
+
+        // 1. motrar el botón de que tipo de guia es
+        // 2. precargar el selector de documentos complementarios dependiendo de que correspondecia es.
+
+        $("#tipo_guia").text('');
+        $('#listado_documentos_ed tr[id^="fila_doc_"]').removeClass('d-none');
+        $("#collapseGuia").removeClass('show');
+        $("#doc_subir_guias").val('');
+        switch (tipo_correspondencia) {
+            case 'Afiliado':
+                $("#tipo_guia").text('Afiliado');
+                break;
+            case 'Empleador':
+                $("#tipo_guia").text('Empleador');
+                break;
+            case 'eps':
+                $("#tipo_guia").text('EPS');
+                break;
+            case 'afp':
+                $("#tipo_guia").text('AFP');
+                break;
+            case 'arl':
+                $("#tipo_guia").text('ARL');
+                break;
+            case 'afp_conocimiento':
+                $("#tipo_guia").text('Entidad conocimiento');
+                break;
+            case 'jrci':
+                $("#tipo_guia").text('JRCI');
+                break;
+            case 'jnci':
+                $("#tipo_guia").text('JNCI');
+                break;
+            default:
+                break;
+        }
+
+        $('#listado_documentos_ed tr[id^="fila_doc_"]').not('#fila_doc_43').addClass('d-none');
+
+        var datos_lista_tipos_documentos = {
+            '_token': token,
+            'evento': $("#newId_evento").val(),
+            'servicio': $("#Id_servicio").val(),
+            'parametro':"docs_complementarios",
+            'tipo_correspondencia': 43,
+        };
+        
+        $.ajax({
+            type:'POST',
+            url:'/selectoresJuntas',
+            data: datos_lista_tipos_documentos,
+            success:function(data) {
+                $("#listado_tipos_documentos_guias").empty();
+                $("#listado_tipos_documentos_guias").append('<option value="">Seleccione una Opción</option>');
+                let tiposdoc = Object.keys(data);
+                for (let i = 0; i < tiposdoc.length; i++) {
+                    $('#listado_tipos_documentos_guias').append('<option value="'+data[tiposdoc[i]]["Nro_documento"]+'">'+data[tiposdoc[i]]["Nro_documento"]+' - '+data[tiposdoc[i]]["Nombre_documento"]+'</option>');
+                }
+            }
+        });
+
     });
 
     $('#form_correspondencia').submit(function (e) {
@@ -3805,7 +4510,7 @@ $(document).ready(function(){
         var F_dictamen_act = $('#F_dictamen_act').val();
         var Id_Asignacion = this.getAttribute('id_asignacion');
         var Id_comunicado = this.getAttribute('id_comunicado');
-        var num_identificacion = this.getAttribute('numero_identificacion');
+        var num_identificacion = this.getAttribute('numero_identificacion');               
         var Nradicado = this.getAttribute('numero_radicado');
         var TipoDescarga = this.getAttribute('tipo_descarga');
         var input_jrci_seleccionado_copia_editar = this.getAttribute('jrci_copia');
@@ -4105,40 +4810,151 @@ $(document).ready(function(){
                         }
                         else if(TipoDescarga === 'Devolucion_Expediente_JRCI'){
                             // Obtener el contenido codificado en base64 del PDF desde la respuesta
-                            var base64Word = response.word;
-                
+                            var base64Pdf = response.pdf;
+
                             // Decodificar base64 en un array de bytes
-                            var binaryString = atob(base64Word);
+                            var binaryString = atob(base64Pdf);
                             var len = binaryString.length;
                             var bytes = new Uint8Array(len);
-                    
+
                             for (var i = 0; i < len; i++) {
                                 bytes[i] = binaryString.charCodeAt(i);
                             }
 
-                            var blob = new Blob([bytes], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+                            // Crear un Blob a partir del array de bytes
+                            var blob = new Blob([bytes], { type: 'application/pdf' });
 
-                            // var nombre_documento = "JUN_DEV_EXPEDIENTE_"+Id_comunicado+"_"+Id_Asignacion+"_"+num_identificacion+".docx";
-                            var nombre_documento = "JUN_DEV_EXPEDIENTE_"+Id_comunicado+"_"+Id_Asignacion+"_"+num_identificacion+"_"+indicativo+".docx";
+                            // var nombre_documento = "JUN_REM_EXPEDIENTE_"+Id_comunicado+"_"+Id_Asignacion+"_"+num_identificacion+".pdf";
+                            var nombre_documento = "JUN_DEV_EXPEDIENTE_"+Id_comunicado+"_"+Id_Asignacion+"_"+num_identificacion+"_"+indicativo+".pdf";                            
                         }
                         else if(TipoDescarga === 'Solicitud_Dictamen_JRCI'){
                             // Obtener el contenido codificado en base64 del PDF desde la respuesta
-                            var base64Word = response.word;
-                
+                            var base64Pdf = response.pdf;
+
                             // Decodificar base64 en un array de bytes
-                            var binaryString = atob(base64Word);
+                            var binaryString = atob(base64Pdf);
                             var len = binaryString.length;
                             var bytes = new Uint8Array(len);
-                    
+
                             for (var i = 0; i < len; i++) {
                                 bytes[i] = binaryString.charCodeAt(i);
                             }
 
-                            var blob = new Blob([bytes], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+                            // Crear un Blob a partir del array de bytes
+                            var blob = new Blob([bytes], { type: 'application/pdf' });
 
-                            // var nombre_documento = "JUN_SOL_DICTAMEN_"+Id_comunicado+"_"+Id_Asignacion+"_"+num_identificacion+".docx";
-                            var nombre_documento = "JUN_SOL_DICTAMEN_"+Id_comunicado+"_"+Id_Asignacion+"_"+num_identificacion+"_"+indicativo+".docx";
+                            // var nombre_documento = "JUN_REM_EXPEDIENTE_"+Id_comunicado+"_"+Id_Asignacion+"_"+num_identificacion+".pdf";
+                            var nombre_documento = "JUN_SOL_DICTAMEN_"+Id_comunicado+"_"+Id_Asignacion+"_"+num_identificacion+"_"+indicativo+".pdf";                            
                         }
+                        else if(TipoDescarga === 'Solicitud_Acta_Ejecutoria_JRCI'){
+                            // Obtener el contenido codificado en base64 del PDF desde la respuesta
+                            var base64Pdf = response.pdf;
+
+                            // Decodificar base64 en un array de bytes
+                            var binaryString = atob(base64Pdf);
+                            var len = binaryString.length;
+                            var bytes = new Uint8Array(len);
+
+                            for (var i = 0; i < len; i++) {
+                                bytes[i] = binaryString.charCodeAt(i);
+                            }
+
+                            // Crear un Blob a partir del array de bytes
+                            var blob = new Blob([bytes], { type: 'application/pdf' });
+
+                            var nombre_documento = "JUN_SOL_ACTA_EJECUTORIA_"+Id_comunicado+"_"+Id_Asignacion+"_"+num_identificacion+"_"+indicativo+".pdf";                            
+                        }
+                        else if(TipoDescarga === 'Solicitud_Pago_Honorarios_JNCI'){
+                            // Obtener el contenido codificado en base64 del PDF desde la respuesta
+                            var base64Pdf = response.pdf;
+
+                            // Decodificar base64 en un array de bytes
+                            var binaryString = atob(base64Pdf);
+                            var len = binaryString.length;
+                            var bytes = new Uint8Array(len);
+
+                            for (var i = 0; i < len; i++) {
+                                bytes[i] = binaryString.charCodeAt(i);
+                            }
+
+                            // Crear un Blob a partir del array de bytes
+                            var blob = new Blob([bytes], { type: 'application/pdf' });
+
+                            var nombre_documento = "JUN_SOL_PAGO_HONORAIOS_"+Id_comunicado+"_"+Id_Asignacion+"_"+num_identificacion+"_"+indicativo+".pdf";                            
+                        }
+                        else if(TipoDescarga === 'Solicitud_Remision_Expediente_JNCI'){
+                            // Obtener el contenido codificado en base64 del PDF desde la respuesta
+                            var base64Pdf = response.pdf;
+
+                            // Decodificar base64 en un array de bytes
+                            var binaryString = atob(base64Pdf);
+                            var len = binaryString.length;
+                            var bytes = new Uint8Array(len);
+
+                            for (var i = 0; i < len; i++) {
+                                bytes[i] = binaryString.charCodeAt(i);
+                            }
+
+                            // Crear un Blob a partir del array de bytes
+                            var blob = new Blob([bytes], { type: 'application/pdf' });
+
+                            var nombre_documento = "JUN_SOL_REM_EXPEDIENTE_JNCI_"+Id_comunicado+"_"+Id_Asignacion+"_"+num_identificacion+"_"+indicativo+".pdf";                            
+                        }                                                
+                        else if(TipoDescarga === 'Cierre_Terminos'){
+                            // Obtener el contenido codificado en base64 del PDF desde la respuesta
+                            var base64Pdf = response.pdf;
+
+                            // Decodificar base64 en un array de bytes
+                            var binaryString = atob(base64Pdf);
+                            var len = binaryString.length;
+                            var bytes = new Uint8Array(len);
+
+                            for (var i = 0; i < len; i++) {
+                                bytes[i] = binaryString.charCodeAt(i);
+                            }
+
+                            // Crear un Blob a partir del array de bytes
+                            var blob = new Blob([bytes], { type: 'application/pdf' });
+
+                            var nombre_documento = "JUN_CIE_TERMINOS_"+Id_comunicado+"_"+Id_Asignacion+"_"+num_identificacion+"_"+indicativo+".pdf";
+                        }
+                        else if(TipoDescarga === 'Sol_Faltante_Contro'){
+                            // Obtener el contenido codificado en base64 del PDF desde la respuesta
+                            var base64Pdf = response.pdf;
+
+                            // Decodificar base64 en un array de bytes
+                            var binaryString = atob(base64Pdf);
+                            var len = binaryString.length;
+                            var bytes = new Uint8Array(len);
+
+                            for (var i = 0; i < len; i++) {
+                                bytes[i] = binaryString.charCodeAt(i);
+                            }
+
+                            // Crear un Blob a partir del array de bytes
+                            var blob = new Blob([bytes], { type: 'application/pdf' });
+
+                            var nombre_documento = "JUN_SOL_FALTANTES_CON_"+Id_comunicado+"_"+Id_Asignacion+"_"+num_identificacion+"_"+indicativo+".pdf";
+                        }
+                        else if(TipoDescarga === 'Cierre_Doc_Noaportada'){
+                            // Obtener el contenido codificado en base64 del PDF desde la respuesta
+                            var base64Pdf = response.pdf;
+
+                            // Decodificar base64 en un array de bytes
+                            var binaryString = atob(base64Pdf);
+                            var len = binaryString.length;
+                            var bytes = new Uint8Array(len);
+
+                            for (var i = 0; i < len; i++) {
+                                bytes[i] = binaryString.charCodeAt(i);
+                            }
+
+                            // Crear un Blob a partir del array de bytes
+                            var blob = new Blob([bytes], { type: 'application/pdf' });
+
+                            var nombre_documento = "JUN_CIE_DOC_NOAPORTA_"+Id_comunicado+"_"+Id_Asignacion+"_"+num_identificacion+"_"+indicativo+".pdf";
+                        }
+                        
                         // Crear un enlace de descarga similar al ejemplo anterior
                         var link = document.createElement('a');
                         link.href = window.URL.createObjectURL(blob);
@@ -4762,23 +5578,37 @@ $(document).ready(function(){
 
 
         if (tipo_descarga == "Oficio_Afiliado") {
+            $("#cierre_terminos_editar").prop("checked", false);
+            $("#sol_faltante_contro_editar").prop("checked", false);
+            $("#cierre_doc_noaportada_editar").prop("checked", false);
             $("#oficio_afiliado_editar").prop("checked", true);
+            if (idRol == 6) {
+                $(".note-editable").attr("contenteditable", true);
+                $("#asunto_editar").prop('readonly', false);
+            } else {
+                $(".note-editable").attr("contenteditable", false);
+                $("#asunto_editar").prop('readonly', true);
+            }
             $("#oficio_juntas_jrci_editar").prop("checked", false);
             $("#remision_expediente_jrci_editar").prop("checked", false);
             $("#devol_expediente_jrci_editar").prop("checked", false);
             $("#solicitud_dictamen_jrci_editar").prop("checked", false);
+            $("#solicitud_acta_ejecutoria_jrci_editar").prop("checked", false);
+            $("#solicitud_pago_honorarios_jnci_editar").prop("checked", false);
+            $("#solicitud_remision_expediente_jnci_editar").prop("checked", false);
             $("#otro_documento_editar").prop("checked", false);
 
             // mostrar mensaje(s) importante(s)
-            $("#mensaje_asunto_editar").removeClass('d-none');
-            $("#rellenar_asunto_editar").html('Para mostrar todo el asunto dentro del documento, debe incluir la etiqueta Nombre Junta Regional dentro del campo Asunto.');
+            $("#mensaje_asunto_editar").addClass('d-none');
+            $("#rellenar_asunto_editar").html('');
             $("#mensaje_cuerpo_editar").removeClass('d-none');
             $("#rellenar_cuerpo_editar").html('');
-            $("#rellenar_cuerpo_editar").html('Para mostrar todo el cuerpo del comunicado dentro del documento, debe incluir la etiqueta Nombre Junta Regional dentro del campo Cuerpo del comunicado.');
+            $("#rellenar_cuerpo_editar").html('Para mostrar todo el cuerpo del comunicado dentro del documento, debe incluir las etiquetas Nombre Afiliado, Nombre Junta Regional y Fecha Envió JRCI dentro del campo Cuerpo del comunicado.');
 
             // botones proforma ADJUNTAR OFICIO AL AFILIADO	
             $("#btn_insertar_nombre_junta_regional_asunto_editar").prop('disabled', false);
             $("#btn_insertar_nombre_junta_regional_editar").prop('disabled', false);
+            $("#btn_insertar_fecha_envio_jrci_editar").prop('disabled', false);
             //  botones REMISIÓN DE EXPEDIENTE PARA TRÁMITE DE CONTROVERSIA
             $("#btn_insertar_nro_orden_pago_editar").prop('disabled', true);
             $("#btn_insertar_fecha_notifi_afiliado_editar").prop('disabled', true);
@@ -4788,6 +5618,10 @@ $(document).ready(function(){
             $("#btn_insertar_nombre_afiliado_editar").prop('disabled', true);
             $("#btn_insertar_fecha_estructuracion_editar").prop('disabled', true);
             $("#btn_insertar_tipo_evento_editar").prop('disabled', true);
+            $("#btn_insertar_origen_editar").prop('disabled', true);
+            $("#btn_insertar_porcentajepcl_editar").prop('disabled', true);
+            $("#btn_insertar_radicado_entrada_controversia_primera_calificacion_editar").prop('disabled', true);
+            $("#btn_insertar_observaciones_editar").prop('disabled', true);
             $("#btn_insertar_nombres_cie10_editar").prop('disabled', true);
             $("#btn_insertar_tipo_controversia_pri_cali_editar").prop('disabled', true);
             $("#btn_insertar_direccion_afiliado_editar").prop('disabled', true);
@@ -4796,18 +5630,26 @@ $(document).ready(function(){
             // $("#btn_insertar_nombre_documento_editar").prop('disabled', true);
             // botón preforma: ACLARACIÓN E INFORMACIÓN SOBRE RECURSO DE REPOSICIÓN EN SUBSIDIO DE APELACIÓN
             $("#btn_insertar_correo_solicitud_info_editar").prop('disabled', true);
+            $("#btn_insertar_dictamen_controvertido_editar").prop('disabled', true);
 
             $("#Pdf").val("Pdf");
             $("#formato_descarga").html('');
             $("#formato_descarga").html('PDF');
 
         } else if(tipo_descarga == "Oficio_Juntas_JRCI") {
+            $("#cierre_terminos_editar").prop("checked", false);
+            $("#sol_faltante_contro_editar").prop("checked", false);
+            $("#cierre_doc_noaportada_editar").prop("checked", false);
             $("#oficio_afiliado_editar").prop("checked", false);
             $("#oficio_juntas_jrci_editar").prop("checked", true);
             $("#remision_expediente_jrci_editar").prop("checked", false);
             $("#devol_expediente_jrci_editar").prop("checked", false);
             $("#solicitud_dictamen_jrci_editar").prop("checked", false);
+            $("#solicitud_acta_ejecutoria_jrci_editar").prop("checked", false);
+            $("#solicitud_pago_honorarios_jnci_editar").prop("checked", false);
+            $("#solicitud_remision_expediente_jnci_editar").prop("checked", false);
             $("#otro_documento_editar").prop("checked", false);
+            $("#asunto_editar").prop('readonly', true);
 
             // mostrar mensaje(s) importante(s)
             $("#mensaje_asunto_editar").addClass('d-none');
@@ -4818,6 +5660,7 @@ $(document).ready(function(){
             // botones proforma ADJUNTAR OFICIO AL AFILIADO	
             $("#btn_insertar_nombre_junta_regional_asunto_editar").prop('disabled', true);
             $("#btn_insertar_nombre_junta_regional_editar").prop('disabled', true);
+            $("#btn_insertar_fecha_envio_jrci_editar").prop('disabled', true);
             //  botones REMISIÓN DE EXPEDIENTE PARA TRÁMITE DE CONTROVERSIA
             $("#btn_insertar_nro_orden_pago_editar").prop('disabled', true);
             $("#btn_insertar_fecha_notifi_afiliado_editar").prop('disabled', true);
@@ -4827,6 +5670,10 @@ $(document).ready(function(){
             $("#btn_insertar_nombre_afiliado_editar").prop('disabled', true);
             $("#btn_insertar_fecha_estructuracion_editar").prop('disabled', true);
             $("#btn_insertar_tipo_evento_editar").prop('disabled', true);
+            $("#btn_insertar_origen_editar").prop('disabled', true);
+            $("#btn_insertar_porcentajepcl_editar").prop('disabled', true);
+            $("#btn_insertar_radicado_entrada_controversia_primera_calificacion_editar").prop('disabled', true);
+            $("#btn_insertar_observaciones_editar").prop('disabled', true);
             $("#btn_insertar_nombres_cie10_editar").prop('disabled', true);
             $("#btn_insertar_tipo_controversia_pri_cali_editar").prop('disabled', true);
             $("#btn_insertar_direccion_afiliado_editar").prop('disabled', true);
@@ -4835,17 +5682,32 @@ $(document).ready(function(){
             // $("#btn_insertar_nombre_documento_editar").prop('disabled', true);
             // botón preforma: ACLARACIÓN E INFORMACIÓN SOBRE RECURSO DE REPOSICIÓN EN SUBSIDIO DE APELACIÓN
             $("#btn_insertar_correo_solicitud_info_editar").prop('disabled', true);
+            $("#btn_insertar_dictamen_controvertido_editar").prop('disabled', true);
 
             $("#Pdf").val("Pdf");
             $("#formato_descarga").html('');
             $("#formato_descarga").html('PDF');
 
-        } else if(tipo_descarga == "Remision_Expediente_JRCI"){
+        } 
+        else if(tipo_descarga == "Remision_Expediente_JRCI"){
+            $("#cierre_terminos_editar").prop("checked", false);
+            $("#sol_faltante_contro_editar").prop("checked", false);
+            $("#cierre_doc_noaportada_editar").prop("checked", false);
             $("#oficio_afiliado_editar").prop("checked", false);
             $("#oficio_juntas_jrci_editar").prop("checked", false);
             $("#remision_expediente_jrci_editar").prop("checked", true);
+            if (idRol == 6) {
+                $(".note-editable").attr("contenteditable", true);
+                $("#asunto_editar").prop('readonly', false);
+            } else {
+                $(".note-editable").attr("contenteditable", false);
+                $("#asunto_editar").prop('readonly', true);
+            }
             $("#devol_expediente_jrci_editar").prop("checked", false);
             $("#solicitud_dictamen_jrci_editar").prop("checked", false);
+            $("#solicitud_acta_ejecutoria_jrci_editar").prop("checked", false);
+            $("#solicitud_pago_honorarios_jnci_editar").prop("checked", false);
+            $("#solicitud_remision_expediente_jnci_editar").prop("checked", false);
             $("#otro_documento_editar").prop("checked", false);
 
             // mostrar mensaje(s) importante(s)
@@ -4853,60 +5715,80 @@ $(document).ready(function(){
             $("#rellenar_asunto_editar").html('');
             $("#mensaje_cuerpo_editar").removeClass('d-none');
             $("#rellenar_cuerpo_editar").html('');
-            $("#rellenar_cuerpo_editar").html('Para mostrar todo el cuerpo del comunicado dentro del documento, debe incluir las etiquetas N° Orden pago, Fecha Notificación al Afiliado, Fecha Radicación Controversia Primera Calificación, Tipo Documento Afiliado, Documento Afiliado, Nombre Afiliado, Fecha Estructuración, Tipo de Evento, Nombres CIE-10, Tipo Controversia Primera Calificación, Dirección Afiliado, Teléfono Afiliado, dentro del campo Cuerpo del comunicado.');
+            $("#rellenar_cuerpo_editar").html('Para mostrar todo el cuerpo del comunicado dentro del documento, debe incluir las etiquetas N° Orden pago, Fecha Notificación al Afiliado, Fecha Radicación Controversia Primera Calificación, Nombre Afiliado, Fecha Estructuración, Tipo de Evento, Origen, Porcentaje PCL, Nombres CIE-10, Tipo Controversia Primera Calificación y Observaciones, dentro del campo Cuerpo del comunicado.');
 
             // botones proforma ADJUNTAR OFICIO AL AFILIADO	
             $("#btn_insertar_nombre_junta_regional_asunto_editar").prop('disabled', true);
             $("#btn_insertar_nombre_junta_regional_editar").prop('disabled', true);
+            $("#btn_insertar_fecha_envio_jrci_editar").prop('disabled', true);
             //  botones REMISIÓN DE EXPEDIENTE PARA TRÁMITE DE CONTROVERSIA
             $("#btn_insertar_nro_orden_pago_editar").prop('disabled', false);
             $("#btn_insertar_fecha_notifi_afiliado_editar").prop('disabled', false);
             $("#btn_insertar_fecha_radi_contro_pri_cali_editar").prop('disabled', false);
-            $("#btn_insertar_tipo_doc_afiliado_editar").prop('disabled', false);
-            $("#btn_insertar_documento_afiliado_editar").prop('disabled', false);
+            $("#btn_insertar_tipo_doc_afiliado_editar").prop('disabled', true);
+            $("#btn_insertar_documento_afiliado_editar").prop('disabled', true);
             $("#btn_insertar_nombre_afiliado_editar").prop('disabled', false);
             $("#btn_insertar_fecha_estructuracion_editar").prop('disabled', false);
             $("#btn_insertar_tipo_evento_editar").prop('disabled', false);
+            $("#btn_insertar_origen_editar").prop('disabled', true);
+            $("#btn_insertar_porcentajepcl_editar").prop('disabled', true);
+            $("#btn_insertar_radicado_entrada_controversia_primera_calificacion_editar").prop('disabled', true);
+            $("#btn_insertar_observaciones_editar").prop('disabled', false);
             $("#btn_insertar_nombres_cie10_editar").prop('disabled', false);
             $("#btn_insertar_tipo_controversia_pri_cali_editar").prop('disabled', false);
-            $("#btn_insertar_direccion_afiliado_editar").prop('disabled', false);
-            $("#btn_insertar_telefono_afiliado_editar").prop('disabled', false);
+            $("#btn_insertar_direccion_afiliado_editar").prop('disabled', true);
+            $("#btn_insertar_telefono_afiliado_editar").prop('disabled', true);
             // botón preforma RESPUESTA A DEVOLUCIÓN DE EXPEDIENTE
             // $("#btn_insertar_nombre_documento_editar").prop('disabled', true);
             // botón preforma: ACLARACIÓN E INFORMACIÓN SOBRE RECURSO DE REPOSICIÓN EN SUBSIDIO DE APELACIÓN
             $("#btn_insertar_correo_solicitud_info_editar").prop('disabled', true);
+            $("#btn_insertar_dictamen_controvertido_editar").prop('disabled', true);
 
             $("#Pdf").val("Pdf");
             $("#formato_descarga").html('');
             $("#formato_descarga").html('PDF');
 
-        } else if(tipo_descarga == "Devolucion_Expediente_JRCI"){
+        } 
+        else if(tipo_descarga == "Devolucion_Expediente_JRCI"){
+            $("#cierre_terminos_editar").prop("checked", false);
+            $("#sol_faltante_contro_editar").prop("checked", false);
+            $("#cierre_doc_noaportada_editar").prop("checked", false);
             $("#oficio_afiliado_editar").prop("checked", false);
             $("#oficio_juntas_jrci_editar").prop("checked", false);
             $("#remision_expediente_jrci_editar").prop("checked", false);
             $("#devol_expediente_jrci_editar").prop("checked", true);
+            $(".note-editable").attr("contenteditable", true);
             $("#solicitud_dictamen_jrci_editar").prop("checked", false);
+            $("#solicitud_acta_ejecutoria_jrci_editar").prop("checked", false);
+            $("#solicitud_pago_honorarios_jnci_editar").prop("checked", false);
+            $("#solicitud_remision_expediente_jnci_editar").prop("checked", false);
             $("#otro_documento_editar").prop("checked", false);
+            $("#asunto_editar").prop('readonly', false);
 
             // mostrar mensaje(s) importante(s)
             $("#mensaje_asunto_editar").addClass('d-none');
             $("#rellenar_asunto_editar").html('');
             $("#mensaje_cuerpo_editar").removeClass('d-none');
             $("#rellenar_cuerpo_editar").html('');
-            $("#rellenar_cuerpo_editar").html('Para mostrar todo el cuerpo del comunicado dentro del documento, debe incluir la etiqueta Nombre Junta Regional dentro del campo Cuerpo del comunicado.');
+            $("#rellenar_cuerpo_editar").html('Para mostrar todo el cuerpo del comunicado dentro del documento, debe incluir la etiqueta Nombre Junta Regional, Fecha Envió JRCI, Tipo Documento Afiliado, Documento Afiliado, Nombre Afiliado y N° Dictamen controvertido dentro del campo Cuerpo del comunicado.');
 
             // botones proforma ADJUNTAR OFICIO AL AFILIADO	
             $("#btn_insertar_nombre_junta_regional_asunto_editar").prop('disabled', true);
             $("#btn_insertar_nombre_junta_regional_editar").prop('disabled', false);
+            $("#btn_insertar_fecha_envio_jrci_editar").prop('disabled', false);
             //  botones REMISIÓN DE EXPEDIENTE PARA TRÁMITE DE CONTROVERSIA
             $("#btn_insertar_nro_orden_pago_editar").prop('disabled', true);
             $("#btn_insertar_fecha_notifi_afiliado_editar").prop('disabled', true);
             $("#btn_insertar_fecha_radi_contro_pri_cali_editar").prop('disabled', true);
-            $("#btn_insertar_tipo_doc_afiliado_editar").prop('disabled', true);
-            $("#btn_insertar_documento_afiliado_editar").prop('disabled', true);
-            $("#btn_insertar_nombre_afiliado_editar").prop('disabled', true);
+            $("#btn_insertar_tipo_doc_afiliado_editar").prop('disabled', false);
+            $("#btn_insertar_documento_afiliado_editar").prop('disabled', false);
+            $("#btn_insertar_nombre_afiliado_editar").prop('disabled', false);
             $("#btn_insertar_fecha_estructuracion_editar").prop('disabled', true);
             $("#btn_insertar_tipo_evento_editar").prop('disabled', true);
+            $("#btn_insertar_origen_editar").prop('disabled', true);
+            $("#btn_insertar_porcentajepcl_editar").prop('disabled', true);
+            $("#btn_insertar_radicado_entrada_controversia_primera_calificacion_editar").prop('disabled', true);
+            $("#btn_insertar_observaciones_editar").prop('disabled', true);
             $("#btn_insertar_nombres_cie10_editar").prop('disabled', true);
             $("#btn_insertar_tipo_controversia_pri_cali_editar").prop('disabled', true);
             $("#btn_insertar_direccion_afiliado_editar").prop('disabled', true);
@@ -4915,17 +5797,32 @@ $(document).ready(function(){
             // $("#btn_insertar_nombre_documento_editar").prop('disabled', false);
             // botón preforma: ACLARACIÓN E INFORMACIÓN SOBRE RECURSO DE REPOSICIÓN EN SUBSIDIO DE APELACIÓN
             $("#btn_insertar_correo_solicitud_info_editar").prop('disabled', true);
+            $("#btn_insertar_dictamen_controvertido_editar").prop('disabled', false);
 
-            $("#Pdf").val("Word");
+            $("#Pdf").val("Pdf");
             $("#formato_descarga").html('');
-            $("#formato_descarga").html('Word');
+            $("#formato_descarga").html('PDF');
 
-        }else if(tipo_descarga == "Solicitud_Dictamen_JRCI"){
+        }
+        else if(tipo_descarga == "Solicitud_Dictamen_JRCI"){
+            $("#cierre_terminos_editar").prop("checked", false);
+            $("#sol_faltante_contro_editar").prop("checked", false);
+            $("#cierre_doc_noaportada_editar").prop("checked", false);
             $("#oficio_afiliado_editar").prop("checked", false);
             $("#oficio_juntas_jrci_editar").prop("checked", false);
             $("#remision_expediente_jrci_editar").prop("checked", false);
             $("#devol_expediente_jrci_editar").prop("checked", false);
             $("#solicitud_dictamen_jrci_editar").prop("checked", true);
+            if (idRol == 6) {
+                $(".note-editable").attr("contenteditable", true);
+                $("#asunto_editar").prop('readonly', false);                
+            } else {
+                $(".note-editable").attr("contenteditable", false);
+                $("#asunto_editar").prop('readonly', true);
+            }
+            $("#solicitud_acta_ejecutoria_jrci_editar").prop("checked", false);
+            $("#solicitud_pago_honorarios_jnci_editar").prop("checked", false);
+            $("#solicitud_remision_expediente_jnci_editar").prop("checked", false);
             $("#otro_documento_editar").prop("checked", false);
 
             // mostrar mensaje(s) importante(s)
@@ -4933,12 +5830,307 @@ $(document).ready(function(){
             $("#rellenar_asunto_editar").html('');
             $("#mensaje_cuerpo_editar").removeClass('d-none');
             $("#rellenar_cuerpo_editar").html('');
-            $("#rellenar_cuerpo_editar").html('Para mostrar todo el cuerpo del comunicado dentro del documento, debe incluir las etiquetas Nombre Afiliado, Correo Solicitud Información, dentro del campo Cuerpo del comunicado.');
+            $("#rellenar_cuerpo_editar").html('Para mostrar todo el cuerpo del comunicado dentro del documento, debe incluir las etiquetas Fecha Envió JRCI, Tipo Documento Afiliado, Documento Afiliado, Nombre Afiliado y N° Dictamen Controvertido dentro del campo Cuerpo del comunicado.');
 
             // botones proforma ADJUNTAR OFICIO AL AFILIADO
             $("#btn_insertar_nombre_junta_regional_asunto_editar").prop('disabled', true);
             $("#btn_insertar_nombre_junta_regional_editar").prop('disabled', true);
+            $("#btn_insertar_fecha_envio_jrci_editar").prop('disabled', false);
             //  botones proforma REMISIÓN DE EXPEDIENTE PARA TRÁMITE DE CONTROVERSIA
+            $("#btn_insertar_nro_orden_pago_editar").prop('disabled', true);
+            $("#btn_insertar_fecha_notifi_afiliado_editar").prop('disabled', true);
+            $("#btn_insertar_fecha_radi_contro_pri_cali_editar").prop('disabled', true);
+            $("#btn_insertar_tipo_doc_afiliado_editar").prop('disabled', false);
+            $("#btn_insertar_documento_afiliado_editar").prop('disabled', false);
+            $("#btn_insertar_nombre_afiliado_editar").prop('disabled', false);
+            $("#btn_insertar_fecha_estructuracion_editar").prop('disabled', true);
+            $("#btn_insertar_tipo_evento_editar").prop('disabled', true);
+            $("#btn_insertar_origen_editar").prop('disabled', true);
+            $("#btn_insertar_porcentajepcl_editar").prop('disabled', true);
+            $("#btn_insertar_radicado_entrada_controversia_primera_calificacion_editar").prop('disabled', true);
+            $("#btn_insertar_observaciones_editar").prop('disabled', true);
+            $("#btn_insertar_nombres_cie10_editar").prop('disabled', true);
+            $("#btn_insertar_tipo_controversia_pri_cali_editar").prop('disabled', true);
+            $("#btn_insertar_direccion_afiliado_editar").prop('disabled', true);
+            $("#btn_insertar_telefono_afiliado_editar").prop('disabled', true);
+            // botón preforma RESPUESTA A DEVOLUCIÓN DE EXPEDIENTE
+            // $("#btn_insertar_nombre_documento_editar").prop('disabled', true);
+            // botón preforma: ACLARACIÓN E INFORMACIÓN SOBRE RECURSO DE REPOSICIÓN EN SUBSIDIO DE APELACIÓN
+            $("#btn_insertar_correo_solicitud_info_editar").prop('disabled', true);
+            $("#btn_insertar_dictamen_controvertido_editar").prop('disabled', false);
+
+            $("#Pdf").val("Pdf");
+            $("#formato_descarga").html('');
+            $("#formato_descarga").html('PDF');
+
+        }
+        else if(tipo_descarga == "Solicitud_Acta_Ejecutoria_JRCI"){
+            $("#cierre_terminos_editar").prop("checked", false);
+            $("#sol_faltante_contro_editar").prop("checked", false);
+            $("#cierre_doc_noaportada_editar").prop("checked", false);
+            $("#oficio_afiliado_editar").prop("checked", false);
+            $("#oficio_juntas_jrci_editar").prop("checked", false);
+            $("#remision_expediente_jrci_editar").prop("checked", false);
+            $("#devol_expediente_jrci_editar").prop("checked", false);
+            $("#solicitud_dictamen_jrci_editar").prop("checked", false);
+            $("#solicitud_acta_ejecutoria_jrci_editar").prop("checked", true);
+            if (idRol == 6) {
+                $(".note-editable").attr("contenteditable", true);
+                $("#asunto_editar").prop('readonly', false);
+            } else {
+                $(".note-editable").attr("contenteditable", false);
+                $("#asunto_editar").prop('readonly', true);
+            }
+            $("#solicitud_pago_honorarios_jnci_editar").prop("checked", false);
+            $("#solicitud_remision_expediente_jnci_editar").prop("checked", false);
+            $("#otro_documento_editar").prop("checked", false);
+
+            // mostrar mensaje(s) importante(s)
+            $("#mensaje_asunto_editar").addClass('d-none');
+            $("#rellenar_asunto_editar").html('');
+            $("#mensaje_cuerpo_editar").removeClass('d-none');
+            $("#rellenar_cuerpo_editar").html('');
+            $("#rellenar_cuerpo_editar").html('Para mostrar todo el cuerpo del comunicado dentro del documento, debe incluir las etiquetas Tipo Documento Afiliado, Documento Afiliado, Nombre Afiliado y N° Dictamen Controvertido dentro del campo Cuerpo del comunicado.');
+
+            // botones proforma ADJUNTAR OFICIO AL AFILIADO
+            $("#btn_insertar_nombre_junta_regional_asunto_editar").prop('disabled', true);
+            $("#btn_insertar_nombre_junta_regional_editar").prop('disabled', true);
+            $("#btn_insertar_fecha_envio_jrci_editar").prop('disabled', true);
+            //  botones proforma REMISIÓN DE EXPEDIENTE PARA TRÁMITE DE CONTROVERSIA
+            $("#btn_insertar_nro_orden_pago_editar").prop('disabled', true);
+            $("#btn_insertar_fecha_notifi_afiliado_editar").prop('disabled', true);
+            $("#btn_insertar_fecha_radi_contro_pri_cali_editar").prop('disabled', true);
+            $("#btn_insertar_tipo_doc_afiliado_editar").prop('disabled', false);
+            $("#btn_insertar_documento_afiliado_editar").prop('disabled', false);
+            $("#btn_insertar_nombre_afiliado_editar").prop('disabled', false);
+            $("#btn_insertar_fecha_estructuracion_editar").prop('disabled', true);
+            $("#btn_insertar_tipo_evento_editar").prop('disabled', true);
+            $("#btn_insertar_origen_editar").prop('disabled', true);
+            $("#btn_insertar_porcentajepcl_editar").prop('disabled', true);
+            $("#btn_insertar_radicado_entrada_controversia_primera_calificacion_editar").prop('disabled', true);
+            $("#btn_insertar_observaciones_editar").prop('disabled', true);
+            $("#btn_insertar_nombres_cie10_editar").prop('disabled', true);
+            $("#btn_insertar_tipo_controversia_pri_cali_editar").prop('disabled', true);
+            $("#btn_insertar_direccion_afiliado_editar").prop('disabled', true);
+            $("#btn_insertar_telefono_afiliado_editar").prop('disabled', true);
+            // botón preforma RESPUESTA A DEVOLUCIÓN DE EXPEDIENTE
+            // $("#btn_insertar_nombre_documento_editar").prop('disabled', true);
+            // botón preforma: ACLARACIÓN E INFORMACIÓN SOBRE RECURSO DE REPOSICIÓN EN SUBSIDIO DE APELACIÓN
+            $("#btn_insertar_correo_solicitud_info_editar").prop('disabled', true);
+            $("#btn_insertar_dictamen_controvertido_editar").prop('disabled', false);
+
+            $("#Pdf").val("Pdf");
+            $("#formato_descarga").html('');
+            $("#formato_descarga").html('PDF');
+
+        }
+        else if(tipo_descarga == "Solicitud_Pago_Honorarios_JNCI"){
+            $("#cierre_terminos_editar").prop("checked", false);
+            $("#sol_faltante_contro_editar").prop("checked", false);
+            $("#cierre_doc_noaportada_editar").prop("checked", false);
+            $("#oficio_afiliado_editar").prop("checked", false);
+            $("#oficio_juntas_jrci_editar").prop("checked", false);
+            $("#remision_expediente_jrci_editar").prop("checked", false);
+            $("#devol_expediente_jrci_editar").prop("checked", false);
+            $("#solicitud_dictamen_jrci_editar").prop("checked", false);
+            $("#solicitud_acta_ejecutoria_jrci_editar").prop("checked", false);
+            $("#solicitud_pago_honorarios_jnci_editar").prop("checked", true);
+            if (idRol == 6) {
+                $(".note-editable").attr("contenteditable", true);
+                $("#asunto_editar").prop('readonly', false);                
+            } else {
+                $(".note-editable").attr("contenteditable", false);                
+                $("#asunto_editar").prop('readonly', true);
+            }
+            $("#solicitud_remision_expediente_jnci_editar").prop("checked", false);
+            $("#otro_documento_editar").prop("checked", false);
+
+            // mostrar mensaje(s) importante(s)
+            $("#mensaje_asunto_editar").addClass('d-none');
+            $("#rellenar_asunto_editar").html('');
+            $("#mensaje_cuerpo_editar").removeClass('d-none');
+            $("#rellenar_cuerpo_editar").html('');
+            $("#rellenar_cuerpo_editar").html('Para mostrar todo el cuerpo del comunicado dentro del documento, debe incluir las etiquetas Tipo Documento Afiliado, Documento Afiliado, Nombre Afiliado y N° Dictamen Controvertido dentro del campo Cuerpo del comunicado.');
+
+            // botones proforma ADJUNTAR OFICIO AL AFILIADO
+            $("#btn_insertar_nombre_junta_regional_asunto_editar").prop('disabled', true);
+            $("#btn_insertar_nombre_junta_regional_editar").prop('disabled', true);
+            $("#btn_insertar_fecha_envio_jrci_editar").prop('disabled', true);
+            //  botones proforma REMISIÓN DE EXPEDIENTE PARA TRÁMITE DE CONTROVERSIA
+            $("#btn_insertar_nro_orden_pago_editar").prop('disabled', true);
+            $("#btn_insertar_fecha_notifi_afiliado_editar").prop('disabled', true);
+            $("#btn_insertar_fecha_radi_contro_pri_cali_editar").prop('disabled', true);
+            $("#btn_insertar_tipo_doc_afiliado_editar").prop('disabled', false);
+            $("#btn_insertar_documento_afiliado_editar").prop('disabled', false);
+            $("#btn_insertar_nombre_afiliado_editar").prop('disabled', false);
+            $("#btn_insertar_fecha_estructuracion_editar").prop('disabled', true);
+            $("#btn_insertar_tipo_evento_editar").prop('disabled', true);
+            $("#btn_insertar_origen_editar").prop('disabled', true);
+            $("#btn_insertar_porcentajepcl_editar").prop('disabled', true);
+            $("#btn_insertar_radicado_entrada_controversia_primera_calificacion_editar").prop('disabled', true);
+            $("#btn_insertar_observaciones_editar").prop('disabled', true);
+            $("#btn_insertar_nombres_cie10_editar").prop('disabled', true);
+            $("#btn_insertar_tipo_controversia_pri_cali_editar").prop('disabled', true);
+            $("#btn_insertar_direccion_afiliado_editar").prop('disabled', true);
+            $("#btn_insertar_telefono_afiliado_editar").prop('disabled', true);
+            // botón preforma RESPUESTA A DEVOLUCIÓN DE EXPEDIENTE
+            // $("#btn_insertar_nombre_documento_editar").prop('disabled', true);
+            // botón preforma: ACLARACIÓN E INFORMACIÓN SOBRE RECURSO DE REPOSICIÓN EN SUBSIDIO DE APELACIÓN
+            $("#btn_insertar_correo_solicitud_info_editar").prop('disabled', true);
+            $("#btn_insertar_dictamen_controvertido_editar").prop('disabled', false);
+
+            $("#Pdf").val("Pdf");
+            $("#formato_descarga").html('');
+            $("#formato_descarga").html('PDF');
+
+        }
+        else if(tipo_descarga == "Solicitud_Remision_Expediente_JNCI"){
+            $("#cierre_terminos_editar").prop("checked", false);
+            $("#sol_faltante_contro_editar").prop("checked", false);
+            $("#cierre_doc_noaportada_editar").prop("checked", false);
+            $("#oficio_afiliado_editar").prop("checked", false);
+            $("#oficio_juntas_jrci_editar").prop("checked", false);
+            $("#remision_expediente_jrci_editar").prop("checked", false);
+            $("#devol_expediente_jrci_editar").prop("checked", false);
+            $("#solicitud_dictamen_jrci_editar").prop("checked", false);
+            $("#solicitud_acta_ejecutoria_jrci_editar").prop("checked", false);
+            $("#solicitud_pago_honorarios_jnci_editar").prop("checked", false);
+            $("#solicitud_remision_expediente_jnci_editar").prop("checked", true);
+            if (idRol == 6) {
+                $(".note-editable").attr("contenteditable", true);
+                $("#asunto_editar").prop('readonly', false);
+            } else {
+                $(".note-editable").attr("contenteditable", false);
+                $("#asunto_editar").prop('readonly', true);
+            }
+            $("#otro_documento_editar").prop("checked", false);
+
+            // mostrar mensaje(s) importante(s)
+            $("#mensaje_asunto_editar").addClass('d-none');
+            $("#rellenar_asunto_editar").html('');
+            $("#mensaje_cuerpo_editar").removeClass('d-none');
+            $("#rellenar_cuerpo_editar").html('');
+            $("#rellenar_cuerpo_editar").html('Para mostrar todo el cuerpo del comunicado dentro del documento, debe incluir las etiquetas Fecha Envió JRCI, Tipo Documento Afiliado, Documento Afiliado, Nombre Afiliado y N° Dictamen Controvertido dentro del campo Cuerpo del comunicado.');
+
+            // botones proforma ADJUNTAR OFICIO AL AFILIADO
+            $("#btn_insertar_nombre_junta_regional_asunto_editar").prop('disabled', true);
+            $("#btn_insertar_nombre_junta_regional_editar").prop('disabled', true);
+            $("#btn_insertar_fecha_envio_jrci_editar").prop('disabled', false);
+            //  botones proforma REMISIÓN DE EXPEDIENTE PARA TRÁMITE DE CONTROVERSIA
+            $("#btn_insertar_nro_orden_pago_editar").prop('disabled', true);
+            $("#btn_insertar_fecha_notifi_afiliado_editar").prop('disabled', true);
+            $("#btn_insertar_fecha_radi_contro_pri_cali_editar").prop('disabled', true);
+            $("#btn_insertar_tipo_doc_afiliado_editar").prop('disabled', false);
+            $("#btn_insertar_documento_afiliado_editar").prop('disabled', false);
+            $("#btn_insertar_nombre_afiliado_editar").prop('disabled', false);
+            $("#btn_insertar_fecha_estructuracion_editar").prop('disabled', true);
+            $("#btn_insertar_tipo_evento_editar").prop('disabled', true);
+            $("#btn_insertar_origen_editar").prop('disabled', true);
+            $("#btn_insertar_porcentajepcl_editar").prop('disabled', true);
+            $("#btn_insertar_radicado_entrada_controversia_primera_calificacion_editar").prop('disabled', true);
+            $("#btn_insertar_observaciones_editar").prop('disabled', true);
+            $("#btn_insertar_nombres_cie10_editar").prop('disabled', true);
+            $("#btn_insertar_tipo_controversia_pri_cali_editar").prop('disabled', true);
+            $("#btn_insertar_direccion_afiliado_editar").prop('disabled', true);
+            $("#btn_insertar_telefono_afiliado_editar").prop('disabled', true);
+            // botón preforma RESPUESTA A DEVOLUCIÓN DE EXPEDIENTE
+            // $("#btn_insertar_nombre_documento_editar").prop('disabled', true);
+            // botón preforma: ACLARACIÓN E INFORMACIÓN SOBRE RECURSO DE REPOSICIÓN EN SUBSIDIO DE APELACIÓN
+            $("#btn_insertar_correo_solicitud_info_editar").prop('disabled', true);
+            $("#btn_insertar_dictamen_controvertido_editar").prop('disabled', false);
+
+            $("#Pdf").val("Pdf");
+            $("#formato_descarga").html('');
+            $("#formato_descarga").html('PDF');
+
+        }                
+        else if(tipo_descarga == "Cierre_Terminos"){
+            $("#cierre_terminos_editar").prop("checked", true);
+            if (idRol == 6) {
+                $(".note-editable").attr("contenteditable", true);
+                $("#asunto_editar").prop('readonly', false);
+            } else {
+                $(".note-editable").attr("contenteditable", false);
+                $("#asunto_editar").prop('readonly', true);
+            }
+            $("#sol_faltante_contro_editar").prop("checked", false);
+            $("#cierre_doc_noaportada_editar").prop("checked", false);
+            $("#oficio_afiliado_editar").prop("checked", false);
+            $("#oficio_juntas_jrci_editar").prop("checked", false);
+            $("#remision_expediente_jrci_editar").prop("checked", false);
+            $("#devol_expediente_jrci_editar").prop("checked", false);
+            $("#solicitud_dictamen_jrci_editar").prop("checked", false);
+            $("#solicitud_acta_ejecutoria_jrci_editar").prop("checked", false);
+            $("#solicitud_pago_honorarios_jnci_editar").prop("checked", false);
+            $("#solicitud_remision_expediente_jnci_editar").prop("checked", false);
+            $("#otro_documento_editar").prop("checked", false);
+
+            // mostrar mensaje(s) importante(s)
+            $("#mensaje_asunto_editar").addClass('d-none');
+            $("#rellenar_asunto_editar").html('');
+            $("#mensaje_cuerpo_editar").removeClass('d-none');
+            $("#rellenar_cuerpo_editar").html('');
+            $("#rellenar_cuerpo_editar").html('Para mostrar todo el cuerpo del comunicado dentro del documento, debe incluir las etiquetas Fecha Notificación al Afiliado, Fecha Radicación Controversia Primera Calificación, Nombre Afiliado, Fecha Estructuración, Tipo de Evento, Origen y Porcentaje PCL, dentro del campo Cuerpo del comunicado.');
+
+            // botones proforma ADJUNTAR CIERRE FUERA DE TERMINOS
+            $("#btn_insertar_nombre_junta_regional_asunto_editar").prop('disabled', true);
+            $("#btn_insertar_nombre_junta_regional_editar").prop('disabled', true);
+            $("#btn_insertar_fecha_envio_jrci_editar").prop('disabled', true);
+            // botones proforma REMISIÓN DE EXPEDIENTE PARA TRÁMITE DE CONTROVERSIA
+            $("#btn_insertar_nro_orden_pago_editar").prop('disabled', true);
+            $("#btn_insertar_fecha_notifi_afiliado_editar").prop('disabled', false);
+            $("#btn_insertar_fecha_radi_contro_pri_cali_editar").prop('disabled', false);
+            $("#btn_insertar_tipo_doc_afiliado_editar").prop('disabled', true);
+            $("#btn_insertar_documento_afiliado_editar").prop('disabled', true);
+            $("#btn_insertar_nombre_afiliado_editar").prop('disabled', false);
+            $("#btn_insertar_fecha_estructuracion_editar").prop('disabled', false);
+            $("#btn_insertar_tipo_evento_editar").prop('disabled', false);
+            $("#btn_insertar_origen_editar").prop('disabled', false);
+            $("#btn_insertar_porcentajepcl_editar").prop('disabled', false);
+            $("#btn_insertar_radicado_entrada_controversia_primera_calificacion_editar").prop('disabled', true);
+            $("#btn_insertar_observaciones_editar").prop('disabled', true);
+            $("#btn_insertar_nombres_cie10_editar").prop('disabled', true);
+            $("#btn_insertar_tipo_controversia_pri_cali_editar").prop('disabled', true);
+            $("#btn_insertar_direccion_afiliado_editar").prop('disabled', true);
+            $("#btn_insertar_telefono_afiliado_editar").prop('disabled', true);
+            // botón preforma RESPUESTA A DEVOLUCIÓN DE EXPEDIENTE
+            // $("#btn_insertar_nombre_documento").prop('disabled', true);
+            // botón preforma: ACLARACIÓN E INFORMACIÓN SOBRE RECURSO DE REPOSICIÓN EN SUBSIDIO DE APELACIÓN
+            $("#btn_insertar_correo_solicitud_info_editar").prop('disabled', true);
+            $("#btn_insertar_dictamen_controvertido_editar").prop('disabled', true);
+
+            $("#Pdf").val("Pdf");
+            $("#formato_descarga").html('');
+            $("#formato_descarga").html('PDF');            
+        }
+        else if(tipo_descarga == "Sol_Faltante_Contro"){            
+            $("#cierre_terminos_editar").prop("checked", false);
+            $("#sol_faltante_contro_editar").prop("checked", true);     
+            $(".note-editable").attr("contenteditable", true);
+            $("#cierre_doc_noaportada_editar").prop("checked", false);
+            $("#oficio_afiliado_editar").prop("checked", false);
+            $("#oficio_juntas_jrci_editar").prop("checked", false);
+            $("#remision_expediente_jrci_editar").prop("checked", false);
+            $("#devol_expediente_jrci_editar").prop("checked", false);
+            $("#solicitud_dictamen_jrci_editar").prop("checked", false);
+            $("#solicitud_acta_ejecutoria_jrci_editar").prop("checked", false);
+            $("#solicitud_pago_honorarios_jnci_editar").prop("checked", false);
+            $("#solicitud_remision_expediente_jnci_editar").prop("checked", false);
+            $("#otro_documento_editar").prop("checked", false);
+            $("#asunto_editar").prop('readonly', false);
+
+            // mostrar mensaje(s) importante(s)
+            $("#mensaje_asunto_editar").addClass('d-none');
+            $("#rellenar_asunto_editar").html('');
+            $("#mensaje_cuerpo_editar").removeClass('d-none');
+            $("#rellenar_cuerpo_editar").html('');
+            $("#rellenar_cuerpo_editar").html('Para mostrar todo el cuerpo del comunicado dentro del documento, debe incluir la etiqueta Nombre  Afiliado dentro del campo Cuerpo del comunicado.');
+
+            // botones proforma ADJUNTAR CIERRE FUERA DE TERMINOS
+            $("#btn_insertar_nombre_junta_regional_asunto_editar").prop('disabled', true);
+            $("#btn_insertar_nombre_junta_regional_editar").prop('disabled', true);
+            $("#btn_insertar_fecha_envio_jrci_editar").prop('disabled', true);
+            // botones proforma REMISIÓN DE EXPEDIENTE PARA TRÁMITE DE CONTROVERSIA
             $("#btn_insertar_nro_orden_pago_editar").prop('disabled', true);
             $("#btn_insertar_fecha_notifi_afiliado_editar").prop('disabled', true);
             $("#btn_insertar_fecha_radi_contro_pri_cali_editar").prop('disabled', true);
@@ -4947,25 +6139,93 @@ $(document).ready(function(){
             $("#btn_insertar_nombre_afiliado_editar").prop('disabled', false);
             $("#btn_insertar_fecha_estructuracion_editar").prop('disabled', true);
             $("#btn_insertar_tipo_evento_editar").prop('disabled', true);
+            $("#btn_insertar_origen_editar").prop('disabled', true);
+            $("#btn_insertar_porcentajepcl_editar").prop('disabled', true);
+            $("#btn_insertar_radicado_entrada_controversia_primera_calificacion_editar").prop('disabled', true);
+            $("#btn_insertar_observaciones_editar").prop('disabled', true);
             $("#btn_insertar_nombres_cie10_editar").prop('disabled', true);
             $("#btn_insertar_tipo_controversia_pri_cali_editar").prop('disabled', true);
             $("#btn_insertar_direccion_afiliado_editar").prop('disabled', true);
             $("#btn_insertar_telefono_afiliado_editar").prop('disabled', true);
             // botón preforma RESPUESTA A DEVOLUCIÓN DE EXPEDIENTE
-            // $("#btn_insertar_nombre_documento_editar").prop('disabled', true);
+            // $("#btn_insertar_nombre_documento").prop('disabled', true);
             // botón preforma: ACLARACIÓN E INFORMACIÓN SOBRE RECURSO DE REPOSICIÓN EN SUBSIDIO DE APELACIÓN
-            $("#btn_insertar_correo_solicitud_info_editar").prop('disabled', false);
+            $("#btn_insertar_correo_solicitud_info_editar").prop('disabled', true);
+            $("#btn_insertar_dictamen_controvertido_editar").prop('disabled', true);
 
-            $("#Pdf").val("Word");
+            $("#Pdf").val("Pdf");
             $("#formato_descarga").html('');
-            $("#formato_descarga").html('Word');
-
-        }else{
+            $("#formato_descarga").html('PDF');
+            
+        }
+        else if(tipo_descarga == "Cierre_Doc_Noaportada"){            
+            $("#cierre_terminos_editar").prop("checked", false);
+            $("#sol_faltante_contro_editar").prop("checked", false);
+            $("#cierre_doc_noaportada_editar").prop("checked", true);           
+            $(".note-editable").attr("contenteditable", true);
             $("#oficio_afiliado_editar").prop("checked", false);
             $("#oficio_juntas_jrci_editar").prop("checked", false);
             $("#remision_expediente_jrci_editar").prop("checked", false);
             $("#devol_expediente_jrci_editar").prop("checked", false);
             $("#solicitud_dictamen_jrci_editar").prop("checked", false);
+            $("#solicitud_acta_ejecutoria_jrci_editar").prop("checked", false);
+            $("#solicitud_pago_honorarios_jnci_editar").prop("checked", false);
+            $("#solicitud_remision_expediente_jnci_editar").prop("checked", false);
+            $("#otro_documento_editar").prop("checked", false);
+            $("#asunto_editar").prop('readonly', false);
+
+
+            // mostrar mensaje(s) importante(s)
+            $("#mensaje_asunto_editar").addClass('d-none');
+            $("#rellenar_asunto_editar").html('');
+            $("#mensaje_cuerpo_editar").removeClass('d-none');
+            $("#rellenar_cuerpo_editar").html('');
+            $("#rellenar_cuerpo_editar").html('Para mostrar todo el cuerpo del comunicado dentro del documento, debe incluir la etiqueta Nombre  Afiliado y Radicado Entrada Controversia Primera Calificación dentro del campo Cuerpo del comunicado.');
+
+            // botones proforma ADJUNTAR CIERRE FUERA DE TERMINOS
+            $("#btn_insertar_nombre_junta_regional_asunto_editar").prop('disabled', true);
+            $("#btn_insertar_nombre_junta_regional_editar").prop('disabled', true);
+            $("#btn_insertar_fecha_envio_jrci_editar").prop('disabled', true);
+            // botones proforma REMISIÓN DE EXPEDIENTE PARA TRÁMITE DE CONTROVERSIA
+            $("#btn_insertar_nro_orden_pago_editar").prop('disabled', true);
+            $("#btn_insertar_fecha_notifi_afiliado_editar").prop('disabled', true);
+            $("#btn_insertar_fecha_radi_contro_pri_cali_editar").prop('disabled', true);
+            $("#btn_insertar_tipo_doc_afiliado_editar").prop('disabled', true);
+            $("#btn_insertar_documento_afiliado_editar").prop('disabled', true);
+            $("#btn_insertar_nombre_afiliado_editar").prop('disabled', false);
+            $("#btn_insertar_fecha_estructuracion_editar").prop('disabled', true);
+            $("#btn_insertar_tipo_evento_editar").prop('disabled', true);
+            $("#btn_insertar_origen_editar").prop('disabled', true);
+            $("#btn_insertar_porcentajepcl_editar").prop('disabled', true);
+            $("#btn_insertar_radicado_entrada_controversia_primera_calificacion_editar").prop('disabled', false);
+            $("#btn_insertar_observaciones_editar").prop('disabled', true);
+            $("#btn_insertar_nombres_cie10_editar").prop('disabled', true);
+            $("#btn_insertar_tipo_controversia_pri_cali_editar").prop('disabled', true);
+            $("#btn_insertar_direccion_afiliado_editar").prop('disabled', true);
+            $("#btn_insertar_telefono_afiliado_editar").prop('disabled', true);
+            // botón preforma RESPUESTA A DEVOLUCIÓN DE EXPEDIENTE
+            // $("#btn_insertar_nombre_documento").prop('disabled', true);
+            // botón preforma: ACLARACIÓN E INFORMACIÓN SOBRE RECURSO DE REPOSICIÓN EN SUBSIDIO DE APELACIÓN
+            $("#btn_insertar_correo_solicitud_info_editar").prop('disabled', true);
+            $("#btn_insertar_dictamen_controvertido_editar").prop('disabled', true);
+
+            $("#Pdf").val("Pdf");
+            $("#formato_descarga").html('');
+            $("#formato_descarga").html('PDF');
+            
+        }        
+        else{
+            $("#cierre_terminos_editar").prop("checked", false);
+            $("#sol_faltante_contro_editar").prop("checked", false);
+            $("#cierre_doc_noaportada_editar").prop("checked", false);
+            $("#oficio_afiliado_editar").prop("checked", false);
+            $("#oficio_juntas_jrci_editar").prop("checked", false);
+            $("#remision_expediente_jrci_editar").prop("checked", false);
+            $("#devol_expediente_jrci_editar").prop("checked", false);
+            $("#solicitud_dictamen_jrci_editar").prop("checked", false);
+            $("#solicitud_acta_ejecutoria_jrci_editar").prop("checked", false);
+            $("#solicitud_pago_honorarios_jnci_editar").prop("checked", false);
+            $("#solicitud_remision_expediente_jnci_editar").prop("checked", false);
             $("#otro_documento_editar").prop("checked", true);
 
             // mostrar mensaje(s) importante(s)
@@ -4977,6 +6237,7 @@ $(document).ready(function(){
             // botones proforma ADJUNTAR OFICIO AL AFILIADO
             $("#btn_insertar_nombre_junta_regional_asunto_editar").prop('disabled', true);
             $("#btn_insertar_nombre_junta_regional_editar").prop('disabled', true);
+            $("#btn_insertar_fecha_envio_jrci_editar").prop('disabled', true);
             //  botones proforma REMISIÓN DE EXPEDIENTE PARA TRÁMITE DE CONTROVERSIA
             $("#btn_insertar_nro_orden_pago_editar").prop('disabled', true);
             $("#btn_insertar_fecha_notifi_afiliado_editar").prop('disabled', true);
@@ -4986,6 +6247,10 @@ $(document).ready(function(){
             $("#btn_insertar_nombre_afiliado_editar").prop('disabled', true);
             $("#btn_insertar_fecha_estructuracion_editar").prop('disabled', true);
             $("#btn_insertar_tipo_evento_editar").prop('disabled', true);
+            $("#btn_insertar_origen_editar").prop('disabled', true);
+            $("#btn_insertar_porcentajepcl_editar").prop('disabled', true);
+            $("#btn_insertar_radicado_entrada_controversia_primera_calificacion_editar").prop('disabled', true);
+            $("#btn_insertar_observaciones_editar").prop('disabled', true);
             $("#btn_insertar_nombres_cie10_editar").prop('disabled', true);
             $("#btn_insertar_tipo_controversia_pri_cali_editar").prop('disabled', true);
             $("#btn_insertar_direccion_afiliado_editar").prop('disabled', true);
@@ -4994,6 +6259,7 @@ $(document).ready(function(){
             // $("#btn_insertar_nombre_documento").prop('disabled', true);
             // botón preforma: ACLARACIÓN E INFORMACIÓN SOBRE RECURSO DE REPOSICIÓN EN SUBSIDIO DE APELACIÓN
             $("#btn_insertar_correo_solicitud_info_editar").prop('disabled', true);
+            $("#btn_insertar_dictamen_controvertido_editar").prop('disabled', true);
 
             $("#Pdf").val("Pdf");
             $("#formato_descarga").html('');
@@ -6083,6 +7349,12 @@ $(document).ready(function(){
         $('#cuerpo_comunicado_editar').summernote('editor.insertText', etiqueta_nombre_junta);
     });
 
+    $("#btn_insertar_fecha_envio_jrci_editar").click(function(e){
+        e.preventDefault();
+        var etiqueta_fecha_envio_jrci = "{{$fecha_envio_jrci}}";
+        $('#cuerpo_comunicado_editar').summernote('editor.insertText', etiqueta_fecha_envio_jrci);
+    });
+
     $("#btn_insertar_nro_orden_pago_editar").click(function(e){
         e.preventDefault();
         var etiqueta_nro_orden_pago = "{{$nro_orden_pago}}";
@@ -6155,6 +7427,30 @@ $(document).ready(function(){
         $('#cuerpo_comunicado_editar').summernote('editor.insertText', etiqueta_telefono_afiliado);
     });
 
+    $("#btn_insertar_origen_editar").click(function(e){
+        e.preventDefault();
+        var etiqueta_origen = "{{$origen}}";
+        $('#cuerpo_comunicado_editar').summernote('editor.insertText', etiqueta_origen);
+    });
+
+    $("#btn_insertar_porcentajepcl_editar").click(function(e){
+        e.preventDefault();
+        var etiqueta_porcentajepcl = "{{$porcentajepcl}}";
+        $('#cuerpo_comunicado_editar').summernote('editor.insertText', etiqueta_porcentajepcl);
+    });
+
+    $("#btn_insertar_radicado_entrada_controversia_primera_calificacion_editar").click(function(e){
+        e.preventDefault();
+        var etiqueta_radicado_entrada_controversia_primera_calificacion = "{{$radicado_entrada_controversia_primera_calificacion}}";
+        $('#cuerpo_comunicado_editar').summernote('editor.insertText', etiqueta_radicado_entrada_controversia_primera_calificacion);
+    }); 
+
+    $("#btn_insertar_observaciones_editar").click(function(e){
+        e.preventDefault();
+        var etiqueta_observaciones = "{{$observaciones}}";
+        $('#cuerpo_comunicado_editar').summernote('editor.insertText', etiqueta_observaciones);
+    });
+
     // $("#btn_insertar_nombre_documento_editar").click(function(e){
     //     e.preventDefault();
     //     var etiqueta_nombre_documento = "{{$nombre_documento}}";
@@ -6166,6 +7462,12 @@ $(document).ready(function(){
         var etiqueta_correo_solicitud_informacion = "{{$correo_solicitud_informacion}}";
         $('#cuerpo_comunicado_editar').summernote('editor.insertText', etiqueta_correo_solicitud_informacion);
     });
+
+    $("#btn_insertar_dictamen_controvertido_editar").click(function(e){
+        e.preventDefault();
+        var etiqueta_numero_dictamen_controvertido = "{{$num_dictamen_controvertido}}";
+        $('#cuerpo_comunicado_editar').summernote('editor.insertText', etiqueta_numero_dictamen_controvertido);
+    });
     
     /* Funcionalidad para los radio buttons de Oficion Juntas afiliado, Oficio Juntas JRCI, 
         Expediente JRCI, Devol. Expediente JRCI, Solicitud Dictamen JRCI, Otro Documento Edición */
@@ -6174,24 +7476,29 @@ $(document).ready(function(){
 
         if(opc_seleccionada == "Oficio_Afiliado"){
             // mostrar mensaje(s) importante(s)
-            $("#mensaje_asunto_editar").removeClass('d-none');
-            $("#rellenar_asunto_editar").html('Para mostrar todo el asunto dentro del documento, debe incluir la etiqueta Nombre Junta Regional dentro del campo Asunto.');
+            $("#mensaje_asunto_editar").addClass('d-none');
+            $("#rellenar_asunto_editar").html('');
             $("#mensaje_cuerpo_editar").removeClass('d-none');
             $("#rellenar_cuerpo_editar").html('');
-            $("#rellenar_cuerpo_editar").html('Para mostrar todo el cuerpo del comunicado dentro del documento, debe incluir la etiqueta Nombre Junta Regional dentro del campo Cuerpo del comunicado.');
+            $("#rellenar_cuerpo_editar").html('Para mostrar todo el cuerpo del comunicado dentro del documento, debe incluir las etiquetas Nombre Afiliado, Nombre Junta Regional y Fecha Envió JRCI dentro del campo Cuerpo del comunicado.');
 
-            // botones proforma ADJUNTAR OFICIO AL AFILIADO	
-            $("#btn_insertar_nombre_junta_regional_asunto_editar").prop('disabled', false);
+            // botones proforma ADJUNTAR OFICIO AL AFILIADO
+            $("#btn_insertar_nombre_junta_regional_asunto_editar").prop('disabled', true);
             $("#btn_insertar_nombre_junta_regional_editar").prop('disabled', false);
+            $("#btn_insertar_fecha_envio_jrci_editar").prop('disabled', false);
             //  botones proforma REMISIÓN DE EXPEDIENTE PARA TRÁMITE DE CONTROVERSIA
             $("#btn_insertar_nro_orden_pago_editar").prop('disabled', true);
             $("#btn_insertar_fecha_notifi_afiliado_editar").prop('disabled', true);
             $("#btn_insertar_fecha_radi_contro_pri_cali_editar").prop('disabled', true);
             $("#btn_insertar_tipo_doc_afiliado_editar").prop('disabled', true);
             $("#btn_insertar_documento_afiliado_editar").prop('disabled', true);
-            $("#btn_insertar_nombre_afiliado_editar").prop('disabled', true);
+            $("#btn_insertar_nombre_afiliado_editar").prop('disabled', false);
             $("#btn_insertar_fecha_estructuracion_editar").prop('disabled', true);
             $("#btn_insertar_tipo_evento_editar").prop('disabled', true);
+            $("#btn_insertar_origen_editar").prop('disabled', true);
+            $("#btn_insertar_porcentajepcl_editar").prop('disabled', true);
+            $("#btn_insertar_radicado_entrada_controversia_primera_calificacion_editar").prop('disabled', true);
+            $("#btn_insertar_observaciones_editar").prop('disabled', true);
             $("#btn_insertar_nombres_cie10_editar").prop('disabled', true);
             $("#btn_insertar_tipo_controversia_pri_cali_editar").prop('disabled', true);
             $("#btn_insertar_direccion_afiliado_editar").prop('disabled', true);
@@ -6200,9 +7507,15 @@ $(document).ready(function(){
             // $("#btn_insertar_nombre_documento_editar").prop('disabled', true);
             // botón preforma: ACLARACIÓN E INFORMACIÓN SOBRE RECURSO DE REPOSICIÓN EN SUBSIDIO DE APELACIÓN
             $("#btn_insertar_correo_solicitud_info_editar").prop('disabled', true);
-
-            $("#asunto_editar").val("REMISIÓN DEL CASO A {{$nombre_junta_asunto}}");
-            var texto_insertar = "<p>Cordial saludo:</p><p>Dando respuesta a inconformidad presentada frente a calificación de la Pérdida de la Capacidad Laboral emitida por esta aseguradora, dentro de los términos estipulados en la normatividad vigente, se informa: que hoy los documentos concernientes a su caso han sido enviados a la {{$nombre_junta}}, la cual, le citará a la valoración correspondiente.</p><p>Recuerde por favor, que las Juntas Regionales de Calificación de Invalidez son entidades independientes y autónomas de las compañías de seguros, cuyos procesos y procedimientos son ajenos a nuestra entidad, por lo tanto, cualquier requerimiento ante la misma debe ser tratado directamente con la Junta Regional de Calificación de Invalidez.</p><p>Cualquier inquietud o consulta al respecto, le invitamos a comunicarse a nuestras líneas de atención al cliente en Bogotá (601) 3 07 70 32 o a la línea nacional gratuita 01 8000 122 532, de lunes a viernes, de 8:00 a. m. a 8:00 p. m. - sábados de 8:00 a.m. a 12 m., o escríbanos a «servicio al cliente@segurosalfa.com.co» o a la dirección Carrera 10 # 18-36 piso 4 Edificio José María Córdoba, Bogotá D.C.</p>";
+            $("#btn_insertar_dictamen_controvertido_editar").prop('disabled', true);
+            if (idRol == 6) {
+                $(".note-editable").attr("contenteditable", true);
+                $("#asunto_editar").val("INFORMACIÓN DE LA REMISIÓN DE SU EXPEDIENTE A LA JUNTA REGIONAL").prop('readonly', false);                
+            } else {
+                $(".note-editable").attr("contenteditable", false);
+                $("#asunto_editar").val("INFORMACIÓN DE LA REMISIÓN DE SU EXPEDIENTE A LA JUNTA REGIONAL").prop('readonly', true);
+            }
+            var texto_insertar = "<p>Apreciado(a) {{$nombre_afiliado}},</p><p>En <b>PROTECCIÓN S.A.</b> estamos para guiarle y acompañarle en cada momento de su vida. Le informamos que el expediente de su caso relacionado con la pérdida de capacidad laboral fue radicado para una nueva calificación en la <b>{{$nombre_junta}}</b> el <b>{{$fecha_envio_jrci}}</b> debido a su desacuerdo con el dictamen emitido o a que alguna de las partes interesadas en su proceso (EPS, ARL o Empleador) presentó recurso de apelación.</p><p>Es importante que tenga presente que las Juntas de Calificación son entidades gubernamentales independientes, por lo tanto, <b>PROTECCIÓN S.A.</b> no tiene facultades en esta parte del proceso. Los médicos de dichos organismos tienen las siguientes responsabilidades:</p><ul><li>Asignar su cita de valoración, la cual puede ser presencial o por teleconsulta.</li><li>Brindar información relacionada con su proceso.</li><li>Emitir y notificar el dictamen a usted y las partes involucradas en su proceso.</li></ul><p><b>Tener presente:</b></p><p>Los datos aportados en la controversia serán los que la {{$nombre_junta}} utilice para contactarlo y asignarle su cita de valoración, si esta cambia debe informarla a las entidades del sistema de seguridad social.</p><p><b>PROTECCIÓN S.A.</b> cuenta con 5 días hábiles para dar traslado del expediente a la Junta regional de Calificación. Estos días se cuentan a partir de que se cumplan las siguientes condiciones:</p><ul><li>La notificación fue recibida de manera exitosa por las partes interesadas en su proceso (Afiliado, EPS, ARL y Empleador).</li><li>El plazo de 10 días hábiles que tiene cada parte para apelar haya finalizado. Es importante que recuerde que el cumplimiento de estos 10 días hábiles no es igual para todos, pues estos empiezan a contar a partir de que cada parte mencionada anteriormente nos confirme la recepción del dictamen.</li></ul><p>Si requiere información adicional o tiene alguna inquietud, puede comunicarse con nuestro asesor virtual a través de proteccion.com o llamar a nuestra Línea de Servicio en Bogotá (601) 744 44 64, Medellín (604) 510 90 99, Cali (602) 386 00 80, Barranquilla (605) 319 79 99, Cartagena (605) 642 49 99 - WhatsApp +57 310 220 5575 y desde el resto del país 018000528000.</p>";
             $('#cuerpo_comunicado_editar').summernote('code', texto_insertar);
 
             $("#Pdf").val("Pdf");
@@ -6216,8 +7529,14 @@ $(document).ready(function(){
             var seteo_nro_anexos = 0;
             $("#anexos_editar").val(seteo_nro_anexos);
 
-            // Deselección automática de las copias a partes interesadas: Afiliado
+            // Deselección automática de las copias a partes interesadas: todas
             $("#edit_copia_afiliado").prop('checked', false);
+            $("#edit_copia_empleador").prop('checked', false);
+            $("#edit_copia_eps").prop('checked', false);
+            $("#edit_copia_afp").prop('checked', false);
+            $("#edit_copia_arl").prop('checked', false);
+            $("#edit_copia_jrci").prop('checked', false);
+            $("#edit_copia_jnci").prop('checked', false);          
 
             // Selección automática del checkbox firmar
             $("#firmarcomunicado_editar").prop('checked', true);
@@ -6232,8 +7551,10 @@ $(document).ready(function(){
             $("#rellenar_cuerpo_editar").html('');
 
             // botones proforma ADJUNTAR OFICIO AL AFILIADO	
+            $(".note-editable").attr("contenteditable", false);
             $("#btn_insertar_nombre_junta_regional_asunto_editar").prop('disabled', true);
             $("#btn_insertar_nombre_junta_regional_editar").prop('disabled', true);
+            $("#btn_insertar_fecha_envio_jrci_editar").prop('disabled', true);
             //  botones proforma REMISIÓN DE EXPEDIENTE PARA TRÁMITE DE CONTROVERSIA
             $("#btn_insertar_nro_orden_pago_editar").prop('disabled', true);
             $("#btn_insertar_fecha_notifi_afiliado_editar").prop('disabled', true);
@@ -6243,6 +7564,10 @@ $(document).ready(function(){
             $("#btn_insertar_nombre_afiliado_editar").prop('disabled', true);
             $("#btn_insertar_fecha_estructuracion_editar").prop('disabled', true);
             $("#btn_insertar_tipo_evento_editar").prop('disabled', true);
+            $("#btn_insertar_origen_editar").prop('disabled', true);
+            $("#btn_insertar_porcentajepcl_editar").prop('disabled', true);
+            $("#btn_insertar_radicado_entrada_controversia_primera_calificacion_editar").prop('disabled', true);
+            $("#btn_insertar_observaciones_editar").prop('disabled', true);
             $("#btn_insertar_nombres_cie10_editar").prop('disabled', true);
             $("#btn_insertar_tipo_controversia_pri_cali_editar").prop('disabled', true);
             $("#btn_insertar_direccion_afiliado_editar").prop('disabled', true);
@@ -6251,8 +7576,9 @@ $(document).ready(function(){
             // $("#btn_insertar_nombre_documento_editar").prop('disabled', true);
             // botón preforma: ACLARACIÓN E INFORMACIÓN SOBRE RECURSO DE REPOSICIÓN EN SUBSIDIO DE APELACIÓN
             $("#btn_insertar_correo_solicitud_info_editar").prop('disabled', true);
+            $("#btn_insertar_dictamen_controvertido_editar").prop('disabled', true);
 
-            $("#asunto_editar").val('N/A');
+            $("#asunto_editar").val('N/A').prop('readonly', true);
             $('#cuerpo_comunicado_editar').summernote('code', 'N/A');
 
             $("#Pdf").val("Pdf");
@@ -6266,43 +7592,62 @@ $(document).ready(function(){
             var seteo_nro_anexos = 0;
             $("#anexos_editar").val(seteo_nro_anexos);
 
-            // Deselección automática de las copias a partes interesadas: Afiliado
+            // Deselección automática de las copias a partes interesadas: todas
             $("#edit_copia_afiliado").prop('checked', false);
+            $("#edit_copia_empleador").prop('checked', false);
+            $("#edit_copia_eps").prop('checked', false);
+            $("#edit_copia_afp").prop('checked', false);
+            $("#edit_copia_arl").prop('checked', false);
+            $("#edit_copia_jrci").prop('checked', false);
+            $("#edit_copia_jnci").prop('checked', false);
 
             // Selección automática del checkbox firmar
             $("#firmarcomunicado_editar").prop('checked', true);
 
-        }else if(opc_seleccionada == "Remision_Expediente_JRCI"){
+        }
+        else if(opc_seleccionada == "Remision_Expediente_JRCI"){
             // mostrar mensaje(s) importante(s)
             $("#mensaje_asunto_editar").addClass('d-none');
             $("#rellenar_asunto_editar").html('');
             $("#mensaje_cuerpo_editar").removeClass('d-none');
             $("#rellenar_cuerpo_editar").html('');
-            $("#rellenar_cuerpo_editar").html('Para mostrar todo el cuerpo del comunicado dentro del documento, debe incluir las etiquetas N° Orden pago, Fecha Notificación al Afiliado, Fecha Radicación Controversia Primera Calificación, Tipo Documento Afiliado, Documento Afiliado, Nombre Afiliado, Fecha Estructuración, Tipo de Evento, Nombres CIE-10, Tipo Controversia Primera Calificación, Dirección Afiliado, Teléfono Afiliado, dentro del campo Cuerpo del comunicado.');
+            $("#rellenar_cuerpo_editar").html('Para mostrar todo el cuerpo del comunicado dentro del documento, debe incluir las etiquetas N° Orden pago, Fecha Notificación al Afiliado, Fecha Radicación Controversia Primera Calificación, Nombre Afiliado, Fecha Estructuración, Tipo de Evento, Origen, Porcentaje PCL, Nombres CIE-10, Tipo Controversia Primera Calificación y Observaciones, dentro del campo Cuerpo del comunicado.');
 
             // botones proforma ADJUNTAR OFICIO AL AFILIADO
             $("#btn_insertar_nombre_junta_regional_asunto_editar").prop('disabled', true);
             $("#btn_insertar_nombre_junta_regional_editar").prop('disabled', true);
+            $("#btn_insertar_fecha_envio_jrci_editar").prop('disabled', true);
             //  botones proforma REMISIÓN DE EXPEDIENTE PARA TRÁMITE DE CONTROVERSIA
             $("#btn_insertar_nro_orden_pago_editar").prop('disabled', false);
             $("#btn_insertar_fecha_notifi_afiliado_editar").prop('disabled', false);
             $("#btn_insertar_fecha_radi_contro_pri_cali_editar").prop('disabled', false);
-            $("#btn_insertar_tipo_doc_afiliado_editar").prop('disabled', false);
-            $("#btn_insertar_documento_afiliado_editar").prop('disabled', false);
+            $("#btn_insertar_tipo_doc_afiliado_editar").prop('disabled', true);
+            $("#btn_insertar_documento_afiliado_editar").prop('disabled', true);
             $("#btn_insertar_nombre_afiliado_editar").prop('disabled', false);
             $("#btn_insertar_fecha_estructuracion_editar").prop('disabled', false);
             $("#btn_insertar_tipo_evento_editar").prop('disabled', false);
+            $("#btn_insertar_origen_editar").prop('disabled', true);
+            $("#btn_insertar_porcentajepcl_editar").prop('disabled', true);
+            $("#btn_insertar_radicado_entrada_controversia_primera_calificacion_editar").prop('disabled', true);
+            $("#btn_insertar_observaciones_editar").prop('disabled', false);
             $("#btn_insertar_nombres_cie10_editar").prop('disabled', false);
             $("#btn_insertar_tipo_controversia_pri_cali_editar").prop('disabled', false);
-            $("#btn_insertar_direccion_afiliado_editar").prop('disabled', false);
-            $("#btn_insertar_telefono_afiliado_editar").prop('disabled', false);
+            $("#btn_insertar_direccion_afiliado_editar").prop('disabled', true);
+            $("#btn_insertar_telefono_afiliado_editar").prop('disabled', true);
             // botón preforma RESPUESTA A DEVOLUCIÓN DE EXPEDIENTE
             // $("#btn_insertar_nombre_documento_editar").prop('disabled', true);
             // botón preforma: ACLARACIÓN E INFORMACIÓN SOBRE RECURSO DE REPOSICIÓN EN SUBSIDIO DE APELACIÓN
             $("#btn_insertar_correo_solicitud_info_editar").prop('disabled', true);
-
-            $("#asunto_editar").val("REMISIÓN DE EXPEDIENTE PARA TRÁMITE DE CONTROVERSIA");
-            var texto_insertar = "<p>Respetados señores, cordial saludo:</p><p>En aras de tramitar el recurso y/o controversia presentada en tiempo por la parte interesada contra el dictamen de calificación de PÉRDIDA DE CAPACIDAD LABORAL, remitimos el expediente del afiliado con la documentación exigida por el artículo 30 del Decreto 1352 de 2013 (historia clínica, constancia de notificación, dictamen médico laboral, controversia, etc.) para su valoración.</p><p>Según lo dispone el artículo 20 del mismo decreto, el valor de los honorarios corresponde a un (1) salario mínimo mensual legal vigente, el cual fue cancelado por esta aseguradora. Para los efectos, adjuntamos orden de pago de honorarios No {{$nro_orden_pago}}.</p><p>Finalmente, indicamos que la fecha de notificación del dictamen lo fue el {{$fecha_notificacion_afiliado}} y la radicación del desacuerdo el {{$fecha_radicacion_controversia_primera_calificacion}}, razón por la cual es procedente tramitar el recurso.</p><p>Los datos del afiliado son los siguientes:</p><table class='tabla_cuerpo_remision_expediente'><tbody><tr><td class='bg'><b>TIPO Y No. DE IDENTIFICACIÓN</b></td><td><p>{{$tipo_documento_afiliado}}{{$documento_afiliado}}<br></p></td></tr><tr><td class='bg'><b>NOMBRE COMPLETO</b></td><td><p>{{$nombre_afiliado}}<br></p></td></tr><tr><td class='bg'><b>FECHA DE ESTRUCTURACIÓN Y TIPO DE EVENTO</b></td><td><p>PCL {{$porcentaje_pcl}}-{{$fecha_estructuracion}}-{{$tipo_evento}}<br></p></td></tr><tr><td class='bg'><b>DIAGNÓSTICO</b></td><td><p>{{$nombres_cie10}}<br></p></td></tr><tr><td class='bg'><b>CONTROVERSIA POR</b></td><td><p>{{$tipo_controversia_primera_calificacion}}<br></p></td></tr><tr><td class='bg'><b>DIRECCIÓN Y TELÉFONO DEL ASEGURADO</b></td><td><p>{{$direccion_afiliado}} {{$telefono_afiliado}}<br></p></td></tr><tr><td class='bg'><b>OBSERVACIONES</b></td><td><p>{{$observaciones}}</p></td></tr></tbody></table><p>En virtud de lo señalado en el Artículo 2 del Decreto 1352 de 2013 que establece:</p><p>Artículo 2. Personas interesadas. Para efectos del presente decreto, se entenderá como personas interesadas en el dictamen y de obligatoria notificación o comunicación como mínimo las siguientes:</p><ul><li><span style=''>La persona objeto de dictamen o sus beneficiarios en caso de muerte.</span></li><li><span style=''>La Entidad Promotora de Salud.</span></li><li><span style=''>La Administradora de Riesgos Laborales.</span></li><li><span style=''>La Administradora del Fondo de Pensiones o Administradora de Régimen de Prima Media.</span></li><li><span style=''>El Empleador.</span></li><li><span style=''>La Compañía de Seguro que asuma el riesgo de invalidez, sobrevivencia y muerte. (Subrayado fuera del texto original).</span></li></ul><p>Cualquier inquietud o consulta al respecto, le invitamos a comunicarse a nuestras líneas de atención al cliente en Bogotá (601) 3 07 70 32 o a la línea nacional gratuita 01 8000 122 532, de lunes a viernes, de 8:00 a. m. a 8:00 p. m. - sábados de 8:00 a.m. a 12 m., o escríbanos a «servicio al cliente@segurosalfa.com.co» o a la dirección Carrera 10 # 18-36 piso 4 Edificio José María Córdoba, Bogotá D.C.</p>";
+            $("#btn_insertar_dictamen_controvertido_editar").prop('disabled', true);
+            if (idRol == 6) {
+                $(".note-editable").attr("contenteditable", true);
+                $("#asunto_editar").val("REMISIÓN DE EXPEDIENTE PARA TRÁMITE DE CONTROVERSIA PCL").prop('readonly', false);                
+            } else {
+                $(".note-editable").attr("contenteditable", false);
+                $("#asunto_editar").val("REMISIÓN DE EXPEDIENTE PARA TRÁMITE DE CONTROVERSIA PCL").prop('readonly', true);
+            }
+            var texto_insertar = "<p>Saludo cordial,</p><p>En aras de tramitar el recurso y/o controversia presentada en tiempo por la parte interesada contra el dictamen de calificación de <b>PÉRDIDA DE CAPACIDAD LABORAL</b>, remitimos el expediente del afiliado con la documentación exigida por el artículo 30 del Decreto 1352 de 2013 para su valoración. Se anexa a la presente remisión el soporte técnico con el cual se fundamentó el proceso de calificación del afiliado en mención: copia historia clínica, dictamen, sustentación del dictamen.</p><p>Adicional, también se anexa soporte de SIAFP en donde se encuentra el historial de vinculaciones del afiliado en las diferentes AFP. Por lo tanto, si la fecha de estructuración otorgada por el médico calificador de la Junta está en vigencias que no correspondan al Fondo de Pensiones Protección S.A, el dictamen emitido deberá ser notificado también a la entidad que corresponda, de acuerdo al historial de vinculaciones.</p><p>Según lo dispone el artículo 20 del mismo decreto, el valor de los honorarios corresponde a un (1) salario mínimo mensual legal vigente, el cual fue cancelado por <b>PROTECCIÓN S.A.</b> Para los efectos, adjuntamos orden de pago de honorarios No. <b>{{$nro_orden_pago}}</b>. La fecha de notificación del dictamen lo fue el <b>{{$fecha_notificacion_afiliado}}</b> y la radicación del desacuerdo el <b>{{$fecha_radicacion_controversia_primera_calificacion}}</b>, razón por la cual es procedente tramitar el recurso.</p><p>Los datos de la controversia son los siguientes:</p><table class='tabla_cuerpo'><tr><td class='th_cuerpo'><b>AFILIADO</b></td><td>{{$nombre_afiliado}}</td></tr><tr><td class='th_cuerpo'><b>PCL, FECHA DE ESTRUCTURACIÓN Y TIPO DE EVENTO</b></td><td>PCL {{$porcentaje_pcl}}% - FE: {{$fecha_estructuracion}} - {{$tipo_evento}} {{$origen}}</td></tr><tr><td class='th_cuerpo'><b>DIAGNÓSTICOS CALIFICADOS</b></td><td>{{$nombres_cie10}}</td></tr><tr><td class='th_cuerpo'><b>CONTROVERSIA POR</b></td><td>{{$tipo_controversia_primera_calificacion}}</td></tr><tr><td class='th_cuerpo'><b>OBSERVACIONES</b></td><td>{{$observaciones}}</td></tr></table><p>Lo anterior teniendo en cuenta lo dispuesto en el Artículo 2, del decreto 1352, indica lo siguiente:</p><p><b>Artículo 2</b> “Personas interesadas”: Para efectos del presente decreto, se entenderá como personas interesadas en el dictamen y de obligatoria notificación o comunicación como mínimo las siguientes (subrayas y negrillas fuera del texto):</p>"+
+            "<ol class='justificarUl'><li>La persona objeto de dictamen o sus beneficiarios en caso de muerte.</li><li>La Entidad Promotora de Salud.</li><li>La Administradora de Riegos Laborales.</li><li><b>La Administradora del Fondo de Pensiones o Administradora de Régimen de Prima Media.</b></li><li>El Empleador.</li><li><b>La Compañía de Seguro que asuma el riesgo de invalidez, sobrevivencia y muerte.</b></li></ol><p>De acuerdo con lo anteriormente expuesto, solicitamos a la <b>{{$nombre_junta}}</b>, revise el caso y califique la Pérdida de Capacidad Laboral con base en la documentación técnica aportada. Por favor enviar al correo electrónico RecepcionDocumental@proteccion.com.co. cualquier información relacionada con la recolección y/o notificación del dictamen o a alguno de nuestros centros de correspondencia:</p><ul class='justificarUl'><li>En la ciudad de Medellín: Calle 49 No. 63-100 Edificio Torre Protección Piso 1.</li><li>En la ciudad de Bogotá: Calle 84A #10-50 Centro de correspondencia piso 2.</li></ul><p>Agradecemos su gestión y pronta respuesta.</p>";
             $('#cuerpo_comunicado_editar').summernote('code', texto_insertar);
 
             $("#Pdf").val("Pdf");
@@ -6316,32 +7661,45 @@ $(document).ready(function(){
             var seteo_nro_anexos = 0;
             $("#anexos_editar").val(seteo_nro_anexos);
 
-            // selección automática de las copias a partes interesadas: Afiliado
-            $("#edit_copia_afiliado").prop('checked', true);
+            // Deselección automática de las copias a partes interesadas: todas
+            $("#edit_copia_afiliado").prop('checked', false);
+            $("#edit_copia_empleador").prop('checked', false);
+            $("#edit_copia_eps").prop('checked', false);
+            $("#edit_copia_afp").prop('checked', false);
+            $("#edit_copia_arl").prop('checked', false);
+            $("#edit_copia_jrci").prop('checked', false);
+            $("#edit_copia_jnci").prop('checked', false);
 
             // Selección automática del checkbox firmar
             $("#firmarcomunicado_editar").prop('checked', true);
 
-        }else if(opc_seleccionada == "Devolucion_Expediente_JRCI"){
+        }
+        else if(opc_seleccionada == "Devolucion_Expediente_JRCI"){
             // mostrar mensaje(s) importante(s)
             $("#mensaje_asunto_editar").addClass('d-none');
             $("#rellenar_asunto_editar").html('');
             $("#mensaje_cuerpo_editar").removeClass('d-none');
             $("#rellenar_cuerpo_editar").html('');
-            $("#rellenar_cuerpo_editar").html('Para mostrar todo el cuerpo del comunicado dentro del documento, debe incluir la etiqueta Nombre Junta Regional dentro del campo Cuerpo del comunicado.');
+            $("#rellenar_cuerpo_editar").html('Para mostrar todo el cuerpo del comunicado dentro del documento, debe incluir la etiqueta Nombre Junta Regional, Fecha Envió JRCI, Tipo Documento Afiliado, Documento Afiliado, Nombre Afiliado y N° Dictamen controvertido dentro del campo Cuerpo del comunicado.');
 
             // botones proforma ADJUNTAR OFICIO AL AFILIADO
+            $(".note-editable").attr("contenteditable", true);
             $("#btn_insertar_nombre_junta_regional_asunto_editar").prop('disabled', true);
             $("#btn_insertar_nombre_junta_regional_editar").prop('disabled', false);
+            $("#btn_insertar_fecha_envio_jrci_editar").prop('disabled', false);
             //  botones proforma REMISIÓN DE EXPEDIENTE PARA TRÁMITE DE CONTROVERSIA
             $("#btn_insertar_nro_orden_pago_editar").prop('disabled', true);
             $("#btn_insertar_fecha_notifi_afiliado_editar").prop('disabled', true);
             $("#btn_insertar_fecha_radi_contro_pri_cali_editar").prop('disabled', true);
-            $("#btn_insertar_tipo_doc_afiliado_editar").prop('disabled', true);
-            $("#btn_insertar_documento_afiliado_editar").prop('disabled', true);
-            $("#btn_insertar_nombre_afiliado_editar").prop('disabled', true);
+            $("#btn_insertar_tipo_doc_afiliado_editar").prop('disabled', false);
+            $("#btn_insertar_documento_afiliado_editar").prop('disabled', false);
+            $("#btn_insertar_nombre_afiliado_editar").prop('disabled', false);
             $("#btn_insertar_fecha_estructuracion_editar").prop('disabled', true);
             $("#btn_insertar_tipo_evento_editar").prop('disabled', true);
+            $("#btn_insertar_origen_editar").prop('disabled', true);
+            $("#btn_insertar_porcentajepcl_editar").prop('disabled', true);
+            $("#btn_insertar_radicado_entrada_controversia_primera_calificacion_editar").prop('disabled', true);
+            $("#btn_insertar_observaciones_editar").prop('disabled', true);
             $("#btn_insertar_nombres_cie10_editar").prop('disabled', true);
             $("#btn_insertar_tipo_controversia_pri_cali_editar").prop('disabled', true);
             $("#btn_insertar_direccion_afiliado_editar").prop('disabled', true);
@@ -6350,22 +7708,16 @@ $(document).ready(function(){
             // $("#btn_insertar_nombre_documento_editar").prop('disabled', false);
             // botón preforma: ACLARACIÓN E INFORMACIÓN SOBRE RECURSO DE REPOSICIÓN EN SUBSIDIO DE APELACIÓN
             $("#btn_insertar_correo_solicitud_info_editar").prop('disabled', true);
+            $("#btn_insertar_dictamen_controvertido_editar").prop('disabled', false);
         
-            $("#asunto_editar").val("RESPUESTA A DEVOLUCIÓN DE EXPEDIENTE");
-            var texto_insertar = "<p>Reciban un cordial saludo,</p>\
-            <p>En respuesta a la solicitud radicada por ustedes, esta aseguradora se permite dar respuesta en los términos que se describen a continuación:</p>\
-            <p>Una vez revisadas nuestras bases y sistemas de información evidenciamos que el día (Anotar Fecha de envío de expediente) esta compañía solicitó a ustedes calificación de (Anotar la causal de controversia) en virtud de la controversia interpuesta por el usuario en asunto.</p>\
-            <p>Ahora bien, con respecto a la solicitud emitida por ustedes, nos permitimos informar que recibimos el expediente en devolución, motivo por el cual el grupo interdisciplinario de Seguros de Vida Alfa realizó la respectiva verificación por lo que remitimos nuevamente el expediente completo con la documentación solicitada:</p>\
-            <p style='color:red;'>Nota: En este espacio del documento debe crear la tabla de Documento y No. Folio.<p>\
-            <p>Por lo anterior, solicitamos amablemente a la Honorable {{$nombre_junta}} para que se realice el trámite correspondiente según la normatividad vigente teniendo en cuenta que la afiliada se encuentra en términos legales para dirimir la controversia interpuesta.</p>\
-            <p>Agradecemos la atención prestada y reiteramos nuestra voluntad de servicio.</p>\
-            ";
-
+            $("#asunto_editar").val("RESPUESTA A DEVOLUCIÓN DE EXPEDIENTE").prop('readonly', false);
+            var texto_insertar = "<p>Saludo cordial,</p><p>En respuesta a la solicitud radicada por ustedes, la <b>Administradora de Fondos de Pensiones y Cesantías PROTECCIÓN S.A.</b> se permite dar respuesta en los términos que se describen a continuación:</p><p>Una vez revisadas nuestras bases y sistemas de información evidenciamos que esta compañía solicitó a ustedes calificación de pérdida de capacidad laboral en virtud de la siguiente controversia interpuesta:</p><table class='tabla_cuerpo'><tr><th class='th_cuerpo'><b>Identificación</b></th><th class='th_cuerpo'><b>Nombre</b></th><th class='th_cuerpo'><b>Dictamen N°</b></th><th class='th_cuerpo'><b>Fecha radicación Expediente</b></th></tr><tr><td>{{$tipo_documento_afiliado}}. {{$documento_afiliado}}</td><td>{{$nombre_afiliado}}</td><td>{{$num_dictamen_controvertido}}</td><td>{{$fecha_envio_jrci}}</td></tr></table><p>Ahora bien, con respecto a la solicitud emitida por ustedes, nos permitimos informar que recibimos el expediente en devolución, motivo por el cual el grupo interdisciplinario de PROTECCIÓN S.A, realizó la respectiva verificación, por lo que remitimos nuevamente el expediente completo con la documentación solicitada:</p><p>(Enumere y describa los documentos solicitados por la Junta incluyendo el N° de folios)</p>"+
+            "<p>Por lo anterior, solicitamos amablemente a la Honorable {{$nombre_junta}} para que se realice el trámite correspondiente según la normatividad vigente teniendo en cuenta que el (la) afiliado(a) se encuentra en términos legales para dirimir la controversia interpuesta.</p><p>Por favor enviar al correo electrónico RecepcionDocumental@proteccion.com.co. cualquier información relacionada con la recolección y/o notificación del dictamen o a alguno de nuestros centros de correspondencia:</p><ul class='justificarUl'><li>En la ciudad de Medellín: Calle 49 No. 63-100 Edificio Torre Protección Piso 1.</li><li>En la ciudad de Bogotá: Calle 84A #10-50 Centro de correspondencia piso 2</li></ul><p>Agradecemos su gestión y pronta respuesta.</p>";
             $('#cuerpo_comunicado_editar').summernote('code', texto_insertar);
 
-            $("#Pdf").val("Word");
+            $("#Pdf").val("Pdf");
             $("#formato_descarga").html('');
-            $("#formato_descarga").html('Word');
+            $("#formato_descarga").html('PDF');
 
             // Auto selección de la opción JRCI (Destinatario Principal)
             $('#jrci_comunicado_editar').click();
@@ -6374,25 +7726,386 @@ $(document).ready(function(){
             var seteo_nro_anexos = 0;
             $("#anexos_editar").val(seteo_nro_anexos);
 
-            // Selección automática de las copias a partes interesadas: Afiliado
-            $("#edit_copia_afiliado").prop('checked', true);
+            // Deselección automática de las copias a partes interesadas: todas
+            $("#edit_copia_afiliado").prop('checked', false);
+            $("#edit_copia_empleador").prop('checked', false);
+            $("#edit_copia_eps").prop('checked', false);
+            $("#edit_copia_afp").prop('checked', false);
+            $("#edit_copia_arl").prop('checked', false);
+            $("#edit_copia_jrci").prop('checked', false);
+            $("#edit_copia_jnci").prop('checked', false);
 
             // Selección automática del checkbox firmar
             $("#firmarcomunicado_editar").prop('checked', true);
             
-        }else if(opc_seleccionada == "Solicitud_Dictamen_JRCI"){
+        }
+        else if(opc_seleccionada == "Solicitud_Dictamen_JRCI"){
 
             // mostrar mensaje(s) importante(s)
             $("#mensaje_asunto_editar").addClass('d-none');
             $("#rellenar_asunto_editar").html('');
             $("#mensaje_cuerpo_editar").removeClass('d-none');
             $("#rellenar_cuerpo_editar").html('');
-            $("#rellenar_cuerpo_editar").html('Para mostrar todo el cuerpo del comunicado dentro del documento, debe incluir las etiquetas Nombre Afiliado, Correo Solicitud Información, dentro del campo Cuerpo del comunicado.');
+            $("#rellenar_cuerpo_editar").html('Para mostrar todo el cuerpo del comunicado dentro del documento, debe incluir las etiquetas Fecha Envió JRCI, Tipo Documento Afiliado, Documento Afiliado, Nombre Afiliado y N° Dictamen Controvertido dentro del campo Cuerpo del comunicado.');
 
             // botones proforma ADJUNTAR OFICIO AL AFILIADO
             $("#btn_insertar_nombre_junta_regional_asunto_editar").prop('disabled', true);
             $("#btn_insertar_nombre_junta_regional_editar").prop('disabled', true);
+            $("#btn_insertar_fecha_envio_jrci_editar").prop('disabled', false);
             //  botones proforma REMISIÓN DE EXPEDIENTE PARA TRÁMITE DE CONTROVERSIA
+            $("#btn_insertar_nro_orden_pago_editar").prop('disabled', true);
+            $("#btn_insertar_fecha_notifi_afiliado_editar").prop('disabled', true);
+            $("#btn_insertar_fecha_radi_contro_pri_cali_editar").prop('disabled', true);
+            $("#btn_insertar_tipo_doc_afiliado_editar").prop('disabled', false);
+            $("#btn_insertar_documento_afiliado_editar").prop('disabled', false);
+            $("#btn_insertar_nombre_afiliado_editar").prop('disabled', false);
+            $("#btn_insertar_fecha_estructuracion_editar").prop('disabled', true);
+            $("#btn_insertar_tipo_evento_editar").prop('disabled', true);
+            $("#btn_insertar_origen_editar").prop('disabled', true);
+            $("#btn_insertar_porcentajepcl_editar").prop('disabled', true);
+            $("#btn_insertar_radicado_entrada_controversia_primera_calificacion_editar").prop('disabled', true);
+            $("#btn_insertar_observaciones_editar").prop('disabled', true);
+            $("#btn_insertar_nombres_cie10_editar").prop('disabled', true);
+            $("#btn_insertar_tipo_controversia_pri_cali_editar").prop('disabled', true);
+            $("#btn_insertar_direccion_afiliado_editar").prop('disabled', true);
+            $("#btn_insertar_telefono_afiliado_editar").prop('disabled', true);
+            // botón preforma RESPUESTA A DEVOLUCIÓN DE EXPEDIENTE
+            // $("#btn_insertar_nombre_documento_editar").prop('disabled', true);
+            // botón preforma: ACLARACIÓN E INFORMACIÓN SOBRE RECURSO DE REPOSICIÓN EN SUBSIDIO DE APELACIÓN
+            $("#btn_insertar_correo_solicitud_info_editar").prop('disabled', true);
+            $("#btn_insertar_dictamen_controvertido_editar").prop('disabled', false);
+            if (idRol == 6) {
+                $(".note-editable").attr("contenteditable", true);
+                $("#asunto_editar").val("DERECHO DE PETICIÓN DE VENCIMIENTO DE EMISIÓN DE DICTAMEN").prop('readonly', false);                
+            } else {
+                $(".note-editable").attr("contenteditable", false);
+                $("#asunto_editar").val("DERECHO DE PETICIÓN DE VENCIMIENTO DE EMISIÓN DE DICTAMEN").prop('readonly', true);                
+            }
+            var texto_insertar = "<p>Saludo cordial,</p><p>Por conducto de la presente, la <b>Administradora de Fondos de Pensiones y Cesantías PROTECCIÓN S.A.</b>, en uso de los derechos fundamentales previstos en los artículos 20<span class='decreto1072'>1</span> y 23<span class='decreto1072'>2</span> de la Constitución Nacional, acude a su Despacho con el fin de solicitarle se sirva de manera inmediata remitir a esta Administradora notificación del dictamen de pérdida de capacidad laboral que a continuación se enuncia:</p><table class='tabla_cuerpo'><tr><th class='th_cuerpo'><b>Identificación</b></th><th class='th_cuerpo'><b>Nombre</b></th><th class='th_cuerpo'><b>Dictamen N°</b></th><th class='th_cuerpo'><b>Fecha radicación Expediente</b></th></tr><tr><td>{{$tipo_documento_afiliado}}. {{$documento_afiliado}}</td><td>{{$nombre_afiliado}}</td><td>{{$num_dictamen_controvertido}}</td><td>{{$fecha_envio_jrci}}</td></tr></table><ol id='lista_arti_sol_dict' class='lista-exponencial'><li><p><b>Artículo 20.</b> Se garantiza a toda persona la libertad de expresar y difundir su pensamiento y opiniones, la de informar y recibir información veraz e imparcial, y la de fundar medios masivos de comunicación. Estos son libres y tienen responsabilidad social. Se garantiza el derecho a la rectificación en condiciones de equidad. No habrá censura.</p></li><li><p><b>Artículo 23.</b> Toda persona tiene derecho a presentar peticiones respetuosas a las autoridades por motivos de interés general o particular y a obtener pronta resolución. El legislador podrá reglamentar su ejercicio ante organizaciones privadas para garantizar los derechos fundamentales.</p></li><li><p>Por medio del cual se expide el Decreto Único Reglamentario del Sector Trabajo.</p></li></ol><p>El artículo 2.2.5.1.36 y siguientes del Decreto 1072 de 2015<span class='decreto1072'>3</span> prevé el procedimiento interno que deben seguir la Juntas de calificación de invalidez para la emisión de los dictámenes de pérdida de capacidad laboral, así mismo prevé los términos que deben seguir las Juntas de calificación para garantizar la correcta ejecución del debido proceso.</p>"+
+            "<p>De tal disposición normativa se concluye que el proceso de calificación del origen y/o pérdida de capacidad laboral, tiene una duración aproximada de 28 días incluyendo el término para notificación del dictamen, esto en el caso en el que no se requieran pruebas o valoración por especialistas, y en caso de que el (la) afiliado(a) no haya asistido a la valoración inicial.</p><p>Pese a todo lo anterior, encontramos que el término para emitir el solicitado dictamen se encuentra más que fenecido sin que se nos haya notificado decisión alguna.</p><p> Así las cosas y con el acostumbrado respeto solicitamos se sirva:</p><ol class='justificarUl'><li>Remitir con destino a esta Administradora notificación del dictamen del (la) afiliado(a) previamente referenciado.</li><li>Informar con destino a esta Administradora si cada dictamen fue emitido en el debido término que dispone la normatividad vigente, en caso de no ser así informar las razones de hecho y de derecho debidamente justificadas por las cuales se tardó la emisión de cada dictamen.</li><li>En caso de no hallar procedente la emisión de algún dictamen, informar con destino a esta Administradora los motivos y especificar puntualmente el estado actual en que se encuentra cada trámite y la fecha estimada de emisión de dictamen.</li><li>Si la tardanza para emitir algún dictamen tiene que ver con que se debe adelantar algún trámite adicional de nuestra parte, informar con destino a esta Administradora cuál es la gestión que debiera realizarse por parte de Protección S.A.</li><li>En caso de no haber sido emitido aún el correspondiente dictamen comentado se sirva indicar de forma cierta, concreta y razonable, y, atendiendo a los principios de oportunidad y razonabilidad la fecha exacta en que procederá con su emisión y/o notificación.</li></ol><p>Para efectos de notificación de la respuesta rogamos tener el correo electrónico RecepcionDocumental@proteccion.com.co</p><p>Agradecemos su gestión y pronta respuesta.</p>";
+            $('#cuerpo_comunicado_editar').summernote('code', texto_insertar);
+
+            $("#Pdf").val("Pdf");
+            $("#formato_descarga").html('');
+            $("#formato_descarga").html('PDF');
+
+            // Auto selección de la opción JRCI (Destinatario Principal)
+            $('#jrci_comunicado_editar').click();
+
+            // Seteo automático del nro de anexos:
+            var seteo_nro_anexos = 0;
+            $("#anexos_editar").val(seteo_nro_anexos);
+
+            // Deselección automática de las copias a partes interesadas: todas
+            $("#edit_copia_afiliado").prop('checked', true);
+            $("#edit_copia_empleador").prop('checked', false);
+            $("#edit_copia_eps").prop('checked', false);
+            $("#edit_copia_afp").prop('checked', false);
+            $("#edit_copia_arl").prop('checked', false);
+            $("#edit_copia_jrci").prop('checked', false);
+            $("#edit_copia_jnci").prop('checked', false);
+
+            // Selección automática del checkbox firmar
+            $("#firmarcomunicado_editar").prop('checked', true);
+    
+        }
+        else if(opc_seleccionada == "Solicitud_Acta_Ejecutoria_JRCI"){
+
+            // mostrar mensaje(s) importante(s)
+            $("#mensaje_asunto_editar").addClass('d-none');
+            $("#rellenar_asunto_editar").html('');
+            $("#mensaje_cuerpo_editar").removeClass('d-none');
+            $("#rellenar_cuerpo_editar").html('');
+            $("#rellenar_cuerpo_editar").html('Para mostrar todo el cuerpo del comunicado dentro del documento, debe incluir las etiquetas Tipo Documento Afiliado, Documento Afiliado, Nombre Afiliado y N° Dictamen Controvertido dentro del campo Cuerpo del comunicado.');
+
+            // botones proforma ADJUNTAR OFICIO AL AFILIADO
+            $("#btn_insertar_nombre_junta_regional_asunto_editar").prop('disabled', true);
+            $("#btn_insertar_nombre_junta_regional_editar").prop('disabled', true);
+            $("#btn_insertar_fecha_envio_jrci_editar").prop('disabled', true);
+            //  botones proforma REMISIÓN DE EXPEDIENTE PARA TRÁMITE DE CONTROVERSIA
+            $("#btn_insertar_nro_orden_pago_editar").prop('disabled', true);
+            $("#btn_insertar_fecha_notifi_afiliado_editar").prop('disabled', true);
+            $("#btn_insertar_fecha_radi_contro_pri_cali_editar").prop('disabled', true);
+            $("#btn_insertar_tipo_doc_afiliado_editar").prop('disabled', false);
+            $("#btn_insertar_documento_afiliado_editar").prop('disabled', false);
+            $("#btn_insertar_nombre_afiliado_editar").prop('disabled', false);
+            $("#btn_insertar_fecha_estructuracion_editar").prop('disabled', true);
+            $("#btn_insertar_tipo_evento_editar").prop('disabled', true);
+            $("#btn_insertar_origen_editar").prop('disabled', true);
+            $("#btn_insertar_porcentajepcl_editar").prop('disabled', true);
+            $("#btn_insertar_radicado_entrada_controversia_primera_calificacion_editar").prop('disabled', true);
+            $("#btn_insertar_observaciones_editar").prop('disabled', true);
+            $("#btn_insertar_nombres_cie10_editar").prop('disabled', true);
+            $("#btn_insertar_tipo_controversia_pri_cali_editar").prop('disabled', true);
+            $("#btn_insertar_direccion_afiliado_editar").prop('disabled', true);
+            $("#btn_insertar_telefono_afiliado_editar").prop('disabled', true);
+            // botón preforma RESPUESTA A DEVOLUCIÓN DE EXPEDIENTE
+            // $("#btn_insertar_nombre_documento_editar").prop('disabled', true);
+            // botón preforma: ACLARACIÓN E INFORMACIÓN SOBRE RECURSO DE REPOSICIÓN EN SUBSIDIO DE APELACIÓN
+            $("#btn_insertar_correo_solicitud_info_editar").prop('disabled', true);
+            $("#btn_insertar_dictamen_controvertido_editar").prop('disabled', false);
+            if (idRol == 6) {
+                $(".note-editable").attr("contenteditable", true);
+                $("#asunto_editar").val("DERECHO DE PETICIÓN DE CONSTANCIA DE EJECUTORIA DE DICTAMEN PCL").prop('readonly', false);
+            } else {
+                $(".note-editable").attr("contenteditable", false);
+                $("#asunto_editar").val("DERECHO DE PETICIÓN DE CONSTANCIA DE EJECUTORIA DE DICTAMEN PCL").prop('readonly', true);                
+            }
+            var texto_insertar = "<p>Saludo cordial,</p><p>Por conducto de la presente, la <b>Administradora de Fondos de Pensiones y Cesantías Protección S.A.</b>, en uso de los derechos fundamentales previstos en los artículos 20<span class='decreto1072'>1</span> y 23<span class='decreto1072'>2</span> de la Constitución Nacional, acude a su Despacho con el fin de solicitarle se sirva expedir y remitir a esta Administradora constancia de ejecutoria del dictamen de pérdida de capacidad laboral que a continuación se enuncia:</p><table class='tabla_cuerpo'><tr><th class='th_cuerpo'><b>Identificación</b></th><th class='th_cuerpo'><b>Nombre</b></th><th class='th_cuerpo'><b>Dictamen N°</b></th></tr><tr><td>{{$tipo_documento_afiliado}}. {{$documento_afiliado}}</td><td>{{$nombre_afiliado}}</td><td>{{$num_dictamen_controvertido}}</td></tr></table><ol id='lista_arti_sol_dict' class='lista-exponencial'><li><p><b>Artículo 20.</b> Se garantiza a toda persona la libertad de expresar y difundir su pensamiento y opiniones, la de informar y recibir información veraz e imparcial, y la de fundar medios masivos de comunicación. Estos son libres y tienen responsabilidad social. Se garantiza el derecho a la rectificación en condiciones de equidad. No habrá censura.</p></li><li><p><b>Artículo 23.</b> Toda persona tiene derecho a presentar peticiones respetuosas a las autoridades por motivos de interés general o particular y a obtener pronta resolución. El legislador podrá reglamentar su ejercicio ante organizaciones privadas para garantizar los derechos fundamentales.</p></li><li><p>Por medio del cual se expide el Decreto Único Reglamentario del Sector Trabajo.</p></li></ol>"+
+            "<p>Para lo anterior deberá tenerse en cuenta que el artículo 2.2.5.1.43 del Decreto 1072 de 2015<span class='decreto1072'>3</span> precisa sobre la firmeza de los dictámenes emitidos:</p><ol class='justificarUl'><p class='cursiva'><b>Artículo 2.2.5.1.43. Firmeza de los dictámenes.</b> Los dictámenes adquieren firmeza cuando:</p><li class='cursiva'>Contra el dictamen no se haya interpuesto el recurso de reposición y/o apelación dentro del término de diez (10) días siguientes a su notificación;</li><li class='cursiva'>Se hayan resuelto los recursos interpuestos y se hayan notificado o comunicado en los términos establecidos en el presente capítulo;</li><li class='cursiva'>Una vez resuelta la solicitud de aclaración o complementación del dictamen proferido por la Junta Nacional y se haya comunicado a todos los interesados.</li></ol>"+
+            "<p>Luego, si para el caso previamente referenciado se hayan cumplidos los requisitos para predicar la firmeza del dictamen resulta necesario entonces que se expida la respectiva constancia de ejecutoria y en caso contrario resulta pertinente informar las razones por las cuales no procede aún su expedición.</p><p>Así las cosas y con el acostumbrado respeto solicitamos se sirva:</p><ol class='justificarUl'><li>Remitir con destino a esta Administradora copia de la constancia de ejecutoria para el caso previamente referenciado.</li><li>Informar con destino a esta Administradora si la constancia de ejecutoria fue expedida en el debido término que dispone la normatividad vigente, en caso de no ser así informar las razones de hecho y de derecho por las cuales se tardó la expedición de la constancia de ejecutoria.</li><li>En caso de no hallar procedente la expedición de alguna constancia de ejecutoria, informar con destino a esta Administradora los motivos.</li><li>Si la imposibilidad para expedir la constancia de ejecutoria tiene que ver con que el interviniente interpuso recursos contra el dictamen emitido, informar con destino a esta Administradora cuál es la parte impugnante y si se requiere de alguna gestión por parte de esta Administradora.</li></ol><p>Para efectos de notificación de la respuesta rogamos tener el correo electrónico RecepcionDocumental@proteccion.com.co</p><p>Agradecemos su gestión y pronta respuesta.</p>";
+            $('#cuerpo_comunicado_editar').summernote('code', texto_insertar);
+
+            $("#Pdf").val("Pdf");
+            $("#formato_descarga").html('');
+            $("#formato_descarga").html('PDF');
+
+            // Auto selección de la opción JRCI (Destinatario Principal)
+            $('#jrci_comunicado_editar').click();
+
+            // Seteo automático del nro de anexos:
+            var seteo_nro_anexos = 0;
+            $("#anexos_editar").val(seteo_nro_anexos);
+
+            // Deselección automática de las copias a partes interesadas: todas
+            $("#edit_copia_afiliado").prop('checked', true);
+            $("#edit_copia_empleador").prop('checked', false);
+            $("#edit_copia_eps").prop('checked', false);
+            $("#edit_copia_afp").prop('checked', false);
+            $("#edit_copia_arl").prop('checked', false);
+            $("#edit_copia_jrci").prop('checked', false);
+            $("#edit_copia_jnci").prop('checked', false);
+
+            // Selección automática del checkbox firmar
+            $("#firmarcomunicado_editar").prop('checked', true);
+    
+        }
+        else if(opc_seleccionada == "Solicitud_Pago_Honorarios_JNCI"){
+
+            // mostrar mensaje(s) importante(s)
+            $("#mensaje_asunto_editar").addClass('d-none');
+            $("#rellenar_asunto_editar").html('');
+            $("#mensaje_cuerpo_editar").removeClass('d-none');
+            $("#rellenar_cuerpo_editar").html('');
+            $("#rellenar_cuerpo_editar").html('Para mostrar todo el cuerpo del comunicado dentro del documento, debe incluir las etiquetas Tipo Documento Afiliado, Documento Afiliado, Nombre Afiliado y N° Dictamen Controvertido dentro del campo Cuerpo del comunicado.');
+
+            // botones proforma ADJUNTAR OFICIO AL AFILIADO
+            $("#btn_insertar_nombre_junta_regional_asunto_editar").prop('disabled', true);
+            $("#btn_insertar_nombre_junta_regional_editar").prop('disabled', true);
+            $("#btn_insertar_fecha_envio_jrci_editar").prop('disabled', true);
+            //  botones proforma REMISIÓN DE EXPEDIENTE PARA TRÁMITE DE CONTROVERSIA
+            $("#btn_insertar_nro_orden_pago_editar").prop('disabled', true);
+            $("#btn_insertar_fecha_notifi_afiliado_editar").prop('disabled', true);
+            $("#btn_insertar_fecha_radi_contro_pri_cali_editar").prop('disabled', true);
+            $("#btn_insertar_tipo_doc_afiliado_editar").prop('disabled', false);
+            $("#btn_insertar_documento_afiliado_editar").prop('disabled', false);
+            $("#btn_insertar_nombre_afiliado_editar").prop('disabled', false);
+            $("#btn_insertar_fecha_estructuracion_editar").prop('disabled', true);
+            $("#btn_insertar_tipo_evento_editar").prop('disabled', true);
+            $("#btn_insertar_origen_editar").prop('disabled', true);
+            $("#btn_insertar_porcentajepcl_editar").prop('disabled', true);
+            $("#btn_insertar_radicado_entrada_controversia_primera_calificacion_editar").prop('disabled', true);
+            $("#btn_insertar_observaciones_editar").prop('disabled', true);
+            $("#btn_insertar_nombres_cie10_editar").prop('disabled', true);
+            $("#btn_insertar_tipo_controversia_pri_cali_editar").prop('disabled', true);
+            $("#btn_insertar_direccion_afiliado_editar").prop('disabled', true);
+            $("#btn_insertar_telefono_afiliado_editar").prop('disabled', true);
+            // botón preforma RESPUESTA A DEVOLUCIÓN DE EXPEDIENTE
+            // $("#btn_insertar_nombre_documento_editar").prop('disabled', true);
+            // botón preforma: ACLARACIÓN E INFORMACIÓN SOBRE RECURSO DE REPOSICIÓN EN SUBSIDIO DE APELACIÓN
+            $("#btn_insertar_correo_solicitud_info_editar").prop('disabled', true);
+            $("#btn_insertar_dictamen_controvertido_editar").prop('disabled', false);
+            if (idRol == 6) {
+                $(".note-editable").attr("contenteditable", true);
+                $("#asunto_editar").val("DERECHO DE PETICIÓN DE CONSIGNACIÓN A FAVOR DE LA JUNTA NACIONAL").prop('readonly', false);
+            } else {
+                $(".note-editable").attr("contenteditable", false);
+                $("#asunto_editar").val("DERECHO DE PETICIÓN DE CONSIGNACIÓN A FAVOR DE LA JUNTA NACIONAL").prop('readonly', true);                
+            }
+            var texto_insertar = "<p>Saludo cordial,</p><p>Por conducto de la presente, la <b>Administradora de Fondos de Pensiones y Cesantías PROTECCIÓN S.A</b>., en uso de los derechos fundamentales previstos en los artículos 20<span class='decreto1072'>1</span> y 23<span class='decreto1072'>2</span> de la Constitución Nacional, acude a su Despacho con el fin de solicitarle se sirva expedir y remitir a esta Administradora nos remitan pronunciamiento respecto a la apelación que Protección realizó frente al dictamen emitido por su entidad, teniendo en cuenta que se apeló dentro de los términos:</p><table class='tabla_cuerpo'><tr><th class='th_cuerpo'><b>Identificación</b></th><th class='th_cuerpo'><b>Nombre</b></th><th class='th_cuerpo'><b>Dictamen N°</b></th></tr><tr><td>{{$tipo_documento_afiliado}}. {{$documento_afiliado}}</td><td>{{$nombre_afiliado}}</td><td>{{$num_dictamen_controvertido}}</td></tr></table>"+
+            "<ol id='lista_arti_sol_dict' class='lista-exponencial'><li><p><b>Artículo 20.</b> Se garantiza a toda persona la libertad de expresar y difundir su pensamiento y opiniones, la de informar y recibir información veraz e imparcial, y la de fundar medios masivos de comunicación. Estos son libres y tienen responsabilidad social. Se garantiza el derecho a la rectificación en condiciones de equidad. No habrá censura.</p></li><li><p><b>Artículo 23.</b> Toda persona tiene derecho a presentar peticiones respetuosas a las autoridades por motivos de interés general o particular y a obtener pronta resolución. El legislador podrá reglamentar su ejercicio ante organizaciones privadas para garantizar los derechos fundamentales.</p></li><li><p>Por medio del cual se expide el Decreto Único Reglamentario del Sector Trabajo.</p></li></ol><p>Para lo anterior deberá tenerse en cuenta que el artículo 43 del Decreto 1353 de 2013<span class='decreto1072'>3</span> precisa sobre los recursos de reposición y apelación presentados:</p>"+
+            "<ol class='justificarUl'><p class='cursiva'><b>ARTÍCULO 43. Recurso de reposición y apelación.</b> Contra el dictamen emitido por la Junta Regional de Calificación de Invalidez proceden los recursos de reposición y/o apelación, presentados por cualquiera de los interesados ante la Junta Regional de Calificación de Invalidez que lo profirió, directamente o por intermedio de sus apoderados dentro de los diez (10) días siguientes a su notificación, sin que requiera de formalidades especiales, exponiendo los motivos de inconformidad, acreditando las pruebas que se pretendan hacer valer y la respectiva consignación de los honorarios de la Junta Nacional si se presenta en subsidio el de apelación.</p><p class='cursiva'>El recurso de reposición deberá ser resuelto por las Juntas Regionales dentro de los diez (10) días calendario siguientes a su recepción y no tendrá costo, en caso de que lleguen varios recursos sobre un mismo dictamen este término empezará a contarse desde la fecha en que haya llegado el último recurso dentro de los tiempos establecidos en el inciso anterior.</p><p class='cursiva'>Cuando se trate de personas jurídicas, los recursos deben interponerse por el representante legal o su apoderado debidamente constituido.</p><p class='cursiva'>La Junta Regional de Calificación de Invalidez no remitirá el expediente a la Junta Nacional si no se allega la consignación de los honorarios de esta última e informará dicha anomalía a las autoridades competentes para la respectiva investigación y sanciones a la entidad responsable del pago. De igual forma, informará a las partes interesadas la imposibilidad de envío a la Junta Nacional hasta que no sea presentada la consignación de dichos honorarios.</p></ol>"+
+            "<p>Luego, si para el caso previamente referenciado se hayan cumplidos los requisitos para resolver el recurso de apelación presentado por esta Administradora, resulta necesario entonces que se expida la respectiva solicitud de pago de honorarios a favor de la Junta Nacional de Calificación de Invalidez de Colombia y en caso contrario resulta pertinente informar las razones por las cuales no procede aún su expedición.</p><p>Así las cosas y con el acostumbrado respeto solicitamos se sirva:</p><ol class='justificarUl'><li>Remitir con destino a esta Administradora solicitud de pago de honorarios a favor de la Junta Nacional de Calificación de Invalidez de Colombia.</li><li>Informar con destino a esta Administradora si la solicitud de pago de honorarios a favor de la Junta Nacional de Calificación de Invalidez de Colombia fue expedida, en caso de no ser así informar las razones de hecho y de derecho por las cuales se tardó la expedición de la solicitud de pago de honorarios.</li><li>En caso de no hallar procedente la expedición de alguna solicitud de pago de honorarios a favor de la Junta Nacional de Calificación de Invalidez de Colombia, informar con destino a esta Administradora los motivos.</li></ol><p>Para efectos de notificación de la respuesta rogamos tener el correo electrónico RecepcionDocumental@proteccion.com.co.</p><p>Agradecemos su gestión y pronta respuesta.</p>";
+            $('#cuerpo_comunicado_editar').summernote('code', texto_insertar);
+
+            $("#Pdf").val("Pdf");
+            $("#formato_descarga").html('');
+            $("#formato_descarga").html('PDF');
+
+            // Auto selección de la opción JRCI (Destinatario Principal)
+            $('#jrci_comunicado_editar').click();
+
+            // Seteo automático del nro de anexos:
+            var seteo_nro_anexos = 0;
+            $("#anexos_editar").val(seteo_nro_anexos);
+
+            // Deselección automática de las copias a partes interesadas: todas
+            $("#edit_copia_afiliado").prop('checked', true);
+            $("#edit_copia_empleador").prop('checked', false);
+            $("#edit_copia_eps").prop('checked', false);
+            $("#edit_copia_afp").prop('checked', false);
+            $("#edit_copia_arl").prop('checked', false);
+            $("#edit_copia_jrci").prop('checked', false);
+            $("#edit_copia_jnci").prop('checked', false);
+
+            // Selección automática del checkbox firmar
+            $("#firmarcomunicado_editar").prop('checked', true);
+    
+        }
+        else if(opc_seleccionada == "Solicitud_Remision_Expediente_JNCI"){
+
+            // mostrar mensaje(s) importante(s)
+            $("#mensaje_asunto_editar").addClass('d-none');
+            $("#rellenar_asunto_editar").html('');
+            $("#mensaje_cuerpo_editar").removeClass('d-none');
+            $("#rellenar_cuerpo_editar").html('');
+            $("#rellenar_cuerpo_editar").html('Para mostrar todo el cuerpo del comunicado dentro del documento, debe incluir las etiquetas Fecha Envió JRCI, Tipo Documento Afiliado, Documento Afiliado, Nombre Afiliado y N° Dictamen Controvertido dentro del campo Cuerpo del comunicado.');
+
+            // botones proforma ADJUNTAR OFICIO AL AFILIADO
+            $("#btn_insertar_nombre_junta_regional_asunto_editar").prop('disabled', true);
+            $("#btn_insertar_nombre_junta_regional_editar").prop('disabled', true);
+            $("#btn_insertar_fecha_envio_jrci_editar").prop('disabled', false);
+            //  botones proforma REMISIÓN DE EXPEDIENTE PARA TRÁMITE DE CONTROVERSIA
+            $("#btn_insertar_nro_orden_pago_editar").prop('disabled', true);
+            $("#btn_insertar_fecha_notifi_afiliado_editar").prop('disabled', true);
+            $("#btn_insertar_fecha_radi_contro_pri_cali_editar").prop('disabled', true);
+            $("#btn_insertar_tipo_doc_afiliado_editar").prop('disabled', false);
+            $("#btn_insertar_documento_afiliado_editar").prop('disabled', false);
+            $("#btn_insertar_nombre_afiliado_editar").prop('disabled', false);
+            $("#btn_insertar_fecha_estructuracion_editar").prop('disabled', true);
+            $("#btn_insertar_tipo_evento_editar").prop('disabled', true);
+            $("#btn_insertar_origen_editar").prop('disabled', true);
+            $("#btn_insertar_porcentajepcl_editar").prop('disabled', true);
+            $("#btn_insertar_radicado_entrada_controversia_primera_calificacion_editar").prop('disabled', true);
+            $("#btn_insertar_observaciones_editar").prop('disabled', true);
+            $("#btn_insertar_nombres_cie10_editar").prop('disabled', true);
+            $("#btn_insertar_tipo_controversia_pri_cali_editar").prop('disabled', true);
+            $("#btn_insertar_direccion_afiliado_editar").prop('disabled', true);
+            $("#btn_insertar_telefono_afiliado_editar").prop('disabled', true);
+            // botón preforma RESPUESTA A DEVOLUCIÓN DE EXPEDIENTE
+            // $("#btn_insertar_nombre_documento_editar").prop('disabled', true);
+            // botón preforma: ACLARACIÓN E INFORMACIÓN SOBRE RECURSO DE REPOSICIÓN EN SUBSIDIO DE APELACIÓN
+            $("#btn_insertar_correo_solicitud_info_editar").prop('disabled', true);
+            $("#btn_insertar_dictamen_controvertido_editar").prop('disabled', false);
+            if (idRol == 6) {
+                $(".note-editable").attr("contenteditable", true);
+                $("#asunto_editar").val("DERECHO DE PETICIÓN DE REMISIÓN DE EXPEDIENTE A JUNTA NACIONAL").prop('readonly', false);
+            } else {
+                $(".note-editable").attr("contenteditable", false);
+                $("#asunto_editar").val("DERECHO DE PETICIÓN DE REMISIÓN DE EXPEDIENTE A JUNTA NACIONAL").prop('readonly', true);                
+            }
+            var texto_insertar = "<p>Saludo cordial,</p><p>Por conducto de la presente, la <b>Administradora de Fondos de Pensiones y Cesantías Protección S.A.</b>, en uso de los derechos fundamentales previstos en los artículos 20<span class='decreto1072'>1</span> y 23<span class='decreto1072'>2</span> de la Constitución Nacional, acude a su Despacho con el fin de solicitarle se sirva de manera inmediata remitir con destino a la Junta nacional de calificación de invalidez el dictamen que fueron debidamente impugnados para que se surta debidamente su trámite de apelación.</p><table class='tabla_cuerpo'><tr><th class='th_cuerpo'><b>Identificación</b></th><th class='th_cuerpo'><b>Nombre</b></th><th class='th_cuerpo'><b>Dictamen N°</b></th><th class='th_cuerpo'><b>Fecha radicación Expediente</b></th></tr><tr><td>{{$tipo_documento_afiliado}}. {{$documento_afiliado}}</td><td>{{$nombre_afiliado}}</td><td>{{$num_dictamen_controvertido}}</td><td>{{$fecha_envio_jrci}}</td></tr></table><ol id='lista_arti_sol_dict' class='lista-exponencial'><li><p><b>Artículo 20.</b> Se garantiza a toda persona la libertad de expresar y difundir su pensamiento y opiniones, la de informar y recibir información veraz e imparcial, y la de fundar medios masivos de comunicación. Estos son libres y tienen responsabilidad social. Se garantiza el derecho a la rectificación en condiciones de equidad. No habrá censura.</p></li><li><p><b>Artículo 23.</b> Toda persona tiene derecho a presentar peticiones respetuosas a las autoridades por motivos de interés general o particular y a obtener pronta resolución. El legislador podrá reglamentar su ejercicio ante organizaciones privadas para garantizar los derechos fundamentales.</p></li><li><p>Por medio del cual se expide el Decreto Único Reglamentario del Sector Trabajo.</p></li></ol><p>De conformidad con el artículo 2.2.5.1.41 del Decreto 1072 de 2015<span class='decreto1072'>3</span> el trámite de la apelación de los dictámenes debe surtirse de manera breve y expedita, así:</p>"+
+            "<ol class='justificarUl'><p class='cursiva'>Artículo 2.2.5.1.41. Recurso de reposición y apelación. (...)</p><p class='cursiva'>El recurso de reposición deberá ser resuelto por las Juntas Regionales dentro de los diez (10) días calendario siguientes a su recepción y no tendrá costo, en caso de que lleguen varios recursos sobre un mismo dictamen este término empezará a contarse desde la fecha en que haya llegado el último recurso dentro de los tiempos establecidos en el inciso anterior.(...)</p><p class='cursiva'>La Junta Regional de Calificación de Invalidez no remitirá el expediente a la Junta Nacional si no se allega la consignación de los honorarios de esta última e informará dicha anomalía a las autoridades competentes para la respectiva investigación y sanciones a la entidad responsable del pago. De igual forma, informará a las partes interesadas la imposibilidad de envío a la Junta Nacional hasta que no sea presentada la consignación de dichos honorarios.(...)</p><p class='cursiva'>Presentado el recurso de apelación en tiempo, el director administrativo y financiero de la Junta Regional de Calificación de Invalidez remitirá todo el expediente con la documentación que sirvió de fundamento para el dictamen dentro de los dos (2) días hábiles siguientes a la Junta Nacional de Calificación de Invalidez, salvo en el caso en que falte la consignación de los honorarios de la Junta Nacional.(...)”</p></ol>"+
+            "<p>Visto lo anterior se concluye que el trámite que debe impartirse a los recursos tanto de reposición como de apelación debe ceñirse a un término claro y perentorio. No obstante, encontramos que en el caso anterior el término para remitir la alzada se encuentra más que fenecido sin que se nos haya notificado su debida remisión a pesar de incluso haberse acreditado debidamente el pago de honorarios.</p><p>Así las cosas y con el acostumbrado respeto solicitamos se sirva:</p><ol class='justificarUl'><li>Remitir de inmediato el expediente que fue objeto de apelación ante la Junta Nacional de calificación de invalidez.</li><li>Informar con destino a esta Administradora cuando se surta cada remisión. E informar si cada apelación fue remitida en el debido término que dispone la normatividad vigente, en caso de no ser así informar las razones de hecho y de derecho debidamente justificadas por las cuales se tardó la remisión ante la Junta Nacional de calificación de invalidez.</li><li>En caso de no hallar procedente la remisión de algún expediente ante la Junta Nacional de calificación de invalidez, informar con destino a esta Administradora los motivos y especificar puntualmente el estado actual en que se encuentra cada trámite y la fecha estimada de remisión.</li><li>Si la tardanza para emitir algún dictamen tiene que ver con que se debe adelantar algún trámite adicional de nuestra parte, informar con destino a esta Administradora cuál es la gestión que debiera realizarse por parte de <b>PROTECCIÓN S.A.</b></li></ol><p>Para efectos de notificación de la respuesta rogamos tener el correo electrónico RecepcionDocumental@proteccion.com.co.</p><p>Agradecemos su gestión y pronta respuesta.</p>";
+            $('#cuerpo_comunicado_editar').summernote('code', texto_insertar);
+
+            $("#Pdf").val("Pdf");
+            $("#formato_descarga").html('');
+            $("#formato_descarga").html('PDF');
+
+            // Auto selección de la opción JRCI (Destinatario Principal)
+            $('#jrci_comunicado_editar').click();
+
+            // Seteo automático del nro de anexos:
+            var seteo_nro_anexos = 0;
+            $("#anexos_editar").val(seteo_nro_anexos);
+
+            // Deselección automática de las copias a partes interesadas: todas
+            $("#edit_copia_afiliado").prop('checked', true);
+            $("#edit_copia_empleador").prop('checked', false);
+            $("#edit_copia_eps").prop('checked', false);
+            $("#edit_copia_afp").prop('checked', false);
+            $("#edit_copia_arl").prop('checked', false);
+            $("#edit_copia_jrci").prop('checked', false);
+            $("#edit_copia_jnci").prop('checked', false);
+
+            // Selección automática del checkbox firmar
+            $("#firmarcomunicado_editar").prop('checked', true);
+    
+        }           
+        else if(opc_seleccionada == "Cierre_Terminos"){
+            // mostrar mensaje(s) importante(s)
+            $("#mensaje_asunto_editar").addClass('d-none');
+            $("#rellenar_asunto_editar").html('');
+            $("#mensaje_cuerpo_editar").removeClass('d-none');
+            $("#rellenar_cuerpo_editar").html('');
+            $("#rellenar_cuerpo_editar").html('Para mostrar todo el cuerpo del comunicado dentro del documento, debe incluir las etiquetas Fecha Notificación al Afiliado, Fecha Radicación Controversia Primera Calificación, Nombre Afiliado, Fecha Estructuración, Tipo de Evento, Origen y Porcentaje PCL, dentro del campo Cuerpo del comunicado.');
+
+            // botones proforma ADJUNTAR CIERRE FUERA DE TERMINOS
+            $("#btn_insertar_nombre_junta_regional_asunto_editar").prop('disabled', true);
+            $("#btn_insertar_nombre_junta_regional_editar").prop('disabled', true);
+            $("#btn_insertar_fecha_envio_jrci_editar").prop('disabled', true);
+            // botones proforma REMISIÓN DE EXPEDIENTE PARA TRÁMITE DE CONTROVERSIA
+            $("#btn_insertar_nro_orden_pago_editar").prop('disabled', true);
+            $("#btn_insertar_fecha_notifi_afiliado_editar").prop('disabled', false);
+            $("#btn_insertar_fecha_radi_contro_pri_cali_editar").prop('disabled', false);
+            $("#btn_insertar_tipo_doc_afiliado_editar").prop('disabled', true);
+            $("#btn_insertar_documento_afiliado_editar").prop('disabled', true);
+            $("#btn_insertar_nombre_afiliado_editar").prop('disabled', false);
+            $("#btn_insertar_fecha_estructuracion_editar").prop('disabled', false);
+            $("#btn_insertar_tipo_evento_editar").prop('disabled', false);
+            $("#btn_insertar_origen_editar").prop('disabled', false);
+            $("#btn_insertar_porcentajepcl_editar").prop('disabled', false);
+            $("#btn_insertar_radicado_entrada_controversia_primera_calificacion_editar").prop('disabled', true);
+            $("#btn_insertar_observaciones_editar").prop('disabled', true);
+            $("#btn_insertar_nombres_cie10_editar").prop('disabled', true);
+            $("#btn_insertar_tipo_controversia_pri_cali_editar").prop('disabled', true);
+            $("#btn_insertar_direccion_afiliado_editar").prop('disabled', true);
+            $("#btn_insertar_telefono_afiliado_editar").prop('disabled', true);
+            // botón preforma RESPUESTA A DEVOLUCIÓN DE EXPEDIENTE
+            // $("#btn_insertar_nombre_documento").prop('disabled', true);
+            // botón preforma: ACLARACIÓN E INFORMACIÓN SOBRE RECURSO DE REPOSICIÓN EN SUBSIDIO DE APELACIÓN
+            $("#btn_insertar_correo_solicitud_info_editar").prop('disabled', true);
+            $("#btn_insertar_dictamen_controvertido_editar").prop('disabled', true);
+            if (idRol == 6) {
+                $(".note-editable").attr("contenteditable", true);
+                $("#asunto_editar").val("RESPUESTA AL RECURSO DE APELACIÓN PRESENTADO").prop('readonly', false);
+
+            } else {
+                $(".note-editable").attr("contenteditable", false);
+                $("#asunto_editar").val("RESPUESTA AL RECURSO DE APELACIÓN PRESENTADO").prop('readonly', true);
+            }
+            var texto_insertar = "<p>Apreciado(a) {{$nombre_afiliado}},</p><p>En <b>PROTECCIÓN S.A.</b> estamos para guiarle y acompañarle en cada momento de su vida. Realizamos las validaciones correspondientes y le informamos que no es posible remitir su caso a la Junta Regional de Calificación. Lo anterior debido a que usted presentó el recurso de apelación frente al dictamen de calificación de pérdida de capacidad laboral por fuera del plazo que indica la ley.</p><p>Como le informamos en una comunicación anterior y de acuerdo a lo que determina Artículo 41 de la ley 100 de 1993, modificado por el artículo 142 del decreto 019 de 2012, la apelación del dictamen debía presentarse dentro de los 10 días hábiles siguientes a la recepción de la notificación del dictamen.</p><p><b>PROTECCIÓN S.A.</b> le notificó la calificación de pérdida de capacidad laboral el día {{$fecha_notificacion_afiliado}} y su apelación contra este dictamen se radicó el {{$fecha_radicacion_controversia_primera_calificacion}}, quedando por fuera del plazo establecido por la ley.</p><p>Su dictamen de calificación de la pérdida de capacidad laboral se mantiene con el resultado inicial:</p><table class='tabla_cuerpo'><tr><th class='th_cuerpo'>Porcentaje de pérdida de capacidad laboral</th><th class='th_cuerpo'>Origen</th><th class='th_cuerpo'>Fecha de estructuración</th></tr><tr><td>{{$porcentajepcl}}</td><td>{{$tipo_evento}} {{$origen}}</td><td>{{$fecha_estructuracion}}</td></tr></table><p>Le agradecemos la confianza depositada en nosotros durante estos años y le reiteramos nuestro deseo de seguir acompañándole en su camino.</p><p>Si requiere información adicional o tiene alguna inquietud, puede comunicarse con nuestro asesor virtual a través de proteccion.com o llamar a nuestra Línea de Servicio en Bogotá (601) 744 44 64, Medellín (604) 510 90 99, Cali (602) 386 00 80, Barranquilla (605) 319 79 99, Cartagena (605) 642 49 99 - WhatsApp +57 310 220 5575 y desde el resto del país 018000528000.</p>";
+            $('#cuerpo_comunicado_editar').summernote('code', texto_insertar);
+
+            $("#Pdf").val("Pdf");
+            $("#formato_descarga").html('');
+            $("#formato_descarga").html('PDF');
+
+            // Auto selección de la opción Afiliado (Destinatario Principal)
+            $('#afiliado_comunicado_editar').click();
+
+            // Seteo automático del nro de anexos:
+            var seteo_nro_anexos = 0;
+            $("#anexos_editar").val(seteo_nro_anexos);
+
+            // Deselección automática de las copias a partes interesadas: todas
+            $("#edit_copia_afiliado").prop('checked', false);
+            $("#edit_copia_empleador").prop('checked', false);
+            $("#edit_copia_eps").prop('checked', false);
+            $("#edit_copia_afp").prop('checked', false);
+            $("#edit_copia_arl").prop('checked', false);
+            $("#edit_copia_jrci").prop('checked', false);
+            $("#edit_copia_jnci").prop('checked', false);
+
+            // Selección automática del checkbox firmar
+            $("#firmarcomunicado_editar").prop('checked', true);
+            
+        }
+        else if(opc_seleccionada == "Sol_Faltante_Contro"){
+            // mostrar mensaje(s) importante(s)
+            $("#mensaje_asunto_editar").addClass('d-none');
+            $("#rellenar_asunto_editar").html('');
+            $("#mensaje_cuerpo_editar").removeClass('d-none');
+            $("#rellenar_cuerpo_editar").html('');
+            $("#rellenar_cuerpo_editar").html('Para mostrar todo el cuerpo del comunicado dentro del documento, debe incluir la etiqueta Nombre  Afiliado dentro del campo Cuerpo del comunicado.');
+
+            // botones proforma ADJUNTAR CIERRE FUERA DE TERMINOS
+            $(".note-editable").attr("contenteditable", true);
+            $("#btn_insertar_nombre_junta_regional_asunto_editar").prop('disabled', true);
+            $("#btn_insertar_nombre_junta_regional_editar").prop('disabled', true);
+            $("#btn_insertar_fecha_envio_jrci_editar").prop('disabled', true);
+            // botones proforma REMISIÓN DE EXPEDIENTE PARA TRÁMITE DE CONTROVERSIA
             $("#btn_insertar_nro_orden_pago_editar").prop('disabled', true);
             $("#btn_insertar_fecha_notifi_afiliado_editar").prop('disabled', true);
             $("#btn_insertar_fecha_radi_contro_pri_cali_editar").prop('disabled', true);
@@ -6401,42 +8114,157 @@ $(document).ready(function(){
             $("#btn_insertar_nombre_afiliado_editar").prop('disabled', false);
             $("#btn_insertar_fecha_estructuracion_editar").prop('disabled', true);
             $("#btn_insertar_tipo_evento_editar").prop('disabled', true);
+            $("#btn_insertar_origen_editar").prop('disabled', true);
+            $("#btn_insertar_porcentajepcl_editar").prop('disabled', true);
+            $("#btn_insertar_radicado_entrada_controversia_primera_calificacion_editar").prop('disabled', true);
+            $("#btn_insertar_observaciones_editar").prop('disabled', true);
             $("#btn_insertar_nombres_cie10_editar").prop('disabled', true);
             $("#btn_insertar_tipo_controversia_pri_cali_editar").prop('disabled', true);
             $("#btn_insertar_direccion_afiliado_editar").prop('disabled', true);
             $("#btn_insertar_telefono_afiliado_editar").prop('disabled', true);
             // botón preforma RESPUESTA A DEVOLUCIÓN DE EXPEDIENTE
-            // $("#btn_insertar_nombre_documento_editar").prop('disabled', true);
+            // $("#btn_insertar_nombre_documento").prop('disabled', true);
             // botón preforma: ACLARACIÓN E INFORMACIÓN SOBRE RECURSO DE REPOSICIÓN EN SUBSIDIO DE APELACIÓN
-            $("#btn_insertar_correo_solicitud_info_editar").prop('disabled', false);
-    
-            $("#asunto_editar").val("ACLARACIÓN E INFORMACIÓN SOBRE RECURSO DE REPOSICIÓN EN SUBSIDIO DE APELACIÓN");
-            var texto_insertar = "<p>Respetados señores, cordial saludo:</p>\
-            <p>Revisadas nuestras bases de datos y sistemas de información evidenciamos que su entidad remitió a la AFP Porvenir, notificación del dictamen de calificación de Pérdida de Capacidad Laboral (PCL) el pasado (Anote Fecha de notificación del Dictamen de JRCI) acaecido al señor {{$nombre_afiliado}}, por lo que esta entidad remitió estos comunicados a Seguros de Vida Alfa, como aseguradora que expidió su seguro previsional.</p>\
-            <p>Al respecto, el equipo interdisciplinario de calificación procedió a revisar sus comunicaciones y evidenció que dentro de dicha notificación no se adjuntó el Dictamen, por lo que el día (Anote Fecha de solicitud de Dictamen) se solicitó a los correos {{$correo_solicitud_informacion}}, el envío del mismo con el fin de verificar cada una de las razones de hecho y de derecho de la decisión tomada por ustedes.</p>\
-            <p>En consecuencia, se observa que después de esta petición no se tiene radicación o aclaración sobre lo antes mencionado, por lo que se solicita amablemente emitir estado de caso sobre la notificación y el recurso emitido, toda vez que en su momento no se tuvo como verificar lo calificado por ustedes a favor del señor {{$nombre_afiliado}}.</p>\
-            <p>Dicha notificación se puede realizar en la dirección Carrera 10 # 18 - 36 Edificio Córdoba Piso 4 en Bogotá.</p>\
-            ";
-            $('#cuerpo_comunicado_editar').summernote('code', texto_insertar);
+            $("#btn_insertar_correo_solicitud_info_editar").prop('disabled', true);
+            $("#btn_insertar_dictamen_controvertido_editar").prop('disabled', true);
+            
+            $("#asunto_editar").val("SOLICITUD DE DOCUMENTACIÓN FALTANTE PARA TRÁMITE DE JUNTAS").prop('readonly', false);
+            let token = $('input[name=_token]').val(); 
+            let datos_sol_documentos = {
+                '_token': token,
+                'Id_evento_sol':  Id_evento_expediente,
+                'Id_proceso_sol':  Id_proceso_expediente,
+                'Id_asignacion_sol':  Id_asignacion_expediente,
+                'parametro': 'lista_sol_documentos'
+            };
+            $.ajax({
+                type:'POST',
+                url: '/selectoresJuntas',
+                data:datos_sol_documentos,
+                success:function(solDocumentos){
+                    let listaDocumentos = "<ul class='justificarUl'>";
+                    solDocumentos.forEach(function (documentosLista){
+                        listaDocumentos += `<li><b>${documentosLista.Nombre_documento}: ${documentosLista.Descripcion}</b></li>`;
+                    });
+                    listaDocumentos += "</ul>";
+                    var texto_insertar = "<p>Apreciado(a) {{$nombre_afiliado}}, </p><p>En <b>PROTECCIÓN S.A.</b> estamos para guiarle y acompañarle en cada momento de su vida. Realizamos las validaciones correspondientes y le informamos que no es posible remitir su caso a la Junta Regional de Calificación. Lo anterior debido a que usted no presentó los siguientes documentos y que son requerimiento para continuar con la revisión del mismo:"+
+                    listaDocumentos+
+                    "</p><p>En este sentido, se requiere aportar los documentos solicitados para proceder con la apelación radicada, los documentos se deben enviar al correo documentos.calificacion@proteccion.com.co.</p><p>Si requiere información adicional o tiene alguna inquietud, puede comunicarse con nuestro asesor virtual a través de proteccion.com o llamar a nuestra Línea de Servicio en Bogotá (601) 744 44 64, Medellín (604) 510 90 99, Cali (602) 386 00 80, Barranquilla (605) 319 79 99, Cartagena (605) 642 49 99 - WhatsApp +57 310 220 5575 y desde el resto del país 018000528000.</p>";
+                    $('#cuerpo_comunicado_editar').summernote('code', texto_insertar);
+                }
+            });
 
-            $("#Pdf").val("Word");
+            $("#Pdf").val("Pdf");
             $("#formato_descarga").html('');
-            $("#formato_descarga").html('Word');
+            $("#formato_descarga").html('PDF');
 
-            // Auto selección de la opción JRCI (Destinatario Principal)
-            $('#jrci_comunicado_editar').click();
+            // Auto selección de la opción Afiliado (Destinatario Principal)
+            $('#afiliado_comunicado_editar').click();
 
             // Seteo automático del nro de anexos:
             var seteo_nro_anexos = 0;
             $("#anexos_editar").val(seteo_nro_anexos);
 
-            // Deselección automática de las copias a partes interesadas: Afiliado
+            // Deselección automática de las copias a partes interesadas: todas
             $("#edit_copia_afiliado").prop('checked', false);
+            $("#edit_copia_empleador").prop('checked', false);
+            $("#edit_copia_eps").prop('checked', false);
+            $("#edit_copia_afp").prop('checked', false);
+            $("#edit_copia_arl").prop('checked', false);
+            $("#edit_copia_jrci").prop('checked', false);
+            $("#edit_copia_jnci").prop('checked', false);
 
             // Selección automática del checkbox firmar
             $("#firmarcomunicado_editar").prop('checked', true);
-    
-        }else{
+            
+        }
+        else if(opc_seleccionada == "Cierre_Doc_Noaportada"){
+            // mostrar mensaje(s) importante(s)
+            $("#mensaje_asunto_editar").addClass('d-none');
+            $("#rellenar_asunto_editar").html('');
+            $("#mensaje_cuerpo_editar").removeClass('d-none');
+            $("#rellenar_cuerpo_editar").html('');
+            $("#rellenar_cuerpo_editar").html('Para mostrar todo el cuerpo del comunicado dentro del documento, debe incluir la etiqueta Nombre  Afiliado y Radicado Entrada Controversia Primera Calificación dentro del campo Cuerpo del comunicado.');
+
+            // botones proforma ADJUNTAR CIERRE FUERA DE TERMINOS
+            $(".note-editable").attr("contenteditable", true);
+            $("#btn_insertar_nombre_junta_regional_asunto_editar").prop('disabled', true);
+            $("#btn_insertar_nombre_junta_regional_editar").prop('disabled', true);
+            $("#btn_insertar_fecha_envio_jrci_editar").prop('disabled', true);
+            // botones proforma REMISIÓN DE EXPEDIENTE PARA TRÁMITE DE CONTROVERSIA
+            $("#btn_insertar_nro_orden_pago_editar").prop('disabled', true);
+            $("#btn_insertar_fecha_notifi_afiliado_editar").prop('disabled', true);
+            $("#btn_insertar_fecha_radi_contro_pri_cali_editar").prop('disabled', true);
+            $("#btn_insertar_tipo_doc_afiliado_editar").prop('disabled', true);
+            $("#btn_insertar_documento_afiliado_editar").prop('disabled', true);
+            $("#btn_insertar_nombre_afiliado_editar").prop('disabled', false);
+            $("#btn_insertar_fecha_estructuracion_editar").prop('disabled', true);
+            $("#btn_insertar_tipo_evento_editar").prop('disabled', true);
+            $("#btn_insertar_origen_editar").prop('disabled', true);
+            $("#btn_insertar_porcentajepcl_editar").prop('disabled', true);
+            $("#btn_insertar_radicado_entrada_controversia_primera_calificacion_editar").prop('disabled', false);
+            $("#btn_insertar_observaciones_editar").prop('disabled', true);
+            $("#btn_insertar_nombres_cie10_editar").prop('disabled', true);
+            $("#btn_insertar_tipo_controversia_pri_cali_editar").prop('disabled', true);
+            $("#btn_insertar_direccion_afiliado_editar").prop('disabled', true);
+            $("#btn_insertar_telefono_afiliado_editar").prop('disabled', true);
+            // botón preforma RESPUESTA A DEVOLUCIÓN DE EXPEDIENTE
+            // $("#btn_insertar_nombre_documento").prop('disabled', true);
+            // botón preforma: ACLARACIÓN E INFORMACIÓN SOBRE RECURSO DE REPOSICIÓN EN SUBSIDIO DE APELACIÓN
+            $("#btn_insertar_correo_solicitud_info_editar").prop('disabled', true);
+            $("#btn_insertar_dictamen_controvertido_editar").prop('disabled', true);
+            
+            $("#asunto_editar").val("CIERRE DE CASO POR DOCUMENTACIÓN NO APORTADA").prop('readonly', false);
+            let token = $('input[name=_token]').val(); 
+            let datos_sol_documentos = {
+                '_token': token,
+                'Id_evento_sol':  Id_evento_expediente,
+                'Id_proceso_sol':  Id_proceso_expediente,
+                'Id_asignacion_sol':  Id_asignacion_expediente,
+                'parametro': 'lista_sol_documentos'
+            };
+            $.ajax({
+                type:'POST',
+                url: '/selectoresJuntas',
+                data:datos_sol_documentos,
+                success:function(solDocumentos){
+                    let listaDocumentos = "<ul class='justificarUl'>";
+                    solDocumentos.forEach(function (documentosLista){
+                        listaDocumentos += `<li><b>${documentosLista.Nombre_documento}: ${documentosLista.Descripcion}</b></li>`;
+                    });
+                    listaDocumentos += "</ul>";
+                    var texto_insertar = "<p>Apreciado(a) {{$nombre_afiliado}}, </p><p>En <b>PROTECCIÓN S.A.</b> estamos para guiarle y acompañarle en cada momento de su vida. Hemos estado atentos a su caso <b>{{$radicado_entrada_controversia_primera_calificacion}}</b> para poder brindarle una solución. Sin embargo, a la fecha no hemos recibido los soportes necesarios que le solicitamos en tres comunicaciones pasadas y que son requerimiento para continuar con la revisión del mismo:"+
+                    listaDocumentos+
+                    "</p><p>En este sentido, nos permitimos notificarle el <b>cierre de su solicitud</b> y le invitamos a que reúna los documentos y creé un nuevo caso a través de Pronto, nuestro Asesor Virtual.</p><p>Si requiere información adicional o tiene alguna inquietud, puede comunicarse con nuestro asesor virtual a través de proteccion.com o llamar a nuestra Línea de Servicio en Bogotá (601) 744 44 64, Medellín (604) 510 90 99, Cali (602) 386 00 80, Barranquilla (605) 319 79 99, Cartagena (605) 642 49 99 - WhatsApp +57 310 220 5575 y desde el resto del país 018000528000.</p>";
+                    $('#cuerpo_comunicado_editar').summernote('code', texto_insertar);
+                }
+            });
+
+            $("#Pdf").val("Pdf");
+            $("#formato_descarga").html('');
+            $("#formato_descarga").html('PDF');
+
+            // Auto selección de la opción Afiliado (Destinatario Principal)
+            $('#afiliado_comunicado_editar').click();
+
+            // Seteo automático del nro de anexos:
+            var seteo_nro_anexos = 0;
+            $("#anexos_editar").val(seteo_nro_anexos);
+
+            // Deselección automática de las copias a partes interesadas: todas
+            $("#edit_copia_afiliado").prop('checked', false);
+            $("#edit_copia_empleador").prop('checked', false);
+            $("#edit_copia_eps").prop('checked', false);
+            $("#edit_copia_afp").prop('checked', false);
+            $("#edit_copia_arl").prop('checked', false);
+            $("#edit_copia_jrci").prop('checked', false);
+            $("#edit_copia_jnci").prop('checked', false);
+
+            // Selección automática del checkbox firmar
+            $("#firmarcomunicado_editar").prop('checked', true);
+            
+        }        
+        else{
             // mostrar mensaje(s) importante(s)
             $("#mensaje_asunto_editar").addClass('d-none');
             $("#rellenar_asunto_editar").html('');
@@ -6444,8 +8272,10 @@ $(document).ready(function(){
             $("#rellenar_cuerpo_editar").html('');
 
             // botones proforma ADJUNTAR OFICIO AL AFILIADO
+            $(".note-editable").attr("contenteditable", false);
             $("#btn_insertar_nombre_junta_regional_asunto_editar").prop('disabled', true);
             $("#btn_insertar_nombre_junta_regional_editar").prop('disabled', true);
+            $("#btn_insertar_fecha_envio_jrci_editar").prop('disabled', true);
             //  botones proforma REMISIÓN DE EXPEDIENTE PARA TRÁMITE DE CONTROVERSIA
             $("#btn_insertar_nro_orden_pago_editar").prop('disabled', true);
             $("#btn_insertar_fecha_notifi_afiliado_editar").prop('disabled', true);
@@ -6455,6 +8285,10 @@ $(document).ready(function(){
             $("#btn_insertar_nombre_afiliado_editar").prop('disabled', true);
             $("#btn_insertar_fecha_estructuracion_editar").prop('disabled', true);
             $("#btn_insertar_tipo_evento_editar").prop('disabled', true);
+            $("#btn_insertar_origen_editar").prop('disabled', true);
+            $("#btn_insertar_porcentajepcl_editar").prop('disabled', true);
+            $("#btn_insertar_radicado_entrada_controversia_primera_calificacion_editar").prop('disabled', true);
+            $("#btn_insertar_observaciones_editar").prop('disabled', true);
             $("#btn_insertar_nombres_cie10_editar").prop('disabled', true);
             $("#btn_insertar_tipo_controversia_pri_cali_editar").prop('disabled', true);
             $("#btn_insertar_direccion_afiliado_editar").prop('disabled', true);
@@ -6463,6 +8297,7 @@ $(document).ready(function(){
             // $("#btn_insertar_nombre_documento").prop('disabled', true);
             // botón preforma: ACLARACIÓN E INFORMACIÓN SOBRE RECURSO DE REPOSICIÓN EN SUBSIDIO DE APELACIÓN
             $("#btn_insertar_correo_solicitud_info_editar").prop('disabled', true);
+            $("#btn_insertar_dictamen_controvertido_editar").prop('disabled', true);
 
             $("#asunto_editar").val('');
             $('#cuerpo_comunicado_editar').summernote('code', '');
@@ -6478,8 +8313,14 @@ $(document).ready(function(){
             var seteo_nro_anexos = 0;
             $("#anexos_editar").val(seteo_nro_anexos);
 
-            // Deselección automática de las copias a partes interesadas: Afiliado
+            // Deselección automática de las copias a partes interesadas: todas
             $("#edit_copia_afiliado").prop('checked', false);
+            $("#edit_copia_empleador").prop('checked', false);
+            $("#edit_copia_eps").prop('checked', false);
+            $("#edit_copia_afp").prop('checked', false);
+            $("#edit_copia_arl").prop('checked', false);
+            $("#edit_copia_jrci").prop('checked', false);
+            $("#edit_copia_jnci").prop('checked', false);
 
             // Deselección automática del checkbox firmar
             $("#firmarcomunicado_editar").prop('checked', false);
@@ -6785,7 +8626,7 @@ $(document).ready(function(){
             "edit_copia_jnci" : copias['JNCI'],
             'tipo_de_preforma_editar': tipo_descarga
         }
-
+        
         $.ajax({
             type:'POST',
             url:'/actualizarComunicadoJuntas',
@@ -7004,6 +8845,7 @@ $(document).ready(function(){
         $("#anexos_editar").prop('readonly', true);
         $(".note-editable").attr("contenteditable", false);
 
+        $("#btn_insertar_fecha_envio_jrci").prop('disabled', true);
         $("#btn_insertar_nombre_junta_regional_asunto").prop('disabled', true);
         $("#btn_insertar_nombre_junta_regional").prop('disabled', true);
         $("#btn_insertar_nro_orden_pago").prop('disabled', true);
@@ -7014,12 +8856,18 @@ $(document).ready(function(){
         $("#btn_insertar_nombre_afiliado").prop('disabled', true);
         $("#btn_insertar_fecha_estructuracion").prop('disabled', true);
         $("#btn_insertar_tipo_evento").prop('disabled', true);
+        $("#btn_insertar_origen").prop('disabled', true);
+        $("#btn_insertar_porcentajepcl").prop('disabled', true);
+        $("#btn_insertar_radicado_entrada_controversia_primera_calificacion").prop('disabled', true);
+        $("#btn_insertar_observaciones").prop('disabled', true);
         $("#btn_insertar_nombres_cie10").prop('disabled', true);
         $("#btn_insertar_tipo_controversia_pri_cali").prop('disabled', true);
         $("#btn_insertar_direccion_afiliado").prop('disabled', true);
         $("#btn_insertar_telefono_afiliado").prop('disabled', true);
         $("#btn_insertar_correo_solicitud_info").prop('disabled', true);
+        $("#btn_insertar_dictamen_controvertido").prop('disabled', true);
 
+        $("#btn_insertar_fecha_envio_jrci_editar").prop('disabled', true);
         $("#btn_insertar_nombre_junta_regional_asunto_editar").prop('disabled', true);
         $("#btn_insertar_nombre_junta_regional_editar").prop('disabled', true);
         $("#btn_insertar_nro_orden_pago_editar").prop('disabled', true);
@@ -7030,11 +8878,16 @@ $(document).ready(function(){
         $("#btn_insertar_nombre_afiliado_editar").prop('disabled', true);
         $("#btn_insertar_fecha_estructuracion_editar").prop('disabled', true);
         $("#btn_insertar_tipo_evento_editar").prop('disabled', true);
+        $("#btn_insertar_origen_editar").prop('disabled', true);
+        $("#btn_insertar_porcentajepcl_editar").prop('disabled', true);
+        $("#btn_insertar_radicado_entrada_controversia_primera_calificacion_editar").prop('disabled', true);
+        $("#btn_insertar_observaciones_editar").prop('disabled', true);
         $("#btn_insertar_nombres_cie10_editar").prop('disabled', true);
         $("#btn_insertar_tipo_controversia_pri_cali_editar").prop('disabled', true);
         $("#btn_insertar_direccion_afiliado_editar").prop('disabled', true);
         $("#btn_insertar_telefono_afiliado_editar").prop('disabled', true);
         $("#btn_insertar_correo_solicitud_info_editar").prop('disabled', true);
+        $("#btn_insertar_dictamen_controvertido_editar").prop('disabled', true);
         
         
         $("#firmarcomunicado").prop('disabled', true);

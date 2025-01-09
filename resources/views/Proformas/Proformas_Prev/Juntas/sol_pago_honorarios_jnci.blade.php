@@ -196,6 +196,43 @@
             /* border: 1px solid black;
             border-collapse: collapse; */
         }
+
+        ol.lista-exponencial {
+            counter-reset: list-counter;
+            padding-left: 25px;
+            font-family: sans-serif;
+            font-size: 9px;
+        }
+
+        ol.lista-exponencial li {
+            list-style: none;
+            position: relative;
+            padding-left: 7px;
+        }
+
+        ol.lista-exponencial li:before {
+            content: counter(list-counter) " ";
+            counter-increment: list-counter;
+            position: absolute;
+            left: 0;
+            top: 8;
+            font-size: 0.8em;
+            vertical-align: super;
+            font-weight: bold;
+        }
+
+        .decreto1072 {
+            font-size: 0.7em; 
+            position: relative; 
+            top: -0.3em;
+        }
+
+        .cursiva {
+            font-size: 12px;
+            font-style: italic;
+        }
+        
+
     </style>
 </head>
 <body>
@@ -240,183 +277,8 @@
         @endphp
         <img src="data:image/png;base64,{{ $imagenBase64_footer }}" class="logo_footer">
     </div>
-    <div class="container">
-        <p class="titulob1">
-            <span>FORMULARIO DE SOLICITUD DE CALIFICACION DE INVALIDEZ</span><br>
-            <span>{{$nombre_junta_jrci}}</span>
-        </p>
+    <div class="container">        
         <p class="fuente_todo_texto_formulario1 derecha fecha_comunicado">
-            <span class="negrita">Fecha de solicitud: {{$fecha}}</span>
-        </p><br><br><br>
-        <table class="tabla_dato_entidad fuente_todo_texto_formulario1"> 
-            <tr>
-                <td colspan="2" class="titulosb1">1. DATOS DE LA ENTIDAD QUE REMITE EL EXPEDIENTE</td>
-            </tr>
-            <tr>
-                <td colspan="2"></td>
-            </tr>
-            <tr>                                                
-                <td colspan="1" class="negrita">Nombre de Entidad que remite el expediente:</td>
-                <td colspan="1" class="izquierda">{{$Nombre_cliente}}</td>
-            </tr>
-            <tr>
-                <td colspan="1" class="negrita">Dirección de la Entidad:</td>
-                <td colspan="1" class="izquierda">{{$Direccion_cliente}}</td>
-            </tr>
-            <tr>
-                <td colspan="1" class="negrita">Teléfono de la Entidad:</td>
-                <td colspan="1" class="izquierda">{{$Telefono_principal_cliente}}</td>
-            </tr>
-            <tr>
-                <td colspan="1" class="negrita">Ciudad - Departamento:</td>
-                <td colspan="1" class="izquierda">{{$Nombre_municipio_cliente}} - {{$Nombre_departamento_cliente}}</td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <b>Descripción de documentos anexos:</b><br>
-                    Comprobante de Pago, copia de Cedula, carta de controversia, copia historia clínica, dictamen y sustentación del dictamen, soporte de SIAFP en donde se encuentra el historial de vinculaciones en las diferentes AFP.<br>
-                    <b>Número de Folios:</b> (Ver expediente)
-                </td>
-            </tr>
-        </table>
-        <br>
-        <table class="tabla_dato_entidad fuente_todo_texto_formulario1"> 
-            <tr>
-                <td colspan="6" class="titulosb1">2. DATOS DE LA PERSONA A CALIFICAR</td>
-            </tr>
-            <tr>
-                <td colspan="6"></td>
-            </tr>
-            <tr>
-                <td colspan="2" class="negrita">Nombres y apellidos:</td>
-                <td colspan="4" class="izquierda">{{$nombre_beneficiario}}</td>
-            </tr>
-            <tr>
-                <td colspan="2" class="negrita">Tipo de identificación:</td>
-                <td colspan="1" class="izquierda">{{$tipo_documentos_benefi}}</td>                
-                <td colspan="1" class="negrita">Número:</td>
-                <td colspan="2" class="izquierda">{{$nro_identificacion_benefi}}</td>
-            </tr>
-            {{-- <tr>
-                <td colspan="2" class="negrita">Expedida en:</td>
-                <td colspan="4" class="izquierda" style="color: red;">NO existe el dato en la DB</td>
-            </tr> --}}
-            <tr>                
-                <td colspan="2" class="negrita">Fecha de Nacimiento:</td>
-                <td colspan="1" class="izquierda">{{$F_nacimiento}}</td>                
-                <td colspan="1" class="negrita">Edad:</td>
-                <td colspan="2" class="izquierda">{{$Edad}} años</td>                
-            </tr>
-            <tr>
-                <td colspan="1" class="negrita">Sexo:</td>
-                <td colspan="1" class="izquierda">{{$Genero}}</td>
-                <td colspan="1" class="negrita">Estado Civil:</td>
-                <td colspan="1" class="izquierda">{{$Estado_civil}}</td>
-                <td colspan="1" class="negrita">Escolaridad:</td>
-                <td colspan="1" class="izquierda">{{$Nivel_escolar}}</td>                
-            </tr>
-            <tr>
-                <td colspan="6" class="negrita">Dirección residencia o de correspondencia:</td>
-            </tr>           
-            <tr>
-                <td colspan="6" class="izquierda">{{$Direccion}}</td>
-            </tr>
-            <tr>
-                <td colspan="2" class="negrita">Ciudad - Departamento:</td>
-                <td colspan="4" class="izquierda">{{$Nombre_municipio}} - {{$Nombre_departamento}}</td>
-            </tr>
-            <tr>
-                <td colspan="2" class="negrita">Teléfono fijo y/o celular:</td>
-                <td colspan="4" class="izquierda">{{$Telefono_contacto}}</td>                               
-            </tr>
-            <tr>
-                <td colspan="2" class="negrita">EPS:</td>
-                <td colspan="4" class="izquierda">{{$Nombre_Eps}}</td> 
-            </tr>
-            <tr>
-                <td colspan="2" class="negrita">ARL:</td>
-                <td colspan="4" class="izquierda">{{$Nombre_Afp}}</td>                
-            </tr>
-            <tr>
-                <td colspan="2" class="negrita">Fondo de Pensión:</td>
-                <td colspan="4" class="izquierda">{{$Nombre_Arl}}</td>
-            </tr>
-            <tr>
-                <td colspan="2" class="negrita">Tipo de Afiliado:</td>
-                <td colspan="4" class="izquierda">{{$tipos_afiliado}}</td>
-            </tr>
-        </table>
-        <br>
-        <table class="tabla_dato_entidad fuente_todo_texto_formulario1"> 
-            <tr>
-                <td colspan="6" class="titulosb1">3. MARQUE CON UNA (X) QUE SE SOLICITA CALIFICAR</td>
-            </tr>
-            <tr>
-                <td colspan="6"></td>
-            </tr>
-            <tr>
-                <td colspan="3" class="izquierda">Pérdida de Capacidad Laboral:</td>
-                <td colspan="3" class="izquierda">@if ($Contro_pcl == '% PCL') ( <span class="negrita">X</span> ) @else <span>( <span style="color:white;">X</span> )</span> @endif</td>
-            </tr>
-            <tr>
-                <td colspan="3" class="izquierda">Determinar Origen:</td>
-                <td colspan="3" class="izquierda">@if ($Contro_origen == 'Origen') ( <span class="negrita">X</span> ) @else <span>( <span style="color:white;">X</span> )</span> @endif</td>
-            </tr>
-            <tr>
-                <td colspan="3" class="izquierda">Fecha de estructuración:</td>
-                <td colspan="3" class="izquierda">@if ($Contro_f_estructura == 'Fecha estructuración') ( <span class="negrita">X</span> ) @else <span>( <span style="color:white;">X</span> )</span> @endif</td>
-            </tr>
-            <tr>
-                <td colspan="3" class="izquierda">Diagnósticos:</td>
-                <td colspan="3" class="izquierda">@if ($Contro_diagnostico == 'Diagnósticos') ( <span class="negrita">X</span> ) @else <span>( <span style="color:white;">X</span> )</span> @endif</td>
-            </tr>
-            <tr>
-                <td colspan="3" class="izquierda">Manual de calificación:</td>
-                <td colspan="3" class="izquierda">@if ($Contro_m_califi == 'Manual de calificación') ( <span class="negrita">X</span> ) @else <span>( <span style="color:white;">X</span> )</span> @endif</td>
-            </tr>
-            <tr>
-                <td colspan="3" class="izquierda">Especifique:</td>
-                <td colspan="3" class="negrita">Controversia {{$Parte_contreversia}}</td>
-            </tr>
-        </table>
-        <br>
-        <table class="tabla_dato_entidad fuente_todo_texto_formulario1"> 
-            <tr>
-                <td colspan="6" class="titulosb1">4. DATOS DE LA EMPRESA DONDE LABORA O EMPLEADOR</td>
-            </tr>
-            <tr>
-                <td colspan="6"></td>
-            </tr>
-            <tr>                
-                <td colspan="2" class="negrita">Nombre de la empresa:</td>
-                <td colspan="4" class="izquierda">{{$Empleador_nombre}}</td>
-            </tr>
-            <tr>
-                <td colspan="2" class="negrita">Dirección de la Empresa:</td>
-                <td colspan="4" class="izquierda">{{$Direccion_empleador}}</td>
-            </tr>
-            <tr>
-                <td colspan="2" class="negrita">Ciudad - Departamento:</td>
-                <td colspan="4" class="izquierda">{{$Nombre_municipio_empleador}} - {{$Nombre_departamento_empleador}}</td>
-            </tr>
-            <tr>
-                <td colspan="2" class="negrita">Teléfono de la Empresa:</td>
-                <td colspan="4" class="izquierda">{{$Telefono_empleador}}</td>
-            </tr>            
-        </table>
-        <br>
-        <table class="tabla_dato_entidad fuente_todo_texto_formulario1"> 
-            <tr>
-                <td colspan="6" class="titulosb1">5. RESPONSABLE DE LA REMISION</td>
-            </tr>
-            <tr>
-                <td colspan="6"></td>
-            </tr>
-            <tr>
-                <td colspan="6" class="titulob1">PROTECCIÓN S.A.</td>
-            </tr>                       
-        </table>
-        <p class="page_break fuente_todo_texto_formulario1 derecha fecha_comunicado">
             <span class="negrita">{{$ciudad_comunicado_act}}, {{$fecha}}</span>
         </p>
         <div class="tabla2" style="margin-top: 30px;">
@@ -447,41 +309,18 @@
         </div>        
         <section class="fuente_todo_texto" style="margin-bottom: 2em; text-align: justify;">                       
             <?php 
-                $patron1 = '/\{\{\$nro_orden_pago\}\}/';
-                $patron2 = '/\{\{\$fecha_notificacion_afiliado\}\}/';
-                $patron3 = '/\{\{\$fecha_radicacion_controversia_primera_calificacion\}\}/';
-                $patron4 = '/\{\{\$nombre_afiliado\}\}/';
-                $patron5 = '/\{\{\$porcentaje_pcl\}\}/';
-                $patron6 = '/\{\{\$fecha_estructuracion\}\}/';
-                $patron7 = '/\{\{\$tipo_evento\}\}/';
-                $patron8 = '/\{\{\$origen\}\}/';
-                $patron9 = '/\{\{\$nombres_cie10\}\}/';
-                $patron10 = '/\{\{\$tipo_controversia_primera_calificacion\}\}/';
-                $patron11 = '/\{\{\$observaciones\}\}/';
-                $patron12 = '/\{\{\$nombre_junta\}\}/';                                
-
+                $patron1 = '/\{\{\$tipo_documento_afiliado\}\}/';
+                $patron2 = '/\{\{\$documento_afiliado\}\}/';
+                $patron3 = '/\{\{\$nombre_afiliado\}\}/';
+                $patron4 = '/\{\{\$num_dictamen_controvertido\}\}/';                   
+                
                 if (preg_match($patron1,$cuerpo) && preg_match($patron2,$cuerpo) && preg_match($patron3,$cuerpo)
-                    && preg_match($patron4,$cuerpo) && preg_match($patron5,$cuerpo) && preg_match($patron6,$cuerpo) 
-                    && preg_match($patron7,$cuerpo) && preg_match($patron8,$cuerpo) && preg_match($patron9,$cuerpo)
-                    && preg_match($patron10,$cuerpo) && preg_match($patron11,$cuerpo) && preg_match($patron12,$cuerpo)                    
+                    && preg_match($patron4,$cuerpo)
                 ) {
-                    $texto_modificado = str_replace('{{$nro_orden_pago}}', "<b>".$nro_orden_pago."</b>", $cuerpo);
-                    $texto_modificado = str_replace('{{$fecha_notificacion_afiliado}}', "<b>".$f_notifi_afiliado_act."</b>", $texto_modificado);
-                    $texto_modificado = str_replace('{{$fecha_radicacion_controversia_primera_calificacion}}', "<b>".$f_radicacion_contro_pri_cali_act."</b>", $texto_modificado);
+                    $texto_modificado = str_replace('{{$tipo_documento_afiliado}}', $tipo_documentos_benefi, $cuerpo);
+                    $texto_modificado = str_replace('{{$documento_afiliado}}', $nro_identificacion_benefi, $texto_modificado);
                     $texto_modificado = str_replace('{{$nombre_afiliado}}', $nombre_beneficiario, $texto_modificado);
-                    $texto_modificado = str_replace('{{$porcentaje_pcl}}', $porcentaje_pcl, $texto_modificado);
-                    $texto_modificado = str_replace('{{$fecha_estructuracion}}', $fecha_estructuracion, $texto_modificado);
-                    $texto_modificado = str_replace('{{$tipo_evento}}', strtoupper($tipo_evento), $texto_modificado);
-                    if ($origen_controvertido == 'Común') {
-                        $origen_controvertido = 'COMÚN';
-                    } else {
-                        $origen_controvertido = strtoupper($origen_controvertido);
-                    }
-                    $texto_modificado = str_replace('{{$origen}}', strtoupper($origen_controvertido), $texto_modificado);
-                    $texto_modificado = str_replace('{{$nombres_cie10}}', $string_diagnosticos_cie10_jrci, $texto_modificado);
-                    $texto_modificado = str_replace('{{$tipo_controversia_primera_calificacion}}', $string_tipos_controversia, $texto_modificado);
-                    $texto_modificado = str_replace('{{$observaciones}}', $observaciones, $texto_modificado);
-                    $texto_modificado = str_replace('{{$nombre_junta}}', $nombre_junta, $texto_modificado);
+                    $texto_modificado = str_replace('{{$num_dictamen_controvertido}}', $num_dictamen_controvertido, $texto_modificado);
                     $cuerpo = $texto_modificado;
                 } else {
                     $cuerpo = "";

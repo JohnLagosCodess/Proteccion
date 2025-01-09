@@ -74,6 +74,12 @@ $(document).ready(function(){
         allowClear:false
     });
 
+    $(".listado_tipos_documentos_guias").select2({      
+        width: '100%',
+        placeholder:"Seleccione una opción",
+        allowClear:false
+    });
+
     $(".enviar").select2({      
         width: '100%',
         placeholder:"Seleccione una opción",
@@ -790,6 +796,70 @@ $(document).ready(function(){
             }         
         });
     });
+
+    /* INICIO FUNCIONALIDAD DEL CARGUE DE DOCUMENTOS COMPLEMENTARIOS (GUIA) */
+    // seteo del id, nombre del documento familia, id evento, id servicio
+    $("#CargarDocumento_guias").prop('disabled', true);
+    $("#listado_tipos_documentos_guias").change(function(){
+        var id_doc_familia_seleccionado = $(this).val();
+        var nombre_doc_familia_seleccionado = $(this).find("option:selected").text().replace(/^\d+\s*-\s*/, '');
+        $("#id_doc_familia_guias").val(id_doc_familia_seleccionado);
+        $("#nombre_doc_familia_guias").val(nombre_doc_familia_seleccionado);
+
+        var evento = $("#newId_evento").val();
+        var servicio = $("#Id_servicio").val();
+        $("#id_evento_familia_guias").val(evento);
+        $("#id_servicio_familia_guias").val(servicio);
+        
+        if (id_doc_familia_seleccionado != "") {
+            $("#CargarDocumento_guias").prop('disabled', false);
+        }
+    });
+    
+    /* Envío de información del documento familia */
+    $("#CargarDocumento_guias").click(function(){
+        console.log("mano");
+        let formData = new FormData();
+        formData.append('_token', $('input[name=_token]').val());
+        formData.append('id_doc_familia', $("#id_doc_familia_guias").val());
+        formData.append('nombre_doc_familia', $("#nombre_doc_familia_guias").val());
+        formData.append('id_evento_familia', $("#id_evento_familia_guias").val());
+        formData.append('id_servicio_familia', $("#id_servicio_familia_guias").val());
+        formData.append('doc_subir', $("#doc_subir_guias")[0].files[0]);
+    
+        $.ajax({
+            url: "/cargaDocumentosComplementarios",
+            method: 'POST',
+            data: formData,
+            processData: false, // No procesar los datos automáticamente
+            contentType: false, // Establecer contentType en false
+            success:function(response){
+                if (response.parametro == "fallo") {
+                    if (response.otro != undefined) {
+                        $('#listadodocumento_'+response.otro).val('');
+                    }else{
+                        $('#doc_subir_guias').val('');
+                    }
+                    $('.mostrar_fallo_doc_familia').removeClass('d-none');
+                    $('.mostrar_fallo_doc_familia').append('<strong>'+response.mensaje+'</strong>');
+                    setTimeout(function(){
+                        $('.mostrar_fallo_doc_familia').addClass('d-none');
+                        $('.mostrar_fallo_doc_familia').empty();
+                    }, 6000);
+                }else if (response.parametro == "exito") {
+                    $('.mostrar_exito_doc_familia').removeClass('d-none');
+                    $('.mostrar_exito_doc_familia').append('<strong>'+response.mensaje+'</strong>');
+                    setTimeout(function(){
+                        $('.mostrar_exito_doc_familia').addClass('d-none');
+                        $('.mostrar_exito_doc_familia').empty();
+                    }, 6000);
+                }else{}
+
+            }         
+        });
+    });
+
+    /* FIN FUNCIONALIDAD DEL CARGUE DE DOCUMENTOS COMPLEMENTARIOS (GUIA) */
 
     //Se crea el resumable usando Resumable.js, el cual tiene como fin crear los chunks y enviarlos al endpoint('target') especificado 
     let resumable = new Resumable({
@@ -2153,6 +2223,69 @@ $(document).ready(function(){
                 $("#check_principal").prop('disabled', true).prop('required', true);
             }
         });
+
+        /* Aqui se programará algunas cosas de la ficha PBS 082 */
+
+        // 1. motrar el botón de que tipo de guia es
+        // 2. precargar el selector de documentos complementarios dependiendo de que correspondecia es.
+        
+        $("#tipo_guia").text('');
+        $('#listado_documentos_ed tr[id^="fila_doc_"]').removeClass('d-none');
+        $("#collapseGuia").removeClass('show');
+        $("#doc_subir_guias").val('');
+        switch (tipo_correspondencia) {
+            case 'Afiliado':
+                $("#tipo_guia").text('Afiliado');
+                break;
+            case 'Empleador':
+                $("#tipo_guia").text('Empleador');
+                break;
+            case 'eps':
+                $("#tipo_guia").text('EPS');
+                break;
+            case 'afp':
+                $("#tipo_guia").text('AFP');
+                break;
+            case 'arl':
+                $("#tipo_guia").text('ARL');
+                break;
+            case 'afp_conocimiento':
+                $("#tipo_guia").text('Entidad conocimiento');
+                break;
+            case 'jrci':
+                $("#tipo_guia").text('JRCI');
+                break;
+            case 'jnci':
+                $("#tipo_guia").text('JNCI');
+                break;
+            default:
+                break;
+        }
+
+        $('#listado_documentos_ed tr[id^="fila_doc_"]').not('#fila_doc_43').addClass('d-none');
+
+        var datos_lista_tipos_documentos = {
+            '_token': token,
+            'evento': $("#newId_evento").val(),
+            'servicio': $("#Id_servicio").val(),
+            'parametro':"docs_complementarios",
+            'tipo_correspondencia': 43,
+        };
+        
+        $.ajax({
+            type:'POST',
+            url:'/selectoresModuloCalificacionPCL',
+            data: datos_lista_tipos_documentos,
+            success:function(data) {
+                $("#listado_tipos_documentos_guias").empty();
+                $("#listado_tipos_documentos_guias").append('<option value="">Seleccione una Opción</option>');
+                let tiposdoc = Object.keys(data);
+                for (let i = 0; i < tiposdoc.length; i++) {
+                    $('#listado_tipos_documentos_guias').append('<option value="'+data[tiposdoc[i]]["Nro_documento"]+'">'+data[tiposdoc[i]]["Nro_documento"]+' - '+data[tiposdoc[i]]["Nombre_documento"]+'</option>');
+                }
+            }
+        });
+
     });
 
     $('#form_correspondencia').submit(function (e) {
@@ -3358,9 +3491,11 @@ $(document).ready(function(){
                 data: datos,
                 success:function(data){
                     let F_notificación_sol_doc_rev_pen = '(DIGITE LA FECHA DE PRIMER COMUNICADO)';
-                    let F_notificación_reiteracion_sol_doc_rev_pen = '(DIGITE LA FECHA DE PRIMER COMUNICADO)';
+                    let F_notificación_reiteracion_sol_doc_rev_pen = '(DIGITE LA FECHA DEL SEGUNDO COMUNICADO)';
                     if (data['F_notificacion_sol_doc_rev_pen']) {
                         F_notificación_sol_doc_rev_pen = data['F_notificacion_sol_doc_rev_pen'];
+                        let partes_fecha = F_notificación_sol_doc_rev_pen.split("-");
+                        F_notificación_sol_doc_rev_pen = `${partes_fecha[2]}/${partes_fecha[1]}/${partes_fecha[0]}`;
                     }
                     if (data['F_notificacion_reiteracion_sol_doc_rev_pen']) {
                         F_notificación_reiteracion_sol_doc_rev_pen = data['F_notificacion_reiteracion_sol_doc_rev_pen'];
@@ -4663,9 +4798,11 @@ $(document).ready(function(){
                 data: datos,
                 success:function(data){
                     let F_notificación_sol_doc_rev_pen = '(DIGITE LA FECHA DE PRIMER COMUNICADO)';
-                    let F_notificación_reiteracion_sol_doc_rev_pen = '(DIGITE LA FECHA DE PRIMER COMUNICADO)';
+                    let F_notificación_reiteracion_sol_doc_rev_pen = '(DIGITE LA FECHA DEL SEGUNDO COMUNICADO)';
                     if (data['F_notificacion_sol_doc_rev_pen']) {
                         F_notificación_sol_doc_rev_pen = data['F_notificacion_sol_doc_rev_pen'];
+                        let partes_fecha = F_notificación_sol_doc_rev_pen.split("-");
+                        F_notificación_sol_doc_rev_pen = `${partes_fecha[2]}/${partes_fecha[1]}/${partes_fecha[0]}`;
                     }
                     if (data['F_notificacion_reiteracion_sol_doc_rev_pen']) {
                         F_notificación_reiteracion_sol_doc_rev_pen = data['F_notificacion_reiteracion_sol_doc_rev_pen'];
@@ -5437,9 +5574,12 @@ $(document).ready(function(){
         });
         
         // Si el servicio es Pronunciamiento deshabilita la entrada al submodulo
-        if ($("#newIdservicio").val() == 9) {
-            $("#botonFormulario2").prop('disabled', true);
-        }
+
+        //  se quitó a petición de la operación el día 19/12/2024
+        
+        // if ($("#newIdservicio").val() == 9) {
+        //     $("#botonFormulario2").prop('disabled', true);
+        // }
 
         // Quitar el disabled al formulario oculto para permitirme ir al submodulo
         $("#llevar_servicio").hover(function(){
@@ -5449,6 +5589,10 @@ $(document).ready(function(){
         });
         // Deshabilitar el botón Actualizar y Activar el botón Pdf en los comunicados
         $("#Pdf").prop('disabled', false);
+
+        $("button[id^='CargarDocumento_']").prop('disabled', true);
+        $("#listado_tipos_documentos_guias").prop('disabled', true);
+        $("#CargarDocumento_guias").prop('disabled', true);
 
     }
     
@@ -5479,6 +5623,8 @@ $(document).ready(function(){
         $("#firmarcomunicado").prop('disabled', true);
         $("#firmarcomunicado_editar").prop('disabled', true);
     //}
+
+
 });
 
 var copia = 1;

@@ -2747,7 +2747,8 @@ class BuscarEventoController extends Controller
     
         // Info del servicio a partir del cual se está creando el nuevo proceso.
         $query = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_lista_procesos_servicios as lps')
-        ->leftJoin('sigmel_gestiones.sigmel_informacion_historial_accion_eventos as ihae', 'ihae.id_servicio', 'lps.id_servicio')
+        // ->leftJoin('sigmel_gestiones.sigmel_informacion_historial_accion_eventos as ihae', 'ihae.id_servicio', 'lps.id_servicio')
+        ->leftJoin('sigmel_gestiones.sigmel_informacion_asignacion_eventos as ihae', 'ihae.id_servicio', 'lps.id_servicio')
         ->select('Nombre_proceso', 'Nombre_servicio')
         ->where([['ihae.ID_evento', $evento], ['ihae.Id_Asignacion', $Id_Asignacion_origen]]);
 

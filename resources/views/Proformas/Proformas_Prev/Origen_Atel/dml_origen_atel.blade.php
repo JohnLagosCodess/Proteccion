@@ -318,9 +318,9 @@
                     <?php $f_visado = date("m/d/Y", strtotime($validacion_visado[0]->F_visado_comite));?>
                     <tr>
                         <td colspan="4" class="dato_dinamico" style="text-align: center;">
-                            <span style="font-weight: 700;">LINA MARCELA MAYORGA CULMA</span><br>
-                            <span>Medicina Física y Rehabilitación - E.S.O<br>
-                            RM 250623/09 - LSO 16640/22</span>
+                            <span style="font-weight: 700;">JOSÉ ABRAHAM GUTIÉRREZ BEDOYA</span><br>
+                            <span>Médico Especialista en Salud Ocupacional<br>
+                            Resolución 238 de 03/02/2022</span>
                             <p class="firma_visado"><b>Fecha de firma: {{$f_visado}}</b></p>
                         </td>
                         <td colspan="4" class="dato_dinamico">
@@ -337,9 +337,9 @@
                     </tr>
                     <tr>
                         <td colspan="4" class="dato_dinamico" style="text-align: center;">
-                            <span style="font-weight: 700;">JULIAN ENRIQUE CAMACHO GONZALEZ</span><br>
-                            <span>Médico Laboral<br>
-                                RM. 04036/2010 - Lic. S.O 28239 del 13/12/2022</span>
+                            <span style="font-weight: 700;">ANDREA CECILIA SANABRIA ESCAMILLA</span><br>
+                            <span>Fisioterapeuta Especialista en Salud Ocupacional<br>
+                            Resolución 651 de 20/01/2017</span>
                             <p class="firma_visado"><b>Fecha de firma: {{$f_visado}}</b></p>
                         </td>
                         <td colspan="4" class="dato_dinamico">
@@ -356,9 +356,9 @@
                     </tr>
                     <tr>
                         <td colspan="4" class="dato_dinamico" style="text-align: center;">
-                            <span style="font-weight: 700;">LILIANA MONTES CASTAÑEDA</span><br>
-                            <span>Fisioterapeuta<br>
-                            LSO Resolución 4919 del 08/05/2012</span>
+                            <span style="font-weight: 700;">ALEXANDER ALBARRACÍN PINZÓN</span><br>
+                            <span>Medicina Física y Rehabilitación<br>
+                            RM. 79760299</span>
                             <p class="firma_visado"><b>Fecha de firma: {{$f_visado}}</b></p>
                         </td>
                         <td colspan="4" class="dato_dinamico">

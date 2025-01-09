@@ -2118,7 +2118,7 @@
         <button type="submit" id="botonEnvioVista" style="display:none !important;"></button>
     </form>
     <?php $aperturaModal = 'Edicion'; ?>
-    @include('//.administrador.modalcarguedocumentos')
+    {{-- @include('//.administrador.modalcarguedocumentos') --}}
     @include('//.administrador.modalProgressbar')
     @include('//.coordinador.modalReemplazarArchivos')
     @include('//.coordinador.modalCorrespondencia')

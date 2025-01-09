@@ -166,10 +166,6 @@
             height: 150px;
             padding-left: 200px;
         }
-
-        .justificarUl{
-            padding-right: 5px;
-        }
         
     </style>
 </head>
@@ -240,23 +236,33 @@
                 @endif              
             </div>
         </div>        
-        <section class="fuente_todo_texto" style="margin-bottom: 2em; text-align: justify;">                       
+        <section class="fuente_todo_texto" style="margin-bottom: 2em; text-align: justify;">
             <?php 
-            
                 $patron1 = '/\{\{\$nombre_afiliado\}\}/';
-                $patron2 = '/\{\{\$nombre_junta\}\}/';
-                $patron3 = '/\{\{\$fecha_envio_jrci\}\}/';                
+                $patron2 = '/\{\{\$fecha_notificacion_afiliado\}\}/';
+                $patron3 = '/\{\{\$fecha_radicacion_controversia_primera_calificacion\}\}/';
+                $patron4 = '/\{\{\$porcentajepcl\}\}/';
+                $patron5 = '/\{\{\$tipo_evento\}\}/';
+                $patron6 = '/\{\{\$origen\}\}/';
+                $patron7 = '/\{\{\$fecha_estructuracion\}\}/';
+                
 
                 if (preg_match($patron1,$cuerpo) && preg_match($patron2,$cuerpo) && preg_match($patron3,$cuerpo)
+                    && preg_match($patron4,$cuerpo) && preg_match($patron5,$cuerpo) && preg_match($patron6,$cuerpo) 
+                    && preg_match($patron7,$cuerpo)
                 ) {
                     $texto_modificado = str_replace('{{$nombre_afiliado}}', $nombre_afiliado, $cuerpo);
-                    $texto_modificado = str_replace('{{$nombre_junta}}', "<b>".$nombre_junta."</b>", $texto_modificado);
-                    $texto_modificado = str_replace('{{$fecha_envio_jrci}}', "<b>".$fecha_envio_jrci."</b>", $texto_modificado);
+                    $texto_modificado = str_replace('{{$fecha_notificacion_afiliado}}', "<b>".$fecha_notificacion_afiliado."</b>", $texto_modificado);
+                    $texto_modificado = str_replace('{{$fecha_radicacion_controversia_primera_calificacion}}', "<b>".$fecha_radicacion_controversia_primera_calificacion."</b>", $texto_modificado);
+                    $texto_modificado = str_replace('{{$porcentajepcl}}', $porcentajepcl.' %', $texto_modificado);                    
+                    $texto_modificado = str_replace('{{$tipo_evento}}', $tipo_evento, $texto_modificado);
+                    $texto_modificado = str_replace('{{$origen}}', $origen, $texto_modificado);
+                    $texto_modificado = str_replace('{{$fecha_estructuracion}}', $fecha_estructuracion, $texto_modificado);                    
                     $cuerpo = $texto_modificado;
                 } else {
                     $cuerpo = "";
                 }
-
+                
                 print_r($cuerpo);
             ?>
         </section>

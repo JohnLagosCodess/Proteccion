@@ -1086,8 +1086,8 @@
                                             <div class="col">
                                                 <div class="form-group">
                                                     <div class="form-check custom-control custom-radio">
-                                                        <input class="form-check-input custom-control-input custom-control-input-info" type="radio" name="tipo_de_preforma" id="oficio_afiliado" value="Oficio_Afiliado" required>
-                                                        <label class="form-check-label custom-control-label" for="oficio_afiliado"><strong>OFICIO AFILIADO</strong></label>                                                                                                                                                                    
+                                                        <input class="form-check-input custom-control-input custom-control-input-info" type="radio" name="tipo_de_preforma" id="cierre_terminos" value="Cierre_Terminos" required>
+                                                        <label class="form-check-label custom-control-label" for="cierre_terminos"><strong>CIERRE FUERA DE TÉRMINOS</strong></label>                                                                                                                                                                    
                                                     </div>
                                                 </div>
                                             </div>
@@ -1096,8 +1096,28 @@
                                             <div class="col">
                                                 <div class="form-group">
                                                     <div class="form-check custom-control custom-radio">
-                                                        <input class="form-check-input custom-control-input custom-control-input-info" type="radio" name="tipo_de_preforma" id="oficio_juntas_jrci" value="Oficio_Juntas_JRCI" required>
-                                                        <label class="form-check-label custom-control-label" for="oficio_juntas_jrci"><strong>SOLICITUD CALIFICACIÓN INVALIDÉZ</strong></label>
+                                                        <input class="form-check-input custom-control-input custom-control-input-info" type="radio" name="tipo_de_preforma" id="sol_faltante_contro" value="Sol_Faltante_Contro" required>
+                                                        <label class="form-check-label custom-control-label" for="sol_faltante_contro"><strong>SOL. FALTANTES CONTROVERSIA</strong></label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
+                                        @if ($array_datos_calificacionJuntas[0]->Id_Servicio == '13')
+                                            <div class="col">
+                                                <div class="form-group">
+                                                    <div class="form-check custom-control custom-radio">
+                                                        <input class="form-check-input custom-control-input custom-control-input-info" type="radio" name="tipo_de_preforma" id="cierre_doc_noaportada" value="Cierre_Doc_Noaportada" required>
+                                                        <label class="form-check-label custom-control-label" for="cierre_doc_noaportada"><strong>CIERRE DOC. NO APORTADA</strong></label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
+                                        @if ($array_datos_calificacionJuntas[0]->Id_Servicio == '13')
+                                            <div class="col">
+                                                <div class="form-group">
+                                                    <div class="form-check custom-control custom-radio">
+                                                        <input class="form-check-input custom-control-input custom-control-input-info" type="radio" name="tipo_de_preforma" id="oficio_afiliado" value="Oficio_Afiliado" required>
+                                                        <label class="form-check-label custom-control-label" for="oficio_afiliado"><strong>RADICACIÓN EXPEDIENTE AFILIADO</strong></label>                                                                                                                                                                    
                                                     </div>
                                                 </div>
                                             </div>
@@ -1127,11 +1147,51 @@
                                                 <div class="form-group">
                                                     <div class="form-check custom-control custom-radio">
                                                         <input class="form-check-input custom-control-input custom-control-input-info" type="radio" name="tipo_de_preforma" id="solicitud_dictamen_jrci" value="Solicitud_Dictamen_JRCI" required>
-                                                        <label class="form-check-label custom-control-label" for="solicitud_dictamen_jrci"><strong>SOLICITUD DICTAMEN JRCI</strong></label>
+                                                        <label class="form-check-label custom-control-label" for="solicitud_dictamen_jrci"><strong>DP1/2 - SOL. DICTAMEN JRCI</strong></label>
                                                     </div>
                                                 </div>
                                             </div>                                            
                                         @endif
+                                        @if ($array_datos_calificacionJuntas[0]->Id_Servicio == '13')
+                                            <div class="col">
+                                                <div class="form-group">
+                                                    <div class="form-check custom-control custom-radio">
+                                                        <input class="form-check-input custom-control-input custom-control-input-info" type="radio" name="tipo_de_preforma" id="solicitud_acta_ejecutoria_jrci" value="Solicitud_Acta_Ejecutoria_JRCI" required>
+                                                        <label class="form-check-label custom-control-label" for="solicitud_acta_ejecutoria_jrci"><strong>DP3 - SOL. ACTA EJECUTORIA JRCI</strong></label>
+                                                    </div>
+                                                </div>
+                                            </div>                                            
+                                        @endif
+                                        @if ($array_datos_calificacionJuntas[0]->Id_Servicio == '13')
+                                            <div class="col">
+                                                <div class="form-group">
+                                                    <div class="form-check custom-control custom-radio">
+                                                        <input class="form-check-input custom-control-input custom-control-input-info" type="radio" name="tipo_de_preforma" id="solicitud_pago_honorarios_jnci" value="Solicitud_Pago_Honorarios_JNCI" required>
+                                                        <label class="form-check-label custom-control-label" for="solicitud_pago_honorarios_jnci"><strong>DP4 - SOL. PAGO HONORARIOS JNCI</strong></label>
+                                                    </div>
+                                                </div>
+                                            </div>                                            
+                                        @endif
+                                        @if ($array_datos_calificacionJuntas[0]->Id_Servicio == '13')
+                                            <div class="col">
+                                                <div class="form-group">
+                                                    <div class="form-check custom-control custom-radio">
+                                                        <input class="form-check-input custom-control-input custom-control-input-info" type="radio" name="tipo_de_preforma" id="solicitud_remision_expediente_jnci" value="Solicitud_Remision_Expediente_JNCI" required>
+                                                        <label class="form-check-label custom-control-label" for="solicitud_remision_expediente_jnci"><strong>DP5 - SOL. REMISIÓN EXPEDIENTE JNCI</strong></label>
+                                                    </div>
+                                                </div>
+                                            </div>                                            
+                                        @endif
+                                        {{-- @if ($array_datos_calificacionJuntas[0]->Id_Servicio == '13')
+                                            <div class="col">
+                                                <div class="form-group">
+                                                    <div class="form-check custom-control custom-radio">
+                                                        <input class="form-check-input custom-control-input custom-control-input-info" type="radio" name="tipo_de_preforma" id="oficio_juntas_jrci" value="Oficio_Juntas_JRCI" required>
+                                                        <label class="form-check-label custom-control-label" for="oficio_juntas_jrci"><strong>SOLICITUD CALIFICACIÓN INVALIDÉZ</strong></label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif --}}
                                         <div class="col">
                                             <div class="form-group">
                                                 <div class="form-check custom-control custom-radio">
@@ -1257,6 +1317,7 @@
                                                 <br>
                                                 {{-- botón para proforma ADJUNTAR OFICIO AL AFILIADO	 --}}
                                                 <button class="btn btn-sm btn-secondary mb-2" id="btn_insertar_nombre_junta_regional">Nombre Junta Regional</button>
+                                                <button class="btn btn-sm btn-secondary mb-2" id="btn_insertar_fecha_envio_jrci">Fecha Envió JRCI</button>
                                                 {{-- botones para proforma REMISIÓN DE EXPEDIENTE PARA TRÁMITE DE CONTROVERSIA --}}
                                                 <button class="btn btn-sm btn-secondary mb-2" id="btn_insertar_nro_orden_pago">N° Orden pago</button>
                                                 <button class="btn btn-sm btn-secondary mb-2" id="btn_insertar_fecha_notifi_afiliado">Fecha Notificación al Afiliado</button>
@@ -1266,14 +1327,19 @@
                                                 <button class="btn btn-sm btn-secondary mb-2" id="btn_insertar_nombre_afiliado">Nombre Afiliado</button>
                                                 <button class="btn btn-sm btn-secondary mb-2" id="btn_insertar_fecha_estructuracion">Fecha Estructuración</button>
                                                 <button class="btn btn-sm btn-secondary mb-2" id="btn_insertar_tipo_evento">Tipo de Evento</button>
+                                                <button class="btn btn-sm btn-secondary mb-2" id="btn_insertar_origen">Origen</button>
+                                                <button class="btn btn-sm btn-secondary mb-2" id="btn_insertar_porcentajepcl">Porcentaje PCL</button>
+                                                <button class="btn btn-sm btn-secondary mb-2" id="btn_insertar_radicado_entrada_controversia_primera_calificacion">Radicado Entrada Controversia Primera Calificación</button>
                                                 <button class="btn btn-sm btn-secondary mb-2" id="btn_insertar_nombres_cie10">Nombres CIE-10</button>
                                                 <button class="btn btn-sm btn-secondary mb-2" id="btn_insertar_tipo_controversia_pri_cali">Tipo Controversia Primera Calificación</button>
+                                                <button class="btn btn-sm btn-secondary mb-2" id="btn_insertar_observaciones">Observaciones</button>
                                                 <button class="btn btn-sm btn-secondary mb-2" id="btn_insertar_direccion_afiliado">Dirección Afiliado</button>
                                                 <button class="btn btn-sm btn-secondary mb-2" id="btn_insertar_telefono_afiliado">Teléfono Afiliado</button>
                                                 {{-- botón para proforma RESPUESTA A DEVOLUCIÓN DE EXPEDIENTE --}}
                                                 {{-- <button class="btn btn-sm btn-secondary mb-2" id="btn_insertar_nombre_documento">Nombre del Documento</button> --}}
                                                 {{-- botón preforma: ACLARACIÓN E INFORMACIÓN SOBRE RECURSO DE REPOSICIÓN EN SUBSIDIO DE APELACIÓN --}}
                                                 <button class="btn btn-sm btn-secondary mb-2" id="btn_insertar_correo_solicitud_info">Correo Solicitud Información</button>
+                                                <button class="btn btn-sm btn-secondary mb-2" id="btn_insertar_dictamen_controvertido">N° Dictamen Controvertido</button>
 
                                                 <textarea name="cuerpo_comunicado" id="cuerpo_comunicado" required></textarea>
                                             </div>
@@ -1400,7 +1466,7 @@
                                         <div class="col-4">
                                             <div class="form-group">
                                                 <label for="ciudad_comunicado">Ciudad <span style="color: red;">(*)</span></label>
-                                                <input class="form-control" type="text" name="ciudad_comunicado" id="ciudad" value="Bogotá D.C" required>
+                                                <input class="form-control" type="text" name="ciudad_comunicado" id="ciudad" value="Medellín" required>
                                                 <input hidden="hidden" type="text" class="form-control" name="Id_evento" id="Id_evento" value="{{$array_datos_calificacionJuntas[0]->ID_evento}}">
                                                 <input hidden="hidden" type="text" class="form-control" name="Id_asignacion" id="Id_asignacion" value="{{$array_datos_calificacionJuntas[0]->Id_Asignacion}}">
                                                 <input hidden="hidden" type="text" class="form-control" name="Id_procesos" id="Id_procesos" value="{{$array_datos_calificacionJuntas[0]->Id_proceso}}">
@@ -1519,8 +1585,8 @@
                                             <div class="col">
                                                 <div class="form-group">
                                                     <div class="form-check custom-control custom-radio">
-                                                        <input class="form-check-input custom-control-input custom-control-input-info" type="radio" name="tipo_de_preforma_editar" id="oficio_afiliado_editar" value="Oficio_Afiliado" required>
-                                                        <label class="form-check-label custom-control-label" for="oficio_afiliado_editar"><strong>OFICIO AFILIADO</strong></label>                                                        
+                                                        <input class="form-check-input custom-control-input custom-control-input-info" type="radio" name="tipo_de_preforma_editar" id="cierre_terminos_editar" value="Cierre_Terminos" required>
+                                                        <label class="form-check-label custom-control-label" for="cierre_terminos_editar"><strong>CIERRE FUERA DE TÉRMINOS</strong></label>                                                                                                                                                                    
                                                     </div>
                                                 </div>
                                             </div>
@@ -1529,8 +1595,28 @@
                                             <div class="col">
                                                 <div class="form-group">
                                                     <div class="form-check custom-control custom-radio">
-                                                        <input class="form-check-input custom-control-input custom-control-input-info" type="radio" name="tipo_de_preforma_editar" id="oficio_juntas_jrci_editar" value="Oficio_Juntas_JRCI" required>
-                                                        <label class="form-check-label custom-control-label" for="oficio_juntas_jrci_editar"><strong>SOLICITUD CALIFICACIÓN INVALIDÉZ</strong></label>
+                                                        <input class="form-check-input custom-control-input custom-control-input-info" type="radio" name="tipo_de_preforma_editar" id="sol_faltante_contro_editar" value="Sol_Faltante_Contro" required>
+                                                        <label class="form-check-label custom-control-label" for="sol_faltante_contro_editar"><strong>SOL. FALTANTES CONTROVERSIA</strong></label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
+                                        @if ($array_datos_calificacionJuntas[0]->Id_Servicio == '13')
+                                            <div class="col">
+                                                <div class="form-group">
+                                                    <div class="form-check custom-control custom-radio">
+                                                        <input class="form-check-input custom-control-input custom-control-input-info" type="radio" name="tipo_de_preforma_editar" id="cierre_doc_noaportada_editar" value="Cierre_Doc_Noaportada" required>
+                                                        <label class="form-check-label custom-control-label" for="cierre_doc_noaportada_editar"><strong>CIERRE DOC. NO APORTADA</strong></label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
+                                        @if ($array_datos_calificacionJuntas[0]->Id_Servicio == '13')
+                                            <div class="col">
+                                                <div class="form-group">
+                                                    <div class="form-check custom-control custom-radio">
+                                                        <input class="form-check-input custom-control-input custom-control-input-info" type="radio" name="tipo_de_preforma_editar" id="oficio_afiliado_editar" value="Oficio_Afiliado" required>
+                                                        <label class="form-check-label custom-control-label" for="oficio_afiliado_editar"><strong>RADICACIÓN EXPEDIENTE AFILIADO</strong></label>                                                        
                                                     </div>
                                                 </div>
                                             </div>
@@ -1554,17 +1640,57 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            @endif
+                                        @endif
                                         @if ($array_datos_calificacionJuntas[0]->Id_Servicio == '13')
                                             <div class="col">
                                                 <div class="form-group">
                                                     <div class="form-check custom-control custom-radio">
                                                         <input class="form-check-input custom-control-input custom-control-input-info" type="radio" name="tipo_de_preforma_editar" id="solicitud_dictamen_jrci_editar" value="Solicitud_Dictamen_JRCI" required>
-                                                        <label class="form-check-label custom-control-label" for="solicitud_dictamen_jrci_editar"><strong>SOLICITUD DICTAMEN JRCI</strong></label>
+                                                        <label class="form-check-label custom-control-label" for="solicitud_dictamen_jrci_editar"><strong>DP1/2 - SOL. DICTAMEN JRCI</strong></label>
                                                     </div>
                                                 </div>
                                             </div>
                                         @endif
+                                        @if ($array_datos_calificacionJuntas[0]->Id_Servicio == '13')
+                                            <div class="col">
+                                                <div class="form-group">
+                                                    <div class="form-check custom-control custom-radio">
+                                                        <input class="form-check-input custom-control-input custom-control-input-info" type="radio" name="tipo_de_preforma_editar" id="solicitud_acta_ejecutoria_jrci_editar" value="Solicitud_Acta_Ejecutoria_JRCI" required>
+                                                        <label class="form-check-label custom-control-label" for="solicitud_acta_ejecutoria_jrci_editar"><strong>DP3 - SOL. ACTA EJECUTORIA JRCI</strong></label>
+                                                    </div>
+                                                </div>
+                                            </div>                                            
+                                        @endif
+                                        @if ($array_datos_calificacionJuntas[0]->Id_Servicio == '13')
+                                            <div class="col">
+                                                <div class="form-group">
+                                                    <div class="form-check custom-control custom-radio">
+                                                        <input class="form-check-input custom-control-input custom-control-input-info" type="radio" name="tipo_de_preforma_editar" id="solicitud_pago_honorarios_jnci_editar" value="Solicitud_Pago_Honorarios_JNCI" required>
+                                                        <label class="form-check-label custom-control-label" for="solicitud_pago_honorarios_jnci_editar"><strong>DP4 - SOL. PAGO HONORARIOS JNCI</strong></label>
+                                                    </div>
+                                                </div>
+                                            </div>                                            
+                                        @endif
+                                        @if ($array_datos_calificacionJuntas[0]->Id_Servicio == '13')
+                                            <div class="col">
+                                                <div class="form-group">
+                                                    <div class="form-check custom-control custom-radio">
+                                                        <input class="form-check-input custom-control-input custom-control-input-info" type="radio" name="tipo_de_preforma_editar" id="solicitud_remision_expediente_jnci_editar" value="Solicitud_Remision_Expediente_JNCI" required>
+                                                        <label class="form-check-label custom-control-label" for="solicitud_remision_expediente_jnci_editar"><strong>DP5 - SOL. REMISIÓN EXPEDIENTE JNCI</strong></label>
+                                                    </div>
+                                                </div>
+                                            </div>                                            
+                                        @endif
+                                        {{-- @if ($array_datos_calificacionJuntas[0]->Id_Servicio == '13')
+                                            <div class="col">
+                                                <div class="form-group">
+                                                    <div class="form-check custom-control custom-radio">
+                                                        <input class="form-check-input custom-control-input custom-control-input-info" type="radio" name="tipo_de_preforma_editar" id="oficio_juntas_jrci_editar" value="Oficio_Juntas_JRCI" required>
+                                                        <label class="form-check-label custom-control-label" for="oficio_juntas_jrci_editar"><strong>SOLICITUD CALIFICACIÓN INVALIDÉZ</strong></label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif --}}
                                         <div class="col">
                                             <div class="form-group">
                                                 <div class="form-check custom-control custom-radio">
@@ -1699,6 +1825,7 @@
                                                 <br>
                                                 {{-- botón para proforma ADJUNTAR OFICIO AL AFILIADO	 --}}
                                                 <button class="btn btn-sm btn-secondary mb-2" id="btn_insertar_nombre_junta_regional_editar">Nombre Junta Regional</button>
+                                                <button class="btn btn-sm btn-secondary mb-2" id="btn_insertar_fecha_envio_jrci_editar">Fecha Envió JRCI</button>
                                                 {{-- botones para proforma REMISIÓN DE EXPEDIENTE PARA TRÁMITE DE CONTROVERSIA --}}
                                                 <button class="btn btn-sm btn-secondary mb-2" id="btn_insertar_nro_orden_pago_editar">N° Orden pago</button>
                                                 <button class="btn btn-sm btn-secondary mb-2" id="btn_insertar_fecha_notifi_afiliado_editar">Fecha Notificación al Afiliado</button>
@@ -1708,15 +1835,19 @@
                                                 <button class="btn btn-sm btn-secondary mb-2" id="btn_insertar_nombre_afiliado_editar">Nombre Afiliado</button>
                                                 <button class="btn btn-sm btn-secondary mb-2" id="btn_insertar_fecha_estructuracion_editar">Fecha Estructuración</button>
                                                 <button class="btn btn-sm btn-secondary mb-2" id="btn_insertar_tipo_evento_editar">Tipo de Evento</button>
+                                                <button class="btn btn-sm btn-secondary mb-2" id="btn_insertar_origen_editar">Origen</button>
+                                                <button class="btn btn-sm btn-secondary mb-2" id="btn_insertar_porcentajepcl_editar">Porcentaje PCL</button>
+                                                <button class="btn btn-sm btn-secondary mb-2" id="btn_insertar_radicado_entrada_controversia_primera_calificacion_editar">Radicado Entrada Controversia Primera Calificación</button>
                                                 <button class="btn btn-sm btn-secondary mb-2" id="btn_insertar_nombres_cie10_editar">Nombres CIE-10</button>
                                                 <button class="btn btn-sm btn-secondary mb-2" id="btn_insertar_tipo_controversia_pri_cali_editar">Tipo Controversia Primera Calificación</button>
+                                                <button class="btn btn-sm btn-secondary mb-2" id="btn_insertar_observaciones_editar">Observaciones</button>
                                                 <button class="btn btn-sm btn-secondary mb-2" id="btn_insertar_direccion_afiliado_editar">Dirección Afiliado</button>
                                                 <button class="btn btn-sm btn-secondary mb-2" id="btn_insertar_telefono_afiliado_editar">Teléfono Afiliado</button>
                                                 {{-- botón para proforma RESPUESTA A DEVOLUCIÓN DE EXPEDIENTE --}}
                                                 {{-- <button class="btn btn-sm btn-secondary mb-2" id="btn_insertar_nombre_documento_editar">Nombre del Documento</button> --}}
                                                 {{-- botón preforma: ACLARACIÓN E INFORMACIÓN SOBRE RECURSO DE REPOSICIÓN EN SUBSIDIO DE APELACIÓN --}}
                                                 <button class="btn btn-sm btn-secondary mb-2" id="btn_insertar_correo_solicitud_info_editar">Correo Solicitud Información</button>
-
+                                                <button class="btn btn-sm btn-secondary mb-2" id="btn_insertar_dictamen_controvertido_editar">N° Dictamen Controvertido</button>
                                                 <textarea name="cuerpo_comunicado_act" id="cuerpo_comunicado_editar" required></textarea>
                                             </div>
                                         </div>
@@ -1854,6 +1985,8 @@
                                                 <input type="hidden" class="form-control" name="F_notifi_afiliado_act" id="F_notifi_afiliado_act" value="<?php if(!empty($arrayinfo_controvertido[0]->F_notifi_afiliado)) { echo $arrayinfo_controvertido[0]->F_notifi_afiliado;} ?>">
                                                 <input type="hidden" class="form-control" name="F_radicacion_contro_pri_cali_act" id="F_radicacion_contro_pri_cali_act" value="<?php if(!empty($arrayinfo_controvertido[0]->F_contro_radi_califi)) { echo $arrayinfo_controvertido[0]->F_contro_radi_califi;} ?>">
                                                 <input type="hidden" class="form-control" name="F_estructuracion_act" id="F_estructuracion_act" value="<?php if(!empty($arrayinfo_controvertido[0]->F_estructuracion_contro)) { echo $arrayinfo_controvertido[0]->F_estructuracion_contro;} ?>">
+                                                {{-- etiqueta nueva --}}
+                                                <input type="hidden" class="form-control" name="N_radicado_entrada_contro_act" id="N_radicado_entrada_contro_act" value="<?php if(!empty($arrayinfo_controvertido[0]->N_radicado_entrada_contro)) { echo $arrayinfo_controvertido[0]->N_radicado_entrada_contro;} ?>">
                                                 {{-- revisar fecha --}}
                                                 <input type="hidden" class="form-control" name="F_dictamen_act" id="F_dictamen_act" value="<?php if(!empty($arrayinfo_controvertido[0]->F_dictamen_jrci_emitido)) { echo $arrayinfo_controvertido[0]->F_dictamen_jrci_emitido;} ?>">
                                             </div>

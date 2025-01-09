@@ -239,11 +239,11 @@
                         <div style="float:right; text-align: right;">
                             <span class="negrita">Asunto: {{$asunto}}</span><br> 
                             @if($Tipo_afiliado === 27)
-                                <span>Beneficiario:</span> <b>{{$Nombre_beneficiario}} {{$T_documento_beneficiario}}. {{$N_documento_beneficiario}}</b><br>
-                                <span>Afiliado:</span> <b>{{$Nombre_afiliado}} {{$T_documento_afiliado}}. {{$N_documento_afiliado}}</b><br>
+                                <span>Beneficiario(a)</span> <b>{{$Nombre_beneficiario}} {{$T_documento_beneficiario}}. {{$N_documento_beneficiario}}</b><br>
+                                <span>Afiliado(a)</span> <b>{{$Nombre_afiliado}} {{$T_documento_afiliado}}. {{$N_documento_afiliado}}</b><br>
                             @endif
                             @if($Tipo_afiliado === 26 || $Tipo_afiliado === 28 || $Tipo_afiliado === 29) 
-                                <span>Afiliado:</span> <b>{{$Nombre_afiliado}} {{$T_documento_afiliado}}. {{$N_documento_afiliado}}</b><br>
+                                <span>Afiliado(a)</span> <b>{{$Nombre_afiliado}} {{$T_documento_afiliado}}. {{$N_documento_afiliado}}</b><br>
                             @endif
                         </div>
                     </td>

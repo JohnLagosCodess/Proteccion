@@ -22,8 +22,8 @@
                     <div class="row">
                         <form action="{{ route('cambiar_clave') }}" method="post" id="cambiar_clave">
                             @csrf
-                            <input type="hidden" name="email" value="{{ $user->email }}">
-                            <input type="hidden" name="token" value="{{ $token }}">
+                            <input type="hidden" name="email" value="{{ @$user->email }}">
+                            <input type="hidden" name="token" value="{{ @$token }}">
 
                             <div class="d-flex align-items-center" style="margin: auto">
                                 <div class="form-group col-4">
@@ -48,6 +48,15 @@
                         </ul>
                     </div>
                 </div>
+                @isset($success)
+                <div class="card-footer mb-2">
+                    <div id="msg_actualizar_clave">
+                            <span role="alert" class="alert alert-success">
+                                {{$success}}
+                            </span>
+                    </div>
+                </div>
+                @endisset
             </div>
         </div>
     </div>
@@ -57,6 +66,7 @@
     <script src="/js/funciones_helpers.js?v=1.0.0"></script>
     <script type="text/javascript">
         $(document).ready(function() {
+            
             $("#alertaCambioClave").show();
             $("#cerrar_modal").click(function(){
                 $("#alertaCambioClave").hide();
@@ -100,6 +110,14 @@
                         '<li class="text-success">La contraseña es válida.</li>');
                 }
             });
+
+            if($("#msg_actualizar_clave").length > 0){
+                $("#alertaCambioClave").hide();
+                setTimeout(() => {
+                    location.href = "{{ route('login')}}";
+                }, 4000);
+            }
+
         });
 
         function validatePassword(password) {
