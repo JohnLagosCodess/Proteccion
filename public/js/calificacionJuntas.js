@@ -1147,8 +1147,11 @@ $(document).ready(function(){
             'f_notifi_afiliado': $('#f_notifi_afiliado').val(),
             'f_contro_primer_califi': $('#f_contro_primer_califi').val(),
             'tipo_evento': $("#Tipo_evento_juntas :selected").val(),
+            'F_radicacion_pri_opor': $("#f_radicacion_pri_opor").val(),
             'bandera_controvertido_guardar_actualizar': $('#guardar_datos_controvertido').val(),
         }
+        // console.log(datos_controvertido);
+        
         document.querySelector("#guardar_datos_controvertido").disabled = true;
         $.ajax({
             type:'POST',
@@ -1166,7 +1169,7 @@ $(document).ready(function(){
                     }, 3000);
                 }
             }
-        })
+        });
     }) 
 
     // Abrir modal una vez se guarde item de controvertido
@@ -1198,8 +1201,8 @@ $(document).ready(function(){
             'f_notifi_afiliado': $('#f_notifi_afiliado').val(),
             'termino_contro_califi': $('#termino_contro_califi').val(),
             'jrci_califi_invalidez': $('#jrci_califi_invalidez').val(),
-            'fecha_envio_jrci': $('#f_envio_jrci').val(),
-            'fecha_envio_jnci': $('#f_envio_jnci').val(),
+            // 'fecha_envio_jrci': $('#f_envio_jrci').val(),
+            // 'fecha_envio_jnci': $('#f_envio_jnci').val(),
             'Observaciones': $('#observaciones_contro').val(),
             'bandera_controversia_guardar_actualizar': $('#guardar_datos_controversia').val(),
         }
@@ -1221,7 +1224,50 @@ $(document).ready(function(){
                 }
             }
         })
-    }) 
+    });
+
+    /* Envío Información sección Seguimiento a Juntas calificadoras */
+    $('#formSeguimientoJuntasCalifi').submit(function (e){
+        e.preventDefault();  
+        let token = $('input[name=_token]').val();
+
+        $('#guardar_datos_seguimiento_junta').prop('disabled', true);
+
+        var datos_seguimiento_junta = {
+            '_token': token,
+            'newId_evento': $('#newId_evento').val(),
+            'newId_asignacion': $('#newId_asignacion').val(),
+            'Id_proceso': $('#Id_proceso').val(),
+            'fecha_envio_jrci': $('#f_envio_jrci').val(),
+            'f_devolucion_exp_jrci': $('#f_devolucion_exp_jrci').val(),
+            'causal_devo_exp_jrci': $('#causal_devo_exp_jrci').val(),
+            'f_reenvio_exp_jrci': $('#f_reenvio_exp_jrci').val(),
+            'f_cita_jrci': $('#f_cita_jrci').val(),
+            'f_soli_pago_hono_jnci': $('#f_soli_pago_hono_jnci').val(),
+            'fecha_envio_jnci': $('#f_envio_jnci').val(),
+            'f_cita_jnci': $('#f_cita_jnci').val(),
+            'bandera_seguimiento_guardar_actualizar': $('#guardar_datos_seguimiento_junta').val()
+        };
+
+        $.ajax({
+            type:'POST',
+            url:'/registrarSeguimientoJuntas',
+            data: datos_seguimiento_junta,            
+            success:function(response){
+                if (response.parametro == 'agregar_seguimiento') {
+                    $('.alerta_seguimiento').removeClass('d-none');
+                    $('.alerta_seguimiento').append('<strong>'+response.mensaje+'</strong>');
+                    setTimeout(function(){
+                        $('.alerta_seguimiento').addClass('d-none');
+                        $('.alerta_seguimiento').empty();
+                        localStorage.setItem("#Generar_controversia", true);
+                        location.reload();
+                    }, 3000);
+                }
+            }
+        })
+
+    });
 
     // Abrir modal una vez se guarde item de controversia
     if (localStorage.getItem("#Generar_controversia")) {

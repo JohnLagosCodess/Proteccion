@@ -100,7 +100,17 @@ class CalificacionJuntasController extends Controller
         ->select('j.ID_evento','j.Enfermedad_heredada','j.F_transferencia_enfermedad','j.Primer_calificador','pa.Nombre_parametro as Calificador'
         ,'j.Nom_entidad','j.N_dictamen_controvertido','j.F_dictamen_controvertido','j.N_siniestro','j.F_notifi_afiliado','j.Parte_controvierte_califi','pa2.Nombre_parametro as ParteCalificador','j.Nombre_controvierte_califi',
         'j.N_radicado_entrada_contro','j.Contro_origen','j.Contro_pcl','j.Contro_diagnostico','j.Contro_f_estructura','j.Contro_m_califi',
-        'j.F_contro_primer_califi','j.F_contro_radi_califi','j.Termino_contro_califi','j.Jrci_califi_invalidez','sie.Nombre_entidad as JrciNombre','j.F_envio_jrci', 'j.F_envio_jnci','j.F_plazo_controversia','j.Observaciones')
+        'j.F_contro_primer_califi','j.F_contro_radi_califi','j.Termino_contro_califi','j.Jrci_califi_invalidez','sie.Nombre_entidad as JrciNombre','j.F_plazo_controversia','j.Observaciones',
+        'Id_Asignacion_Servicio_Anterior',
+        'F_envio_jrci',
+	    'F_devolucion_exp_jrci',
+	    'Causal_devo_exp_jrci',
+	    'F_reenvio_exp_jrci',
+	    'F_cita_jrci',
+	    'F_soli_pago_hono_jnci',
+	    'F_envio_jnci',
+	    'F_cita_jnci',
+        'F_radicacion_pri_opor')
         ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as pa', 'j.Primer_calificador', '=', 'pa.Id_Parametro')
         ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as pa2', 'j.Parte_controvierte_califi', '=', 'pa2.Id_Parametro')
         ->leftJoin('sigmel_gestiones.sigmel_informacion_entidades as sie', 'j.Jrci_califi_invalidez', '=', 'sie.Id_Entidad')
@@ -202,9 +212,216 @@ class CalificacionJuntasController extends Controller
             ['Nombre_documento', 'Lista_chequeo'],
         ])->get();
 
+        /* 
+            Validaciones para traer la info del campo Fecha envío expediente a JRCI de la sección Seguimiento a Juntas calificadoras 
+            Se requiere traer la Fecha de accion más reciente cuando se haya ejecutado la acción REPORTAR NOTIFICACIÓN EXPEDIENTE JRCI (ID 61)
+        */
+        $array_f_envio_exp_jrci = sigmel_informacion_historial_accion_eventos::on('sigmel_gestiones')
+        ->selectRaw('DATE(F_accion) as F_accion')
+        ->where([
+            ['Id_Asignacion', $newIdAsignacion],
+            ['ID_evento', $newIdEvento],
+            ['Id_servicio', $Id_servicio],
+            ['Id_accion', 61]
+        ])->orderBy('F_accion', 'desc')->first();
+        
+        if ($array_f_envio_exp_jrci) {
+            $f_envio_exp_jrci = $array_f_envio_exp_jrci->F_accion;
+        }else{
+            $f_envio_exp_jrci = '';
+        }
+
+        /* 
+            Validaciones para traer la info del campo Fecha devolución expediente JRCI de la sección Seguimiento a Juntas calificadoras 
+            Se requiere traer la Fecha de accion más reciente cuando se haya ejecutado alguna de estas acciones
+
+            RENOTIFICAR DEVOLUCIÓN DE EXPEDIENTE (ID 63)
+            RENOTIFICAR DEVOLUCIÓN DE EXPEDIENTE NO 2 (ID 81)
+            RENOTIFICAR DEVOLUCIÓN DE EXPEDIENTE NO 3 (ID 82)
+        */
+
+        $array_f_devolucion_exp_jrci = sigmel_informacion_historial_accion_eventos::on('sigmel_gestiones')
+        ->selectRaw('DATE(F_accion) as F_accion')
+        ->where([
+            ['Id_Asignacion', $newIdAsignacion],
+            ['ID_evento', $newIdEvento],
+            ['Id_servicio', $Id_servicio]
+        ])
+        ->whereIn('Id_accion', [63,81,82])
+        ->orderBy('F_accion', 'desc')->first();
+
+        if ($array_f_devolucion_exp_jrci) {
+            $f_devolucion_exp_jrci = $array_f_devolucion_exp_jrci->F_accion;
+        }else{
+            $f_devolucion_exp_jrci = '';
+        }
+
+        /* 
+            Validaciones para traer la info del campo Fecha de reenvío expediente a JRCI de la sección Seguimiento a Juntas calificadoras 
+            Se requiere traer la Fecha de accion más reciente cuando se haya ejecutado la acción REPORTAR RENOTIFICACIÓN DE EXPEDIENTE (ID 64)
+        */
+        $array_f_reenvio_exp_jrci = sigmel_informacion_historial_accion_eventos::on('sigmel_gestiones')
+        ->selectRaw('DATE(F_accion) as F_accion')
+        ->where([
+            ['Id_Asignacion', $newIdAsignacion],
+            ['ID_evento', $newIdEvento],
+            ['Id_servicio', $Id_servicio],
+            ['Id_accion', 64]
+        ])->orderBy('F_accion', 'desc')->first();
+        
+        if ($array_f_reenvio_exp_jrci) {
+            $f_reenvio_exp_jrci = $array_f_reenvio_exp_jrci->F_accion;
+        }else{
+            $f_reenvio_exp_jrci = '';
+        }
+
+        /* 
+            Validaciones para traer la info del campo Fecha envío pago de honorarios a JNCI de la sección Seguimiento a Juntas calificadoras 
+            Se requiere traer la Fecha de accion más reciente cuando se haya ejecutado la acción REPORTAR ENVÍO PAGO DE HONORARIOS JNCI (ID 86)
+        */
+        $array_f_envio_pago_honorarios_jnci = sigmel_informacion_historial_accion_eventos::on('sigmel_gestiones')
+        ->selectRaw('DATE(F_accion) as F_accion')
+        ->where([
+            ['Id_Asignacion', $newIdAsignacion],
+            ['ID_evento', $newIdEvento],
+            ['Id_servicio', $Id_servicio],
+            ['Id_accion', 86]
+        ])->orderBy('F_accion', 'desc')->first();
+        
+        if ($array_f_envio_pago_honorarios_jnci) {
+            $f_envio_pago_honorarios_jnci = $array_f_envio_pago_honorarios_jnci->F_accion;
+        }else{
+            $f_envio_pago_honorarios_jnci = '';
+        }
+
+        /*  Validaciones para traer la información a los siguientes campos: 
+            1. Campo Fecha notificación al afiliado de la sección Datos del Dictamen Controvertido
+            2. Campo Fecha radicación primera oportunidad de la sección Datos del Dictamen Controvertido
+        */
+
+        if(!empty($arrayinfo_controvertido[0]->Id_Asignacion_Servicio_Anterior)){
+
+            $id_servicio_anterior = sigmel_informacion_asignacion_eventos::on('sigmel_gestiones')
+            ->select('Id_servicio')
+            ->where([['Id_Asignacion', $arrayinfo_controvertido[0]->Id_Asignacion_Servicio_Anterior]])
+            ->get();
+
+            // Validar que tipo de controversia se creó. Si es 12 es Origen y si es 13 es PCL
+            if ($Id_servicio == 12) {
+                // Validar si la controversia fue creada a partir de un servicio de DTO (id 1) o ADX (id 2)
+                if (!empty($id_servicio_anterior[0]->Id_servicio) && ($id_servicio_anterior[0]->Id_servicio == 1 || $id_servicio_anterior[0]->Id_servicio == 2)) {
+
+                    // Extraemos el dato Fecha de notificación de la tabla de correspondencia siempre y cuando el tipo de correspondencia sea Afiliado y además
+                    // el documento del cual se extraiga la info sea un OFICIO ORIGEN
+                    $array_fecha_notificacion = DB::table(getDatabaseName('sigmel_gestiones').'sigmel_informacion_correspondencia_eventos as sicore')
+                    ->leftJoin('sigmel_gestiones.sigmel_informacion_comunicado_eventos as sicome', 'sicore.Id_comunicado', '=', 'sicome.Id_Comunicado')
+                    ->select('sicore.F_notificacion')
+                    ->where([
+                        ['sicore.Id_Asignacion', $arrayinfo_controvertido[0]->Id_Asignacion_Servicio_Anterior],
+                        ['sicore.Tipo_correspondencia', 'Afiliado'],
+                        ['sicome.Tipo_descarga', 'OFICIO ORIGEN']
+                    ])->first();
+
+                    $fecha_notificacion = $array_fecha_notificacion->F_notificacion;
+
+                    // Extramenos Fecha de radicación de la tabla sigmel_informacion_asignacion_eventos
+                    $array_f_radicacion = sigmel_informacion_asignacion_eventos::on('sigmel_gestiones')
+                    ->select('F_radicacion')
+                    ->where([['Id_Asignacion', $arrayinfo_controvertido[0]->Id_Asignacion_Servicio_Anterior]])->first();
+                    
+                    $f_radicacion = $array_f_radicacion->F_radicacion;
+                    
+                }else{
+                    $fecha_notificacion = '';
+                    $f_radicacion = '';
+                }
+    
+    
+            } else {
+                // Validar si la controversia fue creada a partir de una Calificación técnica (id 6) o Recalificación (id 7) o Revisión pensión (id 8)
+                if (!empty($id_servicio_anterior[0]->Id_servicio) && $id_servicio_anterior[0]->Id_servicio == 6) {
+                    // Extraemos el dato Fecha de notificación de la tabla de correspondencia siempre y cuando el tipo de correspondencia sea Afiliado y además
+                    // el documento del cual se extraiga la info sea un OFICIO PCL
+                    $array_fecha_notificacion = DB::table(getDatabaseName('sigmel_gestiones').'sigmel_informacion_correspondencia_eventos as sicore')
+                    ->leftJoin('sigmel_gestiones.sigmel_informacion_comunicado_eventos as sicome', 'sicore.Id_comunicado', '=', 'sicome.Id_Comunicado')
+                    ->select('sicore.F_notificacion')
+                    ->where([
+                        ['sicore.Id_Asignacion', $arrayinfo_controvertido[0]->Id_Asignacion_Servicio_Anterior],
+                        ['sicore.Tipo_correspondencia', 'Afiliado'],
+                        ['sicome.Tipo_descarga', 'Oficio'],
+                        ['sicome.Modulo_creacion', 'calificacionTecnicaPCL']
+                    ])->first();
+                    
+                    $fecha_notificacion = $array_fecha_notificacion->F_notificacion;
+
+                    // Extramenos Fecha de radicación de la tabla sigmel_informacion_asignacion_eventos
+                    $array_f_radicacion = sigmel_informacion_asignacion_eventos::on('sigmel_gestiones')
+                    ->select('F_radicacion')
+                    ->where([['Id_Asignacion', $arrayinfo_controvertido[0]->Id_Asignacion_Servicio_Anterior]])->first();
+                    
+                    $f_radicacion = $array_f_radicacion->F_radicacion;
+
+                }elseif (!empty($id_servicio_anterior[0]->Id_servicio) && $id_servicio_anterior[0]->Id_servicio == 7) {
+                    // Extraemos el dato Fecha de notificación de la tabla de correspondencia siempre y cuando el tipo de correspondencia sea Afiliado y además
+                    // el documento del cual se extraiga la info sea un OFICIO PCL
+                    $array_fecha_notificacion = DB::table(getDatabaseName('sigmel_gestiones').'sigmel_informacion_correspondencia_eventos as sicore')
+                    ->leftJoin('sigmel_gestiones.sigmel_informacion_comunicado_eventos as sicome', 'sicore.Id_comunicado', '=', 'sicome.Id_Comunicado')
+                    ->select('sicore.F_notificacion')
+                    ->where([
+                        ['sicore.Id_Asignacion', $arrayinfo_controvertido[0]->Id_Asignacion_Servicio_Anterior],
+                        ['sicore.Tipo_correspondencia', 'Afiliado'],
+                        ['sicome.Tipo_descarga', 'Oficio'],
+                        ['sicome.Modulo_creacion', 'recalificacionPCL']
+                    ])->first();
+
+                    $fecha_notificacion = $array_fecha_notificacion->F_notificacion;
+
+                    // Extramenos Fecha de radicación de la tabla sigmel_informacion_asignacion_eventos
+                    $array_f_radicacion = sigmel_informacion_asignacion_eventos::on('sigmel_gestiones')
+                    ->select('F_radicacion')
+                    ->where([['Id_Asignacion', $arrayinfo_controvertido[0]->Id_Asignacion_Servicio_Anterior]])->first();
+                    
+                    $f_radicacion = $array_f_radicacion->F_radicacion;
+
+                }
+                elseif (!empty($id_servicio_anterior[0]->Id_servicio) && $id_servicio_anterior[0]->Id_servicio == 8) {
+                    // Extraemos el dato Fecha de notificación de la tabla de correspondencia siempre y cuando el tipo de correspondencia sea Afiliado y además
+                    // el documento del cual se extraiga la info sea un GRADO 1 - 2 (C) o GRADO 2 A 1 (D) o NO RATIFICACIÓN
+                    $array_fecha_notificacion = DB::table(getDatabaseName('sigmel_gestiones').'sigmel_informacion_correspondencia_eventos as sicore')
+                    ->leftJoin('sigmel_gestiones.sigmel_informacion_comunicado_eventos as sicome', 'sicore.Id_comunicado', '=', 'sicome.Id_Comunicado')
+                    ->select('sicore.F_notificacion')
+                    ->where([
+                        ['sicore.Id_Asignacion', $arrayinfo_controvertido[0]->Id_Asignacion_Servicio_Anterior],
+                        ['sicore.Tipo_correspondencia', 'Afiliado'],
+                        ['sicome.Tipo_descarga', 'Oficio'],
+                        ['sicome.Modulo_creacion', 'recalificacionPCL']
+                    ])->first();
+
+                    $fecha_notificacion = $array_fecha_notificacion->F_notificacion;
+
+                    // Extramenos Fecha de radicación de la tabla sigmel_informacion_asignacion_eventos
+                    $array_f_radicacion = sigmel_informacion_asignacion_eventos::on('sigmel_gestiones')
+                    ->select('F_radicacion')
+                    ->where([['Id_Asignacion', $arrayinfo_controvertido[0]->Id_Asignacion_Servicio_Anterior]])->first();
+                    
+                    $f_radicacion = $array_f_radicacion->F_radicacion;
+                    
+                }else{
+                    $fecha_notificacion = '';
+                    $f_radicacion = '';
+                }
+            }
+        }else{
+            $fecha_notificacion = '';
+            $f_radicacion = '';
+        }
+        
+        // echo $fecha_notificacion;
+
         return view('coordinador.calificacionJuntas', compact('user','array_datos_calificacionJuntas','arraylistado_documentos', 'cantidad_documentos_cargados', 'arrayinfo_afiliado',
         'arrayinfo_controvertido','arrayinfo_pagos','listado_documentos_solicitados','dato_validacion_no_aporta_docs',
-        'arraycampa_documento_solicitado','consecutivo','hitorialAgregarSeguimiento','SubModulo', 'Id_servicio','enviar_notificaciones', 'N_siniestro_evento', 'info_evento', 'validar_lista_chequeo', 'info_cuadro_expedientes'));
+        'arraycampa_documento_solicitado','consecutivo','hitorialAgregarSeguimiento','SubModulo', 'Id_servicio','enviar_notificaciones', 'N_siniestro_evento', 'info_evento', 'validar_lista_chequeo', 'info_cuadro_expedientes',
+        'f_envio_exp_jrci', 'f_devolucion_exp_jrci', 'f_reenvio_exp_jrci', 'f_envio_pago_honorarios_jnci', 'fecha_notificacion', 'f_radicacion'));
     }
     //Cargar Selectores Juntas
     public function cargueListadoSelectoresJuntas(Request $request){
@@ -334,12 +551,18 @@ class CalificacionJuntasController extends Controller
         }
         // Listado Junta Pagos Honorarios
         if($parametro == 'lista_juntas_pago'){
-            $listado_pagos_juntas = sigmel_lista_parametros::on('sigmel_gestiones')
-            ->select('Id_Parametro', 'Nombre_parametro')
-            ->where([
-                ['Tipo_lista', '=', 'Jrci Invalidez'],
-                ['Estado', '=', 'activo']
-            ])
+            // $listado_pagos_juntas = sigmel_lista_parametros::on('sigmel_gestiones')
+            // ->select('Id_Parametro', 'Nombre_parametro')
+            // ->where([
+            //     ['Tipo_lista', '=', 'Jrci Invalidez'],
+            //     ['Estado', '=', 'activo']
+            // ])
+            // ->get();
+
+            $listado_pagos_juntas = sigmel_informacion_entidades::on('sigmel_gestiones')
+            ->select('Id_Entidad as Id_Parametro', 'Nombre_entidad as Nombre_parametro')
+            ->whereIn('IdTipo_entidad', ['4','5'])
+            ->where([['Estado_entidad', 'activo']])
             ->get();
 
             $info_listado_pagos_juntas = json_decode(json_encode($listado_pagos_juntas, true));
@@ -1964,6 +2187,7 @@ class CalificacionJuntasController extends Controller
         $f_contro_primer_califi = $request->f_contro_primer_califi;
         $f_contro_radi_califi = $request->f_contro_radi_califi;
         $f_notifi_afiliado = $request->f_notifi_afiliado;
+        $F_radicacion_pri_opor = $request->F_radicacion_pri_opor;
         //Validar registro termino de controversia
         $conteoDias = sigmel_calendarios::on('sigmel_gestiones')
         ->whereBetween('Fecha', [$f_notifi_afiliado, $f_contro_radi_califi])
@@ -1996,6 +2220,7 @@ class CalificacionJuntasController extends Controller
                 'N_siniestro' => $request->n_siniestro,
                 'F_notifi_afiliado' => $request->f_notifi_afiliado,
                 'Termino_contro_califi' => $terminos,
+                'F_radicacion_pri_opor' => $F_radicacion_pri_opor,
                 'Nombre_usuario' => $nombre_usuario,
                 'F_registro' => $date,
             ];
@@ -2030,6 +2255,7 @@ class CalificacionJuntasController extends Controller
                 'N_siniestro' => $request->n_siniestro,
                 'F_notifi_afiliado' => $request->f_notifi_afiliado,
                 'Termino_contro_califi' => $terminos,
+                'F_radicacion_pri_opor' => $F_radicacion_pri_opor,
                 'Nombre_usuario' => $nombre_usuario,
                 'F_registro' => $date,
             ];
@@ -2106,8 +2332,8 @@ class CalificacionJuntasController extends Controller
                 'Jrci_califi_invalidez' => $request->jrci_califi_invalidez,
                 'Nombre_usuario' => $nombre_usuario,
                 'F_registro' => $date,
-                'F_envio_jrci' => $request->fecha_envio_jrci,
-                'F_envio_jnci' => $request->fecha_envio_jnci,
+                // 'F_envio_jrci' => $request->fecha_envio_jrci,
+                // 'F_envio_jnci' => $request->fecha_envio_jnci,
                 'Observaciones' => $request->Observaciones
             ];
             sigmel_informacion_controversia_juntas_eventos::on('sigmel_gestiones')->insert($datos_info_controversia);
@@ -2136,8 +2362,8 @@ class CalificacionJuntasController extends Controller
                 'Jrci_califi_invalidez' => $request->jrci_califi_invalidez,
                 'Nombre_usuario' => $nombre_usuario,
                 'F_registro' => $date,
-                'F_envio_jrci' => $request->fecha_envio_jrci,
-                'F_envio_jnci' => $request->fecha_envio_jnci,
+                // 'F_envio_jrci' => $request->fecha_envio_jrci,
+                // 'F_envio_jnci' => $request->fecha_envio_jnci,
                 'Observaciones' => $request->Observaciones
             ];
             sigmel_informacion_controversia_juntas_eventos::on('sigmel_gestiones')
@@ -2151,6 +2377,86 @@ class CalificacionJuntasController extends Controller
             return json_decode(json_encode($mensajes, true));
         }
     }
+
+    // Guardar informacion de Seguimiento a juntas calificadores
+    public function guardarSeguimientoJuntas (Request $request){
+        if (!Auth::check()) {
+            return redirect('/');
+        }
+        $time = time();
+        $date = date("Y-m-d", $time);
+        $user = Auth::user();
+        $nombre_usuario = Auth::user()->name;
+
+        $newIdAsignacion = $request->newId_asignacion;
+        $newIdEvento = $request->newId_evento;
+        $Id_proceso = $request->Id_proceso;
+        $fecha_envio_jrci = $request->fecha_envio_jrci;
+        $f_devolucion_exp_jrci = $request->f_devolucion_exp_jrci;
+        $causal_devo_exp_jrci = $request->causal_devo_exp_jrci;
+        $f_reenvio_exp_jrci = $request->f_reenvio_exp_jrci;
+        $f_cita_jrci = $request->f_cita_jrci;
+        $f_soli_pago_hono_jnci = $request->f_soli_pago_hono_jnci;
+        $fecha_envio_jnci = $request->fecha_envio_jnci;
+        $f_cita_jnci = $request->f_cita_jnci;
+        $bandera_seguimiento_guardar_actualizar = $request->bandera_seguimiento_guardar_actualizar;
+
+        // validacion de bandera para guardar o actualizar
+        // insercion de datos a la tabla de sigmel_informacion_controversia_juntas_eventos
+
+        if ($bandera_seguimiento_guardar_actualizar == "Guardar") {
+            
+            $datos_info_seguimiento_junta = [
+                'ID_evento' => $newIdEvento,
+                'Id_Asignacion' => $newIdAsignacion,
+                'Id_proceso' => $Id_proceso,
+                'F_envio_jrci' => $fecha_envio_jrci,
+                'F_devolucion_exp_jrci' => $f_devolucion_exp_jrci,
+                'Causal_devo_exp_jrci' => $causal_devo_exp_jrci,
+                'F_reenvio_exp_jrci' => $f_reenvio_exp_jrci,
+                'F_cita_jrci' => $f_cita_jrci,
+                'F_soli_pago_hono_jnci' => $f_soli_pago_hono_jnci,
+                'F_envio_jnci' => $fecha_envio_jnci,
+                'F_cita_jnci' => $f_cita_jnci,
+                'Nombre_usuario' => $nombre_usuario,
+                'F_registro' => $date,
+            ];
+
+            sigmel_informacion_controversia_juntas_eventos::on('sigmel_gestiones')->insert($datos_info_seguimiento_junta);
+
+            $mensajes = array(
+                "parametro" => 'agregar_seguimiento',
+                "mensaje" => 'Registro agregado satisfactoriamente.'
+            );
+
+        } else {
+            $datos_info_seguimiento_junta_actualizar = [
+                'F_envio_jrci' => $fecha_envio_jrci,
+                'F_devolucion_exp_jrci' => $f_devolucion_exp_jrci,
+                'Causal_devo_exp_jrci' => $causal_devo_exp_jrci,
+                'F_reenvio_exp_jrci' => $f_reenvio_exp_jrci,
+                'F_cita_jrci' => $f_cita_jrci,
+                'F_soli_pago_hono_jnci' => $f_soli_pago_hono_jnci,
+                'F_envio_jnci' => $fecha_envio_jnci,
+                'F_cita_jnci' => $f_cita_jnci,
+                'Nombre_usuario' => $nombre_usuario,
+                'F_registro' => $date,
+            ];
+
+            sigmel_informacion_controversia_juntas_eventos::on('sigmel_gestiones')
+            ->where('Id_Asignacion', $newIdAsignacion)->update($datos_info_seguimiento_junta_actualizar);
+
+            $mensajes = array(
+                "parametro" => 'agregar_seguimiento',
+                "mensaje" => 'Registro actualizado satisfactoriamente.'
+            );
+
+            return json_decode(json_encode($mensajes, true));
+        }
+        
+
+    }
+
     //Guarda informacion pagos honorarios
     public function guardarPagosJuntas(Request $request){
     
