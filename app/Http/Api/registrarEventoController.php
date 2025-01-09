@@ -166,12 +166,12 @@ class registrarEventoController extends Controller
             ],
             'servicio' => [
                 "validar" => ['required', 'string', "in:1,2,3,4,5,6,7,8,9"],
-                "remplazar" => "1:1,2:2,3:3,4:6,5:7,6:8,7:9,8:12,9:13",
                 "validar_servicio" => [
-                        1 => [1,2,3],
-                        2 => [6,7,8,9],
-                        3 => [12,13]
-                    ]
+                    1 => [1,2,3],
+                    2 => [4,5,6,7],
+                    3 => [8,9]
+                ],
+                "remplazar" => "1:1,2:2,3:3,4:6,5:7,6:8,7:9,8:12,9:13",
             ],
             'fecha_radicacion' => [
                 "validar" => ['required', 'date']
@@ -776,18 +776,17 @@ class registrarEventoController extends Controller
      * @var Array|String Atributos sobre los cuales estara interactuando la accion
      * @return void
      */
-    private function validar_se222rviciossss($campo, $target){
+    private function validar_servicio($campo, $target){
         if($this->request->input("servicio") != $this->request->servicio){
             return;
         }
 
         if (isset($target[$this->request->proceso]) && !in_array($this->request->servicio, $target[$this->request->proceso])) {
-    
             $this->estado_ejecucion = "Fallo";
             $this->msg_validacion = $this->getMensaje(101, [
                 "campos_faltantes" => "El servicio seleccionado no corresponde al proceso {$this->request->proceso} seleccionado. Por favor verifique."
             ]);
-    }
+        }
     }
 
     /**
@@ -818,6 +817,8 @@ class registrarEventoController extends Controller
      * @return Void
      */
     private function debug($debug):void{
+        Log::channel('log_api')->debug("TEST: ",["test" => $debug]);
+
         if(is_array($debug)){
             echo "<pre>";
             print_r($debug);
