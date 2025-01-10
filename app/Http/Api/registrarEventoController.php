@@ -279,6 +279,7 @@ class registrarEventoController extends Controller
             $this->configurar_validaciones()->validar();
 
             if ($this->estado_ejecucion == "Fallo") {
+                Log::channel('log_api')->error("Comsumo errado: ", $this->request->all() );
                 return response()->json($this->msg_validacion);
             }
             
@@ -777,10 +778,8 @@ class registrarEventoController extends Controller
      * @return void
      */
     private function validar_servicio($campo, $target){
-        if($this->request->input("servicio") != $this->request->servicio){
-            return;
-        }
-
+        if($this->request->input("servicio") != $this->request->servicio) return;
+        
         if (isset($target[$this->request->proceso]) && !in_array($this->request->servicio, $target[$this->request->proceso])) {
             $this->estado_ejecucion = "Fallo";
             $this->msg_validacion = $this->getMensaje(101, [

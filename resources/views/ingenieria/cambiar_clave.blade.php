@@ -114,7 +114,7 @@
             if($("#msg_actualizar_clave").length > 0){
                 $("#alertaCambioClave").hide();
                 setTimeout(() => {
-                    location.href = "{{ route('login')}}";
+			location.href = "{{ route('login')}}";
                 }, 4000);
             }
 

@@ -65,9 +65,6 @@ class LoginController extends Controller
         }
     }
 
-    /**
-     * Realiza el cambio de clave para un usuario en especifico
-     */
     public function cambiar_clave(Request $request)
     {
         $request->validate([

@@ -183,11 +183,7 @@
         @else
             <div class="footer_content" style="text-align:center;">
                 <span style="position: absolute; width: 100%; text-align:center; top: 10px; left:0px; color:#4D4D4D; font-weight:bold; font-size: 11px;">
-                    @if($info_afiliado->Tipo_afiliado == 27)
-                        {{$info_afiliado->Nombre_afiliado_benefi}} - {{$info_afiliado->t_doc_beneficiario}} {{$info_afiliado->Nro_identificacion_benefi}} - SINIESTRO: {{$N_siniestro}} 
-                    @else
-                        {{$nombre_afiliado}} - {{$t_documento}} {{$n_documento}} - SINIESTRO: {{$N_siniestro}} 
-                    @endif
+                    {{$nombre_afiliado}} - {{$t_documento}} {{$n_documento}} - SINIESTRO: {{$N_siniestro}} 
                 </span>
                 <img src="data:image/png;base64,{{ $footer_base64 }}" class="footer_image" style="display: block;" width="100%">
             </div>
@@ -221,7 +217,7 @@
             <div class="col-6">
                 <span class="fuente_todo_texto negrita"> Asunto: {{$asunto}}</span><br>
                 <span>CASO DEL (LA) SEÑOR(A) <strong>{{$nombre_afiliado}} {{$t_documento}}. {{$n_documento}}</strong></span><br>
-                @if($info_afiliado->Tipo_afiliado == 27 && $info_afiliado->Apoderado == "No")
+                @if($info_afiliado->Tipo_afiliado == 27)
                     <span class="fuente_todo_texto">Afiliado(a): <strong>{{$info_afiliado->Nombre_afiliado_benefi}} {{$info_afiliado->t_doc_beneficiario}}. {{$info_afiliado->Nro_identificacion_benefi}}</strong></span>
                 @endif
             </div>
