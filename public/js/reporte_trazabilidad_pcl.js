@@ -58,6 +58,8 @@ $(document).ready(function () {
         var fecha_desde = $('#fecha_desde').val();
         var fecha_hasta = $('#fecha_hasta').val();
 
+        $("#btn_generar_reporte").prop('disabled', true);
+
         /* Generamos el envío de los datos */
         let datos_consulta_reporte_traza_pcl = {
             '_token': token,
@@ -88,6 +90,8 @@ $(document).ready(function () {
                         $('.resultado_validacion').addClass('d-none');
                         $('.resultado_validacion').removeClass('alert-danger');
                         $('#llenar_mensaje_validacion').empty();
+
+                        $("#btn_generar_reporte").prop('disabled', false);
                     }, 4000);
     
                     $('#fecha_desde').val('');
@@ -97,11 +101,12 @@ $(document).ready(function () {
                 }
                 else{
                     var cantidad_registros = data.cantidad;
-                    
 
                     $('#div_info_numero_registros').removeClass('d-none');
                     $("#total_registros_reporte").empty();
                     $("#total_registros_reporte").append(cantidad_registros);
+
+                    $("#btn_generar_reporte").prop('disabled', true);
 
                     if (cantidad_registros > 0) {
                         $('#mostrar_boton_descarga').removeClass('d-none');
@@ -112,6 +117,8 @@ $(document).ready(function () {
                 $('.resultado_validacion').addClass('d-none');
                 $('.resultado_validacion').removeClass('alert-info');
                 $('#llenar_mensaje_validacion').empty();
+
+                $("#btn_generar_reporte").prop('disabled', false);
             }
         });
     });
