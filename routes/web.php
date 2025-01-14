@@ -702,6 +702,11 @@ Route::post('/selectoresJuntas', [CalificacionJuntasController::class, 'cargueLi
 Route::post('/registrarControvertido', [CalificacionJuntasController::class, 'guardarControvertidoJuntas']);
 // Accion: Registrar Datos de controversia
 Route::post('/registrarControversia', [CalificacionJuntasController::class, 'guardarControversiaJuntas']);
+
+
+Route::post('/registrarSeguimientoJuntas', [CalificacionJuntasController::class, 'guardarSeguimientoJuntas']);
+
+
 // Accion: Registrar Datos pagos honorarios
 Route::post('/registrarPagoJuntas', [CalificacionJuntasController::class, 'guardarPagosJuntas']);
 // Acción: Guardar Datos Listado de documentos solicitados

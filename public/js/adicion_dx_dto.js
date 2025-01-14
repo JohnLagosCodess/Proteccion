@@ -3368,7 +3368,7 @@ $(document).ready(function(){
             contentType: false,
             processData: false  ,
             success:function(response){
-                // //console.log(response);
+                
                 if (response.parametro == "fallo") {
                     if (response.otro != undefined) {
                         $('#listadodocumento_'+response.otro).val('');

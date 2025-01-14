@@ -527,7 +527,7 @@
                                         <div class="col-4">
                                             <div class="form-group">
                                                 <br>
-                                                <label for="f_noti_dictamen_jrci">Fecha de notificación  dictamen (JRCI)</label>
+                                                <label for="f_noti_dictamen_jrci">Fecha aviso recolección dictamen (JRCI)</label>
                                                 <input type="date" class="form-control" name="f_noti_dictamen_jrci" id="f_noti_dictamen_jrci" max="{{now()->format('Y-m-d')}}" min="1900-01-01" value="<?php if(!empty($arrayinfo_controvertido[0]->F_noti_dictamen_jrci)) { echo $arrayinfo_controvertido[0]->F_noti_dictamen_jrci;} ?>">
                                                 <span class="d-none" id="f_noti_dictamen_jrci_alerta" style="color: red; font-style: italic;"></span>
                                             </div>
@@ -535,7 +535,7 @@
                                         <div class="col-4">
                                             <div class="form-group">
                                                 <br>
-                                                <label for="f_radica_dictamen_jrci">Fecha de Radicado entrada Dictamen (JRCI)</label>
+                                                <label for="f_radica_dictamen_jrci">Fecha recolección dictamen (JRCI)</label>
                                                 <input type="date" class="form-control" name="f_radica_dictamen_jrci" id="f_radica_dictamen_jrci" max="{{now()->format('Y-m-d')}}" min="1900-01-01" value="<?php if(!empty($arrayinfo_controvertido[0]->F_radica_dictamen_jrci)) { echo $arrayinfo_controvertido[0]->F_radica_dictamen_jrci;} ?>">
                                                 <span class="d-none" id="f_radica_dictamen_jrci_alerta" style="color: red; font-style: italic;"></span>
                                             </div>
@@ -1002,14 +1002,14 @@
                                         </div>
                                         <div class="col-4">
                                             <div class="form-group">
-                                                <label for="f_noti_dictamen_reposicion_jrci">Fecha de notificación dictamen (Reposición JRCI)</label>
+                                                <label for="f_noti_dictamen_reposicion_jrci">Fecha aviso recolección dictamen (Reposición JRCI)</label>
                                                 <input type="date" class="form-control" name="f_noti_dictamen_reposicion_jrci" id="f_noti_dictamen_reposicion_jrci" max="{{now()->format('Y-m-d')}}" min="1900-01-01" value="<?php if(!empty($arrayinfo_controvertido[0]->F_noti_dictamen_reposicion_jrci)) { echo $arrayinfo_controvertido[0]->F_noti_dictamen_reposicion_jrci;} ?>">
                                                 <span class="d-none" id="f_noti_dictamen_reposicion_jrci_alerta" style="color: red; font-style: italic;"></span>
                                             </div>
                                         </div>
                                         <div class="col-4">
                                             <div class="form-group">
-                                                <label for="f_radica_dictamen_reposicion_jrci">Fecha de Radicado entrada Dictamen (Reposición JRCI)</label>
+                                                <label for="f_radica_dictamen_reposicion_jrci">Fecha recolección dictamen (Reposición JRCI)</label>
                                                 <input type="date" class="form-control" name="f_radica_dictamen_reposicion_jrci" id="f_radica_dictamen_reposicion_jrci" max="{{now()->format('Y-m-d')}}" min="1900-01-01" value="<?php if(!empty($arrayinfo_controvertido[0]->F_radica_dictamen_reposicion_jrci)) { echo $arrayinfo_controvertido[0]->F_radica_dictamen_reposicion_jrci;} ?>">
                                                 <span class="d-none" id="f_radica_dictamen_reposicion_jrci_alerta" style="color: red; font-style: italic;"></span>
                                             </div>
@@ -1208,14 +1208,14 @@
                                         </div>
                                         <div class="col-4">
                                             <div class="form-group">
-                                                <label for="f_acta_ejecutoria_emitida_jrci">Fecha Acta de Ejecutoría emitida por JRCI <span style="color: red;">(*)</span></label>
+                                                <label for="f_acta_ejecutoria_emitida_jrci">Fecha recepción acta ejecutoría (JRCI) <span style="color: red;">(*)</span></label>
                                                 <input type="date" class="form-control" name="f_acta_ejecutoria_emitida_jrci" id="f_acta_ejecutoria_emitida_jrci" max="{{now()->format('Y-m-d')}}" min="1900-01-01" value="<?php if(!empty($arrayinfo_controvertido[0]->F_acta_ejecutoria_emitida_jrci)) { echo $arrayinfo_controvertido[0]->F_acta_ejecutoria_emitida_jrci;} ?>" required>
                                                 <span class="d-none" id="f_acta_ejecutoria_emitida_jrci_alerta" style="color: red; font-style: italic;"></span>
                                             </div>
                                         </div>
                                         <div class="col-4">
                                             <div class="form-group">
-                                                <label for="f_firmeza_dictamen_jrci">Fecha firmeza Dictamen <span style="color: red;">(*)</span></label>
+                                                <label for="f_firmeza_dictamen_jrci">Fecha acta ejecutoría (JRCI) <span style="color: red;">(*)</span></label>
                                                 <input type="date" class="form-control" name="f_firmeza_dictamen_jrci" id="f_firmeza_dictamen_jrci" max="{{now()->format('Y-m-d')}}" min="1900-01-01" value="<?php if(!empty($arrayinfo_controvertido[0]->F_firmeza_dictamen_jrci)) { echo $arrayinfo_controvertido[0]->F_firmeza_dictamen_jrci;} ?>" required>
                                                 <span class="d-none" id="f_firmeza_dictamen_jrci_alerta" style="color: red; font-style: italic;"></span>
                                             </div>
@@ -1413,7 +1413,7 @@
                                         <div class="col-4">
                                             <div class="form-group">
                                                 <br>
-                                                <label for="f_noti_ante_jnci">Fecha de notificación dictamen (JNCI)</label>
+                                                <label for="f_noti_ante_jnci">Fecha aviso recolección dictamen (JNCI)</label>
                                                 <input type="date" class="form-control" name="f_noti_ante_jnci" id="f_noti_ante_jnci" max="{{now()->format('Y-m-d')}}" min="1900-01-01" value="<?php if(!empty($arrayinfo_controvertido[0]->F_noti_ante_jnci)) { echo $arrayinfo_controvertido[0]->F_noti_ante_jnci;} ?>">
                                                 <span class="d-none" id="f_noti_ante_jnci_alerta" style="color: red; font-style: italic;"></span>
                                             </div>
@@ -1421,7 +1421,7 @@
                                         <div class="col-4">
                                             <div class="form-group">
                                                 <br>
-                                                <label for="f_radica_dictamen_jnci">Fecha de Radicado entrada Dictamen (JNCI)</label>
+                                                <label for="f_radica_dictamen_jnci">Fecha recolección dictamen (JNCI)</label>
                                                 <input type="date" class="form-control" name="f_radica_dictamen_jnci" id="f_radica_dictamen_jnci" max="{{now()->format('Y-m-d')}}" min="1900-01-01" value="<?php if(!empty($arrayinfo_controvertido[0]->F_radica_dictamen_jnci)) { echo $arrayinfo_controvertido[0]->F_radica_dictamen_jnci;} ?>">
                                                 <span class="d-none" id="f_radica_dictamen_jnci_alerta" style="color: red; font-style: italic;"></span>
                                             </div>

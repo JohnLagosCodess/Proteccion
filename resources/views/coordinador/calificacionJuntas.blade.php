@@ -566,8 +566,26 @@
                                         <div class="col-4">
                                             <div class="form-group">
                                                 <label for="f_notifi_afiliado">Fecha notificación al afiliado</span></label>
-                                                <input type="date" class="form-control" name="f_notifi_afiliado" id="f_notifi_afiliado" max="{{now()->format('Y-m-d')}}" min='1900-01-01' value="<?php if(!empty($arrayinfo_controvertido[0]->F_notifi_afiliado)) { echo $arrayinfo_controvertido[0]->F_notifi_afiliado;} ?>">
+                                                <input type="date" class="form-control" name="f_notifi_afiliado" id="f_notifi_afiliado" max="{{now()->format('Y-m-d')}}" min='1900-01-01' 
+                                                value="<?php if (!empty($arrayinfo_controvertido[0]->F_notifi_afiliado)) {
+                                                        echo $arrayinfo_controvertido[0]->F_notifi_afiliado;
+                                                    } else {
+                                                        echo $fecha_notificacion;
+                                                    }
+                                                ?>">
                                                 <span class="d-none" id="f_notifi_afiliado_alerta" style="color: red; font-style: italic;"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="form-group">
+                                                <label for="f_radicacion_pri_opor">Fecha radicación primera oportunidad</label>
+                                                <input type="date" class="form-control" name="f_radicacion_pri_opor" id="f_radicacion_pri_opor" 
+                                                value="<?php if (!empty($arrayinfo_controvertido[0]->F_radicacion_pri_opor)) {
+                                                        echo $arrayinfo_controvertido[0]->F_radicacion_pri_opor;
+                                                    } else {
+                                                        echo $f_radicacion;
+                                                    }
+                                                ?>">
                                             </div>
                                         </div>
                                     </div>
@@ -705,20 +723,6 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="col-4 mt-4">
-                                            <div class="form-group">
-                                                <label for="f_envio_jrci">Fecha de envío a JRCI</label>
-                                                <input type="date" class="form-control" name="f_envio_jrci" id="f_envio_jrci" max="{{now()->format('Y-m-d')}}" min='1900-01-01' value="<?php echo $arrayinfo_controvertido[0]->F_envio_jrci ?? '' ?>">
-                                                <span class="d-none" id="f_envio_jrci_alerta" style="color: red; font-style: italic;"></span>
-                                            </div>
-                                        </div>
-                                        <div class="col-4 mt-4">
-                                            <div class="form-group">
-                                                <label for="f_envio_jnci">Fecha de envío a JNCI</label>
-                                                <input type="date" class="form-control" name="f_envio_jnci" id="f_envio_jnci" max="{{now()->format('Y-m-d')}}" min='1900-01-01' value="<?php echo $arrayinfo_controvertido[0]->F_envio_jnci ?? '' ?>">
-                                                <span class="d-none" id="f_envio_jnci_alerta" style="color: red; font-style: italic;"></span>
-                                            </div>
-                                        </div>
                                         <div class="col-12">
                                             <div class="form-group">
                                                 <label for="observaciones_contro">Observaciones</label>
@@ -738,6 +742,133 @@
                                         </div>
                                         <div class="col-12">
                                             <div class="alerta_controversia alert alert-success mt-2 mr-auto d-none" role="alert"></div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        {{-- Datos Seguimiento a Juntas calificadoras --}}
+                        <div class="card-info">
+                            <div class="card-header text-center" style="border: 1.5px solid black;">
+                                <h5>Seguimiento a Juntas calificadoras</h5>
+                            </div>
+                            <div class="card-body">
+                                <form id="formSeguimientoJuntasCalifi" method="POST">
+                                    <div class="text-center">
+                                        <p style="font-weight:bold;">Junta Regional de Calificación de Invalidez</p>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <div class="form-group">
+                                                <label for="f_envio_jrci">Fecha envío expediente a JRCI</label>
+                                                <input type="date" class="form-control" name="f_envio_jrci" id="f_envio_jrci" max="{{now()->format('Y-m-d')}}" min='1900-01-01' 
+                                                value="<?php if (!empty($arrayinfo_controvertido[0]->F_envio_jrci)) {
+                                                        echo $arrayinfo_controvertido[0]->F_envio_jrci;
+                                                    }else{
+                                                        echo $f_envio_exp_jrci;
+                                                    }
+                                                ?>">
+                                                <span class="d-none" id="f_envio_jrci_alerta" style="color: red; font-style: italic;"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="form-group">
+                                                <label for="f_devolucion_exp_jrci">Fecha devolución expediente JRCI</label>
+                                                <input type="date" class="form-control" name="f_devolucion_exp_jrci" id="f_devolucion_exp_jrci" 
+                                                value="<?php if (!empty($arrayinfo_controvertido[0]->F_devolucion_exp_jrci)) {
+                                                        echo $arrayinfo_controvertido[0]->F_devolucion_exp_jrci;
+                                                    } else {
+                                                        echo $f_devolucion_exp_jrci;
+                                                    }
+                                                ?>">
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="form-group">
+                                                <label for="causal_devo_exp_jrci">Causal devolución expediente JRCI</label>
+                                                <input type="text" class="form-control" name="causal_devo_exp_jrci" id="causal_devo_exp_jrci" 
+                                                value="<?php
+                                                    if (!empty($arrayinfo_controvertido[0]->Causal_devo_exp_jrci)) {
+                                                        echo $arrayinfo_controvertido[0]->Causal_devo_exp_jrci;
+                                                    }
+                                                ?>">
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="form-group">
+                                                <label for="f_reenvio_exp_jrci">Fecha reenvío expediente a JRCI</label>
+                                                <input type="date" class="form-control" name="f_reenvio_exp_jrci" id="f_reenvio_exp_jrci" 
+                                                value="<?php if (!empty($arrayinfo_controvertido[0]->F_reenvio_exp_jrci)) {
+                                                        echo $arrayinfo_controvertido[0]->F_reenvio_exp_jrci;
+                                                    } else {
+                                                        echo $f_reenvio_exp_jrci;
+                                                    }
+                                                ?>">
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="form-group">
+                                                <label for="f_cita_jrci">Fecha cita valoración médica por JRCI</label>
+                                                <input type="date" class="form-control" name="f_cita_jrci" id="f_cita_jrci"
+                                                value="<?php if (!empty($arrayinfo_controvertido[0]->F_cita_jrci)) {
+                                                        echo $arrayinfo_controvertido[0]->F_cita_jrci;
+                                                    }
+                                                ?>">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="text-center">
+                                        <p style="font-weight:bold;">Junta Nacional de Calificación de Invalidez</p>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <div class="form-group">
+                                                <label for="f_soli_pago_hono_jnci">Fecha solicitud pago de honorarios a JNCI</label>
+                                                <input type="date" class="form-control" name="f_soli_pago_hono_jnci" id="f_soli_pago_hono_jnci" 
+                                                value="<?php if (!empty($arrayinfo_controvertido[0]->F_soli_pago_hono_jnci)) {
+                                                        echo $arrayinfo_controvertido[0]->F_soli_pago_hono_jnci;
+                                                    }
+                                                ?>">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-4">
+                                            <div class="form-group">
+                                                <label for="f_envio_jnci">Fecha envío pago de honorarios a JNCI</label>
+                                                <input type="date" class="form-control" name="f_envio_jnci" id="f_envio_jnci" max="{{now()->format('Y-m-d')}}" min='1900-01-01' 
+                                                value="<?php if (!empty($arrayinfo_controvertido[0]->F_envio_jnci)) {
+                                                        echo $arrayinfo_controvertido[0]->F_envio_jnci;
+                                                    } else {
+                                                        echo $f_envio_pago_honorarios_jnci;
+                                                    }
+                                                ?>">
+                                                <span class="d-none" id="f_envio_jnci_alerta" style="color: red; font-style: italic;"></span>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-4">
+                                            <div class="form-group">
+                                                <label for="f_cita_jnci">Fecha cita valoración médica por JNCI</label>
+                                                <input type="date" class="form-control" name="f_cita_jnci" id="f_cita_jnci" 
+                                                value="<?php if (!empty($arrayinfo_controvertido[0]->F_cita_jnci)) {
+                                                        echo $arrayinfo_controvertido[0]->F_cita_jnci;
+                                                    }
+                                                ?>">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="form-group">
+                                                @if (empty($arrayinfo_controvertido[0]->ID_evento))
+                                                    <input type="submit" id="guardar_datos_seguimiento_junta" class="btn btn-info" value="Guardar">
+                                                @else 
+                                                    <input type="submit" id="guardar_datos_seguimiento_junta" class="btn btn-info" value="Actualizar">
+                                                @endif    
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="alerta_seguimiento alert alert-success mt-2 mr-auto d-none" role="alert"></div>
                                         </div>
                                     </div>
                                 </form>
@@ -1981,7 +2112,7 @@
                                                 <input type="hidden" class="form-control" name="Id_procesos_act" id="Id_procesos_act">
                                                 <input type="hidden" class="form-control" name="Nombre_junta_act" id="Nombre_junta_act" value="<?php if(!empty($arrayinfo_controvertido[0]->Jrci_califi_invalidez)){echo $arrayinfo_controvertido[0]->JrciNombre;}?>">
                                                 <input type="hidden" class="form-control" name="Id_junta_act" id="Id_junta_act" value="<?php if(!empty($arrayinfo_controvertido[0]->Jrci_califi_invalidez)){echo $arrayinfo_controvertido[0]->Jrci_califi_invalidez;}?>">
-                                                {{-- mauro --}}
+                                                
                                                 <input type="hidden" class="form-control" name="F_notifi_afiliado_act" id="F_notifi_afiliado_act" value="<?php if(!empty($arrayinfo_controvertido[0]->F_notifi_afiliado)) { echo $arrayinfo_controvertido[0]->F_notifi_afiliado;} ?>">
                                                 <input type="hidden" class="form-control" name="F_radicacion_contro_pri_cali_act" id="F_radicacion_contro_pri_cali_act" value="<?php if(!empty($arrayinfo_controvertido[0]->F_contro_radi_califi)) { echo $arrayinfo_controvertido[0]->F_contro_radi_califi;} ?>">
                                                 <input type="hidden" class="form-control" name="F_estructuracion_act" id="F_estructuracion_act" value="<?php if(!empty($arrayinfo_controvertido[0]->F_estructuracion_contro)) { echo $arrayinfo_controvertido[0]->F_estructuracion_contro;} ?>">
