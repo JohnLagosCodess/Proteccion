@@ -638,6 +638,11 @@ $(document).ready(function () {
         let id_profecional_asignado = $("#profesional option:selected").val();
         let servicio = $("#servicio").val();
 
+        let $fecha_primera_cita = $("#fecha_primera_cita");
+        let $causal_incumple_pri_cita = $("#incumple_primera_cita");
+        let $fecha_segunda_cita = $("#fecha_segunda_cita");
+        let $causal_incumple_segu_cita = $("#incumple_segunda_cita");
+
         //Limpiamos los campos de la modal
         $("#c_accion_ejecutar, #c_f_accion, #c_e_facturacion, #c_profesional, #c_servicio, #alerta_accion").empty();
 
@@ -646,12 +651,38 @@ $(document).ready(function () {
          */
         if(accion_ejecutar == "" || id_profecional_asignado == ""){
            $("#alerta_accion").removeClass('d-none');
-           $("#alerta_accion").append("<i class='fas fa-info-circle'></i><b>Importante:</b> No se puede ejecutar la accion debio a que no ha seleccionado una accion y/o profesional");
+           $("#alerta_accion").append("<i class='fas fa-info-circle'></i><b>Importante:</b> No se puede ejecutar la acción debio a que no ha seleccionado una accion y/o profesional");
            $("#c_ejecutar_accion").prop('disabled',true);
            profecional_asignado = "";
         }else{
-            $("#alerta_accion").addClass('d-none');
-            $("#c_ejecutar_accion").prop('disabled',false);
+            /* Validaciones para  los campos Fecha de 1ra cita, Causal de incumplimiento 1ra cita, Fecha de 2da cita, Causal de incumplimiento 2da cita */
+            if ($fecha_primera_cita.prop('required') && $fecha_primera_cita.val() == "") {
+                $("#alerta_accion").removeClass('d-none');
+                $("#alerta_accion").append("<i class='fas fa-info-circle'></i><b>Importante:</b> No se puede ejecutar la acción debido a que el campo Fecha de 1ra cita está obligatorio y no está diligenciado");
+                $("#c_ejecutar_accion").prop('disabled',true);
+                profecional_asignado = ""; 
+            } 
+            else if ($causal_incumple_pri_cita.prop('required') && $("#incumple_primera_cita option:selected").val() == "") {
+                $("#alerta_accion").removeClass('d-none');
+                $("#alerta_accion").append("<i class='fas fa-info-circle'></i><b>Importante:</b> No se puede ejecutar la acción debido a que el campo Causal de incumplimiento 1ra cita está obligatorio y no está diligenciado");
+                $("#c_ejecutar_accion").prop('disabled',true);
+                profecional_asignado = ""; 
+            }
+            else if ($fecha_segunda_cita.prop('required') && $fecha_segunda_cita.val() == "") {
+                $("#alerta_accion").removeClass('d-none');
+                $("#alerta_accion").append("<i class='fas fa-info-circle'></i><b>Importante:</b> No se puede ejecutar la acción debido a que el campo Fecha de 2da cita está obligatorio y no está diligenciado");
+                $("#c_ejecutar_accion").prop('disabled',true);
+                profecional_asignado = ""; 
+            }
+            else if ($causal_incumple_segu_cita.prop('required') && $("#incumple_segunda_cita option:selected").val() == "") {
+                $("#alerta_accion").removeClass('d-none');
+                $("#alerta_accion").append("<i class='fas fa-info-circle'></i><b>Importante:</b> No se puede ejecutar la acción debido a que el campo Causal de incumplimiento 2da cita está obligatorio y no está diligenciado");
+                $("#c_ejecutar_accion").prop('disabled',true);
+                profecional_asignado = ""; 
+            }else{
+                $("#alerta_accion").addClass('d-none');
+                $("#c_ejecutar_accion").prop('disabled',false);
+            }
         }
 
         //Muestra el campo de facturacion si este esta presente
@@ -668,7 +699,7 @@ $(document).ready(function () {
         $("#c_profesional").append(profecional_asignado);
         $("#c_servicio").append(servicio);
         
-        //Se ejecuta la accion
+        //Se ejecuta la acción
         $("#c_ejecutar_accion").off('click').on('click', function() {
             $("#c_ejecutar_accion").prop("disabled",true);
             let id_accion = $("#accion option:selected").val();
@@ -676,7 +707,7 @@ $(document).ready(function () {
             validarAccion_ejecutar(id_accion).then(response => {
 
                 /**
-                 * Siempre y cuando la accion este sin ejecutar para el servicio actual podra ser ejecutada, de no ser asi se bloqueara.
+                 * Siempre y cuando la acción este sin ejecutar para el servicio actual podra ser ejecutada, de no ser asi se bloqueara.
                  */
                 if (response === "sin_ejecutar") {
                     $("#alerta_accion_ejecutando").removeClass('d-none');
@@ -1142,8 +1173,8 @@ function retornarIdDestinatario(ids_destinatario, destinatario){
 
 /**
  * 
- * @param {int} id_accion Id de la accion que se va a ejecutar 
- * @returns Estado de la accion: sin_ejecutar - ejecutada
+ * @param {int} id_accion Id de la acción que se va a ejecutar 
+ * @returns Estado de la acción: sin_ejecutar - ejecutada
  */
 function validarAccion_ejecutar(id_accion) {
     return new Promise((resolve, reject) => {

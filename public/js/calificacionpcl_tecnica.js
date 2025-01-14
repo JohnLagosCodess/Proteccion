@@ -2909,12 +2909,8 @@ $(document).ready(function(){
                 if (response.parametro == 'insertar_comite_interdisciplinario') {
                     $('#GuardarComiteInter').prop('disabled', true);
                     $('#div_alerta_comiteInter').removeClass('d-none');
-                    $('.alerta_comiteInter').append('<strong>'+response.mensaje+'</strong>');                                            
-                    setTimeout(function(){
-                        $('#div_alerta_comiteInter').addClass('d-none');
-                        $('.alerta_comiteInter').empty();   
-                        location.reload();
-                    }, 3000);   
+                    $('.alerta_comiteInter').append('<strong>'+response.mensaje+'</strong>');
+                    $('#form_dictamen_pericial').trigger('submit');                     
                 }
             }          
         })
@@ -3861,7 +3857,7 @@ $(document).ready(function(){
                 }, 3000);
             },
             complete: function(){
-                $("#btn_guardar_actualizar_correspondencia").removeClass("descarga-deshabilitada");
+                // $("#btn_guardar_actualizar_correspondencia").removeClass("descarga-deshabilitada");
                 hideLoading();
             }
         });
@@ -6401,6 +6397,7 @@ function getHistorialNotificacion(n_radicado, nota,status_notificacion,data_comu
 
 function cleanModalCorrespondencia(){
     $("#btn_guardar_actualizar_correspondencia").val('Guardar');
+    $("#btn_guardar_actualizar_correspondencia").removeClass("descarga-deshabilitada");
 
     correspondencia_array = [];
     $("#modalCorrespondencia #check_principal").prop('checked', false).prop('disabled', true).prop('required', true);
