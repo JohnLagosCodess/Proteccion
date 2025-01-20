@@ -119,10 +119,10 @@ class CalificacionJuntasController extends Controller
 
         //Trae Pago de Honorarios 
         $arrayinfo_pagos= DB::table(getDatabaseName('sigmel_gestiones') .'sigmel_informacion_pagos_honorarios_eventos as p')
-        ->select('p.Tipo_pago','pa.Nombre_parametro as NomPago','p.F_solicitud_pago','pa2.Nombre_parametro as JuntaPago'
+        ->select('p.Tipo_pago','pa.Nombre_parametro as NomPago','p.F_solicitud_pago','sie.Nombre_entidad as JuntaPago'
         ,'p.N_orden_pago','p.Valor_pagado','p.F_pago_honorarios','p.F_pago_radicacion')
         ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as pa', 'p.Tipo_pago', '=', 'pa.Id_Parametro')
-        ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as pa2', 'p.Pago_junta', '=', 'pa2.Id_Parametro')
+        ->leftJoin('sigmel_gestiones.sigmel_informacion_entidades as sie', 'p.Pago_junta', '=', 'sie.Id_Entidad')
         ->where([['p.ID_evento',  '=', $newIdEvento],['p.Id_Asignacion', $newIdAsignacion]])
         ->get();
 
@@ -322,14 +322,22 @@ class CalificacionJuntasController extends Controller
                         ['sicome.Tipo_descarga', 'OFICIO ORIGEN']
                     ])->first();
 
-                    $fecha_notificacion = $array_fecha_notificacion->F_notificacion;
+                    if(!empty($array_fecha_notificacion->F_notificacion)){
+                        $fecha_notificacion = $array_fecha_notificacion->F_notificacion;
+                    }else{
+                        $fecha_notificacion = '';
+                    };
 
                     // Extramenos Fecha de radicación de la tabla sigmel_informacion_asignacion_eventos
                     $array_f_radicacion = sigmel_informacion_asignacion_eventos::on('sigmel_gestiones')
                     ->select('F_radicacion')
                     ->where([['Id_Asignacion', $arrayinfo_controvertido[0]->Id_Asignacion_Servicio_Anterior]])->first();
                     
-                    $f_radicacion = $array_f_radicacion->F_radicacion;
+                    if(!empty($array_f_radicacion->F_radicacion)){
+                        $f_radicacion = $array_f_radicacion->F_radicacion;
+                    }else{
+                        $f_radicacion = '';
+                    };
                     
                 }else{
                     $fecha_notificacion = '';
@@ -352,14 +360,22 @@ class CalificacionJuntasController extends Controller
                         ['sicome.Modulo_creacion', 'calificacionTecnicaPCL']
                     ])->first();
                     
-                    $fecha_notificacion = $array_fecha_notificacion->F_notificacion;
+                    if(!empty($array_fecha_notificacion->F_notificacion)){
+                        $fecha_notificacion = $array_fecha_notificacion->F_notificacion;
+                    }else{
+                        $fecha_notificacion = '';
+                    };
 
                     // Extramenos Fecha de radicación de la tabla sigmel_informacion_asignacion_eventos
                     $array_f_radicacion = sigmel_informacion_asignacion_eventos::on('sigmel_gestiones')
                     ->select('F_radicacion')
                     ->where([['Id_Asignacion', $arrayinfo_controvertido[0]->Id_Asignacion_Servicio_Anterior]])->first();
                     
-                    $f_radicacion = $array_f_radicacion->F_radicacion;
+                    if(!empty($array_f_radicacion->F_radicacion)){
+                        $f_radicacion = $array_f_radicacion->F_radicacion;
+                    }else{
+                        $f_radicacion = '';
+                    };
 
                 }elseif (!empty($id_servicio_anterior[0]->Id_servicio) && $id_servicio_anterior[0]->Id_servicio == 7) {
                     // Extraemos el dato Fecha de notificación de la tabla de correspondencia siempre y cuando el tipo de correspondencia sea Afiliado y además
@@ -374,14 +390,22 @@ class CalificacionJuntasController extends Controller
                         ['sicome.Modulo_creacion', 'recalificacionPCL']
                     ])->first();
 
-                    $fecha_notificacion = $array_fecha_notificacion->F_notificacion;
+                    if(!empty($array_fecha_notificacion->F_notificacion)){
+                        $fecha_notificacion = $array_fecha_notificacion->F_notificacion;
+                    }else{
+                        $fecha_notificacion = '';
+                    };
 
                     // Extramenos Fecha de radicación de la tabla sigmel_informacion_asignacion_eventos
                     $array_f_radicacion = sigmel_informacion_asignacion_eventos::on('sigmel_gestiones')
                     ->select('F_radicacion')
                     ->where([['Id_Asignacion', $arrayinfo_controvertido[0]->Id_Asignacion_Servicio_Anterior]])->first();
                     
-                    $f_radicacion = $array_f_radicacion->F_radicacion;
+                    if(!empty($array_f_radicacion->F_radicacion)){
+                        $f_radicacion = $array_f_radicacion->F_radicacion;
+                    }else{
+                        $f_radicacion = '';
+                    };
 
                 }
                 elseif (!empty($id_servicio_anterior[0]->Id_servicio) && $id_servicio_anterior[0]->Id_servicio == 8) {
@@ -397,14 +421,22 @@ class CalificacionJuntasController extends Controller
                         ['sicome.Modulo_creacion', 'recalificacionPCL']
                     ])->first();
 
-                    $fecha_notificacion = $array_fecha_notificacion->F_notificacion;
+                    if(!empty($array_fecha_notificacion->F_notificacion)){
+                        $fecha_notificacion = $array_fecha_notificacion->F_notificacion;
+                    }else{
+                        $fecha_notificacion = '';
+                    };
 
                     // Extramenos Fecha de radicación de la tabla sigmel_informacion_asignacion_eventos
                     $array_f_radicacion = sigmel_informacion_asignacion_eventos::on('sigmel_gestiones')
                     ->select('F_radicacion')
                     ->where([['Id_Asignacion', $arrayinfo_controvertido[0]->Id_Asignacion_Servicio_Anterior]])->first();
                     
-                    $f_radicacion = $array_f_radicacion->F_radicacion;
+                    if(!empty($array_f_radicacion->F_radicacion)){
+                        $f_radicacion = $array_f_radicacion->F_radicacion;
+                    }else{
+                        $f_radicacion = '';
+                    };
                     
                 }else{
                     $fecha_notificacion = '';
