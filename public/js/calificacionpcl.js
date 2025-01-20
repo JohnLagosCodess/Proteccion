@@ -3705,7 +3705,7 @@ $(document).ready(function(){
                 "<p>Reciba un cordial saludo de la Administradora de Fondos de Pensiones y Cesantías <b>PROTECCIÓN S.A.</b></p>"+
                 "<p>Una vez evaluada su solicitud de trámite ante el fondo de pensiones y teniendo presente la legislación actual vigente, decreto 2463 del 2001 y decreto 917/1999, "+
                 "encontramos que es indispensable que usted asista a las citas de evaluación funcional y aporte Historia Clínica solicitada.</p>"+
-                '<p>Por lo tanto, se evidencia que usted no asistió a la segunda cita de valoración funcional el día <b>DD/MM/AAAA</b>.</p>'+
+                '<p>Por lo tanto, se evidencia que usted no asistió a la segunda cita de valoración funcional el día <b>{{$segunda_fecha}}</b>.</p>'+
                 '<p>En virtud de lo anterior, nos permitimos informarle que, a partir de la fecha de notificación de la presente carta, hemos dado por terminada su reclamación '+
                 'ante el fondo, ya que ha operado el <b>DESISTIMIENTO</b> tácito de su trámite.</p>'+
                 '<p class="cuerpo_doc_revPen">“…Cuando en el curso de una actuación administrativa la autoridad advierta que el peticionario debe realizar una gestión de '+
@@ -5023,7 +5023,7 @@ $(document).ready(function(){
                 "<p>Reciba un cordial saludo de la Administradora de Fondos de Pensiones y Cesantías <b>PROTECCIÓN S.A.</b></p>"+
                 "<p>Una vez evaluada su solicitud de trámite ante el fondo de pensiones y teniendo presente la legislación actual vigente, decreto 2463 del 2001 y decreto 917/1999, "+
                 "encontramos que es indispensable que usted asista a las citas de evaluación funcional y aporte Historia Clínica solicitada.</p>"+
-                '<p>Por lo tanto, se evidencia que usted no asistió a la segunda cita de valoración funcional el día <b>DD/MM/AAAA</b>.</p>'+
+                '<p>Por lo tanto, se evidencia que usted no asistió a la segunda cita de valoración funcional el día <b>{{$segunda_fecha}}</b>.</p>'+
                 '<p>En virtud de lo anterior, nos permitimos informarle que, a partir de la fecha de notificación de la presente carta, hemos dado por terminada su reclamación '+
                 'ante el fondo, ya que ha operado el <b>DESISTIMIENTO</b> tácito de su trámite.</p>'+
                 '<p class="cuerpo_doc_revPen">“…Cuando en el curso de una actuación administrativa la autoridad advierta que el peticionario debe realizar una gestión de '+

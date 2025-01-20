@@ -2897,6 +2897,10 @@ class CalificacionPCLController extends Controller
                 //Datos fijos para cualquier tipo de destinatario
                 $Ciudad_destinatario = $informacion_afiliado[0]->Ciudad_destinatario;
                 $Departamento_destinatario = $informacion_afiliado[0]->Departamento_destinatario;
+                //PBS089 SOLICITAN CAMBIOS EN LA LINEA DEL FOOTER QUE MUESTRA LA INFORMACIÓN DEL AFILIADO
+                $Nombre_footer = $informacion_afiliado[0]->Nombre_afiliado;
+                $Tipo_documento_footer = $informacion_afiliado[0]->Tipo_de_identificacion_afiliado_beneficiario;
+                $Numero_documento_footer = $informacion_afiliado[0]->Nro_identificacion;;
                 //Destinatario principal, cuando cuenta con apoderado el destinatario principal sera este, de resto sera el afiliado
                 if($apoderado){
                     $Nombre_destinatario = $informacion_afiliado[0]->Nombre_apoderado;
@@ -5606,6 +5610,13 @@ class CalificacionPCLController extends Controller
             ->where([['ID_evento', $ID_evento]])
             ->get();
 
+            //Segunda fecha 
+            $F_segunda_cita = sigmel_informacion_accion_eventos::on('sigmel_gestiones')
+                ->where([['ID_evento',$ID_evento],['Id_Asignacion',$Id_Asignacion],['Id_proceso',$Id_proceso]])
+                ->value('F_segunda_cita');
+            if($F_segunda_cita){
+                $F_segunda_cita = date("d/m/Y", strtotime($F_segunda_cita));
+            }
             /* Creación de las variables faltantes que no están en el formulario */
             $array_datos_fecha_evento = json_decode(json_encode($dato_fecha_evento), true);
             $fecha_evento = $array_datos_fecha_evento[0]["F_evento"];
@@ -5848,7 +5859,8 @@ class CalificacionPCLController extends Controller
                 'Telefono_beneficiario' => $Telefono_beneficiario,
                 'Email_beneficiario' => $Email_beneficiario,
                 'N_siniestro' => $request->n_siniestro_proforma_editar,
-                'Documentos_solicitados' => $string_documentos_solicitados
+                'Documentos_solicitados' => $string_documentos_solicitados,
+                'segunda_fecha'=>$F_segunda_cita
             ];
 
             // Creación y guardado del pdf

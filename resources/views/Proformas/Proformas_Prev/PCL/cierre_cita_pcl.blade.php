@@ -233,8 +233,19 @@
         <br><br>
         <section class="fuente_todo_texto" style="clear: both;">
             <br>
-            <?php      
-                print_r($cuerpo);
+            <?php
+                $patron1 = '/\{\{\$segunda_fecha\}\}/';
+                if (!empty($cuerpo) && preg_match($patron1, $cuerpo)) {
+                    if($segunda_fecha){
+                        $texto_modificado = str_replace('{{$segunda_fecha}}', $segunda_fecha, $cuerpo);
+                    }else{
+                        $texto_modificado = str_replace('{{$segunda_fecha}}', 'DD/MM/AAAA', $cuerpo);
+                    }
+                    $cuerpo = $texto_modificado;
+                } else {
+                    $cuerpo = "";
+                }                
+                print_r($cuerpo); 
             ?>
         </section>
         <br><br>
