@@ -2463,6 +2463,14 @@ class ControversiaJuntasController extends Controller
         $porcentaje_pcl_jrci_emitido = $request->porcentaje_pcl_jrci_emitido;
         $f_estructuracion_contro_jrci_emitido = $request->f_estructuracion_contro_jrci_emitido;
 
+        $info_afiliado = sigmel_informacion_afiliado_eventos::on('sigmel_gestiones')
+        ->leftJoin("sigmel_gestiones.sigmel_lista_parametros as be","be.Id_Parametro","Tipo_documento_benefi")
+        ->leftJoin("sigmel_gestiones.sigmel_lista_parametros as afi","afi.Id_Parametro","Tipo_documento")
+        ->select("sigmel_informacion_afiliado_eventos.*","be.Nombre_parametro as t_doc_beneficiario","afi.Nombre_parametro as t_doc_afiliado")->where('ID_evento',$id_evento)->first();
+        $Nombre_footer = $info_afiliado->Nombre_afiliado;
+        $Tipo_documento_footer = $info_afiliado->t_doc_afiliado;
+        $Numero_documento_footer = $info_afiliado->Nro_identificacion;
+
         /* Creación de las variables faltantes que no están en el ajax */
 
         // Validación información Destinatario Principal
@@ -2791,7 +2799,10 @@ class ControversiaJuntasController extends Controller
                 "cuerpo" => $cuerpo,
                 "email_junta" => $email_junta, 
                 "id_comite_inter" => $id_comite_inter,
-                "N_siniestro" => $N_siniestro
+                "N_siniestro" => $N_siniestro,
+                'Nombre_footer' => $Nombre_footer,
+                'Tipo_documento_footer' => $Tipo_documento_footer,
+                'Numero_documento_footer' => $Numero_documento_footer,
             ];
             
             $nombre_proforma = $this->crearProforma("DESACUERDO",$datos_proforma);
@@ -3499,7 +3510,9 @@ class ControversiaJuntasController extends Controller
         ->leftJoin("sigmel_gestiones.sigmel_lista_parametros as be","be.Id_Parametro","Tipo_documento_benefi")
         ->leftJoin("sigmel_gestiones.sigmel_lista_parametros as afi","afi.Id_Parametro","Tipo_documento")
         ->select("sigmel_informacion_afiliado_eventos.*","be.Nombre_parametro as t_doc_beneficiario","afi.Nombre_parametro as t_doc_afiliado")->where('ID_evento',$request->id_evento)->first();
-
+        $Nombre_footer = $info_afiliado->Nombre_afiliado;
+        $Tipo_documento_footer = $info_afiliado->t_doc_afiliado;
+        $Numero_documento_footer = $info_afiliado->Nro_identificacion;
         /* Creación de las variables faltantes que no están en el ajax */
 
         // Validación información Destinatario Principal
@@ -3923,7 +3936,10 @@ class ControversiaJuntasController extends Controller
             'nombre_usuario' => $nombre_usuario,
             'footer' => $footer,
             'N_siniestro' => $N_siniestro,
-            'id_servicio' => $id_servicio
+            'id_servicio' => $id_servicio,
+            'Nombre_footer' => $Nombre_footer,
+            'Tipo_documento_footer' => $Tipo_documento_footer,
+            'Numero_documento_footer' => $Numero_documento_footer,
             // 'footer_dato_1' => $footer_dato_1,
             // 'footer_dato_2' => $footer_dato_2,
             // 'footer_dato_3' => $footer_dato_3,

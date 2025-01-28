@@ -204,7 +204,7 @@
     <div id="footer">        
         <?php if($footer == null): ?>
             <div style="text-align:center;">
-                <span style="color: #3C3C3C; margin-top:2px;">{{$Nombre_afiliado_noti}} - {{$T_documento_noti}} {{$NroIden_afiliado_noti}} - SINIESTRO: {{$N_siniestro}} </span>
+                <span style="color: #3C3C3C; margin-top:2px;">{{$Nombre_footer}} - {{$Tipo_documento_footer}} {{$Numero_documento_footer}} - SINIESTRO: {{$N_siniestro}} </span>
             </div>        
         <?php else: ?>
             <?php 
@@ -215,11 +215,12 @@
             ?>
             <div class="footer_content" style="text-align:center;">
                 <span style="position: absolute; width: 100%; text-align:center; top: 10px; left:0px; color:#4D4D4D; font-weight:bold; font-size: 11px;">
-                    @if ($Tipo_afiliado == 26 || $Tipo_afiliado == 28 || $Tipo_afiliado == 29)
-                        {{$Nombre_afiliado_noti}} - {{$T_documento_noti}} {{$NroIden_afiliado_noti}} - SINIESTRO: {{$N_siniestro}} 
-                    @elseif ($Tipo_afiliado == 27)
-                        {{$Nombre_afiliado_noti_benefi}} - {{$T_documento_notibenefi}} {{$NroIden_afiliado_notibenefi}} - SINIESTRO: {{$N_siniestro}} 
-                    @endif
+                    {{-- PBS089 Solicitan que solo se muestre la info del afiliado o del beneficiario --}}
+                    {{-- @if ($Tipo_afiliado == 26 || $Tipo_afiliado == 28 || $Tipo_afiliado == 29) --}}
+                    {{$Nombre_footer}} - {{$Tipo_documento_footer}} {{$Numero_documento_footer}} - SINIESTRO: {{$N_siniestro}} 
+                    {{-- @elseif ($Tipo_afiliado == 27) --}}
+                        {{-- {{$Nombre_afiliado_noti_benefi}} - {{$T_documento_notibenefi}} {{$NroIden_afiliado_notibenefi}} - SINIESTRO: {{$N_siniestro}}  --}}
+                    {{-- @endif --}}
                 </span>
                 <img src="data:image/png;base64,{{ $footer_base64 }}" class="footer_image" style="display: block;">
             </div>

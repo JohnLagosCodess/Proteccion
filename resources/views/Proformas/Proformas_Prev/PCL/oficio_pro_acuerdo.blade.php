@@ -227,15 +227,16 @@
                 $footer_base64 = base64_encode($footer_data);
             ?>
             <div class="footer_content" style="text-align:center;">
-                @if($Tipo_afiliado == 26 || $Tipo_afiliado == 28 || $Tipo_afiliado == 29)
+                {{-- PBS089 SOLICITAN QUE EL FOOTER SOLO SALGA LA INFORMACIÓN DE LOS CAMPOS DE AFILIADO / BENEFICIARIO --}}
+                {{-- @if($Tipo_afiliado == 26 || $Tipo_afiliado == 28 || $Tipo_afiliado == 29) --}}
                     <span style="position: absolute; width: 100%; text-align:center; top: 10px; left:0px; color:#4D4D4D; font-weight:bold; font-size: 11px;">
                         {{$Nombre_afiliado}} - {{$tipo_doc_afiliado}} {{$nro_identificacion_afiliado}} - SINIESTRO: {{$N_siniestro}} 
                     </span>
-                @elseif($Tipo_afiliado == 27)
-                    <span style="position: absolute; width: 100%; text-align:center; top: 10px; left:0px; color:#4D4D4D; font-weight:bold; font-size: 11px;">
+                {{-- @elseif($Tipo_afiliado == 27) --}}
+                    {{-- <span style="position: absolute; width: 100%; text-align:center; top: 10px; left:0px; color:#4D4D4D; font-weight:bold; font-size: 11px;">
                         {{$Nombre_afiliado_noti_benefi}} - {{$T_documento_noti_benefi}} {{$NroIden_afiliado_noti_benefi}} - SINIESTRO: {{$N_siniestro}} 
                     </span>
-                @endif
+                @endif --}}
                 {{-- <span style="position: absolute; width: 100%; text-align:center; top: 10px; left:0px; color:#4D4D4D; font-weight:bold; font-size: 11px;">
                     {{$Nombre_afiliado}} - {{$tipo_doc_afiliado}} {{$nro_identificacion_afiliado}} - SINIESTRO: {{$N_siniestro}} 
                 </span> --}}

@@ -178,12 +178,12 @@
     <div id="footer">        
         @if($footer == null)
             <div style="text-align:center;">
-                <span style="color: #4D4D4D; margin-top:2px;">{{$nombre_afiliado}} - {{$t_documento}} {{$n_documento}} - Siniestro: {{$N_siniestro}} </span>
+                <span style="color: #4D4D4D; margin-top:2px;">{{$Nombre_footer}} - {{$Tipo_documento_footer}} {{$Numero_documento_footer}} - Siniestro: {{$N_siniestro}} </span>
             </div>
         @else
             <div class="footer_content" style="text-align:center;">
                 <span style="position: absolute; width: 100%; text-align:center; top: 10px; left:0px; color:#4D4D4D; font-weight:bold; font-size: 11px;">
-                    {{$nombre_afiliado}} - {{$t_documento}} {{$n_documento}} - SINIESTRO: {{$N_siniestro}} 
+                    {{$Nombre_footer}} - {{$Tipo_documento_footer}} {{$Numero_documento_footer}} - SINIESTRO: {{$N_siniestro}} 
                 </span>
                 <img src="data:image/png;base64,{{ $footer_base64 }}" class="footer_image" style="display: block;" width="100%">
             </div>

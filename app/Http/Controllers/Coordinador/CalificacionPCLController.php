@@ -2900,7 +2900,7 @@ class CalificacionPCLController extends Controller
                 //PBS089 SOLICITAN CAMBIOS EN LA LINEA DEL FOOTER QUE MUESTRA LA INFORMACIÓN DEL AFILIADO
                 $Nombre_footer = $informacion_afiliado[0]->Nombre_afiliado;
                 $Tipo_documento_footer = $informacion_afiliado[0]->Tipo_de_identificacion_afiliado_beneficiario;
-                $Numero_documento_footer = $informacion_afiliado[0]->Nro_identificacion;;
+                $Numero_documento_footer = $informacion_afiliado[0]->Nro_identificacion;
                 //Destinatario principal, cuando cuenta con apoderado el destinatario principal sera este, de resto sera el afiliado
                 if($apoderado){
                     $Nombre_destinatario = $informacion_afiliado[0]->Nombre_apoderado;
@@ -3254,6 +3254,9 @@ class CalificacionPCLController extends Controller
                 'Agregar_copia' => $Agregar_copias,
                 'footer' => $footer,
                 'N_siniestro' => $request->n_siniestro_proforma_editar,
+                'Nombre_footer' => $Nombre_footer,
+                'Tipo_documento_footer' => $Tipo_documento_footer,
+                'Numero_documento_footer' => $Numero_documento_footer,
             ];
 
             // Creación y guardado del pdf
@@ -3531,7 +3534,10 @@ class CalificacionPCLController extends Controller
                 'Telefono_beneficiario' => $Telefono_beneficiario,
                 'Email_beneficiario' => $Email_beneficiario,
                 'N_siniestro' => $request->n_siniestro_proforma_editar,
-                'Documentos_solicitados' => $string_documentos_solicitados
+                'Documentos_solicitados' => $string_documentos_solicitados,
+                'Nombre_footer' => $Nombre_footer,
+                'Tipo_documento_footer' => $Tipo_documento_footer,
+                'Numero_documento_footer' => $Numero_documento_footer,
             ];
 
             // Creación y guardado del pdf
@@ -3792,6 +3798,9 @@ class CalificacionPCLController extends Controller
                 'Telefono_beneficiario' => $Telefono_beneficiario,
                 'Email_beneficiario' => $Email_beneficiario,
                 'N_siniestro' => $request->n_siniestro_proforma_editar,
+                'Nombre_footer' => $Nombre_footer,
+                'Tipo_documento_footer' => $Tipo_documento_footer,
+                'Numero_documento_footer' => $Numero_documento_footer,
             ];
             // Creación y guardado del pdf
             $pdf = app('dompdf.wrapper');
@@ -4076,6 +4085,9 @@ class CalificacionPCLController extends Controller
                 'Direccion_beneficiario' => $Direccion_beneficiario,
                 'Telefono_beneficiario' => $Telefono_beneficiario,
                 'Email_beneficiario' => $Email_beneficiario,
+                'Nombre_footer' => $Nombre_footer,
+                'Tipo_documento_footer' => $Tipo_documento_footer,
+                'Numero_documento_footer' => $Numero_documento_footer,
             ];
             // Creación y guardado del pdf
             $pdf = app('dompdf.wrapper');
@@ -4353,6 +4365,9 @@ class CalificacionPCLController extends Controller
                 'Telefono_beneficiario' => $Telefono_beneficiario,
                 'Medio_notificacion' => $forma_envio,
                 'Email_beneficiario' => $Email_beneficiario,
+                'Nombre_footer' => $Nombre_footer,
+                'Tipo_documento_footer' => $Tipo_documento_footer,
+                'Numero_documento_footer' => $Numero_documento_footer,
             ];
             // Creación y guardado del pdf
             $pdf = app('dompdf.wrapper');
@@ -4632,6 +4647,9 @@ class CalificacionPCLController extends Controller
                 'Telefono_beneficiario' => $Telefono_beneficiario,
                 'Medio_notificacion' => $forma_envio,
                 'Email_beneficiario' => $Email_beneficiario,
+                'Nombre_footer' => $Nombre_footer,
+                'Tipo_documento_footer' => $Tipo_documento_footer,
+                'Numero_documento_footer' => $Numero_documento_footer,
             ];
             // Creación y guardado del pdf
             $pdf = app('dompdf.wrapper');
@@ -4945,6 +4963,9 @@ class CalificacionPCLController extends Controller
                 'Telefono_beneficiario' => $Telefono_beneficiario,
                 'Email_beneficiario' => $Email_beneficiario,
                 'N_siniestro' => $request->n_siniestro_proforma_editar,
+                'Nombre_footer' => $Nombre_footer,
+                'Tipo_documento_footer' => $Tipo_documento_footer,
+                'Numero_documento_footer' => $Numero_documento_footer,
             ];
 
             // Creación y guardado del pdf
@@ -5296,7 +5317,10 @@ class CalificacionPCLController extends Controller
                 'Telefono_beneficiario' => $Telefono_beneficiario,
                 'Email_beneficiario' => $Email_beneficiario,
                 'N_siniestro' => $request->n_siniestro_proforma_editar,
-                'Documentos_solicitados' => $string_documentos_solicitados
+                'Documentos_solicitados' => $string_documentos_solicitados,
+                'Nombre_footer' => $Nombre_footer,
+                'Tipo_documento_footer' => $Tipo_documento_footer,
+                'Numero_documento_footer' => $Numero_documento_footer,
             ];
 
             // Creación y guardado del pdf
@@ -5574,7 +5598,10 @@ class CalificacionPCLController extends Controller
                 'Telefono_beneficiario' => $Telefono_beneficiario,
                 'Email_beneficiario' => $Email_beneficiario,
                 'N_siniestro' => $request->n_siniestro_proforma_editar,
-                'Documentos_solicitados' => $string_documentos_solicitados
+                'Documentos_solicitados' => $string_documentos_solicitados,
+                'Nombre_footer' => $Nombre_footer,
+                'Tipo_documento_footer' => $Tipo_documento_footer,
+                'Numero_documento_footer' => $Numero_documento_footer,
             ];
 
             // Creación y guardado del pdf
@@ -5860,7 +5887,10 @@ class CalificacionPCLController extends Controller
                 'Email_beneficiario' => $Email_beneficiario,
                 'N_siniestro' => $request->n_siniestro_proforma_editar,
                 'Documentos_solicitados' => $string_documentos_solicitados,
-                'segunda_fecha'=>$F_segunda_cita
+                'segunda_fecha'=>$F_segunda_cita,
+                'Nombre_footer' => $Nombre_footer,
+                'Tipo_documento_footer' => $Tipo_documento_footer,
+                'Numero_documento_footer' => $Numero_documento_footer,
             ];
 
             // Creación y guardado del pdf
@@ -6160,6 +6190,9 @@ class CalificacionPCLController extends Controller
                 'tipo_evento' => $tipo_evento,
                 'origen' => $origen,
                 'f_estructuracion' => $f_estructuracion,
+                'Nombre_footer' => $Nombre_footer,
+                'Tipo_documento_footer' => $Tipo_documento_footer,
+                'Numero_documento_footer' => $Numero_documento_footer,
             ];
 
             // Creación y guardado del pdf
@@ -7112,7 +7145,7 @@ class CalificacionPCLController extends Controller
         ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slp', 'slp.Id_Parametro', '=', 'side.Origen')
         ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slps', 'slps.Id_Parametro', '=', 'side.Tipo_enfermedad')
         ->select('side.N_radicado','side.Porcentaje_pcl', 'side.Rango_pcl', 'side.Monto_indemnizacion', 'side.Tipo_evento', 'slte.Nombre_evento', 'side.Origen', 'slp.Nombre_parametro', 
-        'side.F_evento', 'side.F_estructuracion', 'side.Requiere_Revision_Pension', 'side.N_siniestro', 'side.Sustentacion_F_estructuracion', 'side.Detalle_calificacion', 'side.Enfermedad_catastrofica', 
+        'side.F_evento', 'side.F_estructuracion', 'side.Requiere_Recalificacion', 'side.Requiere_Revision_Pension', 'side.N_siniestro', 'side.Sustentacion_F_estructuracion', 'side.Detalle_calificacion', 'side.Enfermedad_catastrofica', 
         'side.Enfermedad_congenita', 'side.Tipo_enfermedad', 'slps.Nombre_parametro as TipoEnfermedad', 'side.Requiere_tercera_persona', 
         'side.Requiere_tercera_persona_decisiones', 'side.Requiere_dispositivo_apoyo', 'side.Justificacion_dependencia', 'side.Nombre_usuario',
         'side.F_registro')
@@ -9700,6 +9733,7 @@ class CalificacionPCLController extends Controller
             $f_evento_pericial = $request->f_evento_pericial;
             $f_estructura_pericial = $request->f_estructura_pericial; 
             $n_siniestro = $request->n_siniestro;
+            $requiere_recalificacion = $request->requiere_recalificacion;
             $requiere_rev_pension = $request->requiere_rev_pension;
             $sustenta_fecha = $request->sustenta_fecha;        
             $detalle_califi = $request->detalle_califi;        
@@ -9763,6 +9797,7 @@ class CalificacionPCLController extends Controller
                     'Origen' => $tipo_origen,
                     'F_evento' => $f_evento_pericial,
                     'F_estructuracion' => $f_estructura_pericial,
+                    'Requiere_Recalificacion' => $requiere_recalificacion,
                     'Requiere_Revision_Pension' => $requiere_rev_pension,
                     'N_siniestro' => $n_siniestro,
                     'Sustentacion_F_estructuracion' => $sustenta_fecha,
@@ -9850,6 +9885,7 @@ class CalificacionPCLController extends Controller
                     'Origen' => $tipo_origen,
                     'F_evento' => $f_evento_pericial,
                     'F_estructuracion' => $f_estructura_pericial,
+                    'Requiere_Recalificacion' => $requiere_recalificacion,
                     'Requiere_Revision_Pension' => $requiere_rev_pension,
                     'N_siniestro' => $n_siniestro,
                     'Sustentacion_F_estructuracion' => $sustenta_fecha,
@@ -9950,6 +9986,7 @@ class CalificacionPCLController extends Controller
                     'Origen' => $tipo_origen,
                     'F_evento' => $f_evento_pericial,
                     'F_estructuracion' => $f_estructura_pericial,
+                    'Requiere_Recalificacion' => $requiere_recalificacion,
                     'Requiere_Revision_Pension' => $requiere_rev_pension,
                     'N_siniestro' => $n_siniestro,
                     'Sustentacion_F_estructuracion' => $sustenta_fecha,
@@ -9980,6 +10017,7 @@ class CalificacionPCLController extends Controller
                     'Origen' => $tipo_origen,
                     'F_evento' => $f_evento_pericial,
                     'F_estructuracion' => $f_estructura_pericial,
+                    'Requiere_Recalificacion' => $requiere_recalificacion,
                     'Requiere_Revision_Pension' => $requiere_rev_pension,
                     'N_siniestro' => $n_siniestro,
                     'Sustentacion_F_estructuracion' => $sustenta_fecha,
@@ -11349,6 +11387,11 @@ class CalificacionPCLController extends Controller
         'sldmu.Nombre_municipio as Nombre_municipio_benefi', 'siae.Nombre_usuario', 'siae.F_registro', 'F_actualizacion')
         ->where([['ID_Evento',$ID_Evento_comuni_comite]])->limit(1)->get(); 
 
+        //PBS089 La información del footer debe ser la del afiliado o beneficiario
+        $Nombre_footer = $array_datos_info_afiliado[0]->Nombre_afiliado;
+        $Tipo_documento_footer = $array_datos_info_afiliado[0]->T_documento;
+        $Numero_documento_footer = $array_datos_info_afiliado[0]->Nro_identificacion;
+
         $Tipo_afiliado = $array_datos_info_afiliado[0]->Tipo_afiliado;
         $Apoderado = $array_datos_info_afiliado[0]->Apoderado;
         
@@ -11831,7 +11874,10 @@ class CalificacionPCLController extends Controller
                 'Email_arl' => $Email_arl,
                 'footer' => $footer,
                 'N_siniestro' => $N_siniestro,
-                'Email_afp_conocimiento' => $Email_afp_conocimiento
+                'Email_afp_conocimiento' => $Email_afp_conocimiento,
+                'Nombre_footer' => $Nombre_footer,
+                'Tipo_documento_footer' => $Tipo_documento_footer,
+                'Numero_documento_footer' => $Numero_documento_footer,
                 // 'footer_dato_1' => $footer_dato_1,
                 // 'footer_dato_2' => $footer_dato_2,
                 // 'footer_dato_3' => $footer_dato_3,

@@ -3659,6 +3659,17 @@ class CalificacionJuntasController extends Controller
         $tipo_de_preforma = $request->tipo_de_preforma_editar;
         $detinatario_principal = $request->afiliado_comunicado_act;
 
+        //Capturamos datos de los campos de afiliado los cuales si o si deben ir en el footer de nuestra proforma PBS089
+        //consultar el tipo de afiliado del evento de la informacion del afiliado
+        $info_afiliado = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_afiliado_eventos as siae')
+        ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slp', 'slp.Id_Parametro', '=', 'siae.Tipo_documento')
+        ->select('siae.Nombre_afiliado', 'siae.Tipo_documento','slp.Nombre_parametro as Tipo_documento_afiliado', 'siae.Nro_identificacion')
+        ->where([['ID_evento', $ID_evento], ['Nro_identificacion', $N_identificacion]])->get();
+
+        $Nombre_footer = $info_afiliado[0]->Nombre_afiliado;
+        $Tipo_documento_footer = $info_afiliado[0]->Tipo_documento_afiliado;
+        $Numero_documento_footer = $info_afiliado[0]->Nro_identificacion;
+
         $indicativo = time();
         switch (true) {
             case ($tipo_de_preforma == "Oficio_Afiliado"):
@@ -4075,7 +4086,10 @@ class CalificacionJuntasController extends Controller
                     'Firma_cliente' => $Firma_cliente,
                     'nombre_usuario' => $nombre_usuario,
                     'footer' => $footer,
-                    'N_siniestro' => $request->n_siniestro_proforma_editar,                                      
+                    'N_siniestro' => $request->n_siniestro_proforma_editar,
+                    'Nombre_footer' => $Nombre_footer,
+                    'Tipo_documento_footer' => $Tipo_documento_footer,
+                    'Numero_documento_footer' => $Numero_documento_footer,
                 ];         
                 
                 $extension_proforma = "pdf";
@@ -4706,7 +4720,8 @@ class CalificacionJuntasController extends Controller
                     $Contro_diagnostico = '';
                     $Contro_f_estructura = '';
                     $Contro_m_califi = '';
-                    $string_tipos_controversia = '';                    
+                    $string_tipos_controversia = '';
+                    $F_estructuracion_contro = '';                  
                 }
                 
                 $f_estructuracion_act = date("d/m/Y", strtotime($F_estructuracion_contro));
@@ -5098,6 +5113,9 @@ class CalificacionJuntasController extends Controller
                     'nombre_usuario' => $nombre_usuario,
                     'footer' => $footer,
                     'N_siniestro' => $request->n_siniestro_proforma_editar,
+                    'Nombre_footer' => $Nombre_footer,
+                    'Tipo_documento_footer' => $Tipo_documento_footer,
+                    'Numero_documento_footer' => $Numero_documento_footer,
                 ];
 
                 $extension_proforma = "pdf";
@@ -5571,6 +5589,9 @@ class CalificacionJuntasController extends Controller
                     'nombre_usuario' => $nombre_usuario,
                     'footer' => $footer,
                     'N_siniestro' => $request->n_siniestro_proforma_editar,
+                    'Nombre_footer' => $Nombre_footer,
+                    'Tipo_documento_footer' => $Tipo_documento_footer,
+                    'Numero_documento_footer' => $Numero_documento_footer,
                 ];
 
                 $extension_proforma = "pdf";
@@ -6044,6 +6065,9 @@ class CalificacionJuntasController extends Controller
                     'nombre_usuario' => $nombre_usuario,
                     'footer' => $footer,
                     'N_siniestro' => $request->n_siniestro_proforma_editar,
+                    'Nombre_footer' => $Nombre_footer,
+                    'Tipo_documento_footer' => $Tipo_documento_footer,
+                    'Numero_documento_footer' => $Numero_documento_footer,
                 ];
 
                 $extension_proforma = "pdf";
@@ -6516,6 +6540,9 @@ class CalificacionJuntasController extends Controller
                     'nombre_usuario' => $nombre_usuario,
                     'footer' => $footer,
                     'N_siniestro' => $request->n_siniestro_proforma_editar,
+                    'Nombre_footer' => $Nombre_footer,
+                    'Tipo_documento_footer' => $Tipo_documento_footer,
+                    'Numero_documento_footer' => $Numero_documento_footer,
                 ];
 
                 $extension_proforma = "pdf";
@@ -6988,6 +7015,9 @@ class CalificacionJuntasController extends Controller
                     'nombre_usuario' => $nombre_usuario,
                     'footer' => $footer,
                     'N_siniestro' => $request->n_siniestro_proforma_editar,
+                    'Nombre_footer' => $Nombre_footer,
+                    'Tipo_documento_footer' => $Tipo_documento_footer,
+                    'Numero_documento_footer' => $Numero_documento_footer,
                 ];
 
                 $extension_proforma = "pdf";
@@ -7461,6 +7491,9 @@ class CalificacionJuntasController extends Controller
                     'nombre_usuario' => $nombre_usuario,
                     'footer' => $footer,
                     'N_siniestro' => $request->n_siniestro_proforma_editar,
+                    'Nombre_footer' => $Nombre_footer,
+                    'Tipo_documento_footer' => $Tipo_documento_footer,
+                    'Numero_documento_footer' => $Numero_documento_footer,
                 ];
 
                 $extension_proforma = "pdf";
@@ -7575,6 +7608,7 @@ class CalificacionJuntasController extends Controller
                     $Origen_controversia = "";
                     $Origen_controvertido = "";
                     $Porcentaje_pcl = "";
+                    $F_estructuracion_contro = "";
                 }
                 
                 $f_estructuracion_act = date("d/m/Y", strtotime($F_estructuracion_contro));
@@ -7915,7 +7949,10 @@ class CalificacionJuntasController extends Controller
                     'Firma_cliente' => $Firma_cliente,
                     'nombre_usuario' => $nombre_usuario,
                     'footer' => $footer,
-                    'N_siniestro' => $request->n_siniestro_proforma_editar,                                      
+                    'N_siniestro' => $request->n_siniestro_proforma_editar,
+                    'Nombre_footer' => $Nombre_footer,
+                    'Tipo_documento_footer' => $Tipo_documento_footer,
+                    'Numero_documento_footer' => $Numero_documento_footer,
                 ];
 
                 $extension_proforma = "pdf";
@@ -8030,6 +8067,7 @@ class CalificacionJuntasController extends Controller
                     $Origen_controversia = "";
                     $Origen_controvertido = "";
                     $Porcentaje_pcl = "";
+                    $F_estructuracion_contro = "";
                 }
                 
                 $f_estructuracion_act = date("d/m/Y", strtotime($F_estructuracion_contro));
@@ -8370,7 +8408,10 @@ class CalificacionJuntasController extends Controller
                     'Firma_cliente' => $Firma_cliente,
                     'nombre_usuario' => $nombre_usuario,
                     'footer' => $footer,
-                    'N_siniestro' => $request->n_siniestro_proforma_editar,                                      
+                    'N_siniestro' => $request->n_siniestro_proforma_editar,
+                    'Nombre_footer' => $Nombre_footer,
+                    'Tipo_documento_footer' => $Tipo_documento_footer,
+                    'Numero_documento_footer' => $Numero_documento_footer,
                 ];
 
                 $extension_proforma = "pdf";
@@ -8486,6 +8527,7 @@ class CalificacionJuntasController extends Controller
                     $Origen_controvertido = "";
                     $Porcentaje_pcl = "";
                     $N_radicado_entrada_contro = "";
+                    $F_estructuracion_contro = "";
                 }
                 
                 $f_estructuracion_act = date("d/m/Y", strtotime($F_estructuracion_contro));
@@ -8826,7 +8868,10 @@ class CalificacionJuntasController extends Controller
                     'Firma_cliente' => $Firma_cliente,
                     'nombre_usuario' => $nombre_usuario,
                     'footer' => $footer,
-                    'N_siniestro' => $request->n_siniestro_proforma_editar,                                      
+                    'N_siniestro' => $request->n_siniestro_proforma_editar,
+                    'Nombre_footer' => $Nombre_footer,
+                    'Tipo_documento_footer' => $Tipo_documento_footer,
+                    'Numero_documento_footer' => $Numero_documento_footer,                                      
                 ];
 
                 $extension_proforma = "pdf";
