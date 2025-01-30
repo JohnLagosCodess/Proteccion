@@ -1468,6 +1468,7 @@
             document.getElementById('Regreso_Adicion_Dx').submit();
         });
     </script> --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js"></script>
     <script src="/js/selectores_gestion_edicion.js"></script>  
     <script src="https://cdn.jsdelivr.net/npm/resumablejs@1.1.0/resumable.min.js"></script>
     <script type="text/javascript">
@@ -1680,6 +1681,36 @@
         $("#fecha_ingreso").on("change", function() {
             var fechaEvento = $(this).val();
             $("#fecha_retiro").val('').attr("min", fechaEvento);
+        });
+
+        let timeoutClear;
+        $(document).on('keyup change', '#fecha_retiro', function(event){
+            var fechaIngreso = $("#fecha_ingreso").val();
+
+            var tipo_handler = event.type;
+            if (tipo_handler == 'keyup' || tipo_handler == 'change') {
+                if ($(this).val() > '1900-01-01' && $(this).val() < fechaIngreso) {
+                    // Si hay un timeout corriendo lo cancela
+                    clearTimeout(timeoutClear);
+                    // Eliminar cualquier alerta previa
+                    if ($(this).next('i').length) {
+                        $(this).next('i').remove();
+                    }
+                    let alerta = '<i style="color:red;">La fecha debe ser igual o mayor a: '+fechaIngreso+'</i>';
+                    $(this).after(alerta);
+                    timeoutClear = setTimeout(() => {
+                        $(this).val(fechaIngreso);
+                        calc_antiguedad_empresa();
+                        $(this).next('i').remove();
+                    }, 2500);
+                }else{
+                    if ($(this).next('i').length) {
+                        $(this).next('i').remove();
+                    }
+                    clearTimeout(timeoutClear);
+                    calc_antiguedad_empresa();
+                }
+            }
         });
     </script>
     {{-- Validación general para todos los campos de tipo fecha --}}

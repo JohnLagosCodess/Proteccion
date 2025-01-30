@@ -100,14 +100,14 @@
                                             <div class="col-sm-3">
                                                 <div class="form-group">
                                                     <label for="fecha_evento" class="col-form-label">Fecha de evento <!-- <span style="color:red;">(*)</span> --></label>
-                                                    <input type="date" class="fecha_evento form-control" name="fecha_evento" id="fecha_evento" max="{{date("Y-m-d")}}">
+                                                    <input type="date" class="fecha_evento form-control" name="fecha_evento" id="fecha_evento" max="{{date("Y-m-d")}}" min='1900-01-01'>
                                                     <span class="d-none" id="fecha_evento_alerta" style="color: red; font-style: italic;"></span>
                                                 </div>
                                             </div>
                                             <div class="col-sm-3">
                                                 <div class="form-group">
                                                     <label for="fecha_radicacion" class="col-form-label">Fecha de radicación <span style="color:red;">(*)</span></label>
-                                                    <input type="date" class="fecha_radicacion form-control" name="fecha_radicacion" id="fecha_radicacion" max="{{date("Y-m-d")}}" required>
+                                                    <input type="date" class="fecha_radicacion form-control" name="fecha_radicacion" id="fecha_radicacion" max="{{date("Y-m-d")}}" min='1900-01-01' required>
                                                 </div>
                                             </div>
                                             <div class="col-sm-3">
@@ -654,7 +654,7 @@
                                             <div class="col-sm">
                                                 <div class="form-group">
                                                     <label for="fecha_ingreso" class="col-form-label">Fecha de ingreso</label>
-                                                    <input type="date" class="fecha_ingreso form-control" name="fecha_ingreso" id="fecha_ingreso" max="{{date("Y-m-d")}}">
+                                                    <input type="date" class="fecha_ingreso form-control" name="fecha_ingreso" id="fecha_ingreso" max="{{date("Y-m-d")}}" min='1900-01-01'>
                                                     <span class="d-none" id="fecha_ingreso_alerta" style="color: red; font-style: italic;"></span>
                                                 </div>
                                             </div>
@@ -687,7 +687,7 @@
                                             <div class="col-sm">
                                                 <div class="form-group">
                                                     <label for="fecha_retiro" class="col-form-label">Fecha de retiro</label>
-                                                    <input type="date" class="fecha_retiro form-control" name="fecha_retiro" id="fecha_retiro">
+                                                    <input type="date" class="fecha_retiro form-control" name="fecha_retiro" id="fecha_retiro" max="{{date("Y-m-d")}}" min='1900-01-01'>
                                                     <span class="d-none" id="fecha_retiro_alerta" style="color: red; font-style: italic;"></span>
                                                 </div>
                                             </div>
@@ -869,6 +869,7 @@
 @stop
 
 @section('js')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/resumablejs@1.1.0/resumable.min.js"></script>
 <script src="/plugins/toatsr/build/toastr.min.js"></script>
 <script src="/js/selectores_gestion_inicial.js"></script>
@@ -1036,32 +1037,72 @@
             var fechaEvento = $(this).val();
             $("#fecha_retiro").val('').attr("min", fechaEvento);
         });
+        let timeoutClear;
+        $(document).on('keyup change', '#fecha_retiro', function(event){
+            var fechaIngreso = $("#fecha_ingreso").val();
+
+            var tipo_handler = event.type;
+            if (tipo_handler == 'keyup' || tipo_handler == 'change') {
+                if ($(this).val() > '1900-01-01' && $(this).val() < fechaIngreso) {
+                    // Si hay un timeout corriendo lo cancela
+                    clearTimeout(timeoutClear);
+                    // Eliminar cualquier alerta previa
+                    if ($(this).next('i').length) {
+                        $(this).next('i').remove();
+                    }
+                    let alerta = '<i style="color:red;">La fecha debe ser igual o mayor a: '+fechaIngreso+'</i>';
+                    $(this).after(alerta);
+                    timeoutClear = setTimeout(() => {
+                        $(this).val(fechaIngreso);
+                        calc_antiguedad_empresa();
+                        $(this).next('i').remove();
+                    }, 2500);
+                }else{
+                    if ($(this).next('i').length) {
+                        $(this).next('i').remove();
+                    }
+                    clearTimeout(timeoutClear);
+                    calc_antiguedad_empresa();
+                }
+            }
+        });
     });
 </script>
 {{-- Validación general para todos los campos de tipo fecha --}}
 <script>
     let today = new Date().toISOString().split("T")[0];
 
-    // Seleccionar todos los inputs de tipo date
-    const dateInputs = document.querySelectorAll('input[type="date"]');
-
-    // Agregar evento de escucha a cada input de tipo date que haya
-    dateInputs.forEach(input => {
-        //Usamos el evento change para detectar los cambios de cada uno de los inputs de tipo fecha
-        input.addEventListener('change', function() {
-            //Validamos que la fecha sea mayor a la fecha de 1900-01-01
-            if(this.value < '1900-01-01'){
+    // Seleccionar todos los inputs de tipo 'date'
+    $('input[type="date"]').each(function() {
+        // Usar los eventos 'keyup' y 'change' para cada input de tipo 'date'
+        $(this).on('keyup change', function() {
+            var today = new Date().toISOString().split('T')[0]; // Fecha actual en formato YYYY-MM-DD
+            var inputValue = $(this).val();
+            $(this).next('i').remove();
+            // Validar que la fecha sea mayor a '1900-01-01'
+            if (inputValue < '1900-01-01') {
+                $(`#${this.id}_alerta`).empty();
                 $(`#${this.id}_alerta`).text("La fecha ingresada no es válida. Por favor valide la fecha ingresada").removeClass("d-none");
                 $('#Edicion_editar').addClass('d-none');
+                setTimeout(() => {
+                    $(`#${this.id}_alerta`).addClass('d-none');
+                }, 3500);
                 return;
             }
-            //Validamos que la fecha no sea mayor a la fecha actual
-            if(this.value > today){
+            // Validar que la fecha no sea mayor a la fecha actual
+            if ((inputValue > today) && this.id != 'fecha_alerta') {
                 $(`#${this.id}_alerta`).text("La fecha ingresada no puede ser mayor a la actual").removeClass("d-none");
                 $('#Edicion_editar').addClass('d-none');
+
+                setTimeout(() => {
+                    $(this).val(today);
+                    $(`#${this.id}_alerta`).addClass('d-none');
+                }, 2500);
                 return;
             }
-            return $(`#${this.id}_alerta`).text('').addClass("d-none");
+
+            // Si la fecha es válida, ocultar el mensaje de alerta
+            $(`#${this.id}_alerta`).text('').addClass("d-none");
         });
     });
 </script>

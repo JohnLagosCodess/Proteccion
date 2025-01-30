@@ -68,9 +68,15 @@
                                 <div class="row d-none" id="mostrar_boton_descarga">
                                     <div class="col-12">
                                         <div style="float: left;">
-                                            <input type="submit" class="btn btn-info" value="Generar Reporte"> 
+                                            <input type="submit" class="btn btn-info" id="Reporte_trazabilidad" value="Generar Reporte"> 
                                         </div>
                                     </div>
+                                </div>
+                                <div class="text-center d-none" id="mostrar_barra_generar_reporte">                                
+                                    <button class="btn btn-info" type="button" disabled>
+                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                        Generando descarga del reporte por favor espere...
+                                    </button>
                                 </div>
                             </form>
 

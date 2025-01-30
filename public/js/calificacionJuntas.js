@@ -186,7 +186,8 @@ $(document).ready(function(){
             let IdCalifi = $('select[name=primer_calificador]').val();
             let primercali = Object.keys(data);
             for (let i = 0; i < primercali.length; i++) {
-                if (data[primercali[i]]['Id_Parametro'] != IdCalifi) {  
+                //PBS090 Solicitan quitar afiliado y empleador de la lista
+                if ((data[primercali[i]]['Id_Parametro'] != IdCalifi) && (data[primercali[i]]['Id_Parametro'] != 231 && data[primercali[i]]['Id_Parametro'] != 232)) {  
                     $('#primer_calificador').append('<option value="'+data[primercali[i]]["Id_Parametro"]+'">'+data[primercali[i]]["Nombre_parametro"]+'</option>');
                 }
             }

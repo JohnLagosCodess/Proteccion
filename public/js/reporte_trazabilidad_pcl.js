@@ -126,7 +126,8 @@ $(document).ready(function () {
     /* Envío de datos para creación del reporte */
     $("#descargar_repor_traza_pcl").submit(function(e){
         e.preventDefault();
-
+        $("#Reporte_trazabilidad").prop('disabled', true);
+        $("#mostrar_barra_generar_reporte").removeClass('d-none');
         /* Captura de variables del formulario */
         var fecha_desde = $('#fecha_desde').val();
         var fecha_hasta = $('#fecha_hasta').val();
@@ -156,6 +157,10 @@ $(document).ready(function () {
                 document.body.appendChild(a);
                 a.click();
                 a.remove();
+
+                $("#Reporte_trazabilidad").prop('disabled', false);
+                $("#mostrar_barra_generar_reporte").addClass('d-none');
+
             }
         });
     });

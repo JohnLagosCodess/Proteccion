@@ -301,6 +301,10 @@ $(document).ready(function(){
             for (let i = 0; i < claves.length; i++) {
                 $('#cliente').append('<option value="'+data[claves[i]]["Id_Cliente"]+'">'+data[claves[i]]["Nombre_cliente"]+'</option>');
             }
+            // Si hay al menos un cliente en la lista, selecciona el primero
+            if (claves.length > 0) {
+                $('#cliente').val(data[claves[0]]["Id_Cliente"]).change();
+            }
         }
     });
 

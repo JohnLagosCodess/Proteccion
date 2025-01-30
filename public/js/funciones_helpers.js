@@ -889,6 +889,7 @@ function historial_servicios(){
             scrollY: 350,
             scrollX: true,
             autoWidth: false,
+            destroy: true,
             data: response,
             pageLength: 5,
             order: [[5, 'desc']],
@@ -1361,4 +1362,32 @@ function peticion_asincrona(...peticiones) {
         .finally(() => {
             console.log('Todas las peticiones han sido procesadas');
         });
+}
+/**
+ * Obtiene la diferencia entre dos fechas
+ * @param {string} fecha_inicial 
+ * @param {string} fecha_final 
+ * @returns devuelve la cantidad de dias entre las fechas
+ */
+function diff_date(fecha_inicial, fecha_final, tipo_diferencia){
+    if(tipo_diferencia.toLowerCase() === 'dias'){
+        let diff = moment(new Date(fecha_final)).diff(new Date(fecha_inicial), 'days', true);
+        return Math.round(diff);
+    }else if(tipo_diferencia.toLowerCase() === 'meses'){
+        let diff = moment(new Date(fecha_final)).diff(new Date(fecha_inicial), 'months', true);
+        return Math.round(diff);
+    }else if(tipo_diferencia.toLowerCase() === 'dias'){
+        let diff = moment(new Date(fecha_final)).diff(new Date(fecha_inicial), 'years', true);
+        return Math.round(diff);
+    }
+    
+}
+/**
+ * Calcula la antiguedad en la empresa
+ */
+function calc_antiguedad_empresa(){
+    if($("#fecha_ingreso").val() !== '' && $("#fecha_retiro").val() !== ''){
+        let antiguedad = diff_date($("#fecha_ingreso").val(),$("#fecha_retiro").val(),'meses');
+        $("#antiguedad_empresa").val(antiguedad);
+    }
 }
