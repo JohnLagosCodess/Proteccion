@@ -215,7 +215,7 @@
         <p class="fuente_todo_texto derecha fecha_comunicado"><span class="negrita">{{$ciudad_comunicado_act}},  {{$fecha}}</span></p>
         <br><br>
         <div class="tabla2" style="margin-top: 30px;">
-            <span class="fuente_todo_texto">Señores: <br><strong>{{$nombre_destinatario_principal}}</strong></span><br>
+            <span class="fuente_todo_texto">Señor(a) <br><strong>{{$nombre_destinatario_principal}}</strong></span><br>
             <span class="fuente_todo_texto">{{$email_destinatario_principal}}</span><br>
             <span class="fuente_todo_texto">{{$direccion_destinatario_principal}}</span><br>
             <span class="fuente_todo_texto">Tel. {{$telefono_destinatario_principal}}</span><br>

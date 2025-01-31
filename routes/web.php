@@ -34,6 +34,7 @@ use App\Http\Controllers\Administrador\ReporteNotificacionesController;
 use App\Http\Controllers\Administrador\ReporteFacturacionPclController;
 use App\Http\Controllers\Administrador\ReporteFacturacionJuntasController;
 use App\Http\Controllers\Consulta\ReporteTrazabilidadPclController;
+use App\Http\Controllers\Consulta\ReporteTrazabilidadJuntasController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -903,7 +904,15 @@ Route::get('/Sigmel/ReporteTrazabilidadPcl', [ReporteTrazabilidadPclController::
 // Acción: Consulta de Reporte Trazabilidad PCL
 Route::post('/consultaReporteTrazabilidadPcl', [ReporteTrazabilidadPclController::class, 'consultaReporteTrazabilidadPcl']);
 
+// Creación Vista Módulo Reporte Trazabilidad Juntas
+// 30/01/2025 Vista Reporte Trazabilidad Juntas
+Route::get('/Sigmel/ReporteTrazabilidadJuntas', [ReporteTrazabilidadJuntasController::class, 'show'])->name('reporteTrazabilidadJuntas');
+// Acción: Consulta de Reporte Trazabilidad PCL
+Route::post('/consultaReporteTrazabilidadJuntas', [ReporteTrazabilidadJuntasController::class, 'consultaReporteTrazabilidadJuntas']);
+
+
 /* FIN SECCION: AQUI SE RENDERIZARÁN LAS RUTAS DE LOS DEMÁS ROLES: */
+
 
 
 Route::get('/Sigmel/pruebas', [ProbandoController::class, 'index']);

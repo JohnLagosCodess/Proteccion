@@ -108,6 +108,7 @@
                                                 <div class="form-group">
                                                     <label for="fecha_radicacion" class="col-form-label">Fecha de radicación <span style="color:red;">(*)</span></label>
                                                     <input type="date" class="fecha_radicacion form-control" name="fecha_radicacion" id="fecha_radicacion" max="{{date("Y-m-d")}}" min='1900-01-01' required>
+                                                    <span class="d-none" id="fecha_radicacion_alerta" style="color: red; font-style: italic;"></span>
                                                 </div>
                                             </div>
                                             <div class="col-sm-3">
@@ -999,10 +1000,12 @@
                     }
                     let alerta = '<i style="color:red;">La fecha debe ser igual o mayor a la fecha evento: '+fechaEvento+'</i>';
                     $(this).after(alerta);
+                    $('#btn_guardar_evento').addClass('d-none');
                 }else{
                     if ($(this).next('i').length) {
                         $(this).next('i').remove();
                     }
+                    $('#btn_guardar_evento').removeClass('d-none');
                 }
             break;
 
@@ -1081,9 +1084,10 @@
             $(this).next('i').remove();
             // Validar que la fecha sea mayor a '1900-01-01'
             if (inputValue < '1900-01-01') {
+                console.log('Inputvalue ', inputValue)
                 $(`#${this.id}_alerta`).empty();
                 $(`#${this.id}_alerta`).text("La fecha ingresada no es válida. Por favor valide la fecha ingresada").removeClass("d-none");
-                $('#Edicion_editar').addClass('d-none');
+                $('#btn_guardar_evento').addClass('d-none');
                 setTimeout(() => {
                     $(`#${this.id}_alerta`).addClass('d-none');
                 }, 3500);

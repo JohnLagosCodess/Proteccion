@@ -401,9 +401,7 @@
                 @endif
             </table>
         </section>
-        <br>
-        <br>
-        <br>
+        <br>                
         <div class="radicado">
             <div class="cuadro fuente_cuadro_inferior" style="margin: 0 auto">
                 <span class="fuente_cuadro_inferior"><span class="negrita">Nro. Radicado: <br>{{$nro_radicado}}</span></span><br>

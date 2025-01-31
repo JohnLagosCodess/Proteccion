@@ -59,7 +59,7 @@
                 <div class="row">
                     <div class="col-12">
                         <!-- Informacion Afiliado-->
-                        <div class="card-info" id="div_info_afiliado">
+                        <div class="card-info d-none" id="div_info_afiliado">
                             <div class="card-header text-center" style="border: 1.5px solid black;">
                                 <h5>Información del afiliado</h5>
                             </div>
