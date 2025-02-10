@@ -245,7 +245,7 @@
                     $texto_modificado = str_replace('{{$F_visado_comite}}', $f_visado_comite, $texto_modificado);
                     $texto_modificado = str_replace('{{$PCL}}', $porcentaje_pcl, $texto_modificado);
                     $texto_modificado = str_replace('{{$Tipo_evento}}', strtoupper($tipo_evento) , $texto_modificado);
-                    $texto_modificado = str_replace('{{$Origen}}', strtoupper($origen) , $texto_modificado);
+                    $texto_modificado = str_replace('{{$Origen}}', mb_strtoupper($origen) , $texto_modificado);
                     $texto_modificado = str_replace('{{$Fecha_estructuracion}}', $f_estructuracion, $texto_modificado);
                     $cuerpo = $texto_modificado;
                 } else {

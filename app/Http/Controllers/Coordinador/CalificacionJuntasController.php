@@ -798,7 +798,8 @@ class CalificacionJuntasController extends Controller
             }
             $Id_servicio = $request->Id_servicio;
             $newIdEvento = $request->Id_evento;
-            $documentos = DB::select('CALL psrvistadocumentos(?,?)',array((string)$newIdEvento , (int) $Id_servicio));
+            $Id_asignacion = $request->Id_asignacion;
+            $documentos = DB::select('CALL psrvistadocumentos(?,?,?)',array((string)$newIdEvento , (int) $Id_servicio, (int) $Id_asignacion));
         
             $lista_chequeo = [];
 
@@ -825,56 +826,37 @@ class CalificacionJuntasController extends Controller
             
             // dd($lista_chequeo);            
 
-            // Reorganizar los documentos de homologación según pbs 062 
-            // Array para almacenar los documentos con el mismo nombre
-            $documentos_repetidos = [];
-            // lista para almacenar documentos únicos
-            $nueva_lista_chequeo = []; 
+            // Reorganizar los documentos de homologación según pbs 062             
+            // Array para almacenar el resultado de la organizacion del array
+            $nueva_lista_chequeo = [];
+            $duplicados = [];
 
-            // Iterar sobre el array original
-            foreach ($lista_chequeo as $key => $chequeo) {
-                $nombre = $chequeo['doc_nombre'];
-                $repetido = false;
-                // Buscar otros documentos con el mismo nombre
-                for ($i = $key + 1; $i < count($lista_chequeo); $i++) {
-                    if ($lista_chequeo[$i]['doc_nombre'] === $nombre) {
-                        // Guardar el documento repetido
-                        $documentos_repetidos[] = $lista_chequeo[$i];
-                        // Marcar este documento como repetido
-                        $repetido = true;
-                        break;
+            // Almacenamos el primer registro de cada doc_nombre basado en el id_Registro_Documento más bajo
+            foreach ($lista_chequeo as $documento) {
+                $docNombre = $documento["doc_nombre"];
+                $idRegistro = $documento["id_Registro_Documento"];
+                
+                // Verificamos si ya existe un documento con el mismo doc_nombre en el resultado
+                if (!isset($nueva_lista_chequeo[$docNombre])) {
+                    $nueva_lista_chequeo[$docNombre] = $documento;
+                } else {
+                    // Si el doc_nombre ya está en resultado, comparamos el id para mantener el más bajo
+                    if ($nueva_lista_chequeo[$docNombre]["id_Registro_Documento"] > $idRegistro) {
+                        // El actual documento tiene menor id, así que movemos el anterior a duplicados
+                        $duplicados[] = $nueva_lista_chequeo[$docNombre];
+                        $nueva_lista_chequeo[$docNombre] = $documento;
+                    } else {
+                        // El actual documento es un duplicado con un id mayor, así que lo movemos a duplicados
+                        $duplicados[] = $documento;
                     }
-                }
-
-                // Si no es repetido, agregarlo a la nueva lista
-                if (!$repetido) {
-                    $nueva_lista_chequeo[] = $chequeo;
                 }
             }
 
-            // Al final, reemplazar la lista original con la lista sin repetidos
-            $lista_chequeo = array_merge($nueva_lista_chequeo, $documentos_repetidos);
+            // Convertimos el resultado en un array de documentos y luego agregamos los duplicados al final
+            $nueva_lista_chequeo = array_values($nueva_lista_chequeo);
+            $lista_chequeo = array_merge($nueva_lista_chequeo, $duplicados);
 
             // dd($lista_chequeo);
-
-            //Comunicados 
-            /* $comunicados = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_comunicado_eventos')
-            ->select('Asunto as Nombre','Id_Comunicado', 'Lista_chequeo')
-            ->where([
-                ['ID_evento', $request->Id_evento],
-                ['Id_Asignacion', $request->Id_asignacion],
-                ['Asunto', 'not like', '%Lista_chequeo%'],
-                ['Modulo_creacion', 'calificacionJuntas']
-            ])->get()->toArray();
-
-            foreach($comunicados as $comunicado){
-                $lista_chequeo['comunicados'][] = [
-                    'nombre' =>preg_replace("/\.[^.]*$/", '', $comunicado->Nombre), //Le quitamos cualquier ext al archivo
-                    'Id_Comunicado' => $comunicado->Id_Comunicado,
-                    'Lista_chequeo' => $comunicado->Lista_chequeo,
-                ];
-            } */
-
             return response()->json($lista_chequeo);
         }
 
@@ -3339,8 +3321,7 @@ class CalificacionJuntasController extends Controller
             ->where([
                 ['ID_evento', $newId_evento],
                 ['Id_Asignacion', $newId_asignacion],
-                ['Id_proceso', '3'],
-                ['N_radicado', '<>', '']
+                ['Id_proceso', '3']
             ])
             ->get();
 
@@ -9065,7 +9046,7 @@ class CalificacionJuntasController extends Controller
                 'Id_Asignacion' => $request->Id_asignacion,
                 'Id_proceso' => $request->Id_proceso,
                 'F_comunicado' => $fecha_actual,
-                // 'N_radicado' => $n_radicado,
+                'N_radicado' => $n_radicado,
                 'Cliente' => $request->cliente,
                 'Nombre_afiliado' => $request->afiliado,
                 'T_documento'  => $request->t_documento,
@@ -9123,96 +9104,9 @@ class CalificacionJuntasController extends Controller
 
             $mensaje = 'Registro agregado satisfactoriamente.';
         }else{
-
-            $array_lista_chequeo = $request->lista_chequeo;
-
-            dd($array_lista_chequeo);
-
-            $fecha_actual = date("Y-m-d", time());
-            //Consultar los documentos de la lista de chequeo del evento y servicio por si hubo algún cambio
-            // Validar cuales siguen dentro de la lista de chequeo (Si)
-            $info_registros_documentos_Si = sigmel_registro_documentos_eventos::on('sigmel_gestiones')
-            ->where([
-                ['ID_evento', $request->Id_evento],
-                ['Id_servicio', $request->Id_servicio],
-                ['Lista_chequeo', 'Si']
-            ])->get();
-
-            $info_array_registros_documentosSi = $info_registros_documentos_Si->toArray();
-
-            // Validar cuales siguen dentro de la lista de chequeo (No) y distinto al documento Lista_chequeo
-            $info_registros_documentos_No = sigmel_registro_documentos_eventos::on('sigmel_gestiones')
-            ->where([
-                ['ID_evento', $request->Id_evento],
-                ['Id_servicio', $request->Id_servicio],
-                ['Lista_chequeo', 'No'],
-                ['Nombre_documento', '<>', 'Lista_chequeo'],
-            ])->get();
-
-            $info_array_registros_documentosNo = $info_registros_documentos_No->toArray();
-
-            // Recorremos el array de los documentos que continuan en la lista de chequeo y actualizamos su posicion
-
-            foreach ($info_array_registros_documentosSi as $chequeo_Si) {
-                
-                // Se organiza el array para la actualizacion, se activa el estado para tenerlo encuenta en la unificación del expediente
-
-                $info_datos_expedientes = [                    
-                    'Estado' => 'activo',
-                    'Nombre_usuario' => Auth::user()->name,
-                    'F_registro' => $fecha_actual
-                ];
-
-                // Recorre el array de la lista de chequeo  array_lista_chequeo para actulizar la posicion de los inputs
-
-                foreach ($array_lista_chequeo as $id_doc_posicion) {
-                    // validamo si los id de documentos son iguales para captura su poscion
-                    if ($chequeo_Si['Id_Documento'] == $id_doc_posicion['id_doc']) {
-                        $info_datos_expedientes['Posicion'] = $id_doc_posicion['posicion'];                        
-                    }
-                }
-
-                // dd($info_datos_expedientes);
-
-                // Actualizamos los registros en la tabla  sigmel_informacion_expedientes_eventos
-
-                sigmel_informacion_expedientes_eventos::on('sigmel_gestiones')
-                ->where([
-                    ['ID_evento', $request->Id_evento],
-                    ['Id_servicio', $request->Id_servicio],
-                    ['Id_Documento', $chequeo_Si['Id_Documento']],
-                ])
-                ->update($info_datos_expedientes);
-
-
-            }
-
-            // Recorremos el array de los documentos que NO continuan en la lista de chequeo y actualizamos su posicion
-
-            foreach ($info_array_registros_documentosNo as $chequeo_No) {
-
-                 // Se organiza el array para la actualizacion, se inactiva el estado para no tenerlo encuenta en la unificación del expediente
-
-                 $info_datos_expedientes = [                    
-                    'Estado' => 'Inactiva',
-                    'Nombre_usuario' => Auth::user()->name,
-                    'F_registro' => $fecha_actual
-                ];
-
-                // Recorre el array de la lista de chequeo  array_lista_chequeo para actulizar la posicion de los inputs
-
-                foreach ($array_lista_chequeo as $id_doc_posicion) {
-                    // validamo si los id de documentos son iguales para captura su poscion
-                    if ($chequeo_No['Id_Documento'] == $id_doc_posicion['id_doc']) {
-                        $info_datos_expedientes['Posicion'] = null;                        
-                    }
-                }
             
-            }
-
-            // $mensaje = 'Registro actualizado satisfactoriamente. Para poder visualizar la lista de chequeo en el historial de comunicaciones debe recargar la pagina.';
-            $mensaje = 'Registro actualizado satisfactoriamente.';
-
+            $mensaje = 'Registro actualizado satisfactoriamente. Para poder visualizar la lista de chequeo en el historial de comunicaciones debe recargar la pagina.';
+            
         }
 
         $mensajes = array(

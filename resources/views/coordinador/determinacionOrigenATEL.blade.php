@@ -32,7 +32,7 @@
     </div>
     <div class="card-info" style="border: 1px solid black;">
         <div class="card-header text-center">
-            <h4>Origen ATEL - Evento: {{$array_datos_calificacion_origen[0]->ID_evento}}</h4>
+            <h4>Origen ATEL - Evento: <u><a onclick="document.getElementById('botonVerEdicionEvento').click();" style="cursor:pointer;">{{$array_datos_calificacion_origen[0]->ID_evento}}</a></u> - Afiliado: {{$array_datos_calificacion_origen[0]->Nombre_afiliado}} {{$array_datos_calificacion_origen[0]->Nombre_tipo_documento}} {{$array_datos_calificacion_origen[0]->Nro_identificacion}} - {{$array_datos_calificacion_origen[0]->Tipo_afiliado}}</h4>
             <h5 style="font-style: italic;">Determinación de Origen (DTO)</h5>
             <input type="hidden" id="id_rol" value="<?php echo session('id_cambio_rol');?>">
             <input type="hidden" name="NombreUsuario" id="NombreUsuario" value="{{$user->name}}">
@@ -83,7 +83,7 @@
                         {{-- FORMULARIO ACCIDENTE, ENFERMEDAD, INCIDENTE, SIN COBERTURA --}}
                         <div id="mostrar_ocultar_formularios" class="d-none1">
                             {{-- Información del afiliado --}}
-                            <div class="card-info">
+                            <div class="card-info d-none">
                                 <div class="card-header text-center" style="border: 1.5px solid black;">
                                     <h5>Información del afiliado</h5>
                                 </div>
@@ -141,7 +141,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row">
+                                    <div class="row d-none">
                                         <div class="col-6">
                                             <div class="form-group">
                                                 <label for="nombre_apoderado">Nombre apoderado</label>
@@ -953,6 +953,9 @@
                     <i class="fas fa-chevron-up"></i>
                 </a>                 
                 <div class="row">
+                    <div class="col-12">
+                        <div class="alerta_roja_dto_dict alert alert-danger mt-2 mr-auto d-none" role="alert"></div>
+                    </div>
                     <div class="col-6">
                         <div class="form-group">
                             @if (empty($datos_bd_DTO_ATEL[0]->ID_evento))
@@ -1775,6 +1778,11 @@
             var nombre_exame_fila = $(this).data("clase_fila");
             listado_examenes_interconsultas.row("."+nombre_exame_fila).remove().draw();
         });
+
+        // Lista de documentos solicitados
+        let lista_documentos_solicitados = @json($array_datos_examenes_interconsultas);
+        // Lista de diagnosticos agregados
+        let lista_diagnosticos_cie10 = @json($array_datos_diagnostico_motcalifi);
 
         //SCRIPT PARA INSERTAR O ELIMINAR FILAS DINAMICAS DEL DATATABLES DE DIAGNOSTCO CIE10
         $(".centrar").css('text-align', 'center');

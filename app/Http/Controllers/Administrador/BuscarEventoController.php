@@ -18,9 +18,16 @@ use App\Models\sigmel_informacion_eventos;
 use App\Models\sigmel_informacion_historial_accion_eventos;
 use App\Models\sigmel_informacion_pronunciamiento_eventos;
 use App\Models\sigmel_registro_documentos_eventos;
+use App\Services\GlobalService;
 
 class BuscarEventoController extends Controller
 {
+    protected $globalService;
+
+    public function __construct(GlobalService $globalService)
+    {
+        $this->globalService = $globalService;
+    }
     /* TODO LO REFERENTE AL FORMULARIO DE BUSCAR UN EVENTO*/
     // Busqueda Evaluado y evento
     public function mostrarVistaBuscarEvento(){
@@ -28,12 +35,12 @@ class BuscarEventoController extends Controller
             return redirect('/');
         }
         $user = Auth::user();
-
+        $info_cliente = $this->globalService->infoCliente();
         // $session = app('session');
         // $session->put('num_ident', "");
         // $session->put('num_id_evento', "");
 
-        return view('administrador.busquedaEvento', compact('user'));
+        return view('administrador.busquedaEvento', compact('user','info_cliente'));
     }
 
 
@@ -292,7 +299,9 @@ class BuscarEventoController extends Controller
                     if (count($posicionPclCali) > 0) {                    
     
                         $resultadoCaliPcl = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_decreto_eventos as side')                    
-                        ->select('ID_Evento','Id_Asignacion','Porcentaje_pcl');
+                        ->leftJoin('sigmel_gestiones.sigmel_lista_tipo_eventos as slte', 'slte.Id_Evento', '=', 'side.Tipo_evento')
+                        ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slp', 'slp.Id_Parametro', '=', 'side.Origen')
+                        ->select('side.ID_Evento','side.Id_Asignacion','side.Porcentaje_pcl', 'side.Tipo_evento', 'slte.Nombre_evento', 'side.Origen', 'slp.Nombre_parametro', 'side.F_estructuracion');
                         foreach ($posicionPclCali as $item) {
                             $resultadoCaliPcl->orWhere([
                                 ['side.Id_Asignacion', $item['Id_Asignacion']],
@@ -311,7 +320,7 @@ class BuscarEventoController extends Controller
                                 // Si se encuentra una coincidencia, agregar la información al array original
                                 if (!empty($resultado)) {
                                     $resultado = reset($resultado); // Obtener el primer elemento del array de resultados
-                                    $item['Porcentaje_pclProResultado'] = $resultado->Porcentaje_pcl;
+                                    $item['Porcentaje_pclProResultado'] = $resultado->Porcentaje_pcl.'% - FE: '.date("d/m/Y", strtotime($resultado->F_estructuracion)).' - '.$resultado->Nombre_evento.' '.$resultado->Nombre_parametro;
                                 } 
                             }                          
                             // Filtrar los elementos que contienen [OrigenDtoResultado]
@@ -348,7 +357,9 @@ class BuscarEventoController extends Controller
                     if (count($posicionPclReca) > 0) {
                         
                         $resultadoRecaPcl =DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_decreto_eventos as side')
-                        ->select('side.ID_Evento','side.Id_Asignacion','side.Porcentaje_pcl');
+                        ->leftJoin('sigmel_gestiones.sigmel_lista_tipo_eventos as slte', 'slte.Id_Evento', '=', 'side.Tipo_evento')
+                        ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slp', 'slp.Id_Parametro', '=', 'side.Origen')
+                        ->select('side.ID_Evento','side.Id_Asignacion','side.Porcentaje_pcl', 'side.Tipo_evento', 'slte.Nombre_evento', 'side.Origen', 'slp.Nombre_parametro', 'side.F_estructuracion');
                         foreach ($posicionPclReca as $item) {
                             $resultadoRecaPcl->orWhere([
                                 ['side.Id_Asignacion', $item['Id_Asignacion']],
@@ -367,7 +378,7 @@ class BuscarEventoController extends Controller
                                 // Si se encuentra una coincidencia, agregar la información al array original
                                 if (!empty($resultado)) {
                                     $resultado = reset($resultado); // Obtener el primer elemento del array de resultados
-                                    $item['ProcentajePClRecaResultado'] = $resultado->Porcentaje_pcl;
+                                    $item['ProcentajePClRecaResultado'] = $resultado->Porcentaje_pcl.'% - FE: '.date("d/m/Y", strtotime($resultado->F_estructuracion)).' - '.$resultado->Nombre_evento.' '.$resultado->Nombre_parametro;
                                 } 
                             }                          
                             // Filtrar los elementos que contienen [OrigenDtoResultado]
@@ -404,12 +415,14 @@ class BuscarEventoController extends Controller
                     }
                     if (count($posicionPclRevi) > 0) {
                         $resultadoReviPcl = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_decreto_eventos as side')
-                        ->select('side.ID_Evento','side.Id_Asignacion','side.Porcentaje_pcl');
+                        ->leftJoin('sigmel_gestiones.sigmel_lista_tipo_eventos as slte', 'slte.Id_Evento', '=', 'side.Tipo_evento')
+                        ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slp', 'slp.Id_Parametro', '=', 'side.Origen')
+                        ->select('side.ID_Evento','side.Id_Asignacion','side.Porcentaje_pcl', 'side.Tipo_evento', 'slte.Nombre_evento', 'side.Origen', 'slp.Nombre_parametro', 'side.F_estructuracion');
                         foreach ($posicionPclRevi as $item) {
                             $resultadoReviPcl->orWhere([
-                                ['Id_Asignacion',$item['Id_Asignacion']], 
-                                ['Id_proceso',$item['Id_proceso']], 
-                                ['ID_Evento',$item['ID_evento']]]);
+                                ['side.Id_Asignacion',$item['Id_Asignacion']], 
+                                ['side.Id_proceso',$item['Id_proceso']], 
+                                ['side.ID_Evento',$item['ID_evento']]]);
                         }
                         $resulReviPcl = $resultadoReviPcl->get();
     
@@ -423,7 +436,7 @@ class BuscarEventoController extends Controller
                                 // Si se encuentra una coincidencia, agregar la información al array original
                                 if (!empty($resultado)) {
                                     $resultado = reset($resultado); // Obtener el primer elemento del array de resultados
-                                    $item['ProcentajePClReviResultado'] = $resultado->Porcentaje_pcl;
+                                    $item['ProcentajePClReviResultado'] = $resultado->Porcentaje_pcl.'% - FE: '.date("d/m/Y", strtotime($resultado->F_estructuracion)).' - '.$resultado->Nombre_evento.' '.$resultado->Nombre_parametro;
                                 } 
                             }                              
                             // Filtrar los elementos que contienen [OrigenDtoResultado]
@@ -940,20 +953,26 @@ class BuscarEventoController extends Controller
                         $Id_ServicioCali = $posicionPclCali[0]['Id_Servicio'];
                         $Id_AsignacionCali = $posicionPclCali[0]['Id_Asignacion'];
     
-                        $resultadoCaliPcl = sigmel_informacion_decreto_eventos::on('sigmel_gestiones')
-                        ->select('ID_Evento','Id_Asignacion','Porcentaje_pcl')
-                        ->where([['Id_Asignacion',$Id_AsignacionCali], ['Id_proceso',$Id_procesoCali], ['ID_Evento',$ID_eventoCali]])
+                        $resultadoCaliPcl = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_decreto_eventos as side')
+                        ->leftJoin('sigmel_gestiones.sigmel_lista_tipo_eventos as slte', 'slte.Id_Evento', '=', 'side.Tipo_evento')
+                        ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slp', 'slp.Id_Parametro', '=', 'side.Origen')
+                        ->select('side.ID_Evento','side.Id_Asignacion','side.Porcentaje_pcl', 'side.Tipo_evento', 'slte.Nombre_evento', 'side.Origen', 'slp.Nombre_parametro', 'side.F_estructuracion')
+                        ->where([['side.Id_Asignacion',$Id_AsignacionCali], ['side.Id_proceso',$Id_procesoCali], ['side.ID_Evento',$ID_eventoCali]])
                         ->get(); 
                         if (count($resultadoCaliPcl) > 0) {
                             $ProcentajePClCaliResultado = $resultadoCaliPcl[0]->Porcentaje_pcl;
+                            $F_estructuracionPClCaliResultado = $resultadoCaliPcl[0]->F_estructuracion;
+                            $F_estructuracionPClCaliResultado = date("d/m/Y", strtotime($F_estructuracionPClCaliResultado));
+                            $Nombre_eventoPClCaliResultado = $resultadoCaliPcl[0]->Nombre_evento;
+                            $OrigenPClCaliResultado = $resultadoCaliPcl[0]->Nombre_parametro;
                             $IdAsignacionResultado = $resultadoCaliPcl[0]->Id_Asignacion;
                             $ID_eventoResultado = $resultadoCaliPcl[0]->ID_Evento;
             
                             foreach ($posicionPclCali as &$elemento) {
                                 // Verificar si Id_Asignacion es igual a $IdAsignacionResultado
                                 if ($elemento['Id_Asignacion'] == $IdAsignacionResultado && $elemento['ID_evento'] == $ID_eventoResultado) {
-                                    // Agregar $OrigenResultado al array
-                                    $elemento['ProcentajePClCaliResultado'] = $ProcentajePClCaliResultado;
+                                    // Agregar todos los valores al array
+                                    $elemento['ProcentajePClCaliResultado'] = $ProcentajePClCaliResultado.'% - FE: '.$F_estructuracionPClCaliResultado.' - '.$Nombre_eventoPClCaliResultado.' '.$OrigenPClCaliResultado;
                                 }
                             }
                             // Filtrar los elementos que contienen [ProcentajePClCaliResultado]
@@ -991,7 +1010,9 @@ class BuscarEventoController extends Controller
                     if (count($posicionPclReca) > 0) {
                         
                         $resultadoRecaPcl =DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_decreto_eventos as side')
-                        ->select('side.ID_Evento','side.Id_Asignacion','side.Porcentaje_pcl');
+                        ->leftJoin('sigmel_gestiones.sigmel_lista_tipo_eventos as slte', 'slte.Id_Evento', '=', 'side.Tipo_evento')
+                        ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slp', 'slp.Id_Parametro', '=', 'side.Origen')
+                        ->select('side.ID_Evento','side.Id_Asignacion','side.Porcentaje_pcl', 'side.Tipo_evento', 'slte.Nombre_evento', 'side.Origen', 'slp.Nombre_parametro', 'side.F_estructuracion');
                         foreach ($posicionPclReca as $item) {
                             $resultadoRecaPcl->orWhere([
                                 ['side.Id_Asignacion', $item['Id_Asignacion']],
@@ -1010,7 +1031,7 @@ class BuscarEventoController extends Controller
                                 // Si se encuentra una coincidencia, agregar la información al array original
                                 if (!empty($resultado)) {
                                     $resultado = reset($resultado); // Obtener el primer elemento del array de resultados
-                                    $item['ProcentajePClRecaResultado'] = $resultado->Porcentaje_pcl;
+                                    $item['ProcentajePClRecaResultado'] = $resultado->Porcentaje_pcl.'% - FE: '.date("d/m/Y", strtotime($resultado->F_estructuracion)).' - '.$resultado->Nombre_evento.' '.$resultado->Nombre_parametro;
                                 } 
                             }                          
                             // Filtrar los elementos que contienen [ProcentajePClRecaResultado]
@@ -1048,7 +1069,9 @@ class BuscarEventoController extends Controller
                     }
                     if (count($posicionPclRevi) > 0) {
                         $resultadoReviPcl =DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_decreto_eventos as side')
-                        ->select('side.ID_Evento','side.Id_Asignacion','side.Porcentaje_pcl');
+                        ->leftJoin('sigmel_gestiones.sigmel_lista_tipo_eventos as slte', 'slte.Id_Evento', '=', 'side.Tipo_evento')
+                        ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slp', 'slp.Id_Parametro', '=', 'side.Origen')
+                        ->select('side.ID_Evento','side.Id_Asignacion','side.Porcentaje_pcl', 'side.Tipo_evento', 'slte.Nombre_evento', 'side.Origen', 'slp.Nombre_parametro', 'side.F_estructuracion');
                         foreach ($posicionPclRevi as $item) {
                             $resultadoReviPcl->orWhere([
                                 ['side.Id_Asignacion', $item['Id_Asignacion']],
@@ -1067,7 +1090,7 @@ class BuscarEventoController extends Controller
                                 // Si se encuentra una coincidencia, agregar la información al array original
                                 if (!empty($resultado)) {
                                     $resultado = reset($resultado); // Obtener el primer elemento del array de resultados
-                                    $item['ProcentajePClReviResultado'] = $resultado->Porcentaje_pcl;
+                                    $item['ProcentajePClReviResultado'] = $resultado->Porcentaje_pcl.'% - FE: '.date("d/m/Y", strtotime($resultado->F_estructuracion)).' - '.$resultado->Nombre_evento.' '.$resultado->Nombre_parametro;
                                 } 
                             }                                                         
                             // Filtrar los elementos que contienen [ProcentajePClReviResultado]
@@ -1637,21 +1660,27 @@ class BuscarEventoController extends Controller
                         $Id_procesoCali = $posicionPclCali[0]['Id_proceso'];
                         $Id_ServicioCali = $posicionPclCali[0]['Id_Servicio'];
                         $Id_AsignacionCali = $posicionPclCali[0]['Id_Asignacion'];
-    
-                        $resultadoCaliPcl = sigmel_informacion_decreto_eventos::on('sigmel_gestiones')
-                        ->select('ID_Evento','Id_Asignacion','Porcentaje_pcl')
-                        ->where([['Id_Asignacion',$Id_AsignacionCali], ['Id_proceso',$Id_procesoCali], ['ID_Evento',$ID_eventoCali]])
-                        ->get(); 
+                            
+                        $resultadoCaliPcl = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_decreto_eventos as side')
+                        ->leftJoin('sigmel_gestiones.sigmel_lista_tipo_eventos as slte', 'slte.Id_Evento', '=', 'side.Tipo_evento')
+                        ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slp', 'slp.Id_Parametro', '=', 'side.Origen')
+                        ->select('side.ID_Evento','side.Id_Asignacion','side.Porcentaje_pcl', 'side.Tipo_evento', 'slte.Nombre_evento', 'side.Origen', 'slp.Nombre_parametro', 'side.F_estructuracion')
+                        ->where([['side.Id_Asignacion',$Id_AsignacionCali], ['side.Id_proceso',$Id_procesoCali], ['side.ID_Evento',$ID_eventoCali]])
+                        ->get();  
                         if (count($resultadoCaliPcl) > 0) {
                             $ProcentajePClCaliResultado = $resultadoCaliPcl[0]->Porcentaje_pcl;
+                            $F_estructuracionPClCaliResultado = $resultadoCaliPcl[0]->F_estructuracion;
+                            $F_estructuracionPClCaliResultado = date("d/m/Y", strtotime($F_estructuracionPClCaliResultado));
+                            $Nombre_eventoPClCaliResultado = $resultadoCaliPcl[0]->Nombre_evento;
+                            $OrigenPClCaliResultado = $resultadoCaliPcl[0]->Nombre_parametro;
                             $IdAsignacionResultado = $resultadoCaliPcl[0]->Id_Asignacion;
                             $ID_eventoResultado = $resultadoCaliPcl[0]->ID_Evento;
             
                             foreach ($posicionPclCali as &$elemento) {
                                 // Verificar si Id_Asignacion es igual a $IdAsignacionResultado
                                 if ($elemento['Id_Asignacion'] == $IdAsignacionResultado && $elemento['ID_evento'] == $ID_eventoResultado) {
-                                    // Agregar $OrigenResultado al array
-                                    $elemento['ProcentajePClCaliResultado'] = $ProcentajePClCaliResultado;
+                                    // Agregar lo valores del las variables al array
+                                    $elemento['ProcentajePClCaliResultado'] = $ProcentajePClCaliResultado.'% - FE: '.$F_estructuracionPClCaliResultado.' - '.$Nombre_eventoPClCaliResultado.' '.$OrigenPClCaliResultado;
                                 }
                             }
                             // Filtrar los elementos que contienen [ProcentajePClCaliResultado]
@@ -1688,7 +1717,9 @@ class BuscarEventoController extends Controller
                     if (count($posicionPclReca) > 0) {
                         
                         $resultadoRecaPcl =DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_decreto_eventos as side')
-                        ->select('side.ID_Evento','side.Id_Asignacion','side.Porcentaje_pcl');
+                        ->leftJoin('sigmel_gestiones.sigmel_lista_tipo_eventos as slte', 'slte.Id_Evento', '=', 'side.Tipo_evento')
+                        ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slp', 'slp.Id_Parametro', '=', 'side.Origen')
+                        ->select('side.ID_Evento','side.Id_Asignacion','side.Porcentaje_pcl', 'side.Tipo_evento', 'slte.Nombre_evento', 'side.Origen', 'slp.Nombre_parametro', 'side.F_estructuracion');
                         foreach ($posicionPclReca as $item) {
                             $resultadoRecaPcl->orWhere([
                                 ['side.Id_Asignacion', $item['Id_Asignacion']],
@@ -1707,7 +1738,7 @@ class BuscarEventoController extends Controller
                                 // Si se encuentra una coincidencia, agregar la información al array original
                                 if (!empty($resultado)) {
                                     $resultado = reset($resultado); // Obtener el primer elemento del array de resultados
-                                    $item['ProcentajePClRecaResultado'] = $resultado->Porcentaje_pcl;
+                                    $item['ProcentajePClRecaResultado'] = $resultado->Porcentaje_pcl.'% - FE: '.date("d/m/Y", strtotime($resultado->F_estructuracion)).' - '.$resultado->Nombre_evento.' '.$resultado->Nombre_parametro;
                                 } 
                             }                          
                             // Filtrar los elementos que contienen [ProcentajePClRecaResultado]
@@ -1744,7 +1775,9 @@ class BuscarEventoController extends Controller
                     }
                     if (count($posicionPclRevi) > 0) {
                         $resultadoReviPcl =DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_decreto_eventos as side')
-                        ->select('side.ID_Evento','side.Id_Asignacion','side.Porcentaje_pcl');
+                        ->leftJoin('sigmel_gestiones.sigmel_lista_tipo_eventos as slte', 'slte.Id_Evento', '=', 'side.Tipo_evento')
+                        ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slp', 'slp.Id_Parametro', '=', 'side.Origen')
+                        ->select('side.ID_Evento','side.Id_Asignacion','side.Porcentaje_pcl', 'side.Tipo_evento', 'slte.Nombre_evento', 'side.Origen', 'slp.Nombre_parametro', 'side.F_estructuracion');
                         foreach ($posicionPclRevi as $item) {
                             $resultadoReviPcl->orWhere([
                                 ['side.Id_Asignacion', $item['Id_Asignacion']],
@@ -1763,7 +1796,7 @@ class BuscarEventoController extends Controller
                                 // Si se encuentra una coincidencia, agregar la información al array original
                                 if (!empty($resultado)) {
                                     $resultado = reset($resultado); // Obtener el primer elemento del array de resultados
-                                    $item['ProcentajePClReviResultado'] = $resultado->Porcentaje_pcl;
+                                    $item['ProcentajePClReviResultado'] = $resultado->Porcentaje_pcl.'% - FE: '.date("d/m/Y", strtotime($resultado->F_estructuracion)).' - '.$resultado->Nombre_evento.' '.$resultado->Nombre_parametro;
                                 } 
                             }                                                         
                             // Filtrar los elementos que contienen [ProcentajePClReviResultado]

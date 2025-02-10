@@ -408,7 +408,40 @@ $(document).ready(function(){
         });
     }
 
-    $("#accion").change(function(){
+    $("#accion").change(async function(){
+        //VALIDACIÓN PBS090 ITEM 6
+        let consultaGuardado = await consultaGuardadoSubmodulo(
+            $("#newId_evento").val(),
+            $('#newId_asignacion').val(),
+            $("#Id_proceso").val(),
+            $("#Id_servicio").val()
+        );
+        if(!consultaGuardado && ($(this).val() == 95 || $(this).val() == 96)){
+            $('#Edicion').prop('disabled',true);
+            $('.grupo_botones').addClass('d-none');
+            alertas_informativas(
+                'Verificar revisión ante concepto de la junta regional',
+                'Recuerde que antes de ejecutar esta acción debe gestionar y guardar el Pronunciamiento ante dictamen de JRCI.',
+                'Por favor valide nuevamente.', 
+                true, 
+                5000
+            )
+        }else{
+            $('#Edicion').prop('disabled',false);
+            $('.grupo_botones').removeClass('d-none');
+        }
+
+        if($(this).val() == 45 || $(this).val() == 65 || $(this).val() == 67 || $(this).val() == 69 || $(this).val() == 72
+        || $(this).val() == 74 || $(this).val() == 81 || $(this).val() == 82 || $(this).val() == 63 || $(this).val() == 22
+        || $(this).val() == 76){
+            alertas_informativas(
+                'Validar nueva fecha de radicación',
+                'Recuerde actualizar la fecha de radicación en el campo Nueva fecha de radicación.',
+                'Si ya la actualizó o no lo requiere, por favor omita este mensaje.', 
+                true, 
+                5000
+            )
+        }
         let datos_ejecutar_parametrica_mod_principal = {
             '_token': token,
             'parametro': "validarSiModPrincipal",
@@ -471,6 +504,25 @@ $(document).ready(function(){
                 }
             }
         });
+
+        //Capturar el ultimo que ejecuto la acción de asignación, cuando seleccionen la acción de devolver asignación PBS068
+        if($(this).val() == 15){
+            data_ult_usuario = {
+                '_token':token,
+                'id_proceso' : $('#Id_proceso').val(),
+                'id_cliente' : $("#cliente").data('id'),
+                'id_servicio': $("#Id_servicio").val(),
+                'id_evento': $("#newId_evento").val(),
+                'id_asignacion':$('#newId_asignacion').val(),
+                'id_accion_devolucion': $(this).val()
+            };
+            let ultimoUsuario = await consultaUltimoUsuarioEjecutarAccion(data_ult_usuario);
+            if(ultimoUsuario[0] && Array.isArray(ultimoUsuario[1])){
+                let info_user = ultimoUsuario[1][0];
+                $('#profesional option[value="'+info_user['id']+'"]').prop('selected', true);
+                $('#profesional').val(info_user['id']).trigger('change');
+            }
+        }
 
         //Selector enviara, seccion 'Accion a realizar'
         let datos_bandeja_destino = {
@@ -5248,7 +5300,7 @@ $(document).ready(function(){
             /* Validaciones para el rol Consulta cuando entra a la vista */
             if (idRol == 7) {
                 // Desactivar todos los elementos excepto los especificados
-                $(':input, select, a, button').not('#listado_roles_usuario, #Hacciones, #botonVerEdicionEvento, #cargue_docs, #clicGuardado, #cargue_docs_modal_listado_docs, #abrir_agregar_seguimiento, #fecha_seguimiento, #causal_seguimiento, #descripcion_seguimiento, #Guardar_seguimientos, #botonFormulario2, .btn-danger, a[id^="EditarComunicado_"]').prop('disabled', true);
+                $(':input, select, a, button').not('#listado_roles_usuario, #Hacciones, #histo_servicios, #botonVerEdicionEvento, #cargue_docs, #clicGuardado, #cargue_docs_modal_listado_docs, #abrir_agregar_seguimiento, #fecha_seguimiento, #causal_seguimiento, #descripcion_seguimiento, #Guardar_seguimientos, #botonFormulario2, .btn-danger, a[id^="EditarComunicado_"]').prop('disabled', true);
                 $('#aumentarColAccionRealizar').addClass('d-none');
                 $("#enlace_ed_evento").hover(function(){
                     $("input[name='_token']").prop('disabled', false);
@@ -8860,7 +8912,7 @@ $(document).ready(function(){
      /* Validaciones para el rol Consulta cuando entra a la vista */
     if (idRol == 7) {
         // Desactivar todos los elementos excepto los especificados
-        $(':input, select, a, button').not('#listado_roles_usuario, #Hacciones, #botonVerEdicionEvento, #cargue_docs, #clicGuardado, #cargue_docs_modal_listado_docs, #abrir_agregar_seguimiento, #fecha_seguimiento, #causal_seguimiento, #descripcion_seguimiento, #Guardar_seguimientos, #botonFormulario2, .btn-danger, a[id^="EditarComunicado_"]').prop('disabled', true);
+        $(':input, select, a, button').not('#listado_roles_usuario, #Hacciones, #histo_servicios, #botonVerEdicionEvento, #cargue_docs, #clicGuardado, #cargue_docs_modal_listado_docs, #abrir_agregar_seguimiento, #fecha_seguimiento, #causal_seguimiento, #descripcion_seguimiento, #Guardar_seguimientos, #botonFormulario2, .btn-danger, a[id^="EditarComunicado_"]').prop('disabled', true);
         $('#aumentarColAccionRealizar').addClass('d-none');
         $("#enlace_ed_evento").hover(function(){
             $("input[name='_token']").prop('disabled', false);
@@ -8976,27 +9028,7 @@ $(document).ready(function(){
 
     });
 
-    // Abrir modal una vez se genere la lista de chequeo
-    if (localStorage.getItem("#Generar_lista_chequeo")) {
-        // Simular el clic en la etiqueta a después de recargar la página
-        localStorage.removeItem("#Generar_lista_chequeo");
-        document.getElementById("Cargando_expediente").style.display = "flex";
-        document.querySelector("#clicGuardado").click();
-        setTimeout(() => {
-            document.querySelector("#crearExpediente").click();                    
-            document.getElementById("Cargando_expediente").style.display = "none";
-        }, 5000);
-    }  
-
-    // Validar si ya existe una lista de chequeo con el boton actualizar
-    var Actualizar_chequeo = $('.actualizar_chequeo');
-    if (Actualizar_chequeo.length > 0) {
-        $(".titulo_lista_chequeo").attr("colspan", "5");
-        $(".posicion_foleo").removeClass('d-none');
-        $(".actualizar_chequeo").removeClass('d-none');
-        $("#row_cuadro_expediente").removeClass('d-none');
-    }
-
+    
     //insertar o eliminar las filas dinamicas del cuadro de expediente
     $(".centrar").css('text-align', 'center');
     var listado_lista_chequeos = $('#listado_lista_chequeos').DataTable({
@@ -9118,7 +9150,7 @@ function verificarCheckboxes() {
         }
     });
     // Habilitar o deshabilitar los botones según la variable hayCheckboxMarcado
-    $(".actualizar_chequeo, .guardar_chequeo").prop('disabled', !hayCheckboxMarcado);    
+    $(".actualizar_chequeo, .guardar_chequeo").prop('disabled', !hayCheckboxMarcado);
 }
 
 /**
@@ -9136,13 +9168,13 @@ function crear_Expediente(data) {
 
     // Abrimos el modal de crear expediente, si data no esta definimo mostramos la alerta
     $("#crearExpediente, #editarExpediente").on('click', function() {
- 
         if ($.isEmptyObject(data)) {
             $("#form_crear_ExpedientesJuntas, #info_expediente").addClass('d-none');
             $("#alert_expediente").removeClass('d-none');
         } else {
             // Actualizar la lista de comunicados
-            actualizarComunicados(data);               
+            actualizarComunicados(data);
+    
         }
     });    
 
@@ -9183,45 +9215,45 @@ function crear_Expediente(data) {
 function actualizarComunicados(data) {
     
     //Quita cualquier extension del comunicado.
-    // let nombre_proforma = data.map(item => {
-    //     // Verifica si el asunto incluye 'Lista_chequeo'
-    //     if (item.Asunto.includes('Lista_chequeo')) {
-    //         return {
-    //             nombre: item.Asunto,
-    //             id_comunicado: item.Id_Comunicado
-    //         };
-    //     } else {
-    //         // Si el asunto no incluye 'Lista_chequeo', retorna null para filtrarlo después
-    //         return null;
-    //     }
-    // }).filter(item => item !== null);
+    let nombre_proforma = data.map(item => {
+        // Verifica si el asunto incluye 'Lista_chequeo'
+        if (item.Asunto.includes('Lista_chequeo')) {
+            return {
+                nombre: item.Asunto,
+                id_comunicado: item.Id_Comunicado
+            };
+        } else {
+            // Si el asunto no incluye 'Lista_chequeo', retorna null para filtrarlo después
+            return null;
+        }
+    }).filter(item => item !== null);
 
     // Limpiar opciones existentes antes de agregar nuevas
-    // $("#historial_comunicados").empty();
+    $("#historial_comunicados").empty();
 
     // Agregar las opciones al select2
     //comunicados.forEach(item => {
        // $("#historial_comunicados").append(`<option value='${item.id_comunicado}'>${item.nombre}</option>`);
     //});
 
-    // // Actualizar select2 después de agregar opciones
-    // $("#historial_comunicados").trigger('change');
+    // Actualizar select2 después de agregar opciones
+    $("#historial_comunicados").trigger('change');
 
     //Cargamos la tabla con la lista de chequeo
     get_documentos_para_check();
 
-    // if(nombre_proforma == ''){
-    //     return null;
-    // }
+    if(nombre_proforma == ''){
+        return null;
+    }
 
     //habilitamos la lista de chequeo en caso de que ya exista una en las comunicaciones
-    // $('#ver_chequeo').removeClass('d-none');
-    // $('#ver_chequeo a').attr('id','generar_descarga_archivo_' + $('#newId_evento').val());
-    // $('#ver_chequeo a').attr('asunto_comunicado',nombre_proforma[0].nombre);
-    // $('#ver_chequeo a').attr('id_evento',$('#newId_evento').val());
+    $('#ver_chequeo').removeClass('d-none');
+    $('#ver_chequeo a').attr('id','generar_descarga_archivo_' + $('#newId_evento').val());
+    $('#ver_chequeo a').attr('asunto_comunicado',nombre_proforma[0].nombre);
+    $('#ver_chequeo a').attr('id_evento',$('#newId_evento').val());
 
-    // $(".actualizar_chequeo").removeClass('d-none');
-    // $(".guardar_chequeo").addClass('d-none');
+    $(".actualizar_chequeo").removeClass('d-none');
+    $(".guardar_chequeo").addClass('d-none');
 
 }
 /**
@@ -9230,9 +9262,6 @@ function actualizarComunicados(data) {
  */
 function get_documentos_para_check() {
 
-    // Validar si ya existe una lista de chequeo con el boton actualizar
-    var Actualizar_chequeo = $('.actualizar_chequeo');   
-        
     const get_documentos = {
         '_token': $("input[name='_token']").val(),
         'parametro': "listado_documentos",
@@ -9250,76 +9279,38 @@ function get_documentos_para_check() {
         data: get_documentos,
         success: function (data) {
             let n_documentos = 0;
-            // console.log(data.status_doc);            
+
             // Iterar sobre los documentos
             $.each(data, function(key, item) {
                 if (key !== "comunicados" ) {
                     n_documentos++;
-                    let status_doc, checkbox, posicion;
-                                        
+                    let status_doc, checkbox;
+
                     if (item.status_doc === "No Cargado") {
                         status_doc = `<strong class="text-danger">${item.status_doc}</strong>`;
                         checkbox = '<input class="scales" type="checkbox" disabled>';
-                        // columna de posicion para agregar en el tbody
-                        if (Actualizar_chequeo.length > 0) {                            
-                            posicion = '<input class="form-control" type="number" id="posicionFoleo" disabled>';
-                        }
 
                     } else if (item.status_doc === "Cargado") {
                         status_doc = `<strong class="text-success">${item.status_doc}</strong>`;
                         checkbox = `<input class="scales" type="checkbox" data-id='${item.Id_Documento}' data-nombre='${item.doc_nombre}'>`;
-                        if (Actualizar_chequeo.length > 0) {                            
-                            posicion = `<input class="form-control" type="number" id="posicionFoleo" data-id='${item.Id_Documento}' data-nombre='${item.doc_nombre}' disabled>`;
-                        }
-                        
+
                         if(item.check == 'Si'){
                             checkbox = `<input class="scales" type="checkbox" data-id='${item.Id_Documento}' data-nombre='${item.doc_nombre}' checked>`;
-                            // columna de posicion para agregar en el tbody
-                            if (Actualizar_chequeo.length > 0) {
-                                posicion = `<input class="form-control posicion-foleo" type="number" id="posicionFoleo" data-idDocumento='${item.Id_Documento}' data-nombre='${item.doc_nombre}' data-idRegistroDoc='${item.id_Registro_Documento}'>`;
-                            }                                                     
                         }
 
                         if(item.doc_nombre ==  'Lista de chequeo'){
                             checkbox = `<input class="scales" type="checkbox" data-id='${item.Id_Documento}' data-nombre='${item.doc_nombre}' checked disabled>`;
-                            // columna de posicion para agregar en el tbody
-                            if (Actualizar_chequeo.length > 0) {
-                                posicion = `<input class="form-control" type="number" id="posicionFoleo" data-id='${item.Id_Documento}' data-nombre='${item.doc_nombre}' disabled>`;
-                            }
                         }
                     }
 
-                    if (Actualizar_chequeo.length > 0) {
-                        let html_documentos = `<tr>
-                            <td>${n_documentos}</td>
-                            <td>${item.doc_nombre}</td>
-                            <td>${status_doc}</td>
-                            <td>${checkbox}</td>
-                            <td>${posicion}</td>
-                        </tr>`;
-                        $("#lista_documentos_check").append(html_documentos);
-                        
-                        // Aplicar el required solo a los elementos que no están deshabilitados
-                        // y ya se encuentran en el dom
-                        // if (Actualizar_chequeo.length > 0) {
-                        //     $(".posicion-foleo").each(function() {
-                        //         if (!$(this).is(':disabled')) {
-                        //             $(this).attr("required", "required");
-                        //         }
-                        //     });
-                        // }
+                    let html_documentos = `<tr>
+                        <td>${n_documentos}</td>
+                        <td>${item.doc_nombre}</td>
+                        <td>${status_doc}</td>
+                        <td>${checkbox}</td>
+                    </tr>`;
 
-                    }else {
-                        let html_documentos = `<tr>
-                            <td>${n_documentos}</td>
-                            <td>${item.doc_nombre}</td>
-                            <td>${status_doc}</td>
-                            <td>${checkbox}</td>                            
-                        </tr>`;
-                        $("#lista_documentos_check").append(html_documentos);
-                    }
-
-
+                    $("#lista_documentos_check").append(html_documentos);
                 }
             });
 
@@ -9327,25 +9318,14 @@ function get_documentos_para_check() {
             $.each(data.comunicados, function(index, item) {
                 n_documentos++;
                 checkbox = `<input class="scales" type="checkbox" data-id='${n_documentos}' data-nombre='${item.nombre}' data-idcomunicado='${item.Id_Comunicado}' disabled>`;
-                if (Actualizar_chequeo.length > 0) {
-                    let html_comunicado = `<tr>
-                        <td>${n_documentos}</td>
-                        <td>${item.nombre}</td>
-                        <td><strong class="text-info">Comunicado</strong></td>
-                        <td>${checkbox}</td>
-                        <td>${posicion}</td>
-                    </tr>`;
-                    $("#lista_documentos_check").append(html_comunicado);
-                }else {
-                    let html_comunicado = `<tr>
-                        <td>${n_documentos}</td>
-                        <td>${item.nombre}</td>
-                        <td><strong class="text-info">Comunicado</strong></td>
-                        <td>${checkbox}</td>                        
-                    </tr>`;
-                    $("#lista_documentos_check").append(html_comunicado);
-                }
+                let html_comunicado = `<tr>
+                    <td>${n_documentos}</td>
+                    <td>${item.nombre}</td>
+                    <td><strong class="text-info">Comunicado</strong></td>
+                    <td>${checkbox}</td>
+                </tr>`;
 
+                $("#lista_documentos_check").append(html_comunicado);
             });
 
             // Disparar evento de cambio después de actualizar la tabla
@@ -9361,34 +9341,6 @@ function get_documentos_para_check() {
  * @param {string} accion Accion a ejecutar (Actualizar, Guardar) 
  */
 function procesarListaChequeo(accion){
-
-    // console.log(accion);
-    
-    if (accion == 'Actualizar') {
-        
-        let validarPosiciones = true;
-    
-        // Recorrer todos los inputs de clase 'posicion-foleo' y verificar su estado
-        $(".posicion-foleo").each(function() {
-            // Solo validar los inputs que no están deshabilitados
-            if (!$(this).is(':disabled') && !$(this).val()) {
-                // Mostrar un error visual
-                $(this).addClass('is-invalid');  
-                // Indicar que el formulario no es válido
-                validarPosiciones = false;
-            } else {
-                // Quitar el error si es válido
-                $(this).removeClass('is-invalid');
-            }
-        });
-    
-        // Si hay algún campo inválido, detener el proceso y mostrar mensaje
-        if (!validarPosiciones) {
-            alert("Por favor, llena todos los campos requeridos en la columna Posición.");
-            return false;  // Evitar continuar si no es válido
-        }
-        // console.log("Procesando lista de chequeo con acción: " + accion);
-    }
 
     let registrarChequeo = {
         '_token': $("input[name='_token']").val(),
@@ -9424,30 +9376,8 @@ function procesarListaChequeo(accion){
         }
     });
 
-    if (accion == 'Actualizar') {
-        
-        // Iterar sobre los inputs y actualizar el array
-        datos.forEach((documento) => {
-            // Encontrar el input correspondiente en el DOM por id_doc
-            let inputPosicion = $(`input[data-idDocumento="${documento.id_doc}"]`);
-            // Si existe el input en el DOM, capturar su valor
-            if (inputPosicion.length > 0) {
-                // Obtener el valor del input y su data (no lo trae de manera correcta debido a que la consulta solo a apunto a los nombre de los documento de homologación)
-                let valorPosicion = inputPosicion.val();  
-                let id_registroDoc = inputPosicion.attr('data-idRegistroDoc');                                             
-                // Asignar el valor capturado a una nueva propiedad en el objeto del array
-                documento.posicion = valorPosicion;
-                documento.id_registro_docu = id_registroDoc;
-            }
-        });
-    
-        // console.log(datos);
-    }
-    
-    // Ahora, el array `documentos` tendrá los valores actualizados de los inputs
     registrarChequeo['lista_chequeo'] = datos;
-    // console.log(registrarChequeo);
-
+    
     $.ajax({
         type: 'POST',
         url: '/registrarListaChequeo',
@@ -9470,11 +9400,10 @@ function procesarListaChequeo(accion){
                 $(".actualizar_chequeo").removeClass('d-none');
                 setTimeout(function(){
                     $('.alerta_chequeo').addClass('d-none');
-                    $('.alerta_chequeo').empty();                                       
-                    localStorage.setItem("#Generar_lista_chequeo", true);
-                    location.reload(); 
+                    $('.alerta_chequeo').empty(); 
+                   
                 }, 3000);
-            }             
+            } 
         },
         error: function(response){
             //Muestra un mensaje en caso de error, ya sea mediante el coontroaldor o fallse en algun proceso de laravel

@@ -328,6 +328,12 @@ Route::post('/guardarInformacionCorrespondencia', [CoordinadorController::class,
 Route::post('/getInfoCorrespByIdDest', [CoordinadorController::class, 'getInformacionPorIdDestinatario']);
 // Acción: Consultar la información de el ultimo comunicado con Notificado efectivamente y con correspondencia en Afiliado
 Route::post('/getInfoComuCorres', [CoordinadorController::class, 'retornarInformacionComunicadoYCorrespondencia']);
+// Acción: Consultar guardado del submodulo de un servicio especifico
+Route::post('/validarGuardadoSubmodulo', [CoordinadorController::class, 'validarGuardadoSubmodulo']);
+// Acción: Consultar visado del submodulo de un servicio especifico
+Route::post('/validarVisadoSubmodulo', [CoordinadorController::class, 'validarVisadoSubmodulo']);
+// Acción: Capturar la ultima persona en ejecutar una acción de asignación.
+Route::post('/capturarUsuarioUltAccion', [CoordinadorController::class, 'capturarUltimoEjecutorDeAccion']);
 
 // 14/07/2023
 // Vista: Módulo Calificación PCL Coordinador

@@ -31,7 +31,7 @@
     </div>
     <div class="card-info" style="border: 1px solid black;">
         <div class="card-header text-center">
-            <h4>Calificación Origen ATEL - Evento: {{$array_datos_pronunciamientoOrigen[0]->ID_evento}}</h4>
+            <h4>Calificación Origen ATEL - Evento: <u><a onclick="document.getElementById('botonVerEdicionEvento').click();" style="cursor:pointer;">{{$array_datos_pronunciamientoOrigen[0]->ID_evento}}</a></u> - Afiliado: {{$array_datos_pronunciamientoOrigen[0]->Nombre_afiliado}} {{$array_datos_pronunciamientoOrigen[0]->Nombre_tipo_documento}} {{$array_datos_pronunciamientoOrigen[0]->Nro_identificacion}} - {{$array_datos_pronunciamientoOrigen[0]->Tipo_afiliado}}</h4>
             <h5 style="font-style: italic;">Pronunciamiento</h5>
             <input type="hidden" id="id_rol" value="<?php echo session('id_cambio_rol');?>">
         </div>
@@ -41,7 +41,7 @@
                     <form id="form_CaliPronuncia" method="POST" enctype="multipart/form-data">
                         @csrf
                         <!-- Informacion Afiliado-->
-                        <div class="card-info" id="div_info_afi">
+                        <div class="card-info d-none" id="div_info_afi">
                             <div class="card-header text-center" style="border: 1.5px solid black;">
                                 <h5>Información del afiliado</h5>
                             </div>
@@ -626,6 +626,9 @@
                                         <i class="fas fa-info-circle"></i> <strong>Importante:</strong> Para guardar la información es necesario dar clic en el botón guardar o actualizar (dependiendo del caso).
                                     </div>
                                 </div>
+                                <div class="col-12">
+                                    <div class="alerta_roja_guardado alert alert-danger mt-2 mr-auto d-none" role="alert"></div>
+                                </div>
                                 <div class="col-6">
                                     <div class="form-group">
                                         @if (!empty($info_pronuncia[0]->ID_evento))
@@ -889,6 +892,8 @@
             // Realizar las acciones que quieres al hacer clic en el botón
             document.getElementById('formularioLlevarEdicionEvento').submit();
         });
+        //Diagnosticos CIE10
+        let arrayDatosDiagnosticos = @json($array_datos_diagnostico_motcalifi);
         $(document).ready(function(){
             //SCRIPT PARA INSERTAR O ELIMINAR FILAS DINAMICAS DEL DATATABLES DE DIAGNOSTCO CIE10
             $(".centrar").css('text-align', 'center');
@@ -963,8 +968,8 @@
             }
         };
     </script>
-    <script type="text/javascript" src="/js/pronunciamientoOrigen.js"></script>
     <script type="text/javascript" src="/js/funciones_helpers.js?v=1.0.0"></script>
+    <script type="text/javascript" src="/js/pronunciamientoOrigen.js"></script>
     <script src="/plugins/summernote/summernote.min.js"></script>
     {{-- Validación general para todos los campos de tipo fecha --}}
     <script>

@@ -1391,3 +1391,118 @@ function calc_antiguedad_empresa(){
         $("#antiguedad_empresa").val(antiguedad);
     }
 }
+    /*
+        Cuando seleccionen la acción de ejecutar acción de DEVOLVER ASIGNACIÓN o DEVOLVER CALIFICACIÓN, se haran las validaciones solicitadas
+        en el PBS090 y si todo sale correcto se retornara la información del usuario, si no, se retornara null;  
+    */
+    function consultaUltimoUsuarioEjecutarAccion(data_ult_usuario){
+        return new Promise((resolve, reject) => { 
+            $.ajax({
+                type:'POST',
+                url:'/capturarUsuarioUltAccion',
+                data: data_ult_usuario,
+                beforeSend: function () {
+                    showLoading();
+                },
+                success:function (data) {
+                    if(data){
+                        resolve(data);
+                    }
+                    resolve(null);
+                },
+                complete: function () {
+                    hideLoading();
+                }
+            });
+        })
+    }
+
+/**
+ * Procesa una alerta y la muestra para un proceso correspondiente, homologando la acccion del boton sobre el formulario al cual esta enlazado.
+ * @param {string} titulo Titulo del modal de alertas. 
+ * @param {string} id_form selector del formulario al cual se delegará el evento submit
+ * @param {int} proceso id del proceso para el cual se esta procesando la alerta 
+ * @param {string} tipo_alerta El tipo de la alerta que se estara mostrando. alerta -> muestra una modal interactiva con botones de accion, otro - Muestra solo una modal informativa.
+ */
+    function alertas_informativas(titulo, mensaje_1, mensaje_2, require_timeout, timeout) {
+        // Mostrar la modal
+        $('#alertas_informativas').modal('show');
+        // Cambiar el titulo del modal
+        let modalTitle = document.querySelector('#alertas_informativas .modal-title');
+        // Icono de información antes del titulo
+        modalTitle.innerHTML = `<i class="fas fa-info-circle"></i> ${titulo}`;
+        //Setteamos los mensajes
+        $('#primer_mensaje').text(mensaje_1);
+        $('#segundo_mensaje').text(mensaje_2);
+        if(require_timeout){
+            setTimeout(() => {
+                $('#alertas_informativas').modal('hide');
+                $('#primer_mensaje').text('');
+                $('#segundo_mensaje').text('');
+            }, timeout);   
+        }
+    }
+
+/*
+    Consulta si el submodulo fue visado para poder permitir el guardado de alguna de las siguientes acciones 
+    141, 142, 143, 175, 176, 152, 153, 154
+*/
+    function consultaVisadoSubmodulo(id_evento, id_asignacion, id_proceso, id_servicio){
+        return new Promise((resolve, reject) => {
+            data = {
+                '_token': $('input[name=_token]').val(),
+                'id_evento': id_evento,
+                'id_asignacion': id_asignacion,
+                'id_proceso': id_proceso,
+                'id_servicio': id_servicio,
+            }
+            $.ajax({
+                type: 'POST',
+                url: '/validarVisadoSubmodulo',
+                data: data,
+                beforeSend: function(){
+                    $('#c_ejecutar_accion').addClass("descarga-deshabilitada");
+                },
+                success: function(response) {
+                    if(response){
+                        resolve(response[0]);
+                    }
+                },
+                complete: function(){
+                    $('#c_ejecutar_accion').removeClass("descarga-deshabilitada");
+                }
+            });
+        })
+    }
+
+    /*
+        Consulta si el submodulo fue guardado para poder permitir el guardado de alguna de las siguientes acciones 
+        25,27,95,96
+    */
+    function consultaGuardadoSubmodulo(id_evento, id_asignacion, id_proceso, id_servicio){
+        return new Promise((resolve, reject) => {
+            data = {
+                '_token': $('input[name=_token]').val(),
+                'id_evento': id_evento,
+                'id_asignacion': id_asignacion,
+                'id_proceso': id_proceso,
+                'id_servicio': id_servicio,
+            }
+            $.ajax({
+                type: 'POST',
+                url: '/validarGuardadoSubmodulo',
+                data: data,
+                beforeSend: function(){
+                    $('#c_ejecutar_accion').addClass("descarga-deshabilitada");
+                },
+                success: function(response) {
+                    if(response){
+                        resolve(response[0]);
+                    }
+                },
+                complete: function(){
+                    $('#c_ejecutar_accion').removeClass("descarga-deshabilitada");
+                }
+            });
+        })
+    }

@@ -5277,7 +5277,8 @@ class AdministradorController extends Controller
                     // $nombre_archivo_sin_extension = pathinfo($nombre_con_extension, PATHINFO_FILENAME);
                     // $nombre_final_documento_en_carpeta = $nombre_archivo_sin_extension."_IdEvento_".$idEvento."_IdServicio_".$Id_servicio.".".$file->extension();
 
-                    $nombre_final_documento_en_carpeta = $nombre_lista_documento."_IdEvento_".$idEvento."_IdServicio_".$Id_servicio."_IdAsignacion_".$Id_asignacion.".".$file->extension();
+                    // $nombre_final_documento_en_carpeta = $nombre_lista_documento."_IdEvento_".$idEvento."_IdServicio_".$Id_servicio."_IdAsignacion_".$Id_asignacion.".".$file->extension();
+                    $nombre_final_documento_en_carpeta = $nombre_lista_documento."_IdEvento_".$idEvento."_IdServicio_".$Id_servicio.".".$file->extension();
                 }else{
                     $nombre_final_documento_en_carpeta = $request->string_nombre_doc.".".$file->extension();
                 }
@@ -5295,7 +5296,8 @@ class AdministradorController extends Controller
                     // $nombre_archivo_sin_extension = pathinfo($nombre_con_extension, PATHINFO_FILENAME);
                     // $nombre_final_documento_en_carpeta = $nombre_archivo_sin_extension."_IdEvento_".$idEvento."_IdServicio_".$Id_servicio.".".$file->extension();
 
-                    $nombre_final_documento_en_carpeta = $nombre_lista_documento."_IdEvento_".$idEvento."_IdServicio_".$Id_servicio."_IdAsignacion_".$Id_asignacion.".".$file->extension();
+                    // $nombre_final_documento_en_carpeta = $nombre_lista_documento."_IdEvento_".$idEvento."_IdServicio_".$Id_servicio."_IdAsignacion_".$Id_asignacion.".".$file->extension();
+                    $nombre_final_documento_en_carpeta = $nombre_lista_documento."_IdEvento_".$idEvento."_IdServicio_".$Id_servicio.".".$file->extension();
                 }else{
                     $nombre_final_documento_en_carpeta = $request->string_nombre_doc.".".$file->extension();
                 }
@@ -5313,7 +5315,7 @@ class AdministradorController extends Controller
                 // $nombre_archivo_sin_extension = pathinfo($nombre_con_extension, PATHINFO_FILENAME);
                 // $nombrecompletodocumento = $nombre_archivo_sin_extension."_IdEvento_".$idEvento."_IdServicio_".$Id_servicio;
 
-                $nombrecompletodocumento = $nombre_lista_documento."_IdEvento_".$idEvento."_IdServicio_".$Id_servicio."_IdAsignacion_".$Id_asignacion;
+                $nombrecompletodocumento = $nombre_lista_documento."_IdEvento_".$idEvento."_IdServicio_".$Id_servicio;
             }else{
                 $nombrecompletodocumento = $request->string_nombre_doc;
             }

@@ -10,10 +10,18 @@ use Illuminate\Support\Facades\Crypt;
 
 use Illuminate\Support\Facades\Session;
 use App\Models\User;
+use App\Services\GlobalService;
 use Illuminate\Support\Facades\DB;
 
 class LoginController extends Controller
 {
+    protected $globalService;
+
+    public function __construct(GlobalService $globalService)
+    {
+        $this->globalService = $globalService;
+    }
+    
     public function show()
     {
         // Si el usuario no ha iniciado, no podrá ingresar al sistema
@@ -27,6 +35,8 @@ class LoginController extends Controller
             'password' => 'required',
         ]);
 
+        $info_cliente = $this->globalService->infoCliente();
+
         // SI LA VALIDACIÓN SE CUMPLE SE PROCEDE A INICIAR SESIÓN
         if (Auth::attempt($credentials)) {
             Auth::logoutOtherDevices($request->password);
@@ -36,7 +46,7 @@ class LoginController extends Controller
             if ($user->cambiar_clave) {
                 return view('ingenieria.cambiar_clave', compact('user', 'token'));
             } else {
-                return redirect()->route('RolPrincipal');
+                return redirect()->route('RolPrincipal')->with('info_cliente', $info_cliente);
             }
         }
 

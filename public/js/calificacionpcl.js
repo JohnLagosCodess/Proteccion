@@ -434,7 +434,58 @@ $(document).ready(function(){
         
     }
 
-    $("#accion").change(function(){
+    $("#accion").change(async function(){
+        //VALIDACIÓN PBS090 ITEM 6
+        let consultaGuardado = await consultaGuardadoSubmodulo(
+            $("#newId_evento").val(),
+            $('#newId_asignacion').val(),
+            $("#Id_proceso").val(),
+            $("#Id_servicio").val()
+        );
+        if(!consultaGuardado && ($(this).val() == 25 || $(this).val() == 27)){
+            $('#Edicion').prop('disabled',true);
+            $('.grupo_botones').addClass('d-none');
+            alertas_informativas(
+                'Verificar pronunciamiento ante la calificación',
+                'Recuerde que antes de ejecutar esta acción debe gestionar y guardar el Pronunciamiento.',
+                'Por favor valide nuevamente.', 
+                true, 
+                5000
+            )
+        }else{
+            $('#Edicion').prop('disabled',false);
+            $('.grupo_botones').removeClass('d-none');
+        }
+        //VALIDACIÓN PBS090 ITEM 2
+        let consultaVisado = await consultaVisadoSubmodulo(
+            $("#newId_evento").val(),
+            $('#newId_asignacion').val(),
+            $("#Id_proceso").val(),
+            $("#Id_servicio").val()
+        );
+        if(!consultaVisado && ($(this).val() == 2 || $(this).val() == 18 || $(this).val() == 19 || $(this).val() == 20)){
+            $('#Edicion').prop('disabled',true);
+            $('.grupo_botones').addClass('d-none');
+            alertas_informativas(
+                'Verificar comité interdisciplinario',
+                'Recuerde que antes de aprobar la calificación debe realizar el visado de la misma.',
+                'Por favor valide nuevamente.', 
+            )
+        }else{
+            $('#Edicion').prop('disabled',false);
+            $('.grupo_botones').removeClass('d-none');
+        }
+        //VALIDACIÓN PBS090 ITEM 3
+        if($(this).val() == 45 || $(this).val() == 50){
+            alertas_informativas(
+                'Validar nueva fecha de radicación',
+                'Recuerde actualizar la fecha de radicación en el campo Nueva fecha de radicación.',
+                'Si ya la actualizó o no lo requiere, por favor omita este mensaje.', 
+                true, 
+                5000
+            )
+        }
+
         /* validar parametrica */
         let datos_ejecutar_parametrica_mod_principal = {
             '_token': token,
@@ -516,6 +567,26 @@ $(document).ready(function(){
                 $('#enviar').append(`<option value="${data.bd_destino}" selected>${data.Nombre_proceso}</option>`);
             }
         });
+
+        //Capturar el ultimo que ejecuto la acción de asignación, cuando seleccionen la acción de devolver asignación PBS090
+        if($(this).val() == 15 || $(this).val() == 16){
+            data_ult_usuario = {
+                '_token':token,
+                'id_proceso' : $('#Id_proceso').val(),
+                'id_cliente' : $("#cliente").data('id'),
+                'id_servicio': $("#Id_servicio").val(),
+                'id_evento': $("#newId_evento").val(),
+                'id_asignacion':$('#newId_asignacion').val(),
+                'id_accion_devolucion': $(this).val()
+            };
+            let ultimoUsuario = await consultaUltimoUsuarioEjecutarAccion(data_ult_usuario);
+            console.log('ultimoUsuario ', ultimoUsuario);
+            if(ultimoUsuario[0] && Array.isArray(ultimoUsuario[1])){
+                let info_user = ultimoUsuario[1][0];
+                $('#profesional option[value="'+info_user['id']+'"]').prop('selected', true);
+                $('#profesional').val(info_user['id']).trigger('change');
+            }
+        }
 
         /* 
             Seteo fecha de de de cierre dependiendo de las siguientes acciones:
@@ -2443,7 +2514,7 @@ $(document).ready(function(){
             // Despues de descargado el documento deja todo nuevamente deshabilitado + los controles hechos
             if (idRol == 7) {
                 // Desactivar todos los elementos excepto los especificados
-                $(':input, select, a, button').not('#listado_roles_usuario, #Hacciones, #botonVerEdicionEvento, #cargue_docs, #clicGuardado, #cargue_docs_modal_listado_docs, #abrir_agregar_seguimiento, #fecha_seguimiento, #causal_seguimiento, #descripcion_seguimiento, #Guardar_seguimientos, #botonFormulario2, .btn-danger, a[id^="EditarComunicado_"]').prop('disabled', true);
+                $(':input, select, a, button').not('#listado_roles_usuario, #Hacciones, #histo_servicios, #botonVerEdicionEvento, #cargue_docs, #clicGuardado, #cargue_docs_modal_listado_docs, #abrir_agregar_seguimiento, #fecha_seguimiento, #causal_seguimiento, #descripcion_seguimiento, #Guardar_seguimientos, #botonFormulario2, .btn-danger, a[id^="EditarComunicado_"]').prop('disabled', true);
                 $('#aumentarColAccionRealizar').addClass('d-none');
                 // Quitar el disabled al formulario oculto para permitirme ir a la edicion del evento.
                 $("#enlace_ed_evento").hover(function(){
@@ -5562,7 +5633,7 @@ $(document).ready(function(){
     /* Validaciones para el rol Consulta cuando entra a la vista */
     if (idRol == 7) {
         // Desactivar todos los elementos excepto los especificados
-        $(':input, select, a, button').not('#listado_roles_usuario, #Hacciones, #botonVerEdicionEvento, #cargue_docs, #clicGuardado, #cargue_docs_modal_listado_docs, #abrir_agregar_seguimiento, #fecha_seguimiento, #causal_seguimiento, #descripcion_seguimiento, #Guardar_seguimientos, #botonFormulario2, .btn-danger, a[id^="EditarComunicado_"]').prop('disabled', true);
+        $(':input, select, a, button').not('#listado_roles_usuario, #Hacciones, #histo_servicios, #botonVerEdicionEvento, #cargue_docs, #clicGuardado, #cargue_docs_modal_listado_docs, #abrir_agregar_seguimiento, #fecha_seguimiento, #causal_seguimiento, #descripcion_seguimiento, #Guardar_seguimientos, #botonFormulario2, .btn-danger, a[id^="EditarComunicado_"]').prop('disabled', true);
         $('#aumentarColAccionRealizar').addClass('d-none');
         // Quitar el disabled al formulario oculto para permitirme ir a la edicion del evento.
         $("#enlace_ed_evento").hover(function(){
@@ -5955,6 +6026,9 @@ $(document).ready(function(){
                     type:'POST',
                     url:'/GuardarDocumentosSolicitados',
                     data: envio_datos,
+                    beforeSend:  function() {
+                        $("#guardar_datos_tabla").addClass("descarga-deshabilitada");
+                    },
                     success:function(response){
                         // console.log(response);
                         if (response.parametro == "inserto_informacion") {
@@ -5967,15 +6041,13 @@ $(document).ready(function(){
                                 $('#resultado_insercion').empty();
                             }, 3000);
                         }
+                    },
+                    complete:function(){
+                        localStorage.setItem("#guardar_datos_tabla", true);
+                        location.reload();
+                        // $("#guardar_datos_tabla").removeClass("descarga-deshabilitada");
                     }
-                });
-        
-                localStorage.setItem("#guardar_datos_tabla", true);
-        
-                setTimeout(() => {
-                    location.reload();
-                }, 3000);
-                
+                });            
             }else{
     
                 // Validación: No se inserta datos y selecciona el checkbox de No aporta documentos
@@ -5992,6 +6064,9 @@ $(document).ready(function(){
                         type:'POST',
                         url:'/GuardarDocumentosSolicitados',
                         data: envio_datos,
+                        beforeSend:  function() {
+                            $("#guardar_datos_tabla").addClass("descarga-deshabilitada");
+                        },
                         success:function(response){
                             if (response.parametro == "inserto_informacion") {
                                 $('#resultado_insercion').removeClass('d-none');
@@ -6012,15 +6087,13 @@ $(document).ready(function(){
                                     $('#resultado_insercion').empty();
                                 }, 3000);
                             }
+                        },
+                        complete:function(){
+                            localStorage.setItem("#guardar_datos_tabla", true);
+                            location.reload();
+                            // $("#guardar_datos_tabla").removeClass("descarga-deshabilitada");
                         }
-                    });
-    
-                    localStorage.setItem("#guardar_datos_tabla", true);
-        
-                    setTimeout(() => {
-                        location.reload();
-                    }, 3000);
-    
+                    }); 
                 }else{
                     $('#resultado_insercion').removeClass('d-none');
                     $('#resultado_insercion').addClass('alert-danger');

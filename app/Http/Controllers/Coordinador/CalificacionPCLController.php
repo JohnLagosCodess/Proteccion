@@ -12736,7 +12736,7 @@ class CalificacionPCLController extends Controller
         sigmel_informacion_comunicado_eventos::on('sigmel_gestiones')->where('Id_Comunicado', $Id_Comunicado)
         ->update($actualizar_nombre_documento);
 
-        return $pdf->stream($nombre_pdf);   
+        return $pdf->download($nombre_pdf);   
     }
     // Generar PDF de Notificacion Cero
 

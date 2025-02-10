@@ -613,4 +613,16 @@ class GlobalService
         }
         return [$query_comite, $query_servicio];
     }
+    /**
+        * Retorna la información del primer cliente registrado en la base de datos.
+        * 
+        * @return Collection Devuelve una colección con la información del cliente con ID #1 en la base de datos
+    */
+    public function infoCliente(){
+        return DB::table(getDatabaseName('sigmel_gestiones') .'sigmel_clientes as sc')
+        ->select('sc.Nombre_cliente','sltc.Nombre_tipo_cliente')
+        ->leftJoin('sigmel_gestiones.sigmel_lista_tipo_clientes as sltc', 'sc.Tipo_cliente', '=', 'sltc.Id_TipoCliente')
+        ->where([['sc.Id_cliente', '=', 1]])
+        ->get();
+    }
 }

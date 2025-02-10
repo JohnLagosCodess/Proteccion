@@ -379,6 +379,10 @@
                                                         <div id="div_afp_conocimiento" class="d-none">
                                                             <select class="afp_conocimiento custom-select" name="afp_conocimiento" id="afp_conocimiento"></select>
                                                         </div>
+                                                        <div>
+                                                            <select class="entidad_conocimiento_multiple custom-select" name="entidad_conocimiento_multiple[]" id="entidad_conocimiento_multiple" multiple="multiple"></select>
+                                                            <span class="d-none" id="entidad_conocimiento_alerta" style="color: red; font-style: italic;">Solo puede seleccionar 5 entidades.</span>
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-3 si_no_apoderado">

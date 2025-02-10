@@ -41,7 +41,7 @@
     {{-- @else --}}
         <div class="card-info" style="border: 1px solid black;">
             <div class="card-header text-center">
-                <h4>Juntas Controversia - Evento: {{$array_datos_controversiaJuntas[0]->ID_evento}}</h4>
+                <h4>Juntas - Evento: <u><a onclick="document.getElementById('botonVerEdicionEvento').click();" style="cursor:pointer;">{{$array_datos_controversiaJuntas[0]->ID_evento}}</a></u> - Afiliado: {{$array_datos_controversiaJuntas[0]->Nombre_afiliado}} {{$array_datos_controversiaJuntas[0]->Nombre_tipo_documento}} {{$array_datos_controversiaJuntas[0]->Nro_identificacion}} - {{$array_datos_controversiaJuntas[0]->Tipo_afiliado}}</h4>
                 <h5 style="font-style: italic;"><?php echo $array_datos_controversiaJuntas[0]->Nombre_servicio;?></h5>
                 <input type="hidden" name="NombreUsuario" id="NombreUsuario" value="{{$user->name}}">
                 <input type="hidden" class="form-control" name="newId_evento" id="newId_evento" value="{{$array_datos_controversiaJuntas[0]->ID_evento}}">
@@ -88,6 +88,16 @@
                                     </div>
                                 </div>
                             </div>
+                            <!--Retonar al modulo Modulo Nuevo edicion -->
+                            <form action="{{route('gestionInicialEdicion')}}" id="formularioLlevarEdicionEvento" method="POST">
+                                @csrf
+                                <input type="hidden" name="bandera_buscador_juntas" id="bandera_buscador_juntas" value="desdejuntas">
+                                <input type="hidden" class="form-control" name="newIdEvento" id="newIdEvento" value="{{$array_datos_controversiaJuntas[0]->ID_evento}}">
+                                <input type="hidden" class="form-control" name="newIdAsignacion" id="newIdAsignacion" value="{{$array_datos_controversiaJuntas[0]->Id_Asignacion}}">
+                                <input type="hidden" class="form-control" name="newIdproceso" id="newIdproceso" value="{{$array_datos_controversiaJuntas[0]->Id_proceso}}">
+                                <input type="hidden" class="form-control" name="newIdservicio" id="newIdservicio" value="{{$array_datos_controversiaJuntas[0]->Id_Servicio}}">
+                                <button type="submit" id="botonVerEdicionEvento" style="display:none !important;"></button>
+                            </form>
                         </div>
                         <!-- Información del Dictamen Controvertido-->
                         <div class="card-info" id="div_info_dic_cotrover">
@@ -550,6 +560,9 @@
 
                                     </div>
                                     <div class="row">
+                                        <div class="col-12">
+                                            <div class="alerta_roja_emitido_jrci alert alert-danger mt-2 mr-auto d-none" role="alert"></div>
+                                        </div>
                                         <div class="col-6">
                                             <div class="form-group">
                                                 <input type="submit" id="guardar_datos_emitido_jrci" class="btn btn-info" value="Guardar">
@@ -1022,6 +1035,9 @@
                                         </div>
                                     </div>
                                     <div class="row">
+                                        <div class="col-12">
+                                            <div class="alerta_datos_reposicion_jrci alert alert-danger mt-2 mr-auto d-none" role="alert"></div>
+                                        </div>
                                         <div class="col-6">
                                             <div class="form-group">
                                                 <input type="submit" id="guardar_datos_reposicion_jrci" class="btn btn-info" value="Guardar">
@@ -1436,6 +1452,9 @@
                                         </div>
                                     </div>
                                     <div class="row">
+                                        <div class="col-12">
+                                            <div class="alerta_roja_emitido_jnci alert alert-danger mt-2 mr-auto d-none" role="alert"></div>
+                                        </div>
                                         <div class="col-6">
                                             <div class="form-group">
                                                 <input type="submit" id="guardar_datos_emitido_jnci" class="btn btn-info" value="Guardar">
@@ -2156,7 +2175,10 @@
     <script type="text/javascript">
         //Diagnosticos CIE10 que vienen desde la base de datos
         let arrayDatosDiagnostico = @json($array_datos_diagnostico_motcalifi_contro);
-        
+        let arrayDatosEmitidoJrci = @json($array_datos_diagnostico_motcalifi_emitido_jrci);
+        let arrayDatosReposiDictJrci = @json($array_datos_diagnostico_reposi_dictamen_jrci);
+        let arrayDatosEmitidoJnci = @json($array_datos_diagnostico_motcalifi_emitido_jnci);
+
         document.getElementById('botonEnvioVista').addEventListener('click', function(event) {
             event.preventDefault();
             // Realizar las acciones que quieres al hacer clic en el botón

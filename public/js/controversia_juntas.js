@@ -1908,7 +1908,7 @@ $(document).ready(function(){
                 });
             }
         });
-        if(arrayDatosDiagnostico.length == 0 && datos_finales_motivo_calificacion.length == 0){
+        if(arrayDatosDiagnostico.length == 0 && datos_finales_motivo_calificacion.length == 0 || $("#origen_controversia").val() == ''){
             $('.alerta_diagnosticos').append('<strong>Información incompleta. Por favor valide nuevamente</strong>').removeClass('d-none')
             setTimeout(function(){
                 $('.alerta_diagnosticos').addClass('d-none');
@@ -2333,6 +2333,14 @@ $(document).ready(function(){
                 });
             }
         });
+        if(arrayDatosEmitidoJrci.length == 0 && datos_finales_motivo_calificacion.length == 0 || $("#origen_jrci_emitido").val() == '' || $("#f_noti_dictamen_jrci").val() == '' || $("#f_radica_dictamen_jrci").val() == ''){
+            $('.alerta_roja_emitido_jrci').append('<strong>Información incompleta. Por favor valide nuevamente</strong>').removeClass('d-none')
+            setTimeout(function(){
+                $('.alerta_roja_emitido_jrci').addClass('d-none');
+                $('.alerta_roja_emitido_jrci').empty();
+            }, 1500);
+            return;
+        }
         var datos_emitido_jrci = {
             '_token': token,
             'newId_evento': $('#newId_evento').val(),
@@ -2538,7 +2546,14 @@ $(document).ready(function(){
                 });
             }
         });
-
+        if(arrayDatosReposiDictJrci.length == 0 && datos_finales_motivo_calificacion.length == 0 || $("#origen_reposicion_jrci").val() == ''){
+            $('.alerta_datos_reposicion_jrci').append('<strong>Información incompleta. Por favor valide nuevamente</strong>').removeClass('d-none')
+            setTimeout(function(){
+                $('.alerta_datos_reposicion_jrci').addClass('d-none');
+                $('.alerta_datos_reposicion_jrci').empty();
+            }, 1500);
+            return;
+        }
         var datos_partes_repo_jrci = {
             '_token': token,
             'newId_evento': $('#newId_evento').val(),
@@ -2706,6 +2721,14 @@ $(document).ready(function(){
                 });
             }
         });
+        if(arrayDatosEmitidoJnci.length == 0 && datos_finales_motivo_calificacion.length == 0 || $("#origen_jnci_emitido").val() == ''){
+            $('.alerta_roja_emitido_jnci').append('<strong>Información incompleta. Por favor valide nuevamente</strong>').removeClass('d-none')
+            setTimeout(function(){
+                $('.alerta_roja_emitido_jnci').addClass('d-none');
+                $('.alerta_roja_emitido_jnci').empty();
+            }, 1500);
+            return;
+        }
         var datos_emitido_jnci = {
             '_token': token,
             'newId_evento': $('#newId_evento').val(),
