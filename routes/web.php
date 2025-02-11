@@ -328,6 +328,8 @@ Route::post('/guardarInformacionCorrespondencia', [CoordinadorController::class,
 Route::post('/getInfoCorrespByIdDest', [CoordinadorController::class, 'getInformacionPorIdDestinatario']);
 // Acción: Consultar la información de el ultimo comunicado con Notificado efectivamente y con correspondencia en Afiliado
 Route::post('/getInfoComuCorres', [CoordinadorController::class, 'retornarInformacionComunicadoYCorrespondencia']);
+// Acción: Consultar información de la calificación tecnica o la nueva calificación
+Route::post('/getInfoCalPCL', [CoordinadorController::class, 'getInformacionCalPCL']);
 // Acción: Consultar guardado del submodulo de un servicio especifico
 Route::post('/validarGuardadoSubmodulo', [CoordinadorController::class, 'validarGuardadoSubmodulo']);
 // Acción: Consultar visado del submodulo de un servicio especifico
@@ -375,6 +377,8 @@ Route::post('/consultarHistorialAcciones', [CalificacionPCLController::class, 'h
 Route::post('/historialAccionesEventosPcl', [CalificacionPCLController::class, 'historialAccionesEventoPcl']);
 // Acción: Valida si una accion ya ha sido ejecutada
 Route::post('/validar_acciones', [AccionesController::class, 'validar_acciones']);
+// Acción: Obtiene una bitacora para un evento dado
+Route::post('/getBitacoraEventos', [AccionesController::class, 'get_bitacora']);
 
 
 // 01/08/2023

@@ -43,7 +43,7 @@
     </div>
     <div class="card-info" style="border: 1px solid black;">
         <div class="card-header text-center">
-            <h4>Calificación PCL - Evento: {{$array_datos_calificacionPcl[0]->ID_evento}}</h4>
+            <h4>Calificación PCL - Evento: <u><a onclick="document.getElementById('botonVerEdicionEvento').click();" style="cursor:pointer;">{{$array_datos_calificacionPcl[0]->ID_evento}}</a></u> - Afiliado: {{$array_datos_calificacionPcl[0]->Nombre_afiliado}} {{$array_datos_calificacionPcl[0]->Nombre_tipo_documento}} {{$array_datos_calificacionPcl[0]->Nro_identificacion}} - {{$array_datos_calificacionPcl[0]->Tipo_afiliado}}</h4>
             <input type="hidden" id="action_actualizar_comunicado" value="{{ route('descargarPdf') }}">
             <input type="hidden" id="id_rol" value="<?php echo session('id_cambio_rol');?>">
         </div>
@@ -54,7 +54,7 @@
                     <div class="col-12" id="filaprincipal">
                         <div class="row" id="aumentarColAfiliado">    
                             <div class="col-12">
-                                <div class="card-info">
+                                <div class="card-info d-none">
                                     <div class="card-header text-center" style="border: 1.5px solid black;">
                                         <h5>Información del afiliado</h5>
                                     </div>
@@ -125,20 +125,33 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-4">
+                                        <div class="col-4 d-none">
                                             <div class="form-group">
                                                 <label for="proceso_actual">Proceso actual</label>
                                                 <input type="text" class="form-control" name="proceso_actual" id="proceso_actual" value="{{$array_datos_calificacionPcl[0]->Nombre_proceso_actual}}" disabled>
                                             </div>
                                         </div>
                                         <div class="col-4">
+                                            <div class="form-group">
+                                                <a href="javascript:void(0);" style="font-size: 1.05rem !important;" id="cargue_docs" class="text-dark text-md" label="Open Modal" data-toggle="modal" data-target="#modalListaDocumentos"><i class="far fa-file text-info"></i> <strong>Cargue Documentos</strong></a>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="form-group">  
+                                                <?php if(!$arraycampa_documento_solicitado->isEmpty()):?>                                                
+                                                    <a href="#" style="font-size: 1.05rem !important;" id="clicGuardado" class="text-dark text-md apertura_modal" label="Open Modal" data-toggle="modal" data-target="#modalSolicitudDocSeguimiento"><i class="fas fa-book-open text-info"></i> <strong>Solicitud documentos - Seguimientos</strong> <i class="fas fa-bell text-info icono"></i></a>
+                                                <?php else:?>
+                                                    <a href="#" style="font-size: 1.05rem !important;" id="clicGuardado" class="text-dark text-md apertura_modal" label="Open Modal" data-toggle="modal" data-target="#modalSolicitudDocSeguimiento"><i class="fas fa-book-open text-info"></i> <strong>Solicitud documentos - Seguimientos</strong></a>
+                                                <?php endif?>                                                
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
                                                 <div class="form-group">
-                                                    <label for="servicio">Servicio</label><br>
-                                                    <a onclick="document.getElementById('botonFormulario2').click();" id="llevar_servicio" style="cursor:pointer;" id="servicio_Pcl"><i class="fa fa-puzzle-piece text-info"></i> <strong class="text-dark">{{$array_datos_calificacionPcl[0]->Nombre_servicio}}</strong></a>
+                                                    <a onclick="document.getElementById('botonFormulario2').click();" id="llevar_servicio" style="font-size: 1.05rem !important; cursor:pointer;" id="servicio_Pcl"><i class="fa fa-puzzle-piece text-info"></i> <strong class="text-dark">{{$array_datos_calificacionPcl[0]->Nombre_servicio}}</strong></a>
                                                     <input type="hidden" class="form-control" name="servicio" id="servicio" value="{{$array_datos_calificacionPcl[0]->Nombre_servicio}}">
                                                 </div>
                                         </div>
-                                        <div class="col-4">
+                                        <div class="col-4 d-none">
                                             <div class="form-group">
                                                 <label for="proceso_envia">Proceso que envía</label>
                                                 <input type="text" class="form-control" name="proceso_envia" id="proceso_envia" value="{{$array_datos_calificacionPcl[0]->Nombre_proceso_anterior}}" disabled>
@@ -152,8 +165,9 @@
                                         </div>
                                         <div class="col-4">
                                             <div class="form-group">
-                                                <label for="fecha_asignacion">Fecha asignación al proceso</label>
-                                                <input type="date" class="form-control" name="fecha_asignacion" id="fecha_asignacion" value="{{$array_datos_calificacionPcl[0]->F_registro_asignacion}}" disabled>
+                                                <label for="">Nueva Fecha de radicación</label>
+                                                <input type="date" class="form-control" name="nueva_fecha_radicacion" id="nueva_fecha_radicacion" max="{{now()->format('Y-m-d')}}" min="1900-01-01" value="<?php if(!empty($array_datos_calificacionPcl[0]->Nueva_F_radicacion)){echo $array_datos_calificacionPcl[0]->Nueva_F_radicacion;}?>">
+                                                <span class="d-none" id="alertaNuevaFechaDeRadicacion" style="color: red; font-style: italic;"></span>
                                             </div>
                                         </div>
                                         <div class="col-4">
@@ -163,6 +177,12 @@
                                             </div>
                                         </div>
                                         <div class="col-4">
+                                            <div class="form-group">
+                                                <label for="fecha_asignacion">Fecha asignación al proceso</label>
+                                                <input type="date" class="form-control" name="fecha_asignacion" id="fecha_asignacion" value="{{$array_datos_calificacionPcl[0]->F_registro_asignacion}}" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="col-4 d-none">
                                             <div class="form-group">
                                                 <label for="dias_trascurrido">Dias transcurridos desde el evento</label>
                                                 <input type="text" class="form-control" name="dias_trascurrido" id="dias_trascurrido" value="{{$array_datos_calificacionPcl[0]->Dias_transcurridos_desde_el_evento}}" disabled>
@@ -183,10 +203,10 @@
                                         <div class="col-4">
                                             <div class="form-group">
                                                 <label for="profesional_calificador">Profesional Calificador</label>
-                                                <input type="text" class="form-control" name="profesional_calificador" id="profesional_calificador" value="<?php if(!empty($array_datos_calificacionPcl[0]->Nombre_calificador)){echo $array_datos_calificacionPcl[0]->Nombre_calificador;}else{ echo 'Sin Calificación';}?>" disabled>
+                                                <input type="text" class="form-control" name="profesional_calificador" id="profesional_calificador" value="<?php if(!empty($array_datos_calificacionPcl[0]->Nombre_calificador)){echo $array_datos_calificacionPcl[0]->Nombre_calificador.' '.$array_datos_calificacionPcl[0]->Tipo_Profesional_calificador;}else{ echo 'Sin Calificación';}?>" disabled>
                                             </div>
                                         </div>
-                                        <div class="col-4">
+                                        <div class="col-4 d-none">
                                             <div class="form-group">
                                                 <label for="tipo_profesional_calificador">Tipo Profesional calificador</label>
                                                 <input type="text" class="form-control" name="tipo_profesional_calificador" id="tipo_profesional_calificador" value="<?php if(!empty($array_datos_calificacionPcl[0]->Tipo_Profesional_calificador)){echo $array_datos_calificacionPcl[0]->Tipo_Profesional_calificador;}else{ echo 'Sin Calificación';}?>" disabled>
@@ -202,7 +222,7 @@
                                             <div class="form-group">
                                                 <label for="profesional_comite">Profesional Comité</label>
                                                 @if ($array_datos_calificacionPcl[0]->Id_Servicio == 9)
-                                                    <input type="text" class="form-control" name="profesional_comite" id="profesional_comite" value="Sin Visado" disabled>                                                                                                        
+                                                    <input type="text" class="form-control" name="profesional_comite" id="profesional_comite" value="N/A" disabled>                                                                                                        
                                                 @else
                                                     <input type="text" class="form-control" name="profesional_comite" id="profesional_comite" value="<?php if(!empty($info_comite_inter[0]->Profesional_comite)){echo $info_comite_inter[0]->Profesional_comite;}else{echo 'Sin Visado';}?>" disabled>                                                    
                                                 @endif                                               
@@ -212,10 +232,28 @@
                                             <div class="form-group">                                                
                                                 <label for="fecha_visado_comite">Fecha de visado comité</label>
                                                 @if ($array_datos_calificacionPcl[0]->Id_Servicio == 9)
-                                                    <input type="text" class="form-control" name="fecha_visado_comite" id="fecha_visado_comite" value="Sin Visado" disabled>                                                                                                        
+                                                    <input type="text" class="form-control" name="fecha_visado_comite" id="fecha_visado_comite" value="N/A" disabled>                                                                                                        
                                                 @else
                                                     <input type="text" class="form-control" name="fecha_visado_comite" id="fecha_visado_comite" value="<?php if(!empty($info_comite_inter[0]->F_visado_comite)){echo $info_comite_inter[0]->F_visado_comite;}else{ echo 'Sin Visado';}?>" disabled>                                                    
                                                 @endif
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="form-group">
+                                                <label for="tiempo_gestion">Tiempo de gestión</label>
+                                                <input type="text" class="form-control" name="tiempo_gestion" id="tiempo_gestion" value="{{$array_datos_calificacionPcl[0]->Tiempo_de_gestion}}" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="form-group">
+                                                <label for="fuente_informacion">Fuente de información</label>
+                                                <select class="fuente_informacion custom-select" name="fuente_informacion" id="fuente_informacion">
+                                                    @if (!empty($array_datos_calificacionPcl[0]->Fuente_informacion))
+                                                        <option value="{{$array_datos_calificacionPcl[0]->Fuente_informacion}}" selected>{{$array_datos_calificacionPcl[0]->Nombre_Fuente_informacion}}</option>
+                                                    @else
+                                                        <option value="">Seleccione una opción</option>
+                                                    @endif
+                                                </select>
                                             </div>
                                         </div>
                                         {{-- <div class="col-4">
@@ -230,47 +268,16 @@
                                                 </select>                                                 
                                             </div>
                                         </div> --}}
-                                        <div class="col-4">
-                                            <div class="form-group">
-                                                <label for="modalidad_calificacion">Documentos adjuntos</label><br>
-                                                <a href="javascript:void(0);" id="cargue_docs" class="text-dark text-md" label="Open Modal" data-toggle="modal" data-target="#modalListaDocumentos"><i class="far fa-file text-info"></i> <strong>Cargue Documentos</strong></a>
-                                            </div>
-                                        </div>
-                                        <div class="col-4">
+                                        <div class="col-4 d-none">
                                             <div class="form-group">
                                                 <label for="fecha_devolucion">Fecha devolución comité</label>
                                                 <input type="text" class="form-control" name="fecha_devolucion" id="fecha_devolucion" value="<?php if(!empty($array_datos_calificacionPcl[0]->Fecha_devolucion_comite) && $array_datos_calificacionPcl[0]->Fecha_devolucion_comite != '0000-00-00'){echo $array_datos_calificacionPcl[0]->Fecha_devolucion_comite;}else{ echo 'Sin Fecha Devolución';}?>" disabled>
                                             </div>                                                                                                                  
-                                        </div>
-                                        <div class="col-4">
-                                            <div class="form-group">
-                                                <label for="tiempo_gestion">Tiempo de gestión</label>
-                                                <input type="text" class="form-control" name="tiempo_gestion" id="tiempo_gestion" value="{{$array_datos_calificacionPcl[0]->Tiempo_de_gestion}}" disabled>
-                                            </div>
-                                        </div>  
-                                        <div class="col-4">
-                                            <div class="form-group">
-                                                <label for="fuente_informacion">Fuente de información</label>
-                                                <select class="fuente_informacion custom-select" name="fuente_informacion" id="fuente_informacion">
-                                                    @if (!empty($array_datos_calificacionPcl[0]->Fuente_informacion))
-                                                        <option value="{{$array_datos_calificacionPcl[0]->Fuente_informacion}}" selected>{{$array_datos_calificacionPcl[0]->Nombre_Fuente_informacion}}</option>
-                                                    @else
-                                                        <option value="">Seleccione una opción</option>
-                                                    @endif
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-4">
+                                        </div> 
+                                        <div class="col-4 d-none">
                                             <div class="form-group">
                                                 <label for="fecha_ajuste_califi">Fecha de ajuste calificación</label>
                                                 <input type="text" class="form-control" name="fecha_ajuste_califi" id="fecha_ajuste_califi" value="<?php if(!empty($array_datos_calificacionPcl[0]->F_ajuste_calificacion)){echo $array_datos_calificacionPcl[0]->F_ajuste_calificacion;}else{ echo 'Sin ajuste Calificación';}?>" disabled>
-                                            </div>
-                                        </div>
-                                        <div class="col-4">
-                                            <div class="form-group">
-                                                <label for="">Nueva Fecha de radicación</label>
-                                                <input type="date" class="form-control" name="nueva_fecha_radicacion" id="nueva_fecha_radicacion" max="{{now()->format('Y-m-d')}}" min="1900-01-01" value="<?php if(!empty($array_datos_calificacionPcl[0]->Nueva_F_radicacion)){echo $array_datos_calificacionPcl[0]->Nueva_F_radicacion;}?>">
-                                                <span class="d-none" id="alertaNuevaFechaDeRadicacion" style="color: red; font-style: italic;"></span>
                                             </div>
                                         </div>
                                         <?php if(!empty($array_datos_calificacionPcl[0]->Id_Servicio)):?>
@@ -307,17 +314,6 @@
                                                 </div>
                                             @endif
                                         <?php endif?>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <div class="form-group">  
-                                                <?php if(!$arraycampa_documento_solicitado->isEmpty()):?>                                                
-                                                    <a href="#" id="clicGuardado" class="text-dark text-md apertura_modal" label="Open Modal" data-toggle="modal" data-target="#modalSolicitudDocSeguimiento"><i class="fas fa-book-open text-info"></i> <strong>Solicitud documentos - Seguimientos</strong> <i class="fas fa-bell text-info icono"></i></a>
-                                                <?php else:?>
-                                                    <a href="#" id="clicGuardado" class="text-dark text-md apertura_modal" label="Open Modal" data-toggle="modal" data-target="#modalSolicitudDocSeguimiento"><i class="fas fa-book-open text-info"></i> <strong>Solicitud documentos - Seguimientos</strong></a>
-                                                <?php endif?>                                                
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
                             </div>                                    
@@ -390,7 +386,7 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                            <div class="col-4">
+                                            <div class="col-4 d-none">
                                                 <div class="form-group">
                                                     <label for="">Fecha de cierre</label>
                                                     <input type="date" class="form-control" name="fecha_cierre" id="fecha_cierre" max="{{now()->format('Y-m-d')}}" min="1900-01-01" value="<?php if(!empty($array_datos_calificacionPcl[0]->F_cierre)){echo $array_datos_calificacionPcl[0]->F_cierre;}?>">

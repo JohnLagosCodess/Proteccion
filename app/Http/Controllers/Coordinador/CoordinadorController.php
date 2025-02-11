@@ -16,6 +16,9 @@ use App\Models\sigmel_informacion_asignacion_eventos;
 use App\Models\sigmel_historial_acciones_eventos;
 
 use App\Models\sigmel_informacion_acciones;
+use App\Models\sigmel_informacion_agudeza_auditiva_eventos;
+use App\Models\sigmel_informacion_agudeza_visual_eventos;
+use App\Models\sigmel_informacion_agudeza_visualre_eventos;
 use App\Models\sigmel_informacion_alertas_automaticas_eventos;
 use App\Models\sigmel_informacion_comite_interdisciplinario_eventos;
 use App\Models\sigmel_informacion_historial_accion_eventos;
@@ -23,7 +26,13 @@ use App\Models\sigmel_informacion_parametrizaciones_clientes;
 use App\Models\sigmel_informacion_comunicado_eventos;
 use App\Models\sigmel_informacion_controversia_juntas_eventos;
 use App\Models\sigmel_informacion_correspondencia_eventos;
+use App\Models\sigmel_informacion_deficiencias_alteraciones_eventos;
+use App\Models\sigmel_informacion_diagnosticos_eventos;
+use App\Models\sigmel_informacion_examenes_interconsultas_eventos;
+use App\Models\sigmel_informacion_laboralmente_activo_eventos;
+use App\Models\sigmel_informacion_libro2_libro3_eventos;
 use App\Models\sigmel_informacion_pronunciamiento_eventos;
+use App\Models\sigmel_informacion_rol_ocupacional_eventos;
 use App\Models\sigmel_numero_orden_eventos;
 use App\Models\sigmel_usuarios_grupos_trabajos;
 use App\Models\User;
@@ -2111,5 +2120,163 @@ class CoordinadorController extends Controller
             return [false,'Sin visado'];
         }
         return [true,'Visado'];
+    }
+
+    public function getInformacionCalPCL(Request $request){
+        if (!Auth::check()) {
+            return redirect('/');
+        }
+        $id_evento = $request->id_evento;
+        $id_asignacion = $request->id_asignacion;
+        $id_proceso = $request->id_proceso;
+        $tipo_decreto = $request->tipo_decreto;
+        $tipo_servicio = $request->tipo_servicio;
+        //VALIDACIONES GLOBALES 
+        if($tipo_servicio == 'Recalificación'){
+            //Examenes o Interconsultas del servicio
+            $examenes_interconsulta = sigmel_informacion_examenes_interconsultas_eventos::on('sigmel_gestiones')
+                ->where([['ID_evento',$id_evento],['Id_Asignacion',$id_asignacion],['Id_proceso',$id_proceso],['Estado_Recalificacion','Activo']])
+                ->get();
+            if($examenes_interconsulta->isEmpty()){
+                return [false,'Debe registrar por lo menos un Examen o interconsulta para poder guardar la calificación de Pérdida de capacidad laboral'];
+            }
+            //Diagnosticos motivos de calificación
+            $diagnosticos_motivos_calificacion = sigmel_informacion_diagnosticos_eventos::on('sigmel_gestiones')
+                ->where([['ID_evento',$id_evento],['Id_Asignacion',$id_asignacion],['Id_proceso',$id_proceso],['Estado_Recalificacion','Activo']])
+                ->get();
+            if($diagnosticos_motivos_calificacion->isEmpty()){
+                return [false,'Debe registrar por lo menos un Diagnóstico para poder guardar la calificación de Pérdida de capacidad laboral'];
+            }
+        }
+        else if($tipo_servicio == 'Cal_Tecnica'){
+            //Examenes o Interconsultas del servicio
+            $examenes_interconsulta = sigmel_informacion_examenes_interconsultas_eventos::on('sigmel_gestiones')
+                ->where([['ID_evento',$id_evento],['Id_Asignacion',$id_asignacion],['Id_proceso',$id_proceso],['Estado','Activo']])
+                ->get();
+            if($examenes_interconsulta->isEmpty()){
+                return [false,'Debe registrar por lo menos un Examen o interconsulta para poder guardar la calificación de Pérdida de capacidad laboral'];
+            }
+            //Diagnosticos motivos de calificación
+            $diagnosticos_motivos_calificacion = sigmel_informacion_diagnosticos_eventos::on('sigmel_gestiones')
+                ->where([['ID_evento',$id_evento],['Id_Asignacion',$id_asignacion],['Id_proceso',$id_proceso],['Estado','Activo']])
+                ->get();
+            if($diagnosticos_motivos_calificacion->isEmpty()){
+                return [false,'Debe registrar por lo menos un Diagnóstico para poder guardar la calificación de Pérdida de capacidad laboral'];
+            }
+        }
+        //VALIDACIONES POR TIPO DE DECRETO Y TIPO DE SERVICIO
+            //DECRETO MUCI - 1507 de 2014 - RECALIFICACIÓN
+            if($tipo_decreto == 1 && $tipo_servicio == 'Recalificación'){ 
+                //Validación 2.1
+                    //Deficiencias por Alteraciones de los Sistemas Generales cálculadas por factores
+                    $deficiencias_alteraciones = sigmel_informacion_deficiencias_alteraciones_eventos::on('sigmel_gestiones')
+                        ->where([['ID_evento',$id_evento],['Id_Asignacion',$id_asignacion],['Id_proceso',$id_proceso],['Estado_Recalificacion','Activo']])
+                        ->get();
+                    //Tabla 9.3 Deficiencia por Alteraciones del Sistema Auditivo
+                    $deficiencias_auditivas = sigmel_informacion_agudeza_auditiva_eventos::on('sigmel_gestiones')
+                        ->where([['ID_evento',$id_evento],['Id_Asignacion',$id_asignacion],['Id_proceso',$id_proceso],['Estado_Recalificacion','Activo']])
+                        ->get();
+                    //Tabla 11.3 Deficiencias por Alteraciones del Sistema Visual
+                    $deficiencias_visuales = sigmel_informacion_agudeza_visualre_eventos::on('sigmel_gestiones')
+                        ->where([['ID_evento_re',$id_evento],['Id_Asignacion_re',$id_asignacion],['Id_proceso_re',$id_proceso],['Estado_Recalificacion','Activo']])
+                        ->get();
+                    if($deficiencias_alteraciones->isEmpty() && $deficiencias_auditivas->isEmpty() && $deficiencias_visuales->isEmpty()){
+                        return [false,'Debe registrar por lo menos una Deficiencia para poder guardar la calificación de Pérdida de capacidad laboral'];
+                    }
+                //Validación 2.2
+                    $laboralmente_activo = sigmel_informacion_laboralmente_activo_eventos::on('sigmel_gestiones')
+                        ->where([['ID_evento',$id_evento],['Id_proceso',$id_proceso],['Estado_Recalificacion','Activo']])
+                        ->get();
+                    $rol_ocupacional = sigmel_informacion_rol_ocupacional_eventos::on('sigmel_gestiones')
+                        ->where([['ID_evento',$id_evento],['Id_proceso',$id_proceso],['Estado_Recalificacion','Activo']])
+                        ->get();
+                    if($laboralmente_activo->isEmpty() && $rol_ocupacional->isEmpty()){
+                        return [false,'Debe aplicar un rol correspondiente al Título II  para poder guardar la calificación de Pérdida de capacidad laboral'];
+                    }
+            }
+            //DECRETO MUCI - 1507 de 2014 - CALIFICACIÓN TECNICA
+            else if($tipo_decreto == 1 && $tipo_servicio == 'Cal_Tecnica'){
+                //Validación 2.1
+                    //Deficiencias por Alteraciones de los Sistemas Generales cálculadas por factores
+                    $deficiencias_alteraciones = sigmel_informacion_deficiencias_alteraciones_eventos::on('sigmel_gestiones')
+                        ->where([['ID_evento',$id_evento],['Id_Asignacion',$id_asignacion],['Id_proceso',$id_proceso],['Estado','Activo']])
+                        ->get();
+                    //Tabla 9.3 Deficiencia por Alteraciones del Sistema Auditivo
+                    $deficiencias_auditivas = sigmel_informacion_agudeza_auditiva_eventos::on('sigmel_gestiones')
+                        ->where([['ID_evento',$id_evento],['Id_Asignacion',$id_asignacion],['Id_proceso',$id_proceso],['Estado','Activo']])
+                        ->get();
+                    //Tabla 11.3 Deficiencias por Alteraciones del Sistema Visual
+                    $deficiencias_visuales = sigmel_informacion_agudeza_visual_eventos::on('sigmel_gestiones')
+                        ->where([['ID_evento',$id_evento],['Id_Asignacion',$id_asignacion],['Id_proceso',$id_proceso]])
+                        ->get();
+                    if($deficiencias_alteraciones->isEmpty() && $deficiencias_auditivas->isEmpty() && $deficiencias_visuales->isEmpty()){
+                        return [false,'Debe registrar por lo menos una Deficiencia para poder guardar la calificación de Pérdida de capacidad laboral'];
+                    }
+                //Validación 2.2
+                    $laboralmente_activo = sigmel_informacion_laboralmente_activo_eventos::on('sigmel_gestiones')
+                        ->where([['ID_evento',$id_evento],['Id_proceso',$id_proceso],['Estado','Activo']])
+                        ->get();
+                    $rol_ocupacional = sigmel_informacion_rol_ocupacional_eventos::on('sigmel_gestiones')
+                        ->where([['ID_evento',$id_evento],['Id_proceso',$id_proceso],['Estado','Activo']])
+                        ->get();
+                    if($laboralmente_activo->isEmpty() && $rol_ocupacional->isEmpty()){
+                        return [false,'Debe aplicar un rol correspondiente al Título II  para poder guardar la calificación de Pérdida de capacidad laboral'];
+                    }
+            }
+            //DECRETO MUCI - 1507 de 2014 (Cero) - RECALIFICACIÓN
+            if($tipo_decreto == 2 && $tipo_servicio == 'Recalificación'){ //
+                //Deficiencias por Alteraciones de los Sistemas Generales cálculadas por factores
+                $deficiencias_alteraciones = sigmel_informacion_deficiencias_alteraciones_eventos::on('sigmel_gestiones')
+                    ->where([['ID_evento',$id_evento],['Id_Asignacion',$id_asignacion],['Id_proceso',$id_proceso],['Estado_Recalificacion','Activo']])
+                    ->get();
+                if($deficiencias_alteraciones->isEmpty()){
+                    return [false,'Debe registrar por lo menos una Deficiencia para poder guardar la calificación de Pérdida de capacidad laboral'];
+                }
+            }
+            //DECRETO MUCI - 1507 de 2014 (Cero) - CALIFICACIÓN TECNICA
+            else if($tipo_decreto == 2 && $tipo_servicio == 'Cal_Tecnica'){
+                //Deficiencias por Alteraciones de los Sistemas Generales cálculadas por factores
+                $deficiencias_alteraciones = sigmel_informacion_deficiencias_alteraciones_eventos::on('sigmel_gestiones')
+                    ->where([['ID_evento',$id_evento],['Id_Asignacion',$id_asignacion],['Id_proceso',$id_proceso],['Estado','Activo']])
+                    ->get();
+                if($deficiencias_alteraciones->isEmpty()){
+                    return [false,'Debe registrar por lo menos una Deficiencia para poder guardar la calificación de Pérdida de capacidad laboral'];
+                }
+            }
+            //DECRETO MUCI  917 de 1999 - RECALIFICACIÓN
+            if($tipo_decreto == 3 && $tipo_servicio == 'Recalificación'){ 
+                //Deficiencias por Alteraciones de los Sistemas Generales cálculadas por factores
+                $deficiencias_alteraciones = sigmel_informacion_deficiencias_alteraciones_eventos::on('sigmel_gestiones')
+                    ->where([['ID_evento',$id_evento],['Id_Asignacion',$id_asignacion],['Id_proceso',$id_proceso],['Estado_Recalificacion','Activo']])
+                    ->get();
+                if($deficiencias_alteraciones->isEmpty()){
+                    return [false,'Debe registrar por lo menos una Deficiencia para poder guardar la calificación de Pérdida de capacidad laboral'];
+                }
+                //Libro II y Libro III
+                $libros = sigmel_informacion_libro2_libro3_eventos::on('sigmel_gestiones')
+                    ->where([['ID_evento',$id_evento],['Id_Asignacion',$id_asignacion],['Id_proceso',$id_proceso],['Estado_Recalificacion','Activo']])
+                    ->get();
+                if($libros->isEmpty()){
+                    return [false,'Debe registrar por lo menos una Deficiencia para poder guardar la calificación de Pérdida de capacidad laboral'];
+                }
+            }
+            //DECRETO MUCI  917 de 1999 - CALIFICACIÓN TECNICA
+            else if($tipo_decreto == 3 && $tipo_servicio == 'Cal_Tecnica'){
+                //Deficiencias por Alteraciones de los Sistemas Generales cálculadas por factores
+                $deficiencias_alteraciones = sigmel_informacion_deficiencias_alteraciones_eventos::on('sigmel_gestiones')
+                    ->where([['ID_evento',$id_evento],['Id_Asignacion',$id_asignacion],['Id_proceso',$id_proceso],['Estado','Activo']])
+                    ->get();
+                if($deficiencias_alteraciones->isEmpty()){
+                    return [false,'Debe registrar por lo menos una Deficiencia para poder guardar la calificación de Pérdida de capacidad laboral'];
+                }
+                //Libro II y Libro III
+                $libros = sigmel_informacion_libro2_libro3_eventos::on('sigmel_gestiones')
+                    ->where([['ID_evento',$id_evento],['Id_Asignacion',$id_asignacion],['Id_proceso',$id_proceso],['Estado','Activo']])
+                    ->get();
+                if($libros->isEmpty()){
+                    return [false,'Debe registrar por lo menos una Deficiencia para poder guardar la calificación de Pérdida de capacidad laboral'];
+                }
+            }
+        return [true,'Validaciones pasadas con exito'];
     }
 }

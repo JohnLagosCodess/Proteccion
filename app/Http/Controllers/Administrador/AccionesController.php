@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Administrador;
 
 use App\Http\Controllers\Controller;
+use App\Models\sigmel_auditorias_bitacora_eventos;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -194,6 +195,35 @@ class AccionesController extends Controller
         $response = $accion_ejecutada->count() == 0 ? "sin_ejecutar" : "ejecutada";
 
         return response()->json($response);
+    }
+
+    /**
+     * Obtiene la bitacora de las acciones realizadas sobre el evento para la accion indicada
+     */
+    public function get_bitacora(Request $request)
+    {
+        $request->validate([
+            "id_accion" => "required"
+        ]);
+        $bitacora = sigmel_auditorias_bitacora_eventos::on('sigmel_auditorias')->select("*")->where("Id_accion",$request->id_accion)->get();
+
+        if(!$bitacora->isEmpty()){
+            return response()->json($bitacora);
+        }else{
+            return "sin_datos";
+        }
+    }
+    /**
+     * Obtiene la ultima accion ejecutada para el evento indicado
+     * @param string $id_evento
+     */
+    public static function getUltimaAccion(string $id_evento){
+        $ultima_accion = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_historial_accion_eventos as sihae')
+        ->leftJoin('sigmel_gestiones.sigmel_informacion_acciones as sia', 'sia.Id_Accion', '=', 'sihae.Id_accion')
+        ->select('sihae.ID_evento', 'sihae.Id_proceso', 'sihae.Id_servicio', 'sihae.Id_accion', 'sihae.Id_Asignacion','sia.Accion')
+        ->where('sihae.ID_evento', $id_evento)->orderBy('sihae.F_accion', 'desc')->first();
+        
+        return $ultima_accion;
     }
 
 }

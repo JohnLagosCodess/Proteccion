@@ -646,6 +646,15 @@ $(document).ready(function () {
         //Limpiamos los campos de la modal
         $("#c_accion_ejecutar, #c_f_accion, #c_e_facturacion, #c_profesional, #c_servicio, #alerta_accion").empty();
 
+        //Si en controversia no han seleccionado una fuente de información PBS090
+        if(servicio.startsWith('Controversia')){
+            if($("#fuente_info_juntas").val() == ''){
+                $("#alerta_accion").removeClass('d-none');
+                $("#alerta_accion").append("<i class='fas fa-info-circle'></i><strong>Importante:</strong> Por favor seleccione una fuente de información");
+                $("#c_ejecutar_accion").prop('disabled',true);
+                return;
+            }
+        }
         /**
          * De no haber una accion y/o profesional seleccionado no se habilitara el boton de ejecucion
          */
@@ -1424,7 +1433,19 @@ function calc_antiguedad_empresa(){
  * @param {int} proceso id del proceso para el cual se esta procesando la alerta 
  * @param {string} tipo_alerta El tipo de la alerta que se estara mostrando. alerta -> muestra una modal interactiva con botones de accion, otro - Muestra solo una modal informativa.
  */
-    function alertas_informativas(titulo, mensaje_1, mensaje_2, require_timeout, timeout) {
+    function alertas_informativas(titulo, mensaje_1, mensaje_2, require_timeout, timeout, confirmation_buttons = false, selector = null) {
+        //Cuando la modal requiere botones no deja ser cerrada ni por teclado ni por clicks fuera de la pagina
+        if(confirmation_buttons){
+            $("#alertas_informativas").modal({
+                backdrop: 'static',
+                keyboard: false
+            });
+        }else{
+            $("#alertas_informativas").modal({
+                backdrop: true,
+                keyboard: true
+            });
+        }
         // Mostrar la modal
         $('#alertas_informativas').modal('show');
         // Cambiar el titulo del modal
@@ -1432,8 +1453,22 @@ function calc_antiguedad_empresa(){
         // Icono de información antes del titulo
         modalTitle.innerHTML = `<i class="fas fa-info-circle"></i> ${titulo}`;
         //Setteamos los mensajes
-        $('#primer_mensaje').text(mensaje_1);
-        $('#segundo_mensaje').text(mensaje_2);
+        $('#primer_mensaje').html(mensaje_1);
+        $('#segundo_mensaje').html(mensaje_2);
+        if(confirmation_buttons){
+            document.getElementById('alertaInformativaFooter').style.display = "flex";
+            $("#no_button").click(function () {
+                selector.val("").trigger("change");
+                return
+            });
+            $("#si_button").click(function () {
+                $('#alertas_informativas').modal('hide');
+                $('#primer_mensaje').text('');
+                $('#segundo_mensaje').text('');
+            });
+        }else{
+            document.getElementById('alertaInformativaFooter').style.display = "none";
+        }
         if(require_timeout){
             setTimeout(() => {
                 $('#alertas_informativas').modal('hide');

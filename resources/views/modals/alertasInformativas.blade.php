@@ -8,6 +8,17 @@
             <span id="segundo_mensaje"></span>
         </div>
     </div>
+    <div id="alertaInformativaFooter">
+        <div class="col-12 d-flex justify-content-end">
+            <div class="col-9" id="info_footer">
+                <h5>¿Esta de acuerdo?</h5>
+            </div>
+            <div class="col-3 d-flex justify-content-between">
+                <button class="btn btn-info" id="si_button">Si</button>
+                <button class="btn btn-danger" id="no_button" data-dismiss="modal">No</button>
+            </div>
+        </div>
+    </div>
 </x-adminlte-modal>
 <style>
     .infoalert .modal-footer{
@@ -29,17 +40,18 @@
     }
     #alertas_informativas #primer_mensaje{
         font-size: 19px;
-        font-weight: 600;
+        font-weight: 500;
         text-align: justify;
     }
     #alertas_informativas #segundo_mensaje{
         font-size: 19px;
-        font-weight: 600;
+        font-weight: 500;
         text-align: justify;
     }
     #alertas_informativas .modal-body{
         justify-content: center;
         display: flex;
+        flex-direction: column;
     }
     #alertas_informativas .card-header{
         display: flex;

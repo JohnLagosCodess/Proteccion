@@ -79,6 +79,13 @@ return [
             'days' => 10,
             'replace_placeholders' => true,
         ],
+        'tools' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/tools.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'days' => 10,
+            'replace_placeholders' => true,
+        ],
         'log_api' => [
             'driver' => 'daily',
             'path' => storage_path('logs/log_api.log'),

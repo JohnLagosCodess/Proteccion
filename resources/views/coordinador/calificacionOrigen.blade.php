@@ -199,7 +199,7 @@
                                     <div class="col-4">
                                         <div class="form-group">
                                             <label for="profesional_calificador">Profesional Calificador</label>
-                                            <input type="text" class="form-control" name="profesional_calificador" id="profesional_calificador" value="<?php if(!empty($array_datos_calificacionOrigen[0]->Nombre_calificador)){echo $array_datos_calificacionOrigen[0]->Nombre_calificador;}else{ echo 'Sin Calificación';}?>" disabled>
+                                            <input type="text" class="form-control" name="profesional_calificador" id="profesional_calificador" value="<?php if(!empty($array_datos_calificacionOrigen[0]->Nombre_calificador)){echo $array_datos_calificacionOrigen[0]->Nombre_calificador.' '.$array_datos_calificacionOrigen[0]->Tipo_Profesional_calificador;}else{ echo 'Sin Calificación';}?>" disabled>
                                         </div>
                                     </div>
                                     <div class="col-4 d-none">
@@ -217,14 +217,18 @@
                                     <div class="col-4">
                                         <div class="form-group">
                                             <label for="profesional_comite">Profesional Comité</label>
-                                            <input type="text" class="form-control" name="profesional_comite" id="profesional_comite" value="<?php if(!empty($cali_profe_comite[0]->Profesional_comite)){echo $cali_profe_comite[0]->Profesional_comite;}else{echo 'Sin Visado';}?>" disabled>
+                                            @if ($array_datos_calificacionPcl[0]->Id_Servicio == 3)
+                                                <input type="text" class="form-control" name="profesional_comite" id="profesional_comite" value="N/A" disabled>                                                                                                        
+                                            @else
+                                                <input type="text" class="form-control" name="profesional_comite" id="profesional_comite" value="<?php if(!empty($cali_profe_comite[0]->Profesional_comite)){echo $cali_profe_comite[0]->Profesional_comite;}else{echo 'Sin Visado';}?>" disabled>
+                                            @endif
                                         </div>
                                     </div>
                                     <div class="col-4">
                                         <div class="form-group">
                                             <label for="fecha_visado_comite">Fecha de visado comité</label>
                                             {{-- <input type="text" class="form-control" name="fecha_visado_comite" id="fecha_visado_comite" value="{{$cali_profe_comite[0]->F_visado_comite}}" disabled> --}}
-                                            <input type="text" class="form-control" name="fecha_visado_comite" id="fecha_visado_comite" value="<?php if(!empty($cali_profe_comite[0]->F_visado_comite)){echo $cali_profe_comite[0]->F_visado_comite;}else{echo 'Sin Visado';}?>" disabled>
+                                            <input type="text" class="form-control" name="fecha_visado_comite" id="fecha_visado_comite" value="<?php if(!empty($cali_profe_comite[0]->F_visado_comite)){echo $cali_profe_comite[0]->F_visado_comite;}else if(!empty($array_datos_calificacionOrigen[0]->Id_Servicio) && $array_datos_calificacionOrigen[0]->Id_Servicio == 3){echo 'N/A';}else{echo 'Sin Visado';}?>" disabled>
                                         </div>
                                     </div>
                                     <div class="col-4 d-none">

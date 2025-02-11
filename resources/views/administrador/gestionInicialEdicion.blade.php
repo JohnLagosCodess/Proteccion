@@ -122,6 +122,7 @@
                     <table id="listado_historial_acciones_evento" class="table table-striped table-bordered" width="100%">
                         <thead>
                             <tr>
+                                <th></th>
                                 <th>Fecha de acción</th>
                                 <th>Usuario de acción</th>
                                 <th>Acción realizada</th>
@@ -1514,13 +1515,63 @@
                         $('#borrar_tabla_historial_acciones').empty();
                     }else{
                         // console.log(data);
-                        $.each(data, function(index, value){
-                            llenar_historial_acciones(data, index, value);
+                        llenar_historial_acciones(data).then(dt => {
+                                dt.on('click', 'td.dt-control,td.dt-hasChild', function (e) {
+                                let tr = e.target.closest('tr');
+                                let row = dt.row(tr);
+
+                                if (row.child.isShown()) {
+                                    // si la fila ya está abierto, se cierra
+                                    row.child.hide();
+                                    // Elimina la clase dt-hasChild para el icono
+                                    $(this).addClass('dt-control');
+                                    $(this).removeClass('dt-hasChild');
+                                } else {
+                                    // Abre las filas hijas row
+                                    format($(this).data('id_accion')).then(function(e) {
+                                        row.child(e).show();
+                                    });
+                                    
+                                    // Añade la clase dt-hasChild
+                                    $(this).removeClass('dt-control');
+                                    $(this).addClass('dt-hasChild');
+                                }
+                            });
                         });
+  
                     }
                 }
             });
         });
+
+        function format(id) {
+            return new Promise((resolve, reject) => {
+            let historial = "Sin informacion";
+            let datos = {
+                _token: '{{csrf_token()}}',
+                id_evento: $("#id_evento").val(),
+                id_accion: id,
+                id_asignacion: $("#id_asignacion").val()
+            };
+
+            $.post("/getBitacoraEventos", datos)
+                .done(function(e) {
+
+                    if (e == "sin_datos") {
+                        resolve("No se realizaron actualizaciones en esta acción");
+                    } else {
+                        let html = '';
+                        let contador = 1;
+                        $.each(e,function(index,item){
+                            html += `<tr role="row" class="odd"><td style="width: 3%">${contador}</td><td style="width: 15%">${item.F_accion}</td><td style="width: 13%">${item.Nombre_usuario}</td><td style="width: 18%">Actualizar informacion</td><td style="width: 50%"><ul>${item.Descripcion}</ul></td></tr>`;
+                            contador++;
+                        });
+                        
+                        resolve(` <div style="max-height: 400px; overflow-y: auto; display: block;"> <table id="" class="table" width="100%"> <tbody> ${html} </tbody> </table> </div> `);
+                    }
+                });
+            });
+        }
 
         function llenar_historico_empresas(response, index, value){
             $('#listado_historico_empresas').DataTable({
@@ -1591,18 +1642,28 @@
         }
 
         function llenar_historial_acciones(response, index, value){
-            $('#listado_historial_acciones_evento').DataTable({
+            return new Promise((resolve, reject) => {
+                var $tabla_historial = $('#listado_historial_acciones_evento').DataTable({
                 "dom": 'rtip',
                 "destroy": true,
                 "data": response,
                 "pageLength": 5,
                 // "order": [[0, 'desc']],
                 "columns":[
+                    {
+                        className: 'dt-control',
+                        orderable: false,
+                        data: null,
+                        defaultContent: ''
+                    },
                     {"data":"F_accion"},
                     {"data":"Nombre_usuario"},
                     {"data":"Accion"},
                     {"data":"Descripcion"}
                 ],
+                "createdRow": function(row, data, dataIndex) {
+                    $('td:eq(0)', row).attr('data-id_accion', data.Id_accion);
+                },
                 "language":{
                     "search": "Buscar",
                     "info": "Mostrando página _PAGE_ de _PAGES_",
@@ -1615,7 +1676,10 @@
                     "emptyTable": "No se encontró información",
                     "infoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
                 }
-            });
+                });
+
+                resolve($tabla_historial);
+            })
         }
     </script>
     <script>

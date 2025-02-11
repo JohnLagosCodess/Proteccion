@@ -450,7 +450,9 @@ $(document).ready(function(){
                 'Recuerde que antes de ejecutar esta acción debe gestionar y guardar el Pronunciamiento.',
                 'Por favor valide nuevamente.', 
                 true, 
-                5000
+                5000,
+                false,
+                null
             )
         }else{
             $('#Edicion').prop('disabled',false);
@@ -469,7 +471,11 @@ $(document).ready(function(){
             alertas_informativas(
                 'Verificar comité interdisciplinario',
                 'Recuerde que antes de aprobar la calificación debe realizar el visado de la misma.',
-                'Por favor valide nuevamente.', 
+                'Por favor valide nuevamente.',
+                true,
+                5000,
+                false,
+                null
             )
         }else{
             $('#Edicion').prop('disabled',false);
@@ -482,7 +488,9 @@ $(document).ready(function(){
                 'Recuerde actualizar la fecha de radicación en el campo Nueva fecha de radicación.',
                 'Si ya la actualizó o no lo requiere, por favor omita este mensaje.', 
                 true, 
-                5000
+                5000,
+                false,
+                null
             )
         }
 
@@ -1202,6 +1210,8 @@ $(document).ready(function(){
         formData.append('profesional', $('#profesional').val());
         formData.append('causal_devolucion_comite', $('#causal_devolucion_comite').val());
         formData.append('fecha_cierre', $('#fecha_cierre').val());
+        formData.append('fecha_asignacion_calificacion',$('#fecha_asignacion_calificacion').val()),
+        formData.append('fecha_calificacion',$('#fecha_calificacion').val()),
         formData.append('descripcion_accion', $('#descripcion_accion').val());
         formData.append('banderaguardar',$('#bandera_accion_guardar_actualizar').val());        
 
@@ -4980,7 +4990,6 @@ $(document).ready(function(){
                 url:'/selectoresModuloCalificacionPCL',
                 data: datos_lista_soli_docs,
                 success:function(data){
-
                     if (data.length > 0) {
                         var listado = '<ul>';
                         let listado_solicitud_documentos = Object.keys(data);
@@ -4990,7 +4999,7 @@ $(document).ready(function(){
                             var descripcion = documento['Descripcion'] ? documento['Descripcion'] : '';
                             
                             if (nombre || descripcion) {
-                                listado += '<li><b>'+nombre+'</b></li>';
+                                listado += '<li><b>'+descripcion+'</b></li>';
                             }
                         }
 

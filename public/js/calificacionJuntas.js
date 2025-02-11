@@ -424,7 +424,9 @@ $(document).ready(function(){
                 'Recuerde que antes de ejecutar esta acción debe gestionar y guardar el Pronunciamiento ante dictamen de JRCI.',
                 'Por favor valide nuevamente.', 
                 true, 
-                5000
+                5000,
+                false,
+                null
             )
         }else{
             $('#Edicion').prop('disabled',false);
@@ -439,7 +441,9 @@ $(document).ready(function(){
                 'Recuerde actualizar la fecha de radicación en el campo Nueva fecha de radicación.',
                 'Si ya la actualizó o no lo requiere, por favor omita este mensaje.', 
                 true, 
-                5000
+                5000,
+                false,
+                null
             )
         }
         let datos_ejecutar_parametrica_mod_principal = {
@@ -738,6 +742,12 @@ $(document).ready(function(){
         formData.append('descripcion_accion', $('#descripcion_accion').val());
         formData.append('fuente_info_juntas', $('#fuente_info_juntas').val());
         formData.append('fecha_cierre', $('#fecha_cierre').val());
+        formData.append('fecha_remision_expediente',$('#fecha_remision_expediente').val());
+        formData.append('fecha_pronunciamiento',$('#fecha_pronunciamiento').val());
+        formData.append('profesional_remision_expediente',$('#profesional_remision_expediente_sin_tipo_colaborador').val());
+        formData.append('profesional_pronunciamiento',$('#profesional_pronunciamiento_sin_tipo_colaborador').val());
+        formData.append('id_profesional_remision_expediente',$('#id_profesional_remision_expediente').val());
+        formData.append('id_profesional_pronunciamiento',$('#id_profesional_pronunciamiento').val());
         formData.append('banderaguardar', $('#bandera_accion_guardar_actualizar').val());
 
         $.ajax({
