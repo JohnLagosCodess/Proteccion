@@ -217,7 +217,7 @@
                                     <div class="col-4">
                                         <div class="form-group">
                                             <label for="profesional_comite">Profesional Comité</label>
-                                            @if ($array_datos_calificacionPcl[0]->Id_Servicio == 3)
+                                            @if ($array_datos_calificacionOrigen[0]->Id_Servicio == 3)
                                                 <input type="text" class="form-control" name="profesional_comite" id="profesional_comite" value="N/A" disabled>                                                                                                        
                                             @else
                                                 <input type="text" class="form-control" name="profesional_comite" id="profesional_comite" value="<?php if(!empty($cali_profe_comite[0]->Profesional_comite)){echo $cali_profe_comite[0]->Profesional_comite;}else{echo 'Sin Visado';}?>" disabled>
