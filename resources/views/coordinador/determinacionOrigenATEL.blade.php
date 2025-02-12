@@ -419,7 +419,7 @@
                                             <div class="form-group">
                                                 <label for="fecha_evento">Fecha del evento <span style="color:red;">(*)</span></label>
                                                 <input type="hidden" id="bd_fecha_evento" value="">
-                                                <input type="date" class="form-control" name="fecha_evento" id="fecha_evento" max="{{date("Y-m-d")}}" min='1900-01-01' value="<?php if(!empty($datos_bd_DTO_ATEL[0]->Fecha_evento)){echo $datos_bd_DTO_ATEL[0]->Fecha_evento;}?>" required>
+                                                <input type="date" class="form-control" name="fecha_evento" id="fecha_evento" max="{{date("Y-m-d")}}" min='1900-01-01' value="{{$info_evento->F_evento}}" required>
                                                 <span class="d-none" id="fecha_evento_alerta" style="color: red; font-style: italic;"></span>
                                             </div>
                                         </div>
