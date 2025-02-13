@@ -142,7 +142,7 @@ class ReporteTrazabilidadJuntasController extends Controller
                 'Rango',
                 'F_finalizacion_jrci'
             )
-            ->whereRaw('DATE(F_ultima_accion) BETWEEN ? AND ?', [$fecha_desde, $fecha_hasta])
+            ->whereRaw('DATE(F_ultima_accion_consulta) BETWEEN ? AND ?', [$fecha_desde, $fecha_hasta])
             ->get();
 
             /* 
