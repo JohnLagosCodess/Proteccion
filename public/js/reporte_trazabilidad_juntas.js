@@ -29,7 +29,6 @@ $(document).ready(function () {
         en los inputs date de fecha desde y fecha hasta
     */
     $(document).on('keyup change', '#fecha_desde, #fecha_hasta', function(event){
-
         var tipo_evento = event.type;
         if (tipo_evento == 'keyup' || tipo_evento == 'change') {
             if ($(this).val() > fecha_descarga) {
@@ -41,7 +40,18 @@ $(document).ready(function () {
                 $(this).after(alerta);
 
                 $('#btn_generar_reporte').prop('disabled', true);
-            }else{
+            }
+            else if($("#fecha_hasta").val() != "" && ($("#fecha_hasta").val() < $("#fecha_desde").val())){
+                // Eliminar cualquier alerta previa
+                if ($(this).next('i').length) {
+                    $(this).next('i').remove();
+                }
+                let alerta = '<i style="color:red;">La fecha hasta debe ser mayor que la fecha desde.</i>';
+                $(this).after(alerta);
+
+                $('#btn_generar_reporte').prop('disabled', true);
+            }
+            else{
                 if ($(this).next('i').length) {
                     $(this).next('i').remove();
                 }

@@ -965,6 +965,7 @@ class CalificacionJuntasController extends Controller
         $Id_proceso = $request->Id_proceso;
         $Id_servicio = $request->Id_servicio;
         $Accion_realizar = $request->accion;
+        $F_asignacion_pronu_juntas = $request->fecha_asignacion_juntas;
 
         //Fecha de remisión expediente y Fecha de pronunciamiento PBS068
         $F_remision_expediente = $request->fecha_remision_expediente;
@@ -987,10 +988,11 @@ class CalificacionJuntasController extends Controller
         // F de asignación para pronunciamiento de Juntas
         if ($Accion_realizar == 22) {
             $F_asignacion_pronu_juntas = $date_time;
-        }else{
-            // $F_asignacion_pronu_juntas = "0000-00-00 00:00:00";
-            $F_asignacion_pronu_juntas = null;
         }
+        // else{
+        //     // $F_asignacion_pronu_juntas = "0000-00-00 00:00:00";
+        //     $F_asignacion_pronu_juntas = null;
+        // }
 
         // Programación para la Nueva Fecha de Radicación
         if ($request->nueva_fecha_radicacion <> "") {

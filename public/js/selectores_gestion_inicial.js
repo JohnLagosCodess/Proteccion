@@ -135,6 +135,14 @@ $(document).ready(function(){
         allowClear: false
     });
 
+    /* INICIALIZACIÓN DEL SELECT2 DE LISTADO DE Entidad de conocimiento */
+    $(".entidad_conocimiento_multiple").select2({
+        width: '100%',
+        placeholder: "Seleccione una opción",
+        allowClear: false,
+        multiple: true
+    });
+
     /* INICIALIZACIÓN DEL SELECT2 DE LISTADO DE ARL (INFORMACIÓN AFILIADO) */
     $(".arl_info_afiliado").select2({
         placeholder: "Seleccione una opción",
@@ -697,6 +705,26 @@ $(document).ready(function(){
             }
         }
     });
+
+    // lista entidad conocimiento
+    let datos_lista_entidad_conocimiento_multiple = {
+        '_token': token,
+        'parametro' : "entidades_conocimiento"
+    };
+    $.ajax({
+        type:'POST',
+        url:'/cargarselectores',
+        data: datos_lista_entidad_conocimiento_multiple,
+        success:function(data) {
+            // console.log(data);
+            $('#entidad_conocimiento_multiple').empty();
+            let claves = Object.keys(data);
+            for (let i = 0; i < claves.length; i++) {
+                $('#entidad_conocimiento_multiple').append('<option value="'+data[claves[i]]["Id_Entidad"]+'">'+data[claves[i]]["Tipo_Entidad"]+' - '+data[claves[i]]["Nombre_entidad"]+'</option>');
+            }
+        }
+    });
+
     // lista arl (información afiliado)
     let datos_lista_arl_info_afiliado = {
         '_token': token,
@@ -1456,11 +1484,14 @@ $(document).ready(function(){
     });
 
     // Validación marcacion checkbox entidad de conocimiento AFP 
+    // Validación marcacion checkbox entidad de conocimiento AFP 
     $('#entidad_conocimiento').change(function (){
         if ($(this).prop('checked')) {
             $('#div_afp_conocimiento').removeClass('d-none');         
         }else{
             $('#div_afp_conocimiento').addClass('d-none');
+
+            $("#entidad_conocimiento_multiple").val('').trigger('change');
         }       
     });
 
@@ -1846,6 +1877,31 @@ $(document).ready(function(){
                 } 
             });
         }
+    });
+
+    /* 
+        FUNCIONALIDAES PARA LAS ENTIDADES DE CONOCIMIENTO
+        1. No permitir seleccionar más de 5 entidades.
+        2. Respetar el orden de selección de las entidades.
+    */
+    $(".entidad_conocimiento_multiple").on("select2:select", function (e) {
+        let selectedOptions = $(this).val(); // Obtiene las opciones seleccionadas
+        if (selectedOptions.length > 5) {
+            // Elimina la última opción seleccionada
+            $(this).find(`option[value="${e.params.data.id}"]`).prop("selected", false);
+            $(this).trigger("change"); // Refresca Select2
+            $("#entidad_conocimiento_alerta").removeClass('d-none');
+        }else{
+            $("#entidad_conocimiento_alerta").addClass('d-none');
+        }
+    
+        var elemento = e.params.data.element;
+        var $elemento = $(elemento);
+        
+        $elemento.detach();
+        $(this).append($elemento);
+        $(this).trigger("change");
+            
     });
 
     /* Asignar ruta del formulario de edicion de evento antes de dar clic en el botón Editar */

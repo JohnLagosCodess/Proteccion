@@ -749,7 +749,7 @@ $(document).ready(function(){
         formData.append('id_profesional_remision_expediente',$('#id_profesional_remision_expediente').val());
         formData.append('id_profesional_pronunciamiento',$('#id_profesional_pronunciamiento').val());
         formData.append('banderaguardar', $('#bandera_accion_guardar_actualizar').val());
-
+        formData.append('fecha_asignacion_juntas',$('#fecha_asignacion_juntas').val());
         $.ajax({
             type:'POST',
             url:'/registrarCalificacionJuntas',

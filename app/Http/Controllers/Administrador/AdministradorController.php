@@ -1947,6 +1947,38 @@ class AdministradorController extends Controller
             return response()->json($info_lista_afp);
         }
 
+         /* Traer listado ENTIDAD CONOCIMIENTO */
+         if($parametro == "entidades_conocimiento"){
+            $listado_entidad_conocimiento = DB::table(getDatabaseName('sigmel_gestiones') .'sigmel_informacion_entidades as enti')
+            ->leftJoin('sigmel_gestiones.sigmel_lista_entidades as sle', 'enti.IdTipo_entidad', '=', 'sle.Id_Entidad')
+            ->select('enti.Id_Entidad', 'enti.Nombre_entidad', 'sle.Tipo_Entidad')
+            ->where([
+                ['enti.Estado_entidad', '=', 'activo']
+            ])
+            ->orderBy('IdTipo_entidad')
+            ->get();
+
+            $info_lista_entidad_conocimiento = json_decode(json_encode($listado_entidad_conocimiento, true));
+            return response()->json($info_lista_entidad_conocimiento);
+        }
+
+        /* Traer listado ENTIDAD CONOCNOCIMIENTO  PARA LA EDICIÓN DEL EVENTO */
+        if($parametro == "entidades_conocimiento_edicion"){ 
+
+            $listado_entidad_conocimiento = DB::table(getDatabaseName('sigmel_gestiones') .'sigmel_informacion_entidades as enti')
+            ->leftJoin('sigmel_gestiones.sigmel_lista_entidades as sle', 'enti.IdTipo_entidad', '=', 'sle.Id_Entidad')
+            ->select('enti.Id_Entidad', 'enti.Nombre_entidad', 'sle.Tipo_Entidad')
+            ->where([
+                ['enti.Estado_entidad', '=', 'activo']
+            ])
+            ->orderBy('IdTipo_entidad')
+            ->get();
+
+            $info_lista_entidad_conocimiento = json_decode(json_encode($listado_entidad_conocimiento, true));
+            
+            return response()->json($info_lista_entidad_conocimiento);
+        }
+
         /* TRAER LISTADO DE ARL (Información Afiliado) */
         if ($parametro == "lista_arl_info_afiliado") {
             
@@ -3413,6 +3445,15 @@ class AdministradorController extends Controller
         // Validamos si el checkbox entidad conocimiento esta marcado 
 
         $entidad_conocimiento = isset($request->entidad_conocimiento) ? 'Si' : 'No';
+
+        // En caso de que esté marcado el checkbox de entidad de conocimiento se envia las entidadesde conocimiento.
+        if (!empty($request->entidad_conocimiento) and $request->entidad_conocimiento == "Si") {
+            $entidad_conocimiento_inicial = $request->entidad_conocimiento_multiple[0];
+            $array_otras_entidades = implode(', ', array_slice($request->entidad_conocimiento_multiple, 1));            
+        }else{
+            $entidad_conocimiento_inicial = null;
+            $array_otras_entidades = null;
+        }
         
         $datos_info_afiliado_evento = [
             'ID_evento' => $Id_evento,
@@ -3456,7 +3497,8 @@ class AdministradorController extends Controller
             'Activo' => $request->activo,
             'Medio_notificacion' => $request->medio_notificacion_afiliado,
             'Entidad_conocimiento' => $entidad_conocimiento,
-            'Id_afp_entidad_conocimiento' => $request->afp_conocimiento,
+            'Id_afp_entidad_conocimiento' => $entidad_conocimiento_inicial,
+            'Otras_entidades_conocimiento' => $array_otras_entidades,
             'Nombre_usuario' => $nombre_usuario,
             'F_registro' => $date
         ];
@@ -4076,7 +4118,7 @@ class AdministradorController extends Controller
         'sld.Id_dominancia', 'sld.Nombre_dominancia as Dominancia', 'siae.Id_departamento', 'sldm.Nombre_departamento',
         'siae.Id_municipio', 'sldm1.Nombre_municipio', 'siae.Ocupacion', 'siae.Tipo_afiliado', 'slp_tipo_afiliado.Nombre_parametro as Nombre_tipo_afiliado',
         'siae.Ibc', 'siae.Id_eps', 'sle.Nombre_entidad as Nombre_eps', 'siae.Id_afp', 'sle1.Nombre_entidad as Nombre_afp', 'siae.Id_arl', 'sle2.Nombre_entidad as Nombre_arl',
-        'siae.Entidad_conocimiento', 'siae.Id_afp_entidad_conocimiento', 'sle3.Nombre_entidad as Nombre_afp_conocimiento',
+        'siae.Entidad_conocimiento', 'siae.Id_afp_entidad_conocimiento','siae.Otras_entidades_conocimiento', 'sle3.Nombre_entidad as Nombre_afp_conocimiento',
         'siae.Tipo_documento_apoderado','slp_tipo_doc_apoderado.Nombre_parametro as Nombre_documento_apoderado',
         'siae.Apoderado', 'siae.Nombre_apoderado','siae.Nro_identificacion_apoderado', 'siae.Email_apoderado','siae.Telefono_apoderado', 'siae.Direccion_apoderado', 'siae.Id_departamento_apoderado', 'siae.Id_municipio_apoderado', 
         'sldm_apoderado.Nombre_departamento as Nombre_departamento_apoderado', 'sldm1_apoderado.Nombre_municipio as Nombre_municipio_apoderado',
@@ -4367,10 +4409,19 @@ class AdministradorController extends Controller
 
         $entidad_conocimiento = isset($request->entidad_conocimiento) ? 'Si' : 'No';
 
-        if ($entidad_conocimiento == 'Si') {
-            $afp_conocimiento = $request->afp_conocimiento;
-        } else {
-            $afp_conocimiento = null;            
+        // if ($entidad_conocimiento == 'Si') {
+        //     $afp_conocimiento = $request->afp_conocimiento;
+        // } else {
+        //     $afp_conocimiento = null;            
+        // }
+
+        // En caso de que esté marcado el checkbox de entidad de conocimiento se envia las entidadesde conocimiento.
+        if (!empty($request->entidad_conocimiento) and $request->entidad_conocimiento == "Si") {
+            $entidad_conocimiento_inicial = $request->entidad_conocimiento_multiple[0];
+            $array_otras_entidades = implode(', ', array_slice($request->entidad_conocimiento_multiple, 1));            
+        }else{
+            $entidad_conocimiento_inicial = null;
+            $array_otras_entidades = null;
         }
         
         $actualizar_GestionInicialAfiliado = [
@@ -4414,7 +4465,8 @@ class AdministradorController extends Controller
             'Id_municipio_benefi' => $request->afi_municipio_info_afiliado,
             'Medio_notificacion' => $request->medio_notificacion_afiliado,
             'Entidad_conocimiento' => $entidad_conocimiento,
-            'Id_afp_entidad_conocimiento' => $afp_conocimiento,
+            'Id_afp_entidad_conocimiento' => $entidad_conocimiento_inicial,
+            'Otras_entidades_conocimiento' => $array_otras_entidades,
             'Nombre_usuario' => $nombre_usuario,
             'F_registro' => $date,
             'F_actualizacion' => $date
@@ -4806,7 +4858,7 @@ class AdministradorController extends Controller
         'sld.Id_dominancia', 'sld.Nombre_dominancia as Dominancia', 'siae.Id_departamento', 'sldm.Nombre_departamento',
         'siae.Id_municipio', 'sldm1.Nombre_municipio', 'siae.Ocupacion', 'siae.Tipo_afiliado', 'slp_tipo_afiliado.Nombre_parametro as Nombre_tipo_afiliado',
         'siae.Ibc', 'siae.Id_eps', 'sle.Nombre_entidad as Nombre_eps', 'siae.Id_afp', 'sle1.Nombre_entidad as Nombre_afp', 'siae.Id_arl', 'sle2.Nombre_entidad as Nombre_arl',
-        'siae.Entidad_conocimiento', 'siae.Id_afp_entidad_conocimiento', 'sle3.Nombre_entidad as Nombre_afp_conocimiento',
+        'siae.Entidad_conocimiento', 'siae.Id_afp_entidad_conocimiento', 'siae.Otras_entidades_conocimiento','sle3.Nombre_entidad as Nombre_afp_conocimiento',
         'siae.Tipo_documento_apoderado','slp_tipo_doc_apoderado.Nombre_parametro as Nombre_documento_apoderado',
         'siae.Apoderado', 'siae.Nombre_apoderado','siae.Nro_identificacion_apoderado', 'siae.Email_apoderado','siae.Telefono_apoderado', 'siae.Direccion_apoderado', 'siae.Id_departamento_apoderado', 'siae.Id_municipio_apoderado', 
         'sldm_apoderado.Nombre_departamento as Nombre_departamento_apoderado', 'sldm1_apoderado.Nombre_municipio as Nombre_municipio_apoderado',
