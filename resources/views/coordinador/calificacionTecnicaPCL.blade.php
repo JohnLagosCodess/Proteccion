@@ -100,7 +100,7 @@
                         {{-- <div class="d-none" id="div_calificacion_Pcl">   --}}               
                         <!-- Informacion Afiliado-->
                         {{-- <div class="card-info columna_row1_afiliado" @if ($decreto_1507=='1') style="display:block" @else style="display:none" @endif> --}}
-                        <div class="card-info columna_row1_afiliado" style="display:none">
+                        <div class="card-info columna_row1_afiliado d-none" style="display:none">
                             <div class="card-header text-center" style="border: 1.5px solid black;">
                                 <h5>Información del afiliado</h5>
                             </div>
