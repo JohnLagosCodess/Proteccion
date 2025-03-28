@@ -8,8 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 /* Importamos la vista */
-use App\Models\cnvista_reportes_trazabilidad_pcls_tres;
-use App\Models\sigmel_informacion_reporte_trazabilidad_pcls;
+use App\Models\cnvista_reportes_trazabilidad_pcls;
 /* Importando todo lo necesario de php spread sheet para el excel */
 use PhpOffice\PhpSpreadsheet\SpreadSheet;
 use PhpOffice\PhpSpreadsheet\IOFactory as IOFactoryExcel;
@@ -74,7 +73,7 @@ class ReporteTrazabilidadPclController extends Controller
         }
         else if (!empty($fecha_desde) && !empty($fecha_hasta)){            
 
-            $reporte_trazabilidad_pcl = sigmel_informacion_reporte_trazabilidad_pcls::on('sigmel_gestiones')
+            $reporte_trazabilidad_pcl = cnvista_reportes_trazabilidad_pcls::on('sigmel_gestiones')
             ->select(
                 'Servicio',
                 'Tipo_documentos',

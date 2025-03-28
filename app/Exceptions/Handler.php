@@ -53,7 +53,7 @@ class Handler extends ExceptionHandler
     {
         
         if ($request->wantsJson()) {
-            return response()->json($this->getMensaje(100), 401);
+            return response()->json($this->getMensaje("general",100), 401);
         }
     
         return redirect()->guest(route('login'));

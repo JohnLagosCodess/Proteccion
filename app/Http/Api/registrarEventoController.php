@@ -61,7 +61,7 @@ class registrarEventoController extends Controller
             ],
             'm_notificacion_empresa' => [
                 "validar" => ["nullable", 'string', "in:1,2"],
-                "remplazar" => "1:Correo electrónico,2:Email"
+                "remplazar" => "1:Correo electrónico,2:Físico"
             ]
         ],
         "Afiliado" => [
@@ -73,8 +73,8 @@ class registrarEventoController extends Controller
                 "validar" => ["required", 'string', 'max:25']
             ],
             'tipo_documento' => [
-                "validar" => ["required", 'string', 'max:25', 'in:CC,TI,CE,PSP,PEPFF,PTP,NUIP,NIT'],
-                 "remplazar" => "CC:1,TI:2,CE:3,PSP:4,PEPFF:5,PTP:6,NUIP:7,NIT:8"
+                "validar" => ["required", 'string', 'max:25', 'in:CC,TI,CE,PSP,PEPFF,PT,NUIP,NIT'],
+                 "remplazar" => "CC:1,TI:2,CE:3,PSP:4,PEPFF:5,PT:6,NUIP:7,NIT:8"
             ],
             'nombre_afiliado' => [
                 "validar" => ["required", 'string', 'max:100']
@@ -210,11 +210,10 @@ class registrarEventoController extends Controller
             ],
             'fuente_informacion' => [
                 "validar" => ['required', 'string', "in:1,2,3,4,5,6,7,8"],
-                "remplazar" => "1:40,2:41,3:309,4:368,5:369,6:370,7:371,8:42"
+                "remplazar" => "1:40,2:41,3:309,4:328,5:329,6:330,7:331,8:42"
             ],
         ]
     ];
-
 
     /** @var Request contiene la solicitud http entrante */
     private $request;
@@ -240,6 +239,9 @@ class registrarEventoController extends Controller
     /** @var String  Acccion por defecto, sobre la cual se registrara el evento. Dicha acccion debe estar asignada para servicio dentro de la parametrica*/
     private $accion_ejecutar = "CREAR SERVICIO";
 
+    /** @var Object{\Datetime} Contiene un Datatime con la fecha actual */
+    private $fecha_actual;
+
     /**
      * Realiza las configuraciones iniciales para la api
      * @param Request $request Peticion http
@@ -247,6 +249,7 @@ class registrarEventoController extends Controller
     public function __construct(Request $request)
     {
         $this->request = $request;
+        $this->fecha_actual = new \DateTime();
 
         $this->uuid =  $request->header('x-request-id');
 
@@ -257,8 +260,19 @@ class registrarEventoController extends Controller
 
         //Callback obtiene las entidades disponibles en funcion del tipo de entidad (eps,afp,arl)
         $this->tools["entidades_disponibles"] = function ($tipo_entidad) {
-            $resultado = sigmel_informacion_entidades::on('sigmel_gestiones')->select('Nit_entidad','Nit_simple')->where('IdTipo_entidad', $tipo_entidad)->pluck('Nit_entidad','Nit_simple')->toArray();
-            return array_unique($resultado);
+            $resultado = sigmel_informacion_entidades::on('sigmel_gestiones')->select('Nit_entidad','Nit_simple')->where([
+                ['IdTipo_entidad', $tipo_entidad],
+                ['Estado_entidad','activo']
+            ])->get();
+
+            $nit_entidades = $resultado->pluck('Nit_entidad')->toArray();
+            $nit_simples = $resultado->pluck('Nit_simple')->toArray();
+
+            $response = array_merge($nit_entidades,$nit_simples);
+            Log::channel('log_api')->info("Listado entidades ",[
+                "resultado" => $response 
+            ]);
+            return $response;  
         };
 
         //Callback obtiene la informacion de una entidad de acuerdo al nit de este
@@ -283,7 +297,7 @@ class registrarEventoController extends Controller
                 return response()->json($this->msg_validacion);
             }
             
-            $response = Cache::lock("runtime_radicacion_Ws")->block(10,function(){
+            $response = Cache::lock("runtime_radicacion_Ws")->block(15,function(){
                 return $this->procesar_solicitud();
             });
 
@@ -298,7 +312,7 @@ class registrarEventoController extends Controller
             ]);
             $this->ejecutar_auditoria("Errado");
 
-            return response()->json($this->getMensaje(000));
+            return response()->json($this->getMensaje("general",000));
         }
     }
 
@@ -330,7 +344,7 @@ class registrarEventoController extends Controller
         $this->registrar_evento()->registrar_afiliado()->registrar_info_laboral()
         ->registrar_info_pericial()->asignar_evento()->finalizar_registro();
 
-        return $this->getMensaje(102,[
+        return $this->getMensaje("general",102,[
             "numero_evento" => $this->n_evento
         ]);
 
@@ -348,7 +362,7 @@ class registrarEventoController extends Controller
         if(!empty($this->request->{$campo}) && is_null($municipio_existe)){
             Log::channel('log_api')->error("Ciudad no encontrada " . $this->request->{$campo} );
             $this->estado_ejecucion = "Fallo";
-            $this->msg_validacion = $this->getMensaje(101, [
+            $this->msg_validacion = $this->getMensaje("general",101, [
                 "campos_faltantes" => "La ciudad <{$this->request->$campo}> registrada para el campo $campo no fue encontrada"
             ]);
         }
@@ -375,7 +389,7 @@ class registrarEventoController extends Controller
         ];
 
         sigmel_informacion_eventos::on('sigmel_gestiones')->insert($datos_info_evento);
-
+        $this->debug($datos_info_evento);
         return $this;
     
     }
@@ -392,12 +406,16 @@ class registrarEventoController extends Controller
         $id_afp =  $this->tools["info_entidad"]($this->request->nit_afp);
         $id_arl =  $this->tools["info_entidad"]($this->request->nit_arl);
 
+        //Calcula la edad del afiliado con base a la fecha actual
+        $edad = $this->fecha_actual->diff(new \DateTime($this->request->fecha_nacimiento))->y;
+
         $datos_info_afiliado_evento = [
             'ID_evento' => $this->n_evento,
             'Nombre_afiliado' => $this->request->nombre_afiliado,
             'Tipo_documento' => $this->request->tipo_documento,
             'Nro_identificacion' => $this->request->n_identificacion,
             'F_nacimiento' => $this->request->fecha_nacimiento,
+            'Edad' => $edad,
             'Email' => $this->request->email_afiliado,
             'Telefono_contacto' =>  $this->request->telefono_celular,
             'Apoderado'=> $this->request->apoderado ?? 'No',
@@ -431,6 +449,7 @@ class registrarEventoController extends Controller
         ];
 
         sigmel_informacion_afiliado_eventos::on('sigmel_gestiones')->insert($datos_info_afiliado_evento);
+        $this->debug($datos_info_afiliado_evento);
         return $this;
     }
 
@@ -459,6 +478,7 @@ class registrarEventoController extends Controller
         ];
 
         sigmel_informacion_laboral_eventos::on('sigmel_gestiones')->insert($datos_info_laboral_evento);
+        $this->debug($datos_info_laboral_evento);
         return $this;
     }
 
@@ -483,7 +503,7 @@ class registrarEventoController extends Controller
 
         $datos_info_pericial_evento = [
             'ID_evento' => $this->n_evento,
-            'Id_motivo_solicitud' => $this->request->motivo_solicitud,
+            'Id_motivo_solicitud' => $this->request->motivo_solitud ?? 1,
             'Tipo_vinculacion' => $this->request->tipo_vinculacion,
             'Regimen_salud' => $this->request->regimen_salud,
             'Id_solicitante' => $this->request->solicitante,
@@ -495,6 +515,7 @@ class registrarEventoController extends Controller
         ];
 
         sigmel_informacion_pericial_eventos::on('sigmel_gestiones')->insert($datos_info_pericial_evento);
+        $this->debug($datos_info_pericial_evento);
         return $this;
     }
 
@@ -580,6 +601,7 @@ class registrarEventoController extends Controller
 
         // Inserción de datos en la tabla sigmel_informacion_asignacion_eventos
         $Id_Asignacion = sigmel_informacion_asignacion_eventos::on('sigmel_gestiones')->insertGetId($datos_info_asignacion_evento);
+        $this->debug($datos_info_asignacion_evento);
 
         //Si el servicio es una DTO insertamos el CIE-10 que debe tener por defecto
         if($this->request->servicio == 1 && $this->request->proceso == 1){
@@ -596,7 +618,7 @@ class registrarEventoController extends Controller
                 'Nombre_usuario' => Auth::user()->name,
                 'F_registro' => date('y-m-d')
             ];
-            
+            $this->debug($diagnostico_default_dto);
             sigmel_informacion_diagnosticos_eventos::on('sigmel_gestiones')->insert($diagnostico_default_dto);
         }
 
@@ -609,6 +631,7 @@ class registrarEventoController extends Controller
             'Descripcion' => "Evento creado de manera automatica",
         ];
 
+        $this->debug($datos_historial_acciones);
         sigmel_historial_acciones_eventos::on('sigmel_gestiones')->insert($datos_historial_acciones);
 
         // Insertar informacion en la tabla sigmel_informacion_historial_accion_eventos
@@ -624,7 +647,7 @@ class registrarEventoController extends Controller
             'Nombre_usuario' => Auth::user()->name,
             'F_accion' => date('y-m-d')
         ];
-
+        $this->debug($datos_historial_accion_eventos);
         sigmel_informacion_historial_accion_eventos::on('sigmel_gestiones')->insert($datos_historial_accion_eventos);
 
         return $this;
@@ -740,13 +763,13 @@ class registrarEventoController extends Controller
         $validacion = Validator::make($this->request->all(), $this->ejecutar_validaciones);
         if ($validacion->fails()) {
             $this->estado_ejecucion = "Fallo";
-            $this->msg_validacion = $this->getMensaje(101, [
+            $this->msg_validacion = $this->getMensaje("general",101, [
                 "campos_faltantes" => $validacion->errors()
             ]);
 
         }else if(is_null($this->uuid)){
             $this->estado_ejecucion = "Fallo";
-            $this->msg_validacion = $this->getMensaje(103);
+            $this->msg_validacion = $this->getMensaje("general",103);
         } else {
             foreach ($this->validaciones as $secciones => $campos) {
                 foreach ($campos as $campo => $atributos) {
@@ -782,7 +805,7 @@ class registrarEventoController extends Controller
         
         if (isset($target[$this->request->proceso]) && !in_array($this->request->servicio, $target[$this->request->proceso])) {
             $this->estado_ejecucion = "Fallo";
-            $this->msg_validacion = $this->getMensaje(101, [
+            $this->msg_validacion = $this->getMensaje("general",101, [
                 "campos_faltantes" => "El servicio seleccionado no corresponde al proceso {$this->request->proceso} seleccionado. Por favor verifique."
             ]);
         }
@@ -815,15 +838,17 @@ class registrarEventoController extends Controller
      * Funcion basica para imprimir valores en caso de debug
      * @return Void
      */
-    private function debug($debug):void{
-        Log::channel('log_api')->debug("TEST: ",["test" => $debug]);
-
-        if(is_array($debug)){
-            echo "<pre>";
-            print_r($debug);
-            echo "</pre>";
+    private function debug($debug,$log = true):void{
+        if($log){
+            Log::channel('log_api')->debug("TEST: ",["test" => $debug]);
         }else{
-            echo "$debug \n";
+            if(is_array($debug)){
+                echo "<pre>";
+                print_r($debug);
+                echo "</pre>";
+            }else{
+                echo "$debug \n";
+            }
         }
     }
 }

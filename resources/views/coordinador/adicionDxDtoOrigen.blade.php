@@ -1381,7 +1381,7 @@
                                                     @else
                                                         <input class="custom-control-input" type="checkbox" id="afp_conocimiento" name="afp_conocimiento" value="AFP_Conocimiento">                                                    
                                                     @endif
-                                                    <label for="afp_conocimiento" class="custom-control-label">AFP Conocimiento</label>
+                                                    <label for="afp_conocimiento" class="custom-control-label">Entidad conocimiento</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -1667,7 +1667,7 @@
                                                         data-id_proceso="{{$comunicados->Id_proceso}}" data-anexos="{{$comunicados->Anexos}}" data-correspondencia="{{$comunicados->Correspondencia}}" 
                                                         data-tipo_descarga="{{$comunicados->Tipo_descarga}}" data-nombre_afiliado="{{$comunicados->Nombre_afiliado}}" data-numero_identificacion="{{$comunicados->N_identificacion}}"
                                                         style="<?php echo subrayado('afp_conocimiento', $destinatario, $array_copias, $array_correspondencia,$comunicados->Tipo_descarga); ?>"
-                                                        data-ids_destinatario="{{$comunicados->Id_Destinatarios}}">AFP Conocimiento</a>
+                                                        data-ids_destinatario="{{$comunicados->Id_Destinatarios}}">Entidad conocimiento</a>
                                                     </td>
                                                 @endif
                                                 <td><select class="custom-select" id="status_notificacion_{{$comunicados->N_radicado}}" style="width:100%;" data-deshabilitar={{$deshabilitarSelector ?? '1'}}  data-default={{$comunicados->Estado_Notificacion}}></select></td>

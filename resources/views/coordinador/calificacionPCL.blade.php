@@ -1058,7 +1058,7 @@
                                                 <div class="form-group">
                                                     <div class="custom-control custom-checkbox">
                                                             <input class="custom-control-input" type="checkbox" id="copia_conocimiento" name="copia_conocimiento" value="AFP_Conocimiento">                                                    
-                                                            <label for="copia_conocimiento" class="custom-control-label">AFP Conocimiento</label>
+                                                            <label for="copia_conocimiento" class="custom-control-label">Entidad conocimiento</label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1479,7 +1479,7 @@
                                                     @else
                                                         <input class="custom-control-input" type="checkbox" id="edit_copia_conocimiento" name="edit_copia_conocimiento" value="AFP_Conocimiento">                                                    
                                                     @endif
-                                                    <label for="edit_copia_conocimiento" class="custom-control-label">AFP Conocimiento</label>
+                                                    <label for="edit_copia_conocimiento" class="custom-control-label">Entidad conocimiento</label>
                                                 </div>
                                             </div>
                                         </div>

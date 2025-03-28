@@ -214,16 +214,21 @@ class AccionesController extends Controller
         }
     }
     /**
-     * Obtiene la ultima accion ejecutada para el evento indicado
+     * Obtiene la ultima accion ejecutada para el evento o servicio indicado
      * @param string $id_evento
+     * @param int|null $id_servicio 
      */
-    public static function getUltimaAccion(string $id_evento){
+    public static function getUltimaAccion(string $id_evento, $id_servicio = null){
         $ultima_accion = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_historial_accion_eventos as sihae')
         ->leftJoin('sigmel_gestiones.sigmel_informacion_acciones as sia', 'sia.Id_Accion', '=', 'sihae.Id_accion')
         ->select('sihae.ID_evento', 'sihae.Id_proceso', 'sihae.Id_servicio', 'sihae.Id_accion', 'sihae.Id_Asignacion','sia.Accion')
-        ->where('sihae.ID_evento', $id_evento)->orderBy('sihae.F_accion', 'desc')->first();
+        ->where('sihae.ID_evento', $id_evento);
         
-        return $ultima_accion;
+        if($id_servicio != null){
+            $ultima_accion->where("Id_servicio",$id_servicio);
+        }
+
+        return $ultima_accion->orderBy('sihae.F_accion', 'desc')->first();
     }
 
 }

@@ -2536,11 +2536,11 @@ $(document).ready(function(){
                     $("#newIdservicio").prop('disabled', false);
                 });
                 // Quitar el disabled al formulario oculto para permitirme ir al submodulo
-                $("#llevar_servicio").hover(function(){
-                    $("input[name='_token']").prop('disabled', false);
-                    $("#Id_evento_pcl").prop('disabled', false);
-                    $("#Id_asignacion_pcl").prop('disabled', false);
-                });
+                // $("#llevar_servicio").hover(function(){
+                //     $("input[name='_token']").prop('disabled', false);
+                //     $("#Id_evento_pcl").prop('disabled', false);
+                //     $("#Id_asignacion_pcl").prop('disabled', false);
+                // });
                 // Deshabilitar el botón Actualizar y Activar el botón Pdf en los comunicados
                 $("#Pdf").prop('disabled', false);
             }

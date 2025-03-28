@@ -2586,6 +2586,7 @@ $(document).ready(function(){
     
     //Captura Formulario Comite Interdisciplinario
     $('#form_comite_interdisciplinario').submit(function (e){
+        $('#GuardarComiteInter').prop('disabled', true);
         e.preventDefault();              
        
         var Id_Evento_dto_atel = $('#Id_Evento_dto_atel').val();
