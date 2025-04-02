@@ -452,7 +452,7 @@ class BandejaNotifiController extends Controller
      * @param Array datosEvento
      * @return string
      */
-    private function ejecutar_accion(int $accion,string $f_accion, string $descripcion = null, string $f_alerta = null, Array $datosEvento){
+    private function ejecutar_accion(int $accion,string $f_accion, $descripcion = null, $f_alerta = null, Array $datosEvento){
 
         $nombre_usuario = Auth::user()->name;
         $estado_ejecucion = [];
@@ -466,7 +466,10 @@ class BandejaNotifiController extends Controller
                 $servicio = $values["servicio"];
                 $id_evento = $values["id_evento"];
                 $info_accion = self::ingresar_notificacion($id_cliente->Cliente,$servicio,$proceso,$accion);
-
+                $f_alerta = new \DateTime($f_alerta);
+                $f_alerta = $f_alerta->format('Y-m-d H:i:s');
+                $f_accion = new \DateTime($f_accion);
+                $f_accion = $f_accion->format('Y-m-d H:i:s');
                 if(is_null($info_accion)){
                     return;
                 }
@@ -508,12 +511,18 @@ class BandejaNotifiController extends Controller
                 ->insert($data_historial_accion);
 
                 //Tabla de acciones modulo principal
-                sigmel_informacion_accion_eventos::on('sigmel_gestiones')->where('Id_Asignacion', $id)->update([
-                    "F_accion" => $accion,
+                sigmel_informacion_accion_eventos::on('sigmel_gestiones')->where('Id_Asignacion', $id)->updateOrCreate([
+                    'Id_Asignacion' => $id,
+                    'ID_evento' => $values["id_evento"],
+                    'Id_proceso' => $values["proceso"],
+                    "F_accion" => $f_accion,
                     "Accion" => $accion,
                     "F_Alerta" => $f_alerta,
-                    "Enviar" => empty($info_accion->enviarA) ? 0 : 4
+                    "Enviar" => empty($info_accion->enviarA) ? 0 : 4,
+                    "Nombre_usuario" => Auth::user()->name,
+                    "F_registro" => date("Y-m-d") 
                 ]);
+                
 
                 //Datos necesarios para la alertas y movimientos automaticos, debe mantener el siguiente orden.
                 $data = Array($f_accion,$accion,$id_cliente->Cliente,$proceso,$servicio,$id_evento,$id);
