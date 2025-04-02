@@ -17,7 +17,7 @@ use App\Models\sigmel_informacion_alertas_automaticas_eventos;
 use App\Models\sigmel_informacion_correspondencia_eventos;
 use App\Models\sigmel_informacion_historial_accion_eventos;
 use App\Models\sigmel_informacion_eventos;
-
+use App\Models\sigmel_informacion_accion_eventos;
 use App\Models\sigmel_informacion_parametrizaciones_clientes;
 use App\Models\sigmel_informacion_acciones;
 use Illuminate\Support\Facades\Validator;
@@ -506,6 +506,14 @@ class BandejaNotifiController extends Controller
                 sigmel_informacion_historial_accion_eventos::on('sigmel_gestiones')
                 ->where('Id_Asignacion', $id)
                 ->insert($data_historial_accion);
+
+                //Tabla de acciones modulo principal
+                sigmel_informacion_accion_eventos::on('sigmel_gestiones')->where('Id_Asignacion', $id)->update([
+                    "F_accion" => $accion,
+                    "Accion" => $accion,
+                    "F_Alerta" => $f_alerta,
+                    "Enviar" => empty($info_accion->enviarA) ? 0 : 4
+                ]);
 
                 //Datos necesarios para la alertas y movimientos automaticos, debe mantener el siguiente orden.
                 $data = Array($f_accion,$accion,$id_cliente->Cliente,$proceso,$servicio,$id_evento,$id);
