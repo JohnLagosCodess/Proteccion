@@ -70,7 +70,7 @@ class PronunciamientoPCLController extends Controller
         ,'pr.Id_tipo_pronunciamiento','p.Nombre_parametro as Tpronuncia','pr.Id_tipo_evento','ti.Nombre_evento','pr.Id_tipo_origen','or.Nombre_parametro as T_origen'
         ,'pr.Fecha_evento','pr.Dictamen_calificador','pr.N_siniestro','pr.Fecha_calificador','pr.Fecha_estruturacion','pr.Porcentaje_pcl','pr.Rango_pcl'
         ,'pr.Decision','pr.Fecha_pronuncia','pr.Asunto_cali','pr.Sustenta_cali','pr.Destinatario_principal','pr.Tipo_entidad','pr.Nombre_entidad','pr.Copia_afiliado','pr.copia_empleador','pr.Copia_eps'
-        ,'pr.Copia_afp','pr.Copia_arl','pr.Copia_junta_regional','pr.Copia_junta_nacional','pr.Junta_regional_cual','j.Ciudad_Junta'
+        ,'pr.Copia_afp','pr.Copia_arl','pr.Copia_Afp_Conocimiento','pr.Copia_junta_regional','pr.Copia_junta_nacional','pr.Junta_regional_cual','j.Ciudad_Junta'
         ,'pr.N_anexos','pr.Elaboro_pronuncia','pr.Reviso_Pronuncia','pr.Ciudad_correspon','pr.N_radicado','pr.Firmar','pr.Fecha_correspondencia'
         ,'pr.Archivo_pronuncia')
         ->leftJoin('sigmel_gestiones.sigmel_lista_entidades as c', 'c.Id_Entidad', '=', 'pr.Id_primer_calificador')
@@ -167,10 +167,16 @@ class PronunciamientoPCLController extends Controller
         ->get();
 
         $Id_servicio = 9;
+        $Id_Asignacion = $Id_asignacion_calitec;
         $arraylistado_documentos = DB::select('CALL psrvistadocumentos(?,?,?)',array($Id_evento_calitec,$Id_servicio,$Id_asignacion_calitec));
 
+        $entidades_conocimiento = $this->globalService->getAFPConocimientosParaCorrespondencia($Id_evento_calitec,$Id_asignacion_calitec);
+
+        /* Traer datos de la AFP de Conocimiento */
+        $info_afp_conocimiento = $this->globalService->retornarcuentaConAfpConocimiento($Id_evento_calitec);
+
         return view('coordinador.pronunciamientoPCL', compact('user','array_datos_pronunciamientoPcl','info_pronuncia','array_datos_diagnostico_motcalifi','consecutivo', 
-        'array_comunicados','caso_notificado','N_siniestro_evento', 'datos_forma_envio', 'array_comite_interdisciplinario', 'Id_servicio', 'arraylistado_documentos'));
+        'array_comunicados','caso_notificado','N_siniestro_evento', 'datos_forma_envio', 'array_comite_interdisciplinario', 'Id_servicio', 'arraylistado_documentos', 'Id_Asignacion', 'entidades_conocimiento', 'info_afp_conocimiento'));
     
     }
     //Ver Documento Pronuncia
@@ -538,6 +544,16 @@ class PronunciamientoPCLController extends Controller
         } else {         
             $copia_arl = $request->copia_arl;
         }
+        if (empty($request->copia_afp_conocimiento)) {
+            $copia_afp_conocimiento = null;                        
+            $copy_afp_conocimiento = null;
+        } else {      
+            // traemos la informacion de las copias dependiendo de cuantas entidades de conocimiento hay
+            $copy_afp_conocimiento = 'AFP_Conocimiento';
+            $str_entidades = $this->globalService->retornarStringCopiasEntidadConocimiento($Id_EventoPronuncia);
+            $copia_afp_conocimiento = $str_entidades;
+
+        }
         if ($request->junta_regional == 'undefined') {
             $junta_regional = null;                        
         } else {         
@@ -555,7 +571,7 @@ class PronunciamientoPCLController extends Controller
         }
 
         // Agrupa las variables en un array
-        $variables = array($copia_afiliado, $copia_empleador, $copia_eps, $copia_afp, $copia_arl, $junta_regional, $junta_nacional);
+        $variables = array($copia_afiliado, $copia_empleador, $copia_eps, $copia_afp, $copia_arl, $copia_afp_conocimiento, $junta_regional, $junta_nacional);
 
         // Filtra los elementos nulos del array
         $variables_filtradas = array_filter($variables, function($valor) {
@@ -661,6 +677,7 @@ class PronunciamientoPCLController extends Controller
                 'Copia_eps' => $copia_eps,
                 'Copia_afp' => $copia_afp,
                 'Copia_arl' => $copia_arl,
+                'Copia_Afp_Conocimiento' => $copy_afp_conocimiento,
                 'Copia_junta_regional' => $junta_regional,
                 'Copia_junta_nacional' => $junta_nacional,
                 'Junta_regional_cual' => $cual,
@@ -847,6 +864,7 @@ class PronunciamientoPCLController extends Controller
                 'Copia_eps' => $copia_eps,
                 'Copia_afp' => $copia_afp,
                 'Copia_arl' => $copia_arl,
+                'Copia_Afp_Conocimiento' => $copy_afp_conocimiento,
                 'Copia_junta_regional' => $junta_regional,
                 'Copia_junta_nacional' => $junta_nacional,
                 'Junta_regional_cual' => $cual,
@@ -1319,6 +1337,7 @@ class PronunciamientoPCLController extends Controller
         $final_copia_eps = isset($request->copia_eps) ? 'EPS' : '';
         $final_copia_afp = isset($request->copia_afp) ? 'AFP' : '';
         $final_copia_arl = isset($request->copia_arl) ? 'ARL' : '';
+        $final_copia_afp_conocimiento = isset($request->copia_afp_conocimiento) ? 'AFP_Conocimiento' : '';
 
         $total_copias = array_filter(array(
             'copia_afiliado' => $final_copia_afiliado,
@@ -1326,6 +1345,7 @@ class PronunciamientoPCLController extends Controller
             'copia_eps' => $final_copia_eps,
             'copia_afp' => $final_copia_afp,
             'copia_arl' => $final_copia_arl,
+            'copia_afp_conocimiento' => $final_copia_afp_conocimiento
         )); 
 
         
@@ -1467,7 +1487,17 @@ class PronunciamientoPCLController extends Controller
             $minucipio_arl = $datos_arl[0]->Nombre_municipio;
 
             $Agregar_copias['ARL'] = $nombre_arl."; ".$direccion_arl."; ".$email_arl."; ".$telefonos_arl."; ".$ciudad_arl."; ".$minucipio_arl;
-        }        
+        }
+        
+        if (isset($copia_afp_conocimiento)) {
+            if($desicion_proforma == "proforma_acuerdo"){
+                $datos_entidades_conocimiento = $this->globalService->informacionEntidadesConocimientoEvento($Id_Evento_pronuncia_corre, 'pdf');
+            }else{
+                $datos_entidades_conocimiento = $this->globalService->informacionEntidadesConocimientoEvento($Id_Evento_pronuncia_corre, 'pdf');
+            }
+            $Agregar_copias['AFP_Conocimiento'] = $datos_entidades_conocimiento;
+        }
+
         // validamos la firma esta marcado para la Captura de la firma del cliente           
         if ($Firma_corre == 'firmar') {            
             $idcliente = sigmel_clientes::on('sigmel_gestiones')->select('Id_cliente', 'Nombre_cliente')

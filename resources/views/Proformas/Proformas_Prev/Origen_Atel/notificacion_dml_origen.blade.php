@@ -394,16 +394,6 @@
                         }
                     ?>
                     <?php 
-                        if (isset($Agregar_copia[$AFP_Conocimiento])) { ?>
-                            <tr>
-                                <td class="copias">
-                                    <span class="negrita">AFP Conocimiento: </span><?=$Agregar_copia['AFP_Conocimiento'];?>
-                                </td>
-                            </tr>
-                        <?php       
-                        }
-                    ?>
-                    <?php 
                         if (isset($Agregar_copia[$ARL])) { ?>
                             <tr>
                                 <td class="copias">
@@ -413,6 +403,12 @@
                         <?php       
                         }
                     ?>
+                    <?php 
+                    if (isset($Agregar_copia[$AFP_Conocimiento])) { ?>
+                        <?=$Agregar_copia['AFP_Conocimiento'];?>
+                    <?php       
+                    }
+                ?>
                 @endif
             </table>
         </section>

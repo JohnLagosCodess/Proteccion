@@ -5,10 +5,12 @@ use App\Models\sigmel_consecutivos_destinatarios;
 use App\Models\sigmel_informacion_asignacion_eventos;
 use App\Models\sigmel_informacion_comite_interdisciplinario_eventos;
 use App\Models\sigmel_informacion_comunicado_eventos;
+use App\Models\sigmel_informacion_correspondencia_eventos;
 use App\Models\sigmel_informacion_documentos_solicitados_eventos;
 use App\Models\sigmel_informacion_eventos;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class GlobalService
 {
@@ -89,7 +91,7 @@ class GlobalService
         ,'pr.Id_tipo_pronunciamiento','p.Nombre_parametro as Tpronuncia','pr.Id_tipo_evento','ti.Nombre_evento','pr.Id_tipo_origen','or.Nombre_parametro as T_origen'
         ,'pr.Fecha_evento','pr.Dictamen_calificador','pr.Fecha_calificador','pr.N_siniestro','pr.Fecha_estruturacion','pr.Porcentaje_pcl','pr.Rango_pcl'
         ,'pr.Decision','pr.Fecha_pronuncia','pr.Asunto_cali','pr.Sustenta_cali','pr.Destinatario_principal','pr.Tipo_entidad','pr.Nombre_entidad as Nombre_entidad_correspon',
-        'pr.Copia_afiliado','pr.copia_empleador','pr.Copia_eps','pr.Copia_afp','pr.Copia_arl','pr.Copia_junta_regional','pr.Copia_junta_nacional','pr.Junta_regional_cual',
+        'pr.Copia_afiliado','pr.copia_empleador','pr.Copia_eps','pr.Copia_afp','pr.Copia_arl','pr.Copia_Afp_Conocimiento','pr.Copia_junta_regional','pr.Copia_junta_nacional','pr.Junta_regional_cual',
         'sie.Nombre_entidad as Ciudad_Junta','pr.N_anexos','pr.Elaboro_pronuncia','pr.Reviso_Pronuncia','pr.Ciudad_correspon','pr.N_radicado','pr.Firmar','pr.Fecha_correspondencia'
         ,'pr.Archivo_pronuncia')
         ->leftJoin('sigmel_gestiones.sigmel_lista_entidades as c', 'c.Id_Entidad', '=', 'pr.Id_primer_calificador')
@@ -138,7 +140,8 @@ class GlobalService
     public function retornarcuentaConAfpConocimiento($id_evento){
         $resultado = DB::table(getDatabaseName('sigmel_gestiones') .'sigmel_informacion_afiliado_eventos as siae')
         ->leftJoin('sigmel_gestiones.sigmel_informacion_entidades as sie', 'siae.Id_afp_entidad_conocimiento', '=', 'sie.Id_Entidad')
-        ->select('siae.Entidad_conocimiento')
+        ->select('siae.Entidad_conocimiento', 'siae.Id_afp_entidad_conocimiento', 'siae.Id_afp_entidad_conocimiento2','siae.Id_afp_entidad_conocimiento3','siae.Id_afp_entidad_conocimiento4',
+        'siae.Id_afp_entidad_conocimiento5','siae.Id_afp_entidad_conocimiento6','siae.Id_afp_entidad_conocimiento7','siae.Id_afp_entidad_conocimiento8')
         ->where([['siae.ID_evento', $id_evento]])
         ->get();
         if ($resultado->isEmpty()) {
@@ -174,14 +177,21 @@ class GlobalService
     */
     public function asignacionConsecutivoIdDestinatario($is_jrci = false, $is_jnci = false){
         $id_destinatarios = [];
-        //Se establecen los prefijos que va a llevar cada uno de los posibles destinatarios
+        //Se establecen los prefijos que va a llevar cada uno de los posibles destinatarios, En la PBS092 solicitaron agregar 8 Entidades de conocimiento se realizo de forma estatica
         $prefijos = [
             'AFI_',
             'EMP_',
             'EPS_',
             'AFP_',
             'ARL_',
-            'FPC_'
+            'FPC_',
+            'FPC2_',
+            'FPC3_',
+            'FPC4_',
+            'FPC5_',
+            'FPC6_',
+            'FPC7_',
+            'FPC8_'
         ];
         //Si JRCI es visible en los posibles destinatarios se agrega a la lista (solo debe ser visible en modulo de Juntas)
         if($is_jrci){
@@ -660,5 +670,335 @@ class GlobalService
             ['Id_Asignacion',$id_asignacion]
          ])
         ->get();
+    }
+    /* Función para retornar la info de las entidades de conocimiento dependiendo del tipo de proforma */
+    public function informacionEntidadesConocimientoEvento ($id_evento, $tipo_proforma){
+
+        // Obtenemos la o las entidades de conocimiento del evento
+        $entidades_conocimiento = DB::table(getDatabaseName('sigmel_gestiones') .'sigmel_informacion_afiliado_eventos as siae')
+        ->select('siae.Id_afp_entidad_conocimiento', 'siae.Id_afp_entidad_conocimiento2','siae.Id_afp_entidad_conocimiento3','siae.Id_afp_entidad_conocimiento4','siae.Id_afp_entidad_conocimiento5','siae.Id_afp_entidad_conocimiento6','siae.Id_afp_entidad_conocimiento7','siae.Id_afp_entidad_conocimiento8')
+        ->where([['siae.ID_evento', $id_evento]])
+        ->first();
+
+        if ($entidades_conocimiento) {
+            $entidades = [
+                $entidades_conocimiento->Id_afp_entidad_conocimiento,
+                $entidades_conocimiento->Id_afp_entidad_conocimiento2,
+                $entidades_conocimiento->Id_afp_entidad_conocimiento3,
+                $entidades_conocimiento->Id_afp_entidad_conocimiento4,
+                $entidades_conocimiento->Id_afp_entidad_conocimiento5,
+                $entidades_conocimiento->Id_afp_entidad_conocimiento6,
+                $entidades_conocimiento->Id_afp_entidad_conocimiento7,
+                $entidades_conocimiento->Id_afp_entidad_conocimiento8
+            ];
+
+            $entidades = array_filter($entidades, function ($value) {
+                return $value !== null && $value !== '' && $value !== 0;
+            });
+
+            // Convertimos en string separado por comas
+            $string_entidades = implode(',', $entidades);
+
+            // Convertimos en array para el WHERE IN
+            $array_string_entidades = explode(',', $string_entidades);
+        } else {
+            $string_entidades = '';
+            $array_string_entidades = [];
+        }
+        
+        // dd($array_string_entidades);
+        $datos_entidades_conocimiento = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_entidades as sie')
+        ->leftJoin('sigmel_gestiones.sigmel_lista_entidades as sle', 'sie.IdTipo_entidad', '=', 'sle.Id_Entidad')
+        // ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm', 'sie.Id_Departamento', '=', 'sldm.Id_departamento')
+        // ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm2', 'sie.Id_Ciudad', '=', 'sldm2.Id_municipios')
+        ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm', function ($join) {
+            $join->on('sie.Id_departamento', '=', 'sldm.Id_departamento')
+                ->on('sie.Id_Ciudad', '=', 'sldm.Id_municipios');
+        })
+        ->select(
+            'sie.Id_Entidad',
+            'sle.Tipo_Entidad',
+            'sie.Nombre_entidad',
+            'sie.Direccion',
+            'sie.Emails as Email',
+            'sie.Telefonos',
+            'sldm.Nombre_municipio as Ciudad',
+            'sldm.Nombre_departamento as Departamento'
+        )
+        ->whereIn('sie.Id_Entidad', $array_string_entidades)
+        ->orderByRaw("FIELD(sie.Id_Entidad, " . implode(',', $array_string_entidades) . ")")
+        ->get();
+
+        $array_datos_entidades_conocimiento = json_decode(json_encode($datos_entidades_conocimiento, true));
+
+        // echo "<pre>";
+        // print_r($array_datos_entidades_conocimiento);
+        // echo "</pre>";
+
+        $string_entidades = '';
+        for ($i=0; $i < count($array_datos_entidades_conocimiento); $i++) {
+            $tipo_entidad = $array_datos_entidades_conocimiento[$i]->Tipo_Entidad;
+            $nombre_entidad = $array_datos_entidades_conocimiento[$i]->Nombre_entidad;
+            $direccion_entidad = $array_datos_entidades_conocimiento[$i]->Direccion;
+            $email_entidad = $array_datos_entidades_conocimiento[$i]->Email;
+            $telefono_entidad = $array_datos_entidades_conocimiento[$i]->Telefonos;
+            $ciudad_entidad = $array_datos_entidades_conocimiento[$i]->Ciudad;
+            $departamento_entidad = $array_datos_entidades_conocimiento[$i]->Departamento;
+            
+            if ($tipo_proforma == 'pdf') {
+                $string_entidades .= "<tr><td class='copias'><span class='negrita'>{$tipo_entidad}: </span>{$nombre_entidad} - {$direccion_entidad}; {$email_entidad}; {$telefono_entidad}; {$ciudad_entidad}; {$departamento_entidad}</td></tr>";
+            }elseif ($tipo_proforma == 'word') {
+                $string_entidades .= "<tr><td style='border: 1px solid #000; padding: 5px; text-align: justify; font-family: Verdana; font-size: 8pt; font-style: italic;'><span style='font-weight:bold;'>{$tipo_entidad}: </span>{$nombre_entidad} - {$direccion_entidad}; {$email_entidad}; {$telefono_entidad}; {$ciudad_entidad}; {$departamento_entidad}</td></tr>";
+            }else if($tipo_proforma == 'otra_forma'){
+                $string_entidades .= "<tr class='fuente_todo_texto'><td colspan='8'><span class='negrita'>{$tipo_entidad}: </span>{$nombre_entidad} - {$direccion_entidad}; {$email_entidad}; {$telefono_entidad}; {$ciudad_entidad}; {$departamento_entidad}</td></tr>";
+            }
+        }
+        return $string_entidades;
+    }
+
+    //Retorna el string de copias de entidad de conocimiento
+    public function retornarStringCopiasEntidadConocimiento($id_evento){
+        $entidades_conocimiento = $this->retornarcuentaConAfpConocimiento($id_evento);
+        if($entidades_conocimiento[0]->Entidad_conocimiento == 'Si'){
+            $entidades_concatenadas[] = 'AFP_Conocimiento';   
+            // El 8 es la cantidad de entidades conocimiento que puede tener, PBS092 se valido y se decidio dejar de forma estatica 
+            for ($i=1; $i < 8; $i++) { 
+                $AFP_Conocimiento = 'AFP_Conocimiento' . ($i + 1);
+                $entidades_concatenadas[] = $AFP_Conocimiento;                
+            }
+            return $entidades_concatenadas = implode(', ', $entidades_concatenadas);
+        }else{
+            return null;
+        }
+    }
+
+    /**
+        * Valida que el oficio exista y si existe retona las copias del mismo
+        * 
+        * @param string $id_evento Necesario para identificar el evento al cual se le necesita hacer el ajuste.
+        *
+        * @param string $id_asignacion Necesario para identificar la asignación dada en el evento.
+        *
+        * @param string $id_proceso Necesario para conocer el proceso del servicio
+        *
+    */
+    public function ValidarExistenciaOficioYCopiasOficio($id_evento,$id_asignacion,$id_proceso){
+        $oficio = sigmel_informacion_comunicado_eventos::on('sigmel_gestiones')
+        ->where([
+            ['ID_evento',$id_evento],
+            ['Id_Asignacion',$id_asignacion],
+            ['Id_proceso',$id_proceso],
+        ])
+        ->whereIn('Tipo_descarga',['Oficio','Comunicado'])->first();
+        if(!$oficio){
+            return null;
+        }
+        return $oficio->Agregar_copia ?? null;
+    }
+    /**
+        * Query para agregar o quitar la copia de entidad conocimiento al dictamen PBS092.
+        * 
+        * @param string $id_evento Necesario para identificar el evento al cual se le necesita hacer el ajuste.
+        *
+        * @param string $id_asignacion Necesario para identificar la asignación dada en el evento.
+        *
+        * @param string $id_proceso Necesario para conocer el proceso del servicio
+        *
+    */
+    public function AgregaroQuitarCopiaEntidadConocimientoDictamen($id_evento,$id_asignacion,$id_proceso,$copias_oficio){
+        $copias_entidad_conocimiento = $this->retornarStringCopiasEntidadConocimiento($id_evento);
+        //Copias actuales del dictamen
+        $dictamen = sigmel_informacion_comunicado_eventos::on('sigmel_gestiones')
+        ->where([
+            ['ID_evento',$id_evento],
+            ['Id_Asignacion',$id_asignacion],
+            ['Id_proceso',$id_proceso],
+            ['Tipo_descarga','Dictamen'],
+        ])->get();
+
+        if($dictamen){
+            //Copias del dictamen
+            $copias_dictamen = $dictamen[0]->Agregar_copia;
+            if($copias_dictamen){
+                // Expresión regular para eliminar "AFP_Conocimiento" con o sin número
+                $cadena_limpia = preg_replace('/,?\s*AFP_Conocimiento\d*/', '', $copias_dictamen);
+                // Eliminar espacios en blanco innecesarios y posibles comas dobles
+                $copias_dictamen = trim(preg_replace('/,\s*,/', ',', $cadena_limpia), ', ');
+            }
+            if(str_contains($copias_oficio, "AFP_Conocimiento")){
+                if($copias_dictamen){
+                    $copias_dictamen .= ', '.$copias_entidad_conocimiento;
+                }else{
+                    $copias_dictamen = $copias_entidad_conocimiento;
+                }
+            }
+            $actualización_dictamen = sigmel_informacion_comunicado_eventos::on('sigmel_gestiones')
+            ->where([
+                ['ID_evento',$id_evento],
+                ['Id_Asignacion',$id_asignacion],
+                ['Id_proceso',$id_proceso],
+                ['Tipo_descarga','Dictamen'],
+            ])->update(['Agregar_copia' => $copias_dictamen]);
+            return $actualización_dictamen;
+        }
+    }
+    public function getAFPConocimientosParaCorrespondencia($id_evento, $id_asignacion){
+        $entidades_conocimiento = $this->retornarcuentaConAfpConocimiento($id_evento);
+        if($entidades_conocimiento && $entidades_conocimiento[0]->Entidad_conocimiento == 'Si'){
+            $lista_entidades_conocimiento = [];
+            for($i = 1; $i <= 8; $i++){
+                $campo = ($i == 1) ? 'Id_afp_entidad_conocimiento' : 'Id_afp_entidad_conocimiento' . $i;
+                $tipo_correspondencia = ($i == 1) ? 'afp_conocimiento' : 'afp_conocimiento' . $i;
+                if (!empty($entidades_conocimiento[0]->$campo) && $entidades_conocimiento[0]->$campo != 0) {
+                    $entidades = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_entidades as sie')
+                        ->leftJoin('sigmel_gestiones.sigmel_lista_entidades as sle', 'sie.IdTipo_entidad', '=', 'sle.Id_Entidad')
+                        ->select('sie.Id_Entidad','sle.Tipo_Entidad','sie.Nombre_entidad')
+                        ->where('sie.Id_Entidad', '=',$entidades_conocimiento[0]->$campo)
+                        ->get();
+                    if($entidades->isEmpty()){
+                        $entidades = null;
+                    }
+                    array_push($lista_entidades_conocimiento,['Entidad'=>$entidades,'tipo_correspondencia'=>$tipo_correspondencia]);
+                }
+            }
+            return $lista_entidades_conocimiento;
+        }
+        return null;
+    } 
+
+    // Función para actualizar la columna Agregar_copia de la tabla de comunicados acorde a las entidades de conocimiento (botón ojo descarga)
+    public function actualizarCopiasEntidadesComunicado($id_evento, $id_comunicado, $id_asignacion, $id_proceso){
+
+        // traemos el string de la cantidad de entidades de conocimientos presentes del evento
+        $entidades_conocimiento_evento = $this->retornarStringCopiasEntidadConocimiento($id_evento);
+        
+        // transformamos la cadena en array
+        $array_entidades_conocimiento_evento = explode(",", $entidades_conocimiento_evento);
+        
+        // consultamos el string de copias de la tabla sigmel_informacion_comunicado_eventos dependiendo del id de comunicado
+        $copias_actuales_comunicado = sigmel_informacion_comunicado_eventos::on('sigmel_gestiones')
+        ->select('Agregar_copia')
+        ->where([['Id_Comunicado', $id_comunicado]])->get();
+
+        $copias_actuales_comunicado_final = json_decode(json_encode($copias_actuales_comunicado,true));
+        
+        // transformamos la cadena en array
+        $array_copias_actuales_comunicado = explode(",", $copias_actuales_comunicado_final[0]->Agregar_copia);
+        
+       if (!empty($copias_actuales_comunicado_final[0]->Agregar_copia) && !empty($entidades_conocimiento_evento)) {
+        // Eliminamos las entidades de conocimiento que tiene actualmente el comunicado
+        $nuevo_array_entidades_comunicado = array_filter($array_copias_actuales_comunicado, function ($valor) {
+            return strpos(trim($valor), "AFP_Conocimiento") !== 0;
+        });
+
+        $nuevo_array_entidades_comunicado = array_values($nuevo_array_entidades_comunicado);
+
+        // Insertamos al nuevo array las entidades existentes del evento. y lo convertimos en un string separado por comas
+        $array_entidades_actualizadas = array_merge($nuevo_array_entidades_comunicado, $array_entidades_conocimiento_evento);
+        $array_entidades_actualizadas = array_map('trim', $array_entidades_actualizadas);
+        $string_entidades_actualizadas = implode(", ", $array_entidades_actualizadas);
+
+       }elseif (!empty($copias_actuales_comunicado_final[0]->Agregar_copia) && empty($entidades_conocimiento_evento)) {
+
+        // Eliminamos las entidades de conocimiento que tiene actualmente el comunicado
+        $nuevo_array_entidades_comunicado = array_filter($array_copias_actuales_comunicado, function ($valor) {
+            return strpos(trim($valor), "AFP_Conocimiento") !== 0;
+        });
+
+        $nuevo_array_entidades_comunicado = array_values($nuevo_array_entidades_comunicado);
+        $array_entidades_actualizadas = $nuevo_array_entidades_comunicado;
+        $array_entidades_actualizadas = array_map('trim', $array_entidades_actualizadas);
+        $string_entidades_actualizadas = implode(", ", $array_entidades_actualizadas);
+
+       }
+    
+        // Actualizamos la columna Agregar_copia de la tabla sigmel_informacion_comunicado_eventos dependiendo del comunicado
+        $datos_actualizar = [
+            'Agregar_copia' => $string_entidades_actualizadas
+        ];
+
+        sigmel_informacion_comunicado_eventos::on('sigmel_gestiones')
+        ->where([['Id_Comunicado', $id_comunicado]])
+        ->update($datos_actualizar);
+
+        $this->AgregaroQuitarCopiaEntidadConocimientoDictamen($id_evento, $id_asignacion,$id_proceso,$copias_actuales_comunicado_final[0]->Agregar_copia);
+        
+    }
+
+    public function validarEntidadesConocimientoGuardadas($id_evento){
+        $entidades_conocimiento = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_afiliado_eventos as siae')
+        ->select(
+            'siae.Entidad_conocimiento',
+            'siae.Id_afp_entidad_conocimiento',
+            'siae.Id_afp_entidad_conocimiento2',
+            'siae.Id_afp_entidad_conocimiento3',
+            'siae.Id_afp_entidad_conocimiento4',
+            'siae.Id_afp_entidad_conocimiento5',
+            'siae.Id_afp_entidad_conocimiento6',
+            'siae.Id_afp_entidad_conocimiento7',
+            'siae.Id_afp_entidad_conocimiento8'
+        )
+        ->where('siae.ID_evento', $id_evento)
+        ->get();
+        if($entidades_conocimiento->isEmpty()){
+            return null;
+        }
+        if($entidades_conocimiento[0]->Entidad_conocimiento == 'No'){
+            return null;
+        }
+        return $entidades_conocimiento;
+    }
+    public function eliminarCorrespondenciaIdModificado($nuevo_id_entidad,$id_entidad_conocimiento, $id_evento, $tipo_correspondencia){
+        try {
+            //Buscamos todos los comunicados del evento y si la columna correspondencia contiene 
+            // el tipo de correspondencia que buscamos se elimina de la cadena
+            Log::info('Tipo_correspondencia',['TC : ',$tipo_correspondencia]);
+            $correspondencia_comunicados = sigmel_informacion_comunicado_eventos::on('sigmel_gestiones')
+                ->where([['ID_evento',$id_evento]])
+                ->get();
+            if(count($correspondencia_comunicados) > 0){
+                foreach($correspondencia_comunicados as $i => $corresp){
+                    if($corresp->Correspondencia){
+                        Log::info('Comunicado: ', ['Id_comunicado',$corresp->Id_Comunicado,'Antigua correspondencia ',$corresp->Correspondencia]);
+                        $array_correspondencia = explode(', ',$corresp->Correspondencia);
+                        // Buscar y eliminar el elemento específico
+                        $filter_correspondencia = array_filter($array_correspondencia, function ($item) use ($tipo_correspondencia) {
+                            return trim($item) !== trim($tipo_correspondencia);
+                        });
+                        // Convertir de nuevo el array a cadena
+                        $nueva_correspondencia = implode(", ", $filter_correspondencia);
+                        Log::info('Nueva Correspondencia: ', ['Nueva correspondencia ',$nueva_correspondencia]);
+                        // Actualizar en la base de datos
+                        sigmel_informacion_comunicado_eventos::on('sigmel_gestiones')
+                        ->where('Id_Comunicado','=',$corresp->Id_Comunicado)
+                        ->update(['Correspondencia' => $nueva_correspondencia]);
+                    }
+                }
+            }
+            //Buscamos todas las correspondencias que esten guardadas para dicha entidad conocimiento
+            $correspondencia = sigmel_informacion_correspondencia_eventos::on('sigmel_gestiones')
+                ->where([['ID_evento',$id_evento],['Id_entidad_conocimiento',$id_entidad_conocimiento]])
+                ->get();
+
+            if($correspondencia->isEmpty()){
+                return null;
+            }
+            Log::info('Evento '.$id_evento.' Se eliminaran las correspondencias de esta entidad '.$id_entidad_conocimiento." El cual fue reemplazado por este id : ".$nuevo_id_entidad);
+            if(count($correspondencia) > 0){
+                foreach($correspondencia as $index => $element){
+                    Log::info('Correspondencias a eliminar: ',['element',$element]);
+                    $eliminación = sigmel_informacion_correspondencia_eventos::on('sigmel_gestiones')
+                        ->where('Id_Correspondencia','=',$element->Id_Correspondencia)
+                        ->delete();
+                    if($eliminación == 1){
+                        Log::info('Correspondencia eliminada correctamente');
+                    }          
+                }
+            }
+        }
+        catch (\Throwable $th) {
+            Log::error('Error al eliminar correspondencias: ' . $th->getMessage(), ['exception' => $th]);
+            return false;
+        }
     }
 }

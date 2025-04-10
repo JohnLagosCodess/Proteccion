@@ -1093,7 +1093,7 @@
                                     </div>
                                 </div>
                                 <div class="table-responsive">
-                                    <table id="listado_agregar_comunicados" class="table table-striped table-bordered" style="width: 100%;  white-space: nowrap;">
+                                    <table id="listado_comunicados_juntas" class="table table-striped table-bordered" style="width: 100%;  white-space: nowrap;">
                                         <thead>
                                             <tr class="bg-info">
                                                 <th>N° Radicado</th>
@@ -1575,6 +1575,17 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <input type="hidden" name="entidad_conocimiento" id="entidad_conocimiento" value="<?php if(!empty($info_afp_conocimiento[0]->Entidad_conocimiento)){echo $info_afp_conocimiento[0]->Entidad_conocimiento;}?>">
+                                        @if (!empty($info_afp_conocimiento[0]->Entidad_conocimiento) && $info_afp_conocimiento[0]->Entidad_conocimiento == "Si")
+                                            <div class="col-3">
+                                                <div class="form-group">
+                                                    <div class="custom-control custom-checkbox">
+                                                            <input class="custom-control-input" type="checkbox" id="copia_afp_conocimiento" name="copia_afp_conocimiento" value="AFP_Conocimiento">                                                    
+                                                            <label for="copia_afp_conocimiento" class="custom-control-label">Entidad conocimiento</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
                                         <div class="col-4">
                                             <div class="form-group">
                                                 <div class="custom-control custom-checkbox">
@@ -2082,6 +2093,17 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <input type="hidden" name="entidad_conocimiento" id="entidad_conocimiento" value="<?php if(!empty($info_afp_conocimiento[0]->Entidad_conocimiento)){echo $info_afp_conocimiento[0]->Entidad_conocimiento;}?>">
+                                        @if (!empty($info_afp_conocimiento[0]->Entidad_conocimiento) && $info_afp_conocimiento[0]->Entidad_conocimiento == "Si")
+                                            <div class="col-3">
+                                                <div class="form-group">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input class="custom-control-input" type="checkbox" id="edit_copia_afp_conocimiento" name="edit_copia_afp_conocimiento" value="AFP_Conocimiento">                                                    
+                                                        <label for="edit_copia_afp_conocimiento" class="custom-control-label">Entidad conocimiento</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
                                         <div class="col-4">
                                             <div class="form-group">
                                                 <div class="custom-control custom-checkbox">
@@ -2170,7 +2192,7 @@
                                                 </button>
                                             </div>
                                         </div>
-                                        <div class="text-center d-none" id="mostrar_barra_creacion_comunicado">                                
+                                        <div class="text-center d-none" id="ed_mostrar_barra_creacion_comunicado">                                
                                             <button class="btn btn-info" type="button" disabled>
                                                 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                                                 Guardando Comunicado por favor espere...
@@ -2266,8 +2288,9 @@
 @section('js')
     <script type="text/javascript" src="/js/calificacionJuntas.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/resumablejs@1.1.0/resumable.min.js"></script>
-    <script type="text/javascript" src="/js/funciones_helpers.js?v=1.0.0"></script>
+    <script type="text/javascript" src="/js/funciones_helpers.js"></script>
     <script>
+        let entidades_conocimiento = @json($entidades_conocimiento);
         //funcion para habilitar el historial de acciones
         function historialDeAcciones() {
             var div = document.getElementById("historialAcciones");

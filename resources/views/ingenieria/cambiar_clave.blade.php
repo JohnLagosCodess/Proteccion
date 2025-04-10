@@ -63,7 +63,7 @@
     @include('modals.alertaCambioClave')
 @stop
 @section('js')
-    <script src="/js/funciones_helpers.js?v=1.0.0"></script>
+    <script src="/js/funciones_helpers.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {
             

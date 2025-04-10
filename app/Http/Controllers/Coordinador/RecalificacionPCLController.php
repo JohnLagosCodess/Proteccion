@@ -227,6 +227,8 @@ class RecalificacionPCLController extends Controller
         ->where([['siae.ID_evento', $Id_evento_recali]])
         ->get();
 
+        $entidades_conocimiento = $this->globalService->getAFPConocimientosParaCorrespondencia($Id_evento_recali,$Id_asignacion_recali);
+
         // Condicional IF para Recalificacion sobre Recalificacion y Else para Recalifacion sobre Calificacion tecnica
 
         if ($eventoAsigancionMin_Recalifi != $Id_asignacion_recali && !empty($eventoAsigancionMin_Recalifi)) {             
@@ -965,6 +967,7 @@ class RecalificacionPCLController extends Controller
                 $Modalidad_calificacion = $this->globalService->retornarModalidadCalificacionPCL($Id_evento_recali,$Id_asignacion_recali);
 
                 $Id_servicio = $Id_servicioRecalifi;
+                $Id_Asignacion = $Id_asignacion_recali;
                 $arraylistado_documentos = DB::select('CALL psrvistadocumentos(?,?,?)',array($Id_evento_recali,$Id_servicio,$Id_asignacion_recali));
                 
                 
@@ -975,7 +978,7 @@ class RecalificacionPCLController extends Controller
                 'array_datos_deficiencias_alteracionesre', 'array_agudeza_Auditiva', 'array_agudeza_Auditivare', 'hay_agudeza_visual', 'hay_agudeza_visualre', 'array_laboralmente_Activo', 
                 'array_laboralmente_Activore', 'array_rol_ocupacional', 'array_rol_ocupacionalre', 'array_libros_2_3', 'array_libros_2_3re', 'deficiencias', 'TotalDeficiencia50', 'array_tipo_fecha_evento',
                 'array_comite_interdisciplinariore', 'consecutivore', 'array_dictamen_pericial', 'array_dictamen_pericialre', 'array_comunicados_correspondenciare', 'array_comunicados_comite_interre', 
-                'info_afp_conocimiento','N_siniestro_evento', 'edad_afiliado','Modalidad_calificacion', 'Destinatario_principal_correspo', 'Id_servicio', 'arraylistado_documentos'));
+                'info_afp_conocimiento','N_siniestro_evento', 'edad_afiliado','Modalidad_calificacion', 'Destinatario_principal_correspo', 'Id_servicio', 'arraylistado_documentos', 'Id_Asignacion','entidades_conocimiento'));
                 
             }                        
         } 
@@ -1579,13 +1582,15 @@ class RecalificacionPCLController extends Controller
                 $Modalidad_calificacion = $this->globalService->retornarModalidadCalificacionPCL($Id_evento_recali,$Id_asignacion_recali);
                 
                 $Id_servicio = $Id_servicioRecalifi;
+                $Id_Asignacion = $Id_asignacion_recali;
                 $arraylistado_documentos = DB::select('CALL psrvistadocumentos(?,?,?)',array($Id_evento_recali,$Id_servicio,$Id_asignacion_recali));
                 
                 return view('coordinador.recalificacionPCL', compact('user','array_datos_RecalificacionPcl', 'validar_estado_decreto', 'datos_decretore', 'validar_evento_CalifiTecnica', 
                 'array_info_decreto_evento_re', 'array_datos_relacion_documentos', 'motivo_solicitud_actual', 'datos_apoderado_actual', 'array_datos_examenes_interconsultasre', 
                 'array_datos_diagnostico_motcalifire', 'array_datos_deficiencias_alteracionesre', 'array_agudeza_Auditivare', 'hay_agudeza_visualre', 'array_laboralmente_Activore', 
                 'array_rol_ocupacionalre', 'array_libros_2_3re', 'deficiencias', 'TotalDeficiencia50', 'array_tipo_fecha_evento', 'array_comite_interdisciplinariore', 'consecutivore', 
-                'array_dictamen_pericialre', 'array_comunicados_correspondenciare', 'array_comunicados_comite_interre', 'info_afp_conocimiento','N_siniestro_evento', 'edad_afiliado','Modalidad_calificacion', 'Destinatario_principal_correspo', 'Id_servicio', 'arraylistado_documentos'));
+                'array_dictamen_pericialre', 'array_comunicados_correspondenciare', 'array_comunicados_comite_interre', 'info_afp_conocimiento','N_siniestro_evento', 'edad_afiliado','Modalidad_calificacion',
+                'Destinatario_principal_correspo', 'Id_servicio', 'arraylistado_documentos', 'Id_Asignacion','entidades_conocimiento'));
             }            
             elseif (!empty($validar_evento_CalifiTecnica[0]->Id_servicio)) { 
                 
@@ -2407,6 +2412,7 @@ class RecalificacionPCLController extends Controller
                 $Modalidad_calificacion = $this->globalService->retornarModalidadCalificacionPCL($Id_evento_recali,$Id_asignacion_recali);
 
                 $Id_servicio = $Id_servicioRecalifi;
+                $Id_Asignacion = $Id_asignacion_recali;
                 $arraylistado_documentos = DB::select('CALL psrvistadocumentos(?,?,?)',array($Id_evento_recali,$Id_servicio,$Id_asignacion_recali));
 
                 return view('coordinador.recalificacionPCL', compact('user','array_datos_RecalificacionPcl', 'validar_estado_decreto', 'datos_decreto', 'datos_decretore', 
@@ -2415,7 +2421,8 @@ class RecalificacionPCLController extends Controller
                 'array_datos_diagnostico_motcalifire', 'array_datos_deficiencias_alteraciones', 'array_datos_deficiencias_alteracionesre', 'array_agudeza_Auditiva', 
                 'array_agudeza_Auditivare', 'hay_agudeza_visual', 'hay_agudeza_visualre', 'array_laboralmente_Activo', 'array_laboralmente_Activore', 'array_rol_ocupacional', 
                 'array_rol_ocupacionalre', 'array_libros_2_3', 'array_libros_2_3re', 'deficiencias', 'TotalDeficiencia50', 'array_tipo_fecha_evento', 'array_comite_interdisciplinariore', 'consecutivore', 
-                'array_dictamen_pericial', 'array_dictamen_pericialre', 'array_comunicados_correspondenciare', 'array_comunicados_comite_interre', 'info_afp_conocimiento','N_siniestro_evento', 'edad_afiliado', 'Modalidad_calificacion', 'Destinatario_principal_correspo', 'Id_servicio', 'arraylistado_documentos'));
+                'array_dictamen_pericial', 'array_dictamen_pericialre', 'array_comunicados_correspondenciare', 'array_comunicados_comite_interre', 'info_afp_conocimiento',
+                'N_siniestro_evento', 'edad_afiliado', 'Modalidad_calificacion', 'Destinatario_principal_correspo', 'Id_servicio', 'arraylistado_documentos', 'Id_Asignacion','entidades_conocimiento'));
                 
             }
         }
@@ -5247,12 +5254,14 @@ class RecalificacionPCLController extends Controller
         }
         if (!empty($afp)) {
             $variables_llenas[] = $afp;
-        }
-        if (!empty($afp_conocimiento)) {
-            $variables_llenas[] = $afp_conocimiento;
-        }
+        }        
         if (!empty($arl)) {
             $variables_llenas[] = $arl;
+        }
+        if (!empty($afp_conocimiento)) {
+            // traemos la informacion de las copias dependiendo de cuantas entidades de conocimiento hay
+            $str_entidades = $this->globalService->retornarStringCopiasEntidadConocimiento($Id_EventoDecreto);           
+            $variables_llenas[] = $str_entidades;
         }
         if (!empty($jrci)) {
             $variables_llenas[] = $jrci;
@@ -5418,9 +5427,6 @@ class RecalificacionPCLController extends Controller
                 "Id_Comunicado" => $Id_Comunicado,
                 "Bandera_boton_guardar_oficio" => 'boton_oficio'
             );
-    
-            return json_decode(json_encode($mensajes, true));
-            
         } 
         elseif($bandera_correspondecia_guardar_actualizar == 'Actualizar') {
             $datos_correspondencia = [
@@ -5532,10 +5538,18 @@ class RecalificacionPCLController extends Controller
                 "Id_Comunicado" => $Id_Comunicado,
                 "Bandera_boton_guardar_oficio" => 'boton_oficio'
             );
-    
-            return json_decode(json_encode($mensajes, true));
         }
-        
+        //Se actualizan las copias de entidad conocimiento del dictamen, PBS092 pero solo para cuando eligen formato E
+        if($id_servicio === 8){
+            if($formatoe == 'Si'){
+                $this->globalService->AgregaroQuitarCopiaEntidadConocimientoDictamen($Id_EventoDecreto,$Id_Asignacion_Dcreto,$Id_ProcesoDecreto,$agregar_copias_comu);
+            }
+        }else if($id_servicio === 7){
+            if($oficiopcl == 'Si' || $oficioinca == 'Si'){
+                $this->globalService->AgregaroQuitarCopiaEntidadConocimientoDictamen($Id_EventoDecreto,$Id_Asignacion_Dcreto,$Id_ProcesoDecreto,$agregar_copias_comu);
+            }
+        }
+        return json_decode(json_encode($mensajes, true));        
 
     }
 
@@ -5616,12 +5630,7 @@ class RecalificacionPCLController extends Controller
         $info_afp_conocimiento = $this->globalService->retornarcuentaConAfpConocimiento($Id_EventoDecreto);
         $agregar_copias_dml = '';
         if($id_servicio === 7){
-            if(!empty($info_afp_conocimiento[0]->Entidad_conocimiento) && $info_afp_conocimiento[0]->Entidad_conocimiento == "Si"){
-                $agregar_copias_dml = "EPS, ARL, AFP_Conocimiento";
-            }
-            else{
-                $agregar_copias_dml = "EPS, ARL";
-            }
+            $agregar_copias_dml = "EPS, ARL";
         }
         $Destinatario = 'Afiliado';
 
@@ -5913,6 +5922,11 @@ class RecalificacionPCLController extends Controller
                     ])
             ->get();
             $Id_Comunicado = $capturar_Id_Comunicado[0]->Id_Comunicado;
+
+            $actualizaOficios = $this->globalService->ValidarExistenciaOficioYCopiasOficio($Id_EventoDecreto, $Id_Asignacion_Dcreto,$Id_ProcesoDecreto);
+            if($actualizaOficios){
+                $this->globalService->AgregaroQuitarCopiaEntidadConocimientoDictamen($Id_EventoDecreto,$Id_Asignacion_Dcreto,$Id_ProcesoDecreto,$actualizaOficios);
+            }
             
             $mensajes = array(
                 "parametro" => 'insertar_dictamen_pericial',
@@ -7261,7 +7275,7 @@ class RecalificacionPCLController extends Controller
             $Email_afp = '';
             $Ciudad_departamento_afp = '';
         }
-
+        $Agregar_copias = [];
         if (!empty($Copia_afp_conocimiento_correspondencia) && $Copia_afp_conocimiento_correspondencia == "AFP_Conocimiento") {
             $dato_id_afp_conocimiento = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_afiliado_eventos as siae')
             ->select('siae.Entidad_conocimiento','siae.Id_afp_entidad_conocimiento')
@@ -7272,34 +7286,14 @@ class RecalificacionPCLController extends Controller
             $id_afp_conocimiento = $dato_id_afp_conocimiento[0]->Id_afp_entidad_conocimiento;
 
             if ($si_entidad_conocimiento == "Si") {
-                $datos_afp_conocimiento = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_entidades as sie')
-                ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm', 'sie.Id_Departamento', '=', 'sldm.Id_departamento')
-                ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm2', 'sie.Id_Ciudad', '=', 'sldm2.Id_municipios')
-                ->select('sie.Nombre_entidad', 'sie.Direccion', 'sie.Telefonos', 'sie.Otros_Telefonos','sie.Emails as Email', 'sldm.Nombre_departamento', 'sldm2.Nombre_municipio as Nombre_ciudad')
-                ->where([['sie.Id_Entidad', $id_afp_conocimiento]])
-                ->get();
-    
-                $Nombre_afp_conocimiento = $datos_afp_conocimiento[0]->Nombre_entidad;
-                $Direccion_afp_conocimiento = $datos_afp_conocimiento[0]->Direccion;
-                $Telefonos_afp_conocimiento = $datos_afp_conocimiento[0]->Telefonos;
-                $Email_afp_conocimiento = $datos_afp_conocimiento[0]->Email;
-                $Ciudad_departamento_afp_conocimiento = $datos_afp_conocimiento[0]->Nombre_ciudad.'-'.$datos_afp_conocimiento[0]->Nombre_departamento;
+                $datos_entidades_conocimiento = $this->globalService->informacionEntidadesConocimientoEvento($ID_Evento_comuni_comite, 'pdf');
+                $Agregar_copias['AFP_Conocimiento'] = $datos_entidades_conocimiento;
             } else {
                 $Copia_afp_conocimiento_correspondencia = '';
-
-                $Nombre_afp_conocimiento = '';
-                $Direccion_afp_conocimiento = '';
-                $Telefonos_afp_conocimiento = '';
-                $Email_afp_conocimiento = '';
-                $Ciudad_departamento_afp_conocimiento = '';
             }
 
         } else {
-            $Nombre_afp_conocimiento = '';
-            $Direccion_afp_conocimiento = '';
-            $Telefonos_afp_conocimiento = '';
-            $Email_afp_conocimiento = '';
-            $Ciudad_departamento_afp_conocimiento = '';
+            $Copia_afp_conocimiento_correspondencia = '';
         }
 
         if(!empty($Copia_arl_correspondecia) && $Copia_arl_correspondecia == 'ARL'){
@@ -7682,11 +7676,7 @@ class RecalificacionPCLController extends Controller
                 'Direccion_afp' => $Direccion_afp,
                 'Telefono_afp' => $Telefono_afp,
                 'Ciudad_departamento_afp' => $Ciudad_departamento_afp,
-                'Nombre_afp_conocimiento' => $Nombre_afp_conocimiento,
-                'Direccion_afp_conocimiento' => $Direccion_afp_conocimiento,
-                'Telefonos_afp_conocimiento' => $Telefonos_afp_conocimiento,
-                'Ciudad_departamento_afp_conocimiento' => $Ciudad_departamento_afp_conocimiento,
-                'Email_afp_conocimiento' => $Email_afp_conocimiento,
+                'Agregar_copia' => $Agregar_copias,
                 'Nombre_arl' => $Nombre_arl,
                 'Direccion_arl' => $Direccion_arl,
                 'Telefono_arl' => $Telefono_arl,
@@ -7780,10 +7770,7 @@ class RecalificacionPCLController extends Controller
                 'Direccion_afp' => $Direccion_afp,
                 'Telefono_afp' => $Telefono_afp,
                 'Ciudad_departamento_afp' => $Ciudad_departamento_afp,
-                'Nombre_afp_conocimiento' => $Nombre_afp_conocimiento,
-                'Direccion_afp_conocimiento' => $Direccion_afp_conocimiento,
-                'Telefonos_afp_conocimiento' => $Telefonos_afp_conocimiento,
-                'Ciudad_departamento_afp_conocimiento' => $Ciudad_departamento_afp_conocimiento,
+                'Agregar_copia' => $Agregar_copias,
                 'Nombre_arl' => $Nombre_arl,
                 'Direccion_arl' => $Direccion_arl,
                 'Telefono_arl' => $Telefono_arl,
@@ -7792,7 +7779,6 @@ class RecalificacionPCLController extends Controller
                 'N_siniestro' => $N_siniestro,
                 'Email_eps' => $Email_eps,
                 'Email_afp' => $Email_afp,
-                'Email_afp_conocimiento' => $Email_afp_conocimiento,
                 'Email_arl' => $Email_arl,
                 // 'footer_dato_1' => $footer_dato_1,
                 // 'footer_dato_2' => $footer_dato_2,
@@ -7960,6 +7946,7 @@ class RecalificacionPCLController extends Controller
                 'Direccion_afp' => $Direccion_afp,
                 'Telefono_afp' => $Telefono_afp,
                 'Ciudad_departamento_afp' => $Ciudad_departamento_afp,
+                'Agregar_copia' => $Agregar_copias,
                 'Nombre_arl' => $Nombre_arl,
                 'Direccion_arl' => $Direccion_arl,
                 'Telefono_arl' => $Telefono_arl,
@@ -7968,7 +7955,6 @@ class RecalificacionPCLController extends Controller
                 'N_siniestro' => $N_siniestro,
                 'Email_eps' => $Email_eps,
                 'Email_afp' => $Email_afp,
-                'Email_afp_conocimiento' => $Email_afp_conocimiento,
                 'Email_arl' => $Email_arl,
                 'Nombre_footer' => $Nombre_footer,
                 'Tipo_documento_footer' => $Tipo_documento_footer,
@@ -8162,11 +8148,7 @@ class RecalificacionPCLController extends Controller
                 'Ciudad_departamento_arl' => $Ciudad_departamento_arl,
                 'footer' => $footer,
                 'N_siniestro' => $N_siniestro,
-                'Nombre_afp_conocimiento' => $Nombre_afp_conocimiento,
-                'Direccion_afp_conocimiento' => $Direccion_afp_conocimiento,
-                'Telefonos_afp_conocimiento' => $Telefonos_afp_conocimiento,
-                'Ciudad_departamento_afp_conocimiento' => $Ciudad_departamento_afp_conocimiento,
-                'Email_afp_conocimiento' => $Email_afp_conocimiento,
+                'Agregar_copia' => $Agregar_copias,
                 'Email_eps' => $Email_eps,
                 'Email_afp' => $Email_afp,
                 'Email_arl' => $Email_arl,
@@ -8277,11 +8259,7 @@ class RecalificacionPCLController extends Controller
                 'Ciudad_departamento_arl' => $Ciudad_departamento_arl,
                 'footer' => $footer,
                 'N_siniestro' => $N_siniestro,
-                'Nombre_afp_conocimiento' => $Nombre_afp_conocimiento,
-                'Direccion_afp_conocimiento' => $Direccion_afp_conocimiento,
-                'Telefonos_afp_conocimiento' => $Telefonos_afp_conocimiento,
-                'Ciudad_departamento_afp_conocimiento' => $Ciudad_departamento_afp_conocimiento,
-                'Email_afp_conocimiento' => $Email_afp_conocimiento,
+                'Agregar_copia' => $Agregar_copias,
                 'Email_eps' => $Email_eps,
                 'Email_afp' => $Email_afp,
                 'Email_arl' => $Email_arl,
@@ -8396,11 +8374,7 @@ class RecalificacionPCLController extends Controller
                 'Ciudad_departamento_arl' => $Ciudad_departamento_arl,
                 'footer' => $footer,
                 'N_siniestro' => $N_siniestro,
-                'Nombre_afp_conocimiento' => $Nombre_afp_conocimiento,
-                'Direccion_afp_conocimiento' => $Direccion_afp_conocimiento,
-                'Telefonos_afp_conocimiento' => $Telefonos_afp_conocimiento,
-                'Ciudad_departamento_afp_conocimiento' => $Ciudad_departamento_afp_conocimiento,
-                'Email_afp_conocimiento' => $Email_afp_conocimiento,
+                'Agregar_copia' => $Agregar_copias,
                 'Email_eps' => $Email_eps,
                 'Email_afp' => $Email_afp,
                 'Email_arl' => $Email_arl,

@@ -575,7 +575,7 @@
                                     </div>
                                 </div>
                                 <div class="table-responsive">
-                                    <table id="listado_agregar_comunicados" class="table table-striped table-bordered" style="width: 100%;  white-space: nowrap;">
+                                    <table id="listado_comunicados_pcl" class="table table-striped table-bordered" style="width: 100%;  white-space: nowrap;">
                                         <thead>
                                             <tr class="bg-info">
                                                 <th>N° Radicado</th>
@@ -1053,12 +1053,13 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <input type="hidden" name="entidad_conocimiento" id="entidad_conocimiento" value="<?php if(!empty($info_afp_conocimiento[0]->Entidad_conocimiento)){echo $info_afp_conocimiento[0]->Entidad_conocimiento;}?>">
                                         @if (!empty($info_afp_conocimiento[0]->Entidad_conocimiento) && $info_afp_conocimiento[0]->Entidad_conocimiento == "Si")
-                                            <div class="col-2">
+                                            <div class="col-3">
                                                 <div class="form-group">
                                                     <div class="custom-control custom-checkbox">
-                                                            <input class="custom-control-input" type="checkbox" id="copia_conocimiento" name="copia_conocimiento" value="AFP_Conocimiento">                                                    
-                                                            <label for="copia_conocimiento" class="custom-control-label">Entidad conocimiento</label>
+                                                        <input class="custom-control-input" type="checkbox" id="copia_afp_conocimiento" name="copia_afp_conocimiento" value="AFP_Conocimiento">                                                    
+                                                        <label for="copia_afp_conocimiento" class="custom-control-label">Entidad conocimiento</label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1470,20 +1471,17 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <input type="hidden" name="entidad_conocimiento" id="entidad_conocimiento" value="<?php if(!empty($info_afp_conocimiento[0]->Entidad_conocimiento)){echo $info_afp_conocimiento[0]->Entidad_conocimiento;}?>">
                                         @if (!empty($info_afp_conocimiento[0]->Entidad_conocimiento) && $info_afp_conocimiento[0]->Entidad_conocimiento == "Si")
-                                        <div class="col-3">
-                                            <div class="form-group">
-                                                <div class="custom-control custom-checkbox">
-                                                    @if (!empty($array_comite_interdisciplinario[0]->copia_conocimiento))
-                                                        <input class="custom-control-input" type="checkbox" id="edit_copia_conocimiento" name="edit_copia_conocimiento" value="AFP_Conocimiento" checked>
-                                                    @else
-                                                        <input class="custom-control-input" type="checkbox" id="edit_copia_conocimiento" name="edit_copia_conocimiento" value="AFP_Conocimiento">                                                    
-                                                    @endif
-                                                    <label for="edit_copia_conocimiento" class="custom-control-label">Entidad conocimiento</label>
+                                            <div class="col-3">
+                                                <div class="form-group">
+                                                    <div class="custom-control custom-checkbox">
+                                                            <input class="custom-control-input" type="checkbox" id="edit_copia_afp_conocimiento" name="edit_copia_afp_conocimiento" value="AFP_Conocimiento">                                                    
+                                                            <label for="edit_copia_afp_conocimiento" class="custom-control-label">Entidad conocimiento</label>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    @endif
+                                        @endif
                                     </div>
                                     <div class="alert alert-warning mensaje_confirmacion_cargar_evento" role="alert">
                                         <i class="fas fa-info-circle"></i> <strong>Importante:</strong> Recuerde Actualizar siempre después de haber modificado uno o más campos, El botón Actualizar se bloquea cuando falte algún campo obligatorio por llenar, y el del PDF se habilitará después de realizar la actualización.
@@ -1672,6 +1670,7 @@
     </script>
 
     <script type="text/javascript">
+        let entidades_conocimiento = @json($entidades_conocimiento);
         document.getElementById('botonVerEdicionEvento').addEventListener('click', function(event) {
             event.preventDefault();
             // Realizar las acciones que quieres al hacer clic en el botón
@@ -1755,7 +1754,7 @@
     </script>
     
     <script type="text/javascript" src="/js/calificacionpcl.js"></script>
-    <script type="text/javascript" src="/js/funciones_helpers.js?v=1.0.0"></script>
+    <script type="text/javascript" src="/js/funciones_helpers.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/resumablejs@1.1.0/resumable.min.js"></script>
     <script src="/plugins/summernote/summernote.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

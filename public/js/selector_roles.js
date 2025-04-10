@@ -44,4 +44,9 @@ $(document).ready(function(){
         $("input[name='id_usuario']").prop('disabled', false);
         $("input[name='correo_usuario']").prop('disabled', false);
     });
+
+    // recargar ventana en cargue documentos en modulos principales
+    $("#recargar_ventana_docs").click(function(){
+        location.reload();
+    });
 })

@@ -1520,6 +1520,7 @@ class CoordinadorController extends Controller
         $Id_proceso = $request->id_proceso;
         $Tipo_correspondencia = $request->tipo_correspondencia;
         $Previous_saved = $request->previous_saved;
+        $id_entidad_conocimiento = $request->id_entidad_conocimiento;
         $info_comunicado = sigmel_informacion_comunicado_eventos::on('sigmel_gestiones')
             ->select('Destinatario','Nombre_destinatario','Otro_destinatario','JRCI_Destinatario')
             ->where([['Id_Comunicado', $Id_comunicado]])
@@ -1737,12 +1738,19 @@ class CoordinadorController extends Controller
                     ])->limit(1)->get();
                     $response['datos'] = count($datos_jnci) > 0 ? $datos_jnci[0] : null;
                 }
-                else if($Tipo_correspondencia === 'afp_conocimiento' && !empty($infoAfiliado)){
-                    $si_entidad_conocimiento = $infoAfiliado[0]->Entidad_conocimiento;
-
-                    if ($si_entidad_conocimiento == "Si") {
+                else if(str_starts_with($Tipo_correspondencia,'afp_conocimiento') && !empty($infoAfiliado)){
+                    if($id_entidad_conocimiento){
+                        $datos_afp_conocimiento = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_entidades as sie')
+                        ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm', 'sie.Id_Departamento', '=', 'sldm.Id_departamento')
+                        ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm2', 'sie.Id_Ciudad', '=', 'sldm2.Id_municipios')
+                        ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slp', 'slp.Id_Parametro', '=', 'sie.Id_Medio_Noti')
+                        ->select('sie.Nombre_entidad as Nombre_destinatario', 'sie.Direccion as Direccion_destinatario', 'sie.Emails as Email_destinatario','sie.Telefonos as Telefono_destinatario', 
+                        'sie.Otros_Telefonos', 'sldm.Nombre_departamento as Departamento_destinatario', 'sldm2.Nombre_municipio as Ciudad_destinatario','slp.Nombre_parametro as Medio_notificacion_destinatario')
+                        ->where([['sie.Id_Entidad', $id_entidad_conocimiento]])
+                        ->get();
+                        $response['datos'] = count($datos_afp_conocimiento) > 0 ? $datos_afp_conocimiento[0] : null;
+                    }else{
                         $id_afp_conocimiento = $infoAfiliado[0]->Id_afp_entidad_conocimiento;
-
                         $datos_afp_conocimiento = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_entidades as sie')
                         ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm', 'sie.Id_Departamento', '=', 'sldm.Id_departamento')
                         ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm2', 'sie.Id_Ciudad', '=', 'sldm2.Id_municipios')
@@ -1759,11 +1767,10 @@ class CoordinadorController extends Controller
             }
         }
         else{
-            $info_correspondencia = sigmel_informacion_correspondencia_eventos::on('sigmel_gestiones')
-            ->where([['Id_comunicado', $Id_comunicado],['Tipo_correspondencia', $Tipo_correspondencia]])
-            ->get();
-
-            return response()->json($info_correspondencia);
+            $info_correspondencia = DB::table('sigmel_gestiones.sigmel_informacion_correspondencia_eventos as sice')
+                ->where([['sice.Id_comunicado', $Id_comunicado],['sice.Tipo_correspondencia', $Tipo_correspondencia]]);
+            $response = $info_correspondencia->get();
+            return response()->json($response);
         }
     }
 
@@ -1798,6 +1805,8 @@ class CoordinadorController extends Controller
         $tipo_correspondencia = $request->tipo_correspondencia;
         $accion = $request->accion;
         $id_correspondencia = $request->id_correspondencia;
+        $id_entidad_conocimiento = $request->id_entidad_conocimiento;
+        $tipo_entidad_conocimiento = $request->tipo_entidad_conocimiento;
         
         $info_asignacion_eventos = sigmel_informacion_asignacion_eventos::on('sigmel_gestiones')
         ->select('Id_servicio')
@@ -1836,6 +1845,8 @@ class CoordinadorController extends Controller
                 'F_notificacion' => $request->fecha_notificacion,
                 'Id_Estado_corresp' => $request->estado_notificacion,
                 'tipo_correspondencia' => $tipo_correspondencia,
+                'Id_entidad_conocimiento' => $id_entidad_conocimiento,
+                'Tipo_entidad_conocimiento' => $tipo_entidad_conocimiento,
                 'Nombre_usuario' => $nombre_usuario,
                 'F_registro' => $date
             ];
@@ -1880,6 +1891,8 @@ class CoordinadorController extends Controller
                 'F_notificacion' => $request->fecha_notificacion,
                 'Id_Estado_corresp' => $request->estado_notificacion,
                 'tipo_correspondencia' => $tipo_correspondencia,
+                'Id_entidad_conocimiento' => $id_entidad_conocimiento,
+                'Tipo_entidad_conocimiento' => $tipo_entidad_conocimiento,
                 'Nombre_usuario' => $nombre_usuario,
                 'F_registro' => $date
             ];

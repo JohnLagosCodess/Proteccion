@@ -97,7 +97,7 @@
             padding: 0;
         }
         .tabla1{
-            width: 80%;
+            width: 100%;
             margin-left: -3.5px;
         }
         .tabla2{
@@ -349,11 +349,7 @@
                     ?>                    
                     <?php 
                         if (isset($Agregar_copia[$AFP_Conocimiento])) { ?>
-                            <tr>
-                                <td class="copias">
-                                    <span class="negrita">AFP Conocimiento: </span><?=$Agregar_copia['AFP_Conocimiento'];?>
-                                </td>
-                            </tr>
+                            <?=$Agregar_copia['AFP_Conocimiento'];?>
                         <?php       
                         }
                     ?>

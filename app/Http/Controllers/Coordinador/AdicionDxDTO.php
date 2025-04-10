@@ -905,14 +905,17 @@ class AdicionDxDTO extends Controller
         ->get();
 
         $Id_servicio = 2;
+        $Id_Asignacion = $Id_asignacion_actual;
         $arraylistado_documentos = DB::select('CALL psrvistadocumentos(?,?,?)',array($Id_evento,$Id_servicio,$Id_asignacion_actual));
+
+        $entidades_conocimiento = $this->globalService->getAFPConocimientosParaCorrespondencia($Id_evento,$Id_asignacion_actual);
 
         return view('coordinador.adicionDxDtoOrigen', compact('user', 'Id_asignacion_actual', 'datos_bd_DTO_ATEL', 'bandera_hay_dto', 'array_datos_calificacion_origen', 
             'bandera_tipo_evento', 'nombre_del_evento_guardado', 'numero_consecutivo', 'motivo_solicitud_actual',
             'datos_apoderado_actual', 'array_datos_info_laboral','listado_documentos_solicitados', 'dato_articulo_12', 'array_datos_examenes_interconsultas',
             'array_datos_diagnostico_motcalifi', 'info_adicion_dx', 'array_datos_diagnostico_adicionales','array_comite_interdisciplinario', 'consecutivo', 
             'array_comunicados_correspondencia', 'afp_afiliado', 'info_afp_conocimiento', 'caso_notificado', 'N_siniestro_evento','info_evento',
-            'arraylistado_documentos', 'Id_servicio')
+            'arraylistado_documentos', 'Id_servicio', 'Id_Asignacion','entidades_conocimiento')
         );
         
     }
@@ -1803,6 +1806,12 @@ class AdicionDxDTO extends Controller
             ])
         ->value('Id_Comunicado');
 
+
+        $actualizaOficios = $this->globalService->ValidarExistenciaOficioYCopiasOficio($request->ID_Evento, $request->Id_Asignacion,$request->Id_proceso);
+        if($actualizaOficios){
+            $this->globalService->AgregaroQuitarCopiaEntidadConocimientoDictamen($request->ID_Evento,$request->Id_Asignacion,$request->Id_proceso,$actualizaOficios);
+        }
+        
         $mensajes = array(
             "parametro" => 'agregar_dto_atel',
             'Id_Comunicado' => $id_comunicado ? $id_comunicado : null,
@@ -2089,10 +2098,7 @@ class AdicionDxDTO extends Controller
                 "parametro" => 'insertar_correspondencia',
                 'Id_Comunicado' => $id_comunicado ? $id_comunicado : null,
                 "mensaje" => 'Correspondencia guardada satisfactoriamente.'
-            );
-    
-            return json_decode(json_encode($mensajes, true));
-            
+            );            
         } 
         elseif($bandera_correspondecia_guardar_actualizar == 'Actualizar') {
             $datos_correspondencia = [
@@ -2203,12 +2209,11 @@ class AdicionDxDTO extends Controller
                 "parametro" => 'actualizar_correspondencia',
                 'Id_Comunicado' => $id_comunicado ? $id_comunicado : null,
                 "mensaje" => 'Correspondencia actualizada satisfactoriamente.'
-            );
-    
-            return json_decode(json_encode($mensajes, true));
+            );    
         }
-        
-
+        //Se actualizan las copias de entidad conocimiento del dictamen, PBS092
+        $this->globalService->AgregaroQuitarCopiaEntidadConocimientoDictamen($Id_Evento,$Id_Asignacion_adicion_dx,$Id_Proceso_adicion_dx,$agregar_copias_comu);
+        return json_decode(json_encode($mensajes, true));
     }
 
     // Descargar proforma DML ORIGEN PREVISIONAL (DICTAMEN)

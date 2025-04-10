@@ -7551,22 +7551,7 @@
                                                 <label for="afp" class="custom-control-label">AFP</label>
                                             </div>
                                         </div>
-                                    </div>
-                                    <input type="hidden" name="entidad_conocimiento" id="entidad_conocimiento" value="<?php if(!empty($info_afp_conocimiento[0]->Entidad_conocimiento)){echo $info_afp_conocimiento[0]->Entidad_conocimiento;}?>">
-                                    @if (!empty($info_afp_conocimiento[0]->Entidad_conocimiento) && $info_afp_conocimiento[0]->Entidad_conocimiento == "Si")
-                                        <div class="col-3">
-                                            <div class="form-group">
-                                                <div class="custom-control custom-checkbox">
-                                                    @if (!empty($array_comite_interdisciplinario[0]->Copia_afp_conocimiento))
-                                                        <input class="dependencia_justificacion custom-control-input" type="checkbox" id="afp_conocimiento" name="afp_conocimiento" value="AFP_Conocimiento" checked>
-                                                    @else
-                                                        <input class="custom-control-input" type="checkbox" id="afp_conocimiento" name="afp_conocimiento" value="AFP_Conocimiento">                                                    
-                                                    @endif
-                                                    <label for="afp_conocimiento" class="custom-control-label">AFP Conocimiento</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    @endif
+                                    </div>                                    
                                     <div class="col-3">
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox">
@@ -7578,7 +7563,22 @@
                                                 <label for="arl" class="custom-control-label">ARL</label>
                                             </div>
                                         </div>
-                                    </div>    
+                                    </div>
+                                    <input type="hidden" name="entidad_conocimiento" id="entidad_conocimiento" value="<?php if(!empty($info_afp_conocimiento[0]->Entidad_conocimiento)){echo $info_afp_conocimiento[0]->Entidad_conocimiento;}?>">
+                                    @if (!empty($info_afp_conocimiento[0]->Entidad_conocimiento) && $info_afp_conocimiento[0]->Entidad_conocimiento == "Si")
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <div class="custom-control custom-checkbox">
+                                                    @if (!empty($array_comite_interdisciplinario[0]->Copia_afp_conocimiento))
+                                                        <input class="dependencia_justificacion custom-control-input" type="checkbox" id="afp_conocimiento" name="afp_conocimiento" value="AFP_Conocimiento" checked>
+                                                    @else
+                                                        <input class="custom-control-input" type="checkbox" id="afp_conocimiento" name="afp_conocimiento" value="AFP_Conocimiento">                                                    
+                                                    @endif
+                                                    <label for="afp_conocimiento" class="custom-control-label">Entidad conocimiento</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endif     
                                     {{-- <div class="col-4">
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox">
@@ -7823,7 +7823,7 @@
                                                                 ?>
                                                                 <td><?php echo $tipo_descarga;?></td>
                                                                 <td style="display: flex; flex-direction:row; justify-content:space-around; align-items:center;">
-                                                                    <form name="ver_notificacionPcl" data-archivo="{{json_encode($comite_inter)}}" @if($comite_inter->Reemplazado === 1) id="verNotificacionPCL" @else action="{{ route('generarOficio_Pcl') }}" @endif method="POST">
+                                                                    <form name="ver_notificacionPcl" data-archivo="{{json_encode($comite_inter)}}" @if($comite_inter->Reemplazado === 1) id="verNotificacionPCL" @else id="verNotiPcl" @endif method="POST">
                                                                         @csrf
                                                                         <input type="hidden" name="ID_Evento_comuni_comite" value="{{$comite_inter->ID_evento}}">
                                                                         <input type="hidden" name="Id_Asignacion_comuni_comite" value="{{$comite_inter->Id_Asignacion}}">
@@ -7920,7 +7920,7 @@
                                                                 ?>
                                                                 <td><?php echo $tipo_descarga;?></td>
                                                                 <td style="display: flex; flex-direction:row; justify-content:space-around; align-items:center;">
-                                                                    <form name="ver_notificacionPcl" data-archivo="{{json_encode($comite_inter)}}" @if($comite_inter->Reemplazado === 1) id="verNotificacionPCL" @else action="{{ route('generarOficio_Pcl') }}" @endif method="POST">
+                                                                    <form name="ver_notificacionPcl" data-archivo="{{json_encode($comite_inter)}}" @if($comite_inter->Reemplazado === 1) id="verNotificacionPCL" @else id="verNotiPcl" @endif method="POST">
                                                                         @csrf
                                                                         <input type="hidden"  name="ID_Evento_comuni_comite" value="{{$comite_inter->ID_evento}}">
                                                                         <input type="hidden"  name="Id_Asignacion_comuni_comite" value="{{$comite_inter->Id_Asignacion}}">
@@ -8017,7 +8017,7 @@
                                                                 ?>
                                                                 <td><?php echo $tipo_descarga;?></td>
                                                                 <td style="display: flex; flex-direction:row; justify-content:space-around; align-items:center;">
-                                                                    <form name="ver_notificacionPcl" data-archivo="{{json_encode($comite_inter)}}" @if($comite_inter->Reemplazado === 1) id="verNotificacionPCL" @else action="{{ route('generarOficio_Pcl') }}" @endif method="POST">
+                                                                    <form name="ver_notificacionPcl" data-archivo="{{json_encode($comite_inter)}}" @if($comite_inter->Reemplazado === 1) id="verNotificacionPCL" @else id="verNotiPcl" @endif method="POST">
                                                                         @csrf
                                                                         <input type="hidden"  name="ID_Evento_comuni_comite" value="{{$comite_inter->ID_evento}}">
                                                                         <input type="hidden"  name="Id_Asignacion_comuni_comite" value="{{$comite_inter->Id_Asignacion}}">
@@ -8155,7 +8155,7 @@
 
 @section('js')
 <script type="text/javascript">
-
+    let entidades_conocimiento = @json($entidades_conocimiento);
     document.getElementById('botonEnvioVista').addEventListener('click', function(event) {
         event.preventDefault();
         // Realizar las acciones que quieres al hacer clic en el botón
@@ -8417,7 +8417,7 @@
     });
 
 </script>
-<script type="text/javascript" src="/js/funciones_helpers.js?v=1.0.0"></script>
+<script type="text/javascript" src="/js/funciones_helpers.js"></script>
 <script type="text/javascript" src="/js/calificacionpcl_tecnica.js"></script>
 {{-- JS: Deficiencias por Alteraciones de los Sistemas Generales cálculadas por factores --}}
 <script type="text/javascript" src="/js/datatable_deficiencias_alteraciones_sistemas.js"></script>

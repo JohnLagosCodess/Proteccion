@@ -381,17 +381,7 @@
                             </tr>
                         <?php       
                         }
-                    ?>
-                    <?php 
-                        if (!empty($Copia_afp_conocimiento_correspondencia)) { ?>
-                            <tr>
-                                <td class="copias">
-                                    <span class="negrita">AFP Conocimiento: </span><?php echo $Nombre_afp_conocimiento.' - '.$Direccion_afp_conocimiento.'; '.$Email_afp_conocimiento.'; '.$Telefonos_afp_conocimiento.'; '.$Ciudad_departamento_afp_conocimiento;?>
-                                </td>
-                            </tr>
-                        <?php       
-                        }
-                    ?>
+                    ?>                    
                     <?php 
                         if (!empty($Copia_arl_correspondecia)) { ?>
                             <tr>
@@ -401,7 +391,16 @@
                             </tr>
                         <?php       
                         }
-                    ?>                    
+                    ?>
+                    <?php                     
+                    $AFP_Conocimiento = 'AFP_Conocimiento';
+                    if (!empty($Copia_afp_conocimiento_correspondencia)) {                         
+                        if (isset($Agregar_copia[$AFP_Conocimiento])) { ?>
+                            <?=$Agregar_copia['AFP_Conocimiento'];?>
+                        <?php       
+                        }  
+                    }                    
+                ?>                    
                 @endif
             </table>
         </section>

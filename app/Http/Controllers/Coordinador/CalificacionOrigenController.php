@@ -262,12 +262,18 @@ class CalificacionOrigenController extends Controller
        ->where([['ID_evento',$newIdEvento]])
        ->get();
 
+        $Id_Asignacion = $newIdAsignacion;
+
+        $info_afp_conocimiento = $this->globalService->retornarcuentaConAfpConocimiento($newIdEvento);
+
+        $entidades_conocimiento = $this->globalService->getAFPConocimientosParaCorrespondencia($newIdEvento,$newIdAsignacion);
+
         // Validar si la accion ejecutada tiene enviar a notificaciones            
         $enviar_notificaciones = BandejaNotifiController::evento_en_notificaciones($newIdEvento,$newIdAsignacion);
         return view('coordinador.calificacionOrigen', compact('user','nombre_usuario','array_datos_calificacionOrigen','arraylistado_documentos', 'cantidad_documentos_cargados',
         'arraycampa_documento_solicitado','SubModulo','Fnuevo','listado_documentos_solicitados','dato_validacion_no_aporta_docs','dato_ultimo_grupo_doc',
         'dato_doc_sugeridos','dato_articulo_12','consecutivo','primer_seguimiento','segundo_seguimiento','tercer_seguimiento','listado_seguimiento_solicitados',
-        'cali_profe_comite', 'Id_servicio', 'enviar_notificaciones','N_siniestro_evento'));
+        'cali_profe_comite', 'Id_servicio', 'enviar_notificaciones','N_siniestro_evento','Id_Asignacion','info_afp_conocimiento','entidades_conocimiento'));
     }
 
     //Guardar informacion del modulo de Origen ATEL

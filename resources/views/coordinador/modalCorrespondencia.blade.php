@@ -65,6 +65,8 @@
                                                 <input class="form-control" type="hidden" name="id_proceso" id="id_proceso">
                                                 <input class="form-control" type="hidden" name="id_comunicado" id="id_comunicado">
                                                 <input class="form-control" type="hidden" name="id_correspondencia" id="id_correspondencia">
+                                                <input class="form-control" type="hidden" name="id_entidad_conocimiento" id="id_entidad_conocimiento">
+                                                <input class="form-control" type="hidden" name="tipo_entidad_conocimiento" id="tipo_entidad_conocimiento">
                                                 <div class="row">
                                                     
                                                     <div class="col-4">
@@ -194,6 +196,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <input type="submit" id="btn_guardar_actualizar_correspondencia" name="btn_guardar_actualizar_correspondencia" class="btn btn-info" value="Guardar">
                                             </div>
                                         </div>
                                         {{-- Guías Ventana Correspondencia --}}
@@ -386,6 +389,9 @@
                                                         <div class="mostrar_fallo alert alert-danger mt-2 mr-auto d-none" role="alert"></div>
                                                         <div class="mostrar_exito alert alert-success mt-2 mr-auto d-none" role="alert"></div>
                                                     </div>
+                                                    <div class="col-12">
+                                                        <input type="button" class="btn btn-info" id="recargar_ventana_docs" value="Actualizar Documentos">
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -401,7 +407,7 @@
                                 <button type="submit" class="btn btn-info guardar_correspondencia" id="btn-guardar-correspondencia" data-accion='Guardar'>Guardar</button> --}}
                                 
                                 {{-- <button class="btn btn-info" id="recargar_ventana">Actualizar</button> --}}
-                                <input type="submit" id="btn_guardar_actualizar_correspondencia" name="btn_guardar_actualizar_correspondencia" class="btn btn-info" value="Guardar">
+                                {{-- <input type="submit" id="btn_guardar_actualizar_correspondencia" name="btn_guardar_actualizar_correspondencia" class="btn btn-info" value="Guardar"> --}}
                                 <x-adminlte-button theme="danger" label="Cerrar" id="cerar_modalCorrespondencia" data-dismiss="modal" />
                             </div>
                         </form>

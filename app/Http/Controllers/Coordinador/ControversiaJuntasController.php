@@ -151,6 +151,7 @@ class ControversiaJuntasController extends Controller
         ])->get(); 
 
         //Trae Documetos Generales del evento
+        $Id_Asignacion = $Id_asignacion_juntas;
         $arraylistado_documentos = DB::select('CALL psrvistadocumentos(?,?,?)',array($Id_evento_juntas, $Id_servicio, $Id_asignacion_juntas));
 
         // cantidad de documentos cargados
@@ -246,14 +247,19 @@ class ControversiaJuntasController extends Controller
 
 
         //Traer el N_siniestro del evento
-        $N_siniestro_evento = $this->globalService->retornarNumeroSiniestro($Id_evento_juntas);     
-        //dd($arrayinfo_controvertido);
+        $N_siniestro_evento = $this->globalService->retornarNumeroSiniestro($Id_evento_juntas);  
+        
+        $entidades_conocimiento = $this->globalService->getAFPConocimientosParaCorrespondencia($Id_evento_juntas,$Id_asignacion_juntas);
+        
+        /* Traer datos de la AFP de Conocimiento */
+        $info_afp_conocimiento = $this->globalService->retornarcuentaConAfpConocimiento($Id_evento_juntas);
+
         return view('coordinador.controversiaJuntas', compact('user','array_datos_controversiaJuntas','arrayinfo_controvertido',
         'array_datos_diagnostico_motcalifi_contro','array_datos_diagnostico_motcalifi_emitido_jrci',
         'array_datos_diagnostico_reposi_dictamen_jrci',
         'array_datos_diagnostico_motcalifi_emitido_jnci',
         'array_comite_interdisciplinario', 'consecutivo', 'array_comunicados_correspondencia', 'Id_servicio','array_control', 'bandera_manual_calificacion', 'caso_notificado','N_siniestro_evento',
-        'cantidad_documentos_cargados','arraylistado_documentos'));
+        'cantidad_documentos_cargados','arraylistado_documentos','Id_Asignacion','entidades_conocimiento', 'info_afp_conocimiento'));
     
     }
 
@@ -1770,9 +1776,15 @@ class ControversiaJuntasController extends Controller
             $cual = null;
         }
         $jnci = $request->jnci;
+        $afp_conocimiento = $request->afp_conocimiento;
+
         // $agregar_copias_comu = $afiliado.','.$empleador.','.$eps.','.$afp.','.$arl.','.$jrci.','.$jnci;
 
         $variables_llenas = array();
+
+        if (!empty($afiliado)) {
+            $variables_llenas[] = $afiliado;
+        }
 
         if (!empty($empleador)) {
             $variables_llenas[] = $empleador;
@@ -1793,7 +1805,20 @@ class ControversiaJuntasController extends Controller
             $variables_llenas[] = $jnci;
         }
 
-        $agregar_copias_comu = implode(',', $variables_llenas);
+        if (!empty($afp_conocimiento)) {
+
+            // traemos la informacion de las copias dependiendo de cuantas entidades de conocimiento hay
+            $str_entidades = $this->globalService->retornarStringCopiasEntidadConocimiento($newId_evento);
+           
+            $variables_llenas[] = $str_entidades;
+        }
+
+        // $agregar_copias_comu = implode(',', $variables_llenas);
+        if(count($variables_llenas) > 0){
+            $Agregar_copias = implode(',', $variables_llenas);
+        }else {
+            $Agregar_copias = '';
+        }
         
         $anexos = $request->anexos;
         $elaboro = $request->elaboro;
@@ -1854,13 +1879,13 @@ class ControversiaJuntasController extends Controller
             return !empty($var);
         });
         // Verifica si el array resultante está vacío
-        if (!empty($variables_filtradas)) {
-            // Si hay elementos en el array, los concatenamos con comas
-            $Agregar_copias = implode(", ", $variables_filtradas);
-        } else {
-            // Si el array está vacío, asignamos una cadena vacía
-            $Agregar_copias = '';
-        }
+        // if (!empty($variables_filtradas)) {
+        //     // Si hay elementos en el array, los concatenamos con comas
+        //     $Agregar_copias = implode(", ", $variables_filtradas);
+        // } else {
+        //     // Si el array está vacío, asignamos una cadena vacía
+        //     $Agregar_copias = '';
+        // }
 
         if($request->decision_dictamen === 'Desacuerdo'){
             $tipo_descarga = 'DESACUERDO PCL JRCI';
@@ -1900,6 +1925,7 @@ class ControversiaJuntasController extends Controller
                 'Copia_eps' => $eps,
                 'Copia_afp' => $afp,
                 'Copia_arl' => $arl,
+                'Copia_afp_conocimiento' => $afp_conocimiento,
                 'Copia_jr' => $jrci,
                 'Cual_jr' => $cual,
                 'Copia_jn' => $jnci,
@@ -1987,6 +2013,7 @@ class ControversiaJuntasController extends Controller
                 'Copia_eps' => $eps,
                 'Copia_afp' => $afp,
                 'Copia_arl' => $arl,
+                'Copia_afp_conocimiento' => $afp_conocimiento,
                 'Copia_jr' => $jrci,
                 'Cual_jr' => $cual,
                 'Copia_jn' => $jnci,
@@ -2064,7 +2091,7 @@ class ControversiaJuntasController extends Controller
 
     }
 
-    public  function generarProforma($tipo, $id_comunicado,$id_comite, $id_evento,$id_asignacion,$proceso,$request){
+    public function generarProforma($tipo, $id_comunicado,$id_comite, $id_evento,$id_asignacion,$proceso,$request){
         $data = [
             "_token" => $request->_token,
             "id_comite_inter" => $id_comite,
@@ -2090,6 +2117,7 @@ class ControversiaJuntasController extends Controller
             'copia_eps' => $request->eps,
             'copia_afp'=> $request->afp,
             'copia_arl' => $request->arl,
+            'copia_afp_conocimiento' => $request->afp_conocimiento,
             'porcentaje_pcl_jrci_emitido' => $request->porcentaje_pcl_jrci_emitido,
             'f_estructuracion_contro_jrci_emitido' => $request->f_estructuracion_contro_jrci_emitido,
             "asunto" => $request->Asunto,
@@ -2184,7 +2212,7 @@ class ControversiaJuntasController extends Controller
             'sicie.Destinatario_principal', 'sicie.Otro_destinatario', 'sicie.Tipo_destinatario', 'sicie.Nombre_dest_principal', 'sie.Nombre_entidad',
             'sicie.Nombre_destinatario','sicie.Nit_cc', 'sicie.Direccion_destinatario', 'sicie.Telefono_destinatario', 'sicie.Email_destinatario',
             'sicie.Departamento_destinatario', 'sicie.Ciudad_destinatario', 'sicie.Asunto', 'sicie.Cuerpo_comunicado', 'sicie.Copia_afiliado', 'sicie.Copia_empleador',
-            'sicie.Copia_eps', 'sicie.Copia_afp', 'sicie.Copia_arl', 'sicie.Copia_jr', 'sicie.Cual_jr', 'sicie.Copia_jn', 'sicie.Anexos',
+            'sicie.Copia_eps', 'sicie.Copia_afp', 'sicie.Copia_arl', 'sicie.Copia_jr', 'sicie.Cual_jr', 'sicie.Copia_jn', 'sicie.Copia_afp_conocimiento', 'sicie.Anexos',
             'sicie.Elaboro', 'sicie.Reviso', 'sicie.Firmar', 'sicie.Ciudad', 'sicie.F_correspondecia', 'sicie.N_radicado', 'sicie.Nombre_usuario',
             'sicie.F_registro')        
             ->where([
@@ -2323,6 +2351,12 @@ class ControversiaJuntasController extends Controller
             } else {
                 $checkeado_copia_jn = "No";
             }
+
+            if (!empty($array_comite_interdisciplinario[0]->Copia_afp_conocimiento)) {
+                $checkeado_afp_conocimiento = "Si";
+            } else {
+                $checkeado_afp_conocimiento = "No";
+            }
             
             /* Anexos */
             if (!empty($array_comite_interdisciplinario[0]->Anexos)) {
@@ -2388,6 +2422,7 @@ class ControversiaJuntasController extends Controller
                 'checkeado_copia_jr' => $checkeado_copia_jr,
                 'bd_cual_jr' => $bd_cual_jr,
                 'checkeado_copia_jn' => $checkeado_copia_jn,
+                'checkeado_afp_conocimiento' => $checkeado_afp_conocimiento,
                 'anexos' => $anexos,
                 'elaboro' => $elaboro,
                 'bd_reviso' => $bd_reviso,
@@ -2455,6 +2490,7 @@ class ControversiaJuntasController extends Controller
         $copia_arl = $request->copia_arl;
         $copia_jrci = $request->copia_jrci;
         $copia_jnci = $request->copia_jnci;
+        $copia_afp_conocimiento = $request->copia_afp_conocimiento;
         $jrci_elegida = $request->jrci_elegida;
         $asunto = strtoupper($request->asunto);
         $cuerpo = $request->cuerpo;
@@ -2712,6 +2748,7 @@ class ControversiaJuntasController extends Controller
         $final_copia_eps = isset($copia_eps) ? 'EPS' : '';
         $final_copia_afp = isset($copia_afp) ? 'AFP' : '';
         $final_copia_arl = isset($copia_arl) ? 'ARL' : '';
+        $final_copia_afp_conocimiento = isset($copia_afp_conocimiento) ? 'AFP_Conocimiento' : '';
 
         $total_copias = array_filter(array(
             'copia_afiliado' => $final_copia_afiliado,
@@ -2719,6 +2756,7 @@ class ControversiaJuntasController extends Controller
             'copia_eps' => $final_copia_eps,
             'copia_afp' => $final_copia_afp,
             'copia_arl' => $final_copia_arl,
+            'copia_afp_conocimiento' => $final_copia_afp_conocimiento
         )); 
 
         sleep(2);
@@ -2766,6 +2804,15 @@ class ControversiaJuntasController extends Controller
 
         if(isset($copia_jnci)){
             $Agregar_copias['JNCI'] = $this->globalService->retornarJnci();
+        }
+
+        if (isset($copia_afp_conocimiento)) {
+            if($request->tipo_proforma == "pdf"){
+                $datos_entidades_conocimiento = $this->globalService->informacionEntidadesConocimientoEvento($id_evento, 'pdf');
+            }else{
+                $datos_entidades_conocimiento = $this->globalService->informacionEntidadesConocimientoEvento($id_evento, 'word');
+            }
+            $Agregar_copias['AFP_Conocimiento'] = $datos_entidades_conocimiento;
         }
 
         if($request->tipo_proforma == "pdf"){
@@ -3206,6 +3253,7 @@ class ControversiaJuntasController extends Controller
             $ARL = 'ARL';
             $JRCI = 'JRCI';
             $JNCI = 'JNCI';
+            $AFP_Conocimiento = 'AFP_Conocimiento';
 
             if (isset($Agregar_copias[$Afiliado])) {
                 $htmltabla2 .= '<tr><td style="border: 1px solid #000; padding: 5px; text-align: justify; font-family: Verdana; font-size: 8pt; font-style: italic;"><span style="font-weight:bold;">Afiliado: </span>' . $Agregar_copias['Afiliado'] . '</td></tr>';
@@ -3233,6 +3281,10 @@ class ControversiaJuntasController extends Controller
 
             if (isset($Agregar_copias[$JNCI])) {
                 $htmltabla2 .= '<tr><td style="border: 1px solid #000; padding: 5px; text-align: justify; font-family: Verdana; font-size: 8pt; font-style: italic;"><span style="font-weight:bold;">JNCI: </span>' . $Agregar_copias['JNCI'] . '</td></tr>';
+            }
+
+            if(isset($Agregar_copias[$AFP_Conocimiento])){
+                $htmltabla2.= $Agregar_copias['AFP_Conocimiento'];
             }
         }
 
@@ -3498,6 +3550,7 @@ class ControversiaJuntasController extends Controller
         $copia_eps = $request->copia_eps;
         $copia_afp = $request->copia_afp;
         $copia_arl = $request->copia_arl;
+        $copia_afp_conocimiento = $request->copia_afp_conocimiento;
         $asunto = strtoupper($request->asunto);
         $cuerpo = $request->cuerpo;
         $firmar = $request->firmar;
@@ -3735,6 +3788,7 @@ class ControversiaJuntasController extends Controller
         $final_copia_eps = isset($copia_eps) ? 'EPS' : '';
         $final_copia_afp = isset($copia_afp) ? 'AFP' : '';
         $final_copia_arl = isset($copia_arl) ? 'ARL' : '';
+        $final_copia_afp_conocimiento = isset($copia_afp_conocimiento) ? 'AFP_Conocimiento' : '';
 
         $total_copias = array_filter(array(
             'copia_afiliado' => $final_copia_afiliado,
@@ -3742,6 +3796,7 @@ class ControversiaJuntasController extends Controller
             'copia_eps' => $final_copia_eps,
             'copia_afp' => $final_copia_afp,
             'copia_arl' => $final_copia_arl,
+            'copia_afp_conocimiento' => $final_copia_afp_conocimiento
         )); 
 
         sleep(2);
@@ -3858,6 +3913,11 @@ class ControversiaJuntasController extends Controller
             $Agregar_copias['ARL'] = $nombre_arl."; ".$direccion_arl."; ".$email_arl."; ".$telefonos_arl."; ".$ciudad_arl."; ".$minucipio_arl;
         }
 
+        if (isset($copia_afp_conocimiento)) {
+            $datos_entidades_conocimiento = $this->globalService->informacionEntidadesConocimientoEvento($id_evento, 'pdf');
+            $Agregar_copias['AFP_Conocimiento'] = $datos_entidades_conocimiento;
+        }
+        // dd($Agregar_copias);
         /* Validación Firma Cliente */
         $validarFirma = isset($firmar) ? 'Firmar' : 'No firma';
         

@@ -80,9 +80,16 @@ use ZipArchive;
 
 use App\Models\sigmel_informacion_comunicado_eventos;
 use App\Models\sigmel_informacion_comite_interdisciplinario_eventos;
+use App\Services\GlobalService;
 
 class AdministradorController extends Controller
 {
+    protected $globalService;
+
+    public function __construct(GlobalService $globalService)
+    {
+        $this->globalService = $globalService;
+    }
     
     public function show(){
         if(!Auth::check()){
@@ -1947,8 +1954,8 @@ class AdministradorController extends Controller
             return response()->json($info_lista_afp);
         }
 
-         /* Traer listado ENTIDAD CONOCIMIENTO */
-         if($parametro == "entidades_conocimiento"){
+        /* Traer listado ENTIDAD CONOCIMIENTO */
+        if($parametro == "entidades_conocimiento"){
             $listado_entidad_conocimiento = DB::table(getDatabaseName('sigmel_gestiones') .'sigmel_informacion_entidades as enti')
             ->leftJoin('sigmel_gestiones.sigmel_lista_entidades as sle', 'enti.IdTipo_entidad', '=', 'sle.Id_Entidad')
             ->select('enti.Id_Entidad', 'enti.Nombre_entidad', 'sle.Tipo_Entidad')
@@ -3444,21 +3451,48 @@ class AdministradorController extends Controller
 
         // Validamos si el checkbox entidad conocimiento esta marcado 
 
-        $entidad_conocimiento = isset($request->entidad_conocimiento) ? 'Si' : 'No';
+        // $entidad_conocimiento = isset($request->entidad_conocimiento) ? 'Si' : 'No';
 
         // En caso de que esté marcado el checkbox de entidad de conocimiento se envia las entidadesde conocimiento.
         if (!empty($request->entidad_conocimiento) and $request->entidad_conocimiento == "Si") {
-            if(!empty($request->entidad_conocimiento_multiple[0])){
-                $entidad_conocimiento_inicial = $request->entidad_conocimiento_multiple[0];
-                $array_otras_entidades = implode(', ', array_slice($request->entidad_conocimiento_multiple, 1));            
+            if ($request->entidad_conocimiento_1 == 0 && $request->entidad_conocimiento_2 == 0 &&
+                $request->entidad_conocimiento_3 == 0 && $request->entidad_conocimiento_4 == 0 &&
+                $request->entidad_conocimiento_5 == 0 && $request->entidad_conocimiento_6 == 0 && 
+                $request->entidad_conocimiento_7 == 0 && $request->entidad_conocimiento_8 == 0
+            ) {
+                $entidad_conocimiento = 'No';
 
+                $entidad_conocimiento_1 = null;
+                $entidad_conocimiento_2 = null;
+                $entidad_conocimiento_3 = null;
+                $entidad_conocimiento_4 = null;
+                $entidad_conocimiento_5 = null;
+                $entidad_conocimiento_6 = null;
+                $entidad_conocimiento_7 = null;
+                $entidad_conocimiento_8 = null;
             }else{
-                $entidad_conocimiento_inicial = null;
-                $array_otras_entidades = null;
-            }         
+                $entidad_conocimiento = 'Si';
+
+                $entidad_conocimiento_1 = $request->entidad_conocimiento_1;
+                $entidad_conocimiento_2 = $request->entidad_conocimiento_2;
+                $entidad_conocimiento_3 = $request->entidad_conocimiento_3;
+                $entidad_conocimiento_4 = $request->entidad_conocimiento_4;
+                $entidad_conocimiento_5 = $request->entidad_conocimiento_5;
+                $entidad_conocimiento_6 = $request->entidad_conocimiento_6;
+                $entidad_conocimiento_7 = $request->entidad_conocimiento_7;
+                $entidad_conocimiento_8 = $request->entidad_conocimiento_8;
+            }
         }else{
-            $entidad_conocimiento_inicial = null;
-            $array_otras_entidades = null;
+            $entidad_conocimiento = 'No';
+
+            $entidad_conocimiento_1 = null;
+            $entidad_conocimiento_2 = null;
+            $entidad_conocimiento_3 = null;
+            $entidad_conocimiento_4 = null;
+            $entidad_conocimiento_5 = null;
+            $entidad_conocimiento_6 = null;
+            $entidad_conocimiento_7 = null;
+            $entidad_conocimiento_8 = null;
         }
         
         $datos_info_afiliado_evento = [
@@ -3503,8 +3537,14 @@ class AdministradorController extends Controller
             'Activo' => $request->activo,
             'Medio_notificacion' => $request->medio_notificacion_afiliado,
             'Entidad_conocimiento' => $entidad_conocimiento,
-            'Id_afp_entidad_conocimiento' => $entidad_conocimiento_inicial,
-            'Otras_entidades_conocimiento' => $array_otras_entidades,
+            'Id_afp_entidad_conocimiento' => $entidad_conocimiento_1,
+            'Id_afp_entidad_conocimiento2' => $entidad_conocimiento_2,
+            'Id_afp_entidad_conocimiento3' => $entidad_conocimiento_3,
+            'Id_afp_entidad_conocimiento4' => $entidad_conocimiento_4,
+            'Id_afp_entidad_conocimiento5' => $entidad_conocimiento_5,
+            'Id_afp_entidad_conocimiento6' => $entidad_conocimiento_6,
+            'Id_afp_entidad_conocimiento7' => $entidad_conocimiento_7,
+            'Id_afp_entidad_conocimiento8' => $entidad_conocimiento_8,
             'Nombre_usuario' => $nombre_usuario,
             'F_registro' => $date
         ];
@@ -4124,7 +4164,7 @@ class AdministradorController extends Controller
         'sld.Id_dominancia', 'sld.Nombre_dominancia as Dominancia', 'siae.Id_departamento', 'sldm.Nombre_departamento',
         'siae.Id_municipio', 'sldm1.Nombre_municipio', 'siae.Ocupacion', 'siae.Tipo_afiliado', 'slp_tipo_afiliado.Nombre_parametro as Nombre_tipo_afiliado',
         'siae.Ibc', 'siae.Id_eps', 'sle.Nombre_entidad as Nombre_eps', 'siae.Id_afp', 'sle1.Nombre_entidad as Nombre_afp', 'siae.Id_arl', 'sle2.Nombre_entidad as Nombre_arl',
-        'siae.Entidad_conocimiento', 'siae.Id_afp_entidad_conocimiento','siae.Otras_entidades_conocimiento', 'sle3.Nombre_entidad as Nombre_afp_conocimiento',
+        'siae.Entidad_conocimiento','siae.Id_afp_entidad_conocimiento', 'siae.Id_afp_entidad_conocimiento2', 'siae.Id_afp_entidad_conocimiento3', 'siae.Id_afp_entidad_conocimiento4', 'siae.Id_afp_entidad_conocimiento5', 'siae.Id_afp_entidad_conocimiento6', 'siae.Id_afp_entidad_conocimiento7', 'siae.Id_afp_entidad_conocimiento8', 'sle3.Nombre_entidad as Nombre_afp_conocimiento',
         'siae.Tipo_documento_apoderado','slp_tipo_doc_apoderado.Nombre_parametro as Nombre_documento_apoderado',
         'siae.Apoderado', 'siae.Nombre_apoderado','siae.Nro_identificacion_apoderado', 'siae.Email_apoderado','siae.Telefono_apoderado', 'siae.Direccion_apoderado', 'siae.Id_departamento_apoderado', 'siae.Id_municipio_apoderado', 
         'sldm_apoderado.Nombre_departamento as Nombre_departamento_apoderado', 'sldm1_apoderado.Nombre_municipio as Nombre_municipio_apoderado',
@@ -4198,6 +4238,29 @@ class AdministradorController extends Controller
         /** Contiene los cambios realizados en el modulo */
         $bitacora = [];
         
+        //Validamos si antes de la actualización tenia entidades de conocimiento
+        $entidades_conocimiento_actuales = $this->globalService->validarEntidadesConocimientoGuardadas($IdEventoactulizar);
+        if($entidades_conocimiento_actuales){
+            $nuevas_entidades_conocimiento = [
+                $request->entidad_conocimiento_1,$request->entidad_conocimiento_2,$request->entidad_conocimiento_3,
+                $request->entidad_conocimiento_4,$request->entidad_conocimiento_5,$request->entidad_conocimiento_6,$request->entidad_conocimiento_7,
+                $request->entidad_conocimiento_8
+            ];
+            $actuales_entidades_conocimiento = [
+                $entidades_conocimiento_actuales[0]->Id_afp_entidad_conocimiento,$entidades_conocimiento_actuales[0]->Id_afp_entidad_conocimiento2,$entidades_conocimiento_actuales[0]->Id_afp_entidad_conocimiento3,
+                $entidades_conocimiento_actuales[0]->Id_afp_entidad_conocimiento4,$entidades_conocimiento_actuales[0]->Id_afp_entidad_conocimiento5,$entidades_conocimiento_actuales[0]->Id_afp_entidad_conocimiento6,
+                $entidades_conocimiento_actuales[0]->Id_afp_entidad_conocimiento7,$entidades_conocimiento_actuales[0]->Id_afp_entidad_conocimiento8
+            ];
+            Log::info('Actuales entidades de conocimiento ',$actuales_entidades_conocimiento);
+            Log::info('Nuevas entidades de conocimiento ',$nuevas_entidades_conocimiento);
+            foreach ($actuales_entidades_conocimiento as $index => $id) {
+                $flag_cambio = $nuevas_entidades_conocimiento[$index] != $id ? true : false;
+                if($flag_cambio){
+                    $tipo_correspondencia = $index === 0 ? "afp_conocimiento" : "afp_conocimiento" . ($index + 1);
+                    $this->globalService->eliminarCorrespondenciaIdModificado($nuevas_entidades_conocimiento[$index],$id,$IdEventoactulizar,$tipo_correspondencia);
+                }
+            }
+        }
         /* Actualizacion tabla sigmel_informacion_eventos */
 
         // validacion del otro/cual? en el tipo de cliente 
@@ -4413,7 +4476,7 @@ class AdministradorController extends Controller
             $id_arl = $request->arl_info_afiliado;
         }
 
-        $entidad_conocimiento = isset($request->entidad_conocimiento) ? 'Si' : 'No';
+        // $entidad_conocimiento = isset($request->entidad_conocimiento) ? 'Si' : 'No';
 
         // if ($entidad_conocimiento == 'Si') {
         //     $afp_conocimiento = $request->afp_conocimiento;
@@ -4423,12 +4486,46 @@ class AdministradorController extends Controller
 
         // En caso de que esté marcado el checkbox de entidad de conocimiento se envia las entidadesde conocimiento.
         if (!empty($request->entidad_conocimiento) and $request->entidad_conocimiento == "Si") {
-            $entidad_conocimiento_inicial = $request->entidad_conocimiento_multiple[0];
-            $array_otras_entidades = implode(', ', array_slice($request->entidad_conocimiento_multiple, 1));            
+            if ($request->entidad_conocimiento_1 == 0 && $request->entidad_conocimiento_2 == 0 &&
+                $request->entidad_conocimiento_3 == 0 && $request->entidad_conocimiento_4 == 0 &&
+                $request->entidad_conocimiento_5 == 0 && $request->entidad_conocimiento_6 == 0 && 
+                $request->entidad_conocimiento_7 == 0 && $request->entidad_conocimiento_8 == 0
+            ) {
+                $entidad_conocimiento = 'No';
+
+                $entidad_conocimiento_1 = null;
+                $entidad_conocimiento_2 = null;
+                $entidad_conocimiento_3 = null;
+                $entidad_conocimiento_4 = null;
+                $entidad_conocimiento_5 = null;
+                $entidad_conocimiento_6 = null;
+                $entidad_conocimiento_7 = null;
+                $entidad_conocimiento_8 = null;
+            }else{
+                $entidad_conocimiento = 'Si';
+
+                $entidad_conocimiento_1 = $request->entidad_conocimiento_1;
+                $entidad_conocimiento_2 = $request->entidad_conocimiento_2;
+                $entidad_conocimiento_3 = $request->entidad_conocimiento_3;
+                $entidad_conocimiento_4 = $request->entidad_conocimiento_4;
+                $entidad_conocimiento_5 = $request->entidad_conocimiento_5;
+                $entidad_conocimiento_6 = $request->entidad_conocimiento_6;
+                $entidad_conocimiento_7 = $request->entidad_conocimiento_7;
+                $entidad_conocimiento_8 = $request->entidad_conocimiento_8;
+            }
         }else{
-            $entidad_conocimiento_inicial = null;
-            $array_otras_entidades = null;
+            $entidad_conocimiento = 'No';
+
+            $entidad_conocimiento_1 = null;
+            $entidad_conocimiento_2 = null;
+            $entidad_conocimiento_3 = null;
+            $entidad_conocimiento_4 = null;
+            $entidad_conocimiento_5 = null;
+            $entidad_conocimiento_6 = null;
+            $entidad_conocimiento_7 = null;
+            $entidad_conocimiento_8 = null;
         }
+        
         
         $actualizar_GestionInicialAfiliado = [
             'Nombre_afiliado' => $request->nombre_afiliado,
@@ -4471,8 +4568,14 @@ class AdministradorController extends Controller
             'Id_municipio_benefi' => $request->afi_municipio_info_afiliado,
             'Medio_notificacion' => $request->medio_notificacion_afiliado,
             'Entidad_conocimiento' => $entidad_conocimiento,
-            'Id_afp_entidad_conocimiento' => $entidad_conocimiento_inicial,
-            'Otras_entidades_conocimiento' => $array_otras_entidades,
+            'Id_afp_entidad_conocimiento' => $entidad_conocimiento_1,
+            'Id_afp_entidad_conocimiento2' => $entidad_conocimiento_2,
+            'Id_afp_entidad_conocimiento3' => $entidad_conocimiento_3,
+            'Id_afp_entidad_conocimiento4' => $entidad_conocimiento_4,
+            'Id_afp_entidad_conocimiento5' => $entidad_conocimiento_5,
+            'Id_afp_entidad_conocimiento6' => $entidad_conocimiento_6,
+            'Id_afp_entidad_conocimiento7' => $entidad_conocimiento_7,
+            'Id_afp_entidad_conocimiento8' => $entidad_conocimiento_8,
             'Nombre_usuario' => $nombre_usuario,
             'F_registro' => $date,
             'F_actualizacion' => $date
@@ -4856,7 +4959,7 @@ class AdministradorController extends Controller
         ->leftJoin('sigmel_gestiones.sigmel_informacion_entidades as sle', 'sle.Id_Entidad', '=', 'siae.Id_eps')
         ->leftJoin('sigmel_gestiones.sigmel_informacion_entidades as sle1', 'sle1.Id_Entidad', '=', 'siae.Id_afp')
         ->leftJoin('sigmel_gestiones.sigmel_informacion_entidades as sle2', 'sle2.Id_Entidad', '=', 'siae.Id_arl')
-        ->leftJoin('sigmel_gestiones.sigmel_informacion_entidades as sle3', 'sle3.Id_Entidad', '=', 'siae.Id_afp_entidad_conocimiento')
+        // ->leftJoin('sigmel_gestiones.sigmel_informacion_entidades as sle3', 'sle3.Id_Entidad', '=', 'siae.Id_afp_entidad_conocimiento')
         ->select('siae.Id_Afiliado', 'siae.ID_evento', 'siae.F_registro', 'siae.Nombre_afiliado', 'siae.Direccion', 'siae.Tipo_documento',
         'slp_tipo_doc.Nombre_parametro as Nombre_documento', 'siae.Nro_identificacion', 'siae.F_nacimiento', 'siae.Edad', 'siae.Genero',
         'slp_tipo_genero.Nombre_parametro as Nombre_genero', 'siae.Email', 'siae.Telefono_contacto', 'siae.Estado_civil',
@@ -4864,7 +4967,7 @@ class AdministradorController extends Controller
         'sld.Id_dominancia', 'sld.Nombre_dominancia as Dominancia', 'siae.Id_departamento', 'sldm.Nombre_departamento',
         'siae.Id_municipio', 'sldm1.Nombre_municipio', 'siae.Ocupacion', 'siae.Tipo_afiliado', 'slp_tipo_afiliado.Nombre_parametro as Nombre_tipo_afiliado',
         'siae.Ibc', 'siae.Id_eps', 'sle.Nombre_entidad as Nombre_eps', 'siae.Id_afp', 'sle1.Nombre_entidad as Nombre_afp', 'siae.Id_arl', 'sle2.Nombre_entidad as Nombre_arl',
-        'siae.Entidad_conocimiento', 'siae.Id_afp_entidad_conocimiento', 'siae.Otras_entidades_conocimiento','sle3.Nombre_entidad as Nombre_afp_conocimiento',
+        'siae.Entidad_conocimiento', 'siae.Id_afp_entidad_conocimiento', 'siae.Id_afp_entidad_conocimiento2', 'siae.Id_afp_entidad_conocimiento3', 'siae.Id_afp_entidad_conocimiento4', 'siae.Id_afp_entidad_conocimiento5', 'siae.Id_afp_entidad_conocimiento6', 'siae.Id_afp_entidad_conocimiento7', 'siae.Id_afp_entidad_conocimiento8',
         'siae.Tipo_documento_apoderado','slp_tipo_doc_apoderado.Nombre_parametro as Nombre_documento_apoderado',
         'siae.Apoderado', 'siae.Nombre_apoderado','siae.Nro_identificacion_apoderado', 'siae.Email_apoderado','siae.Telefono_apoderado', 'siae.Direccion_apoderado', 'siae.Id_departamento_apoderado', 'siae.Id_municipio_apoderado', 
         'sldm_apoderado.Nombre_departamento as Nombre_departamento_apoderado', 'sldm1_apoderado.Nombre_municipio as Nombre_municipio_apoderado',

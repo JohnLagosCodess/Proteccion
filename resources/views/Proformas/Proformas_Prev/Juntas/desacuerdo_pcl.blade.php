@@ -255,7 +255,7 @@
 
         @if(!empty($Agregar_copia))
             <br><br>
-            <div class="copias">
+            {{-- <div class="copias">
                 @foreach ($Agregar_copia as $copias => $valor)
                     @if($copias == "Afiliado")
                         <span class="fuente_todo_texto"><strong>Afiliado</strong> {{$afiliado_principal}}</strong></span><br>
@@ -263,7 +263,78 @@
                         <span class="fuente_todo_texto"><strong>{{$copias}}:</strong> {{$valor}}</span><br>
                     @endif
                 @endforeach
-            </div>
+            </div> --}}
+            <section class="fuente_todo_texto">
+                <table style="text-align: justify; width:100%; margin-left: -3px;">
+                    <tr>
+                        <td class="justificado copias"><span class="negrita">Copia:</span></td>                            
+                    </tr>
+                    <?php 
+                        $Afiliado = 'Afiliado';
+                        $Empleador = 'Empleador';
+                        $EPS = 'EPS';
+                        $AFP = 'AFP';
+                        $ARL = 'ARL';
+                        $AFP_Conocimiento = 'AFP_Conocimiento';
+                    ?>
+                    <?php 
+                        if (isset($Agregar_copia[$Afiliado])) { ?>
+                            <tr>
+                                <td class="copias">
+                                    <span class="negrita">Afiliado: </span><?=$afiliado_principal;?>
+                                </td>
+                            </tr>
+                        <?php       
+                        }
+                    ?>
+                    <?php 
+                        if (isset($Agregar_copia[$Empleador])) { ?>
+                            <tr>
+                                <td class="copias">
+                                    <span class="negrita">Empleador: </span><?=$Agregar_copia['Empleador'];?>
+                                </td>
+                            </tr>
+                        <?php       
+                        }
+                    ?>
+                    <?php 
+                        if (isset($Agregar_copia[$EPS])) { ?>
+                            <tr>
+                                <td class="copias">
+                                    <span class="negrita">EPS: </span><?=$Agregar_copia['EPS'];?>
+                                </td>
+                            </tr>
+                        <?php       
+                        }
+                    ?>
+                    <?php 
+                        if (isset($Agregar_copia[$AFP])) { ?>
+                            <tr>
+                                <td class="copias">
+                                    <span class="negrita">AFP: </span><?=$Agregar_copia['AFP'];?>
+                                </td>
+                            </tr>
+                        <?php       
+                        }
+                    ?>
+                    <?php 
+                        if (isset($Agregar_copia[$ARL])) { ?>
+                            <tr>
+                                <td class="copias">
+                                    <span class="negrita">ARL: </span><?=$Agregar_copia['ARL'];?>
+                                </td>
+                            </tr>
+                        <?php       
+                        }
+                    ?>
+                    <?php 
+                        if (isset($Agregar_copia[$AFP_Conocimiento])) { ?>
+                            <?=$Agregar_copia['AFP_Conocimiento'];?>
+                        <?php       
+                        }
+                    ?>
+                </table>
+            </section>
         @endif
         <br>
         <br>

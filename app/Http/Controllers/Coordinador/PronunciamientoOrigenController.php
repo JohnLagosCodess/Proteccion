@@ -115,6 +115,7 @@ class PronunciamientoOrigenController extends Controller
         }
 
         $Id_servicio = 3;
+        $Id_Asignacion = $Id_asignacion_calitec;
         $arraylistado_documentos = DB::select('CALL psrvistadocumentos(?,?,?)',array($Id_evento_calitec,$Id_servicio,$Id_asignacion_calitec));
 
         //Traer el N_siniestro del evento
@@ -122,8 +123,14 @@ class PronunciamientoOrigenController extends Controller
         ->select('N_siniestro')
         ->where([['ID_evento',$Id_evento_calitec]])
         ->get();
+
+        $entidades_conocimiento = $this->globalService->getAFPConocimientosParaCorrespondencia($Id_evento_calitec,$Id_asignacion_calitec);
+
+        /* Traer datos de la AFP de Conocimiento */
+        $info_afp_conocimiento = $this->globalService->retornarcuentaConAfpConocimiento($Id_evento_calitec);
+
         return view('coordinador.pronunciamientoOrigenATEL', compact('user','array_datos_pronunciamientoOrigen','info_pronuncia','array_datos_diagnostico_motcalifi','consecutivo',
-        'array_comunicados', 'caso_notificado','N_siniestro_evento', 'arraylistado_documentos', 'Id_servicio'));
+        'array_comunicados', 'caso_notificado','N_siniestro_evento', 'arraylistado_documentos', 'Id_servicio','Id_Asignacion','entidades_conocimiento', 'info_afp_conocimiento'));
     }
 
     //Cargar Selectores pronunciamiento
@@ -433,9 +440,18 @@ class PronunciamientoOrigenController extends Controller
         } else {         
             $junta_nacional = $request->junta_nacional;
         }
+        if (empty($request->copia_afp_conocimiento)) {
+            $copia_afp_conocimiento = null;                        
+            $copy_afp_conocimiento = null;
+        } else {      
+            // traemos la informacion de las copias dependiendo de cuantas entidades de conocimiento hay
+            $copy_afp_conocimiento = 'AFP_Conocimiento';
+            $str_entidades = $this->globalService->retornarStringCopiasEntidadConocimiento($Id_EventoPronuncia);
+            $copia_afp_conocimiento = $str_entidades;
+        }
 
         // Agrupa las variables en un array
-        $variables = array($copia_afiliado, $copia_empleador, $copia_eps, $copia_afp, $copia_arl, $junta_regional, $junta_nacional);
+        $variables = array($copia_afiliado, $copia_empleador, $copia_eps, $copia_afp, $copia_arl, $copia_afp_conocimiento, $junta_regional, $junta_nacional);
 
         // Filtra los elementos nulos del array
         $variables_filtradas = array_filter($variables, function($valor) {
@@ -535,6 +551,7 @@ class PronunciamientoOrigenController extends Controller
                 'Copia_eps' => $copia_eps,
                 'Copia_afp' => $copia_afp,
                 'Copia_arl' => $copia_arl,
+                'Copia_Afp_Conocimiento' => $copy_afp_conocimiento,
                 'Copia_junta_regional' => $junta_regional,
                 'Copia_junta_nacional' => $junta_nacional,
                 'Junta_regional_cual' => $cual,
@@ -734,6 +751,7 @@ class PronunciamientoOrigenController extends Controller
                 'Copia_eps' => $copia_eps,
                 'Copia_afp' => $copia_afp,
                 'Copia_arl' => $copia_arl,
+                'Copia_Afp_Conocimiento' => $copy_afp_conocimiento,
                 'Copia_junta_regional' => $junta_regional,
                 'Copia_junta_nacional' => $junta_nacional,
                 'Junta_regional_cual' => $cual,

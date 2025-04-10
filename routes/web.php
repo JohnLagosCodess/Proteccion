@@ -35,6 +35,8 @@ use App\Http\Controllers\Administrador\ReporteFacturacionPclController;
 use App\Http\Controllers\Administrador\ReporteFacturacionJuntasController;
 use App\Http\Controllers\Consulta\ReporteTrazabilidadPclController;
 use App\Http\Controllers\Consulta\ReporteTrazabilidadJuntasController;
+use App\Services\GlobalService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 
@@ -907,6 +909,15 @@ Route::post('/consultaReporteFactuJuntas', [ReporteFacturacionJuntasController::
 // Validación creación de un nuevo servicio de Adición Dx, Calificacion técnica, Reacalificación y Revisión Pensión desde la modal Nuevo Proceso
 Route::post('/ValidarNuevosServiciosNuevoProceso', [BuscarEventoController::class, 'ValidarNuevosServiciosNuevoProceso']);
 
+// llamado del servicio global retornarStringCopiasEntidadConocimiento para retornar el string de las entidades (se usa solamente en los módulos principales)
+Route::post('/string_entidades_conocimiento', function (Request $request) {
+    return app()->make(GlobalService::class)->retornarStringCopiasEntidadConocimiento($request->id_evento);
+});
+
+// llamado del servicio global actualizarCopiasEntidadesComunicado
+Route::post('/actualizar_copias_comunicado', function (Request $request) {
+    return app()->make(GlobalService::class)->actualizarCopiasEntidadesComunicado($request->id_evento, $request->id_comunicado, $request->id_asignacion, $request->id_proceso);
+});
 
 // Creación Vista Módulo Reporte Trazabilidad PCL
 // 25/11/2024 Vista Reporte Trazabilidad PCL

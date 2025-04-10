@@ -469,13 +469,19 @@ class CalificacionJuntasController extends Controller
             $fecha_notificacion = '';
             $f_radicacion = '';
         }
+        $Id_Asignacion = $newIdAsignacion;
+        
+        $info_afp_conocimiento = $this->globalService->retornarcuentaConAfpConocimiento($newIdEvento);
+
+        $entidades_conocimiento = $this->globalService->getAFPConocimientosParaCorrespondencia($newIdEvento,$newIdAsignacion);
         
         // echo $fecha_notificacion;
 
         return view('coordinador.calificacionJuntas', compact('user','array_datos_calificacionJuntas','arraylistado_documentos', 'cantidad_documentos_cargados', 'arrayinfo_afiliado',
         'arrayinfo_controvertido','arrayinfo_pagos','listado_documentos_solicitados','dato_validacion_no_aporta_docs',
         'arraycampa_documento_solicitado','consecutivo','hitorialAgregarSeguimiento','SubModulo', 'Id_servicio','enviar_notificaciones', 'N_siniestro_evento', 'info_evento', 'validar_lista_chequeo', 'info_cuadro_expedientes',
-        'f_envio_exp_jrci', 'f_devolucion_exp_jrci', 'f_reenvio_exp_jrci', 'f_envio_pago_honorarios_jnci', 'fecha_notificacion', 'f_radicacion'));
+        'f_envio_exp_jrci', 'f_devolucion_exp_jrci', 'f_reenvio_exp_jrci', 'f_envio_pago_honorarios_jnci', 'fecha_notificacion', 'f_radicacion',
+        'Id_Asignacion','info_afp_conocimiento','entidades_conocimiento'));
     }
     //Cargar Selectores Juntas
     public function cargueListadoSelectoresJuntas(Request $request){
@@ -3190,14 +3196,14 @@ class CalificacionJuntasController extends Controller
 
         $mensajes = array(
             "parametro" => 'agregar_comunicado',
-            'status_pdf' => $this->generarPDF($request, $id_comunicado,$principalDestinatario($entidades,$destinatario ?? null),'guardar'),
+            'status_pdf' => $this->generarPDF($request, $id_comunicado,$principalDestinatario($entidades,$destinatario ?? null),$total_copia_comunicado,'guardar'),
             "mensaje" => 'Comunicado generado satisfactoriamente.'
         );
 
         return json_decode(json_encode($mensajes, true));
 
     }
-    public function generarPDF($data_comunicado,$id_comunicado,$principalDestinatario,$tipo_proceso){
+    public function generarPDF($data_comunicado,$id_comunicado,$principalDestinatario,$total_copia_comunicado,$tipo_proceso){
         
         //Dado que los procesos de guardar y actualizar estan separados, y las clave-valor no son los mismos,
         //se utiliza params para homolarlo en uno solo.
@@ -3343,6 +3349,7 @@ class CalificacionJuntasController extends Controller
             'edit_copia_arl' => ($data_comunicado->{$params[$tipo_proceso]['p36']} == 'true'),
             'edit_copia_jrci' => ($data_comunicado->{$params[$tipo_proceso]['p37']} == 'true'),
             'edit_copia_jnci' => ($data_comunicado->{$params[$tipo_proceso]['p38']} == 'true'),
+            'edit_copia_entidad_conocimiento' => $total_copia_comunicado,
             'n_siniestro_proforma_editar' => $data_comunicado->{$params[$tipo_proceso]['p39']},
             'Nombre_junta_act' => $data_comunicado->{$params[$tipo_proceso]['p40']},
             'F_estructuracion_act' => $data_comunicado->{$params[$tipo_proceso]['p41']},
@@ -3592,7 +3599,7 @@ class CalificacionJuntasController extends Controller
         
         $mensajes = array(
             "parametro" => 'actualizar_comunicado',
-            'status_pdf' => $this->generarPDF($request, $Id_comunicado_editar,$principalDestinatario($entidades,$destinatario),'actualizar'),
+            'status_pdf' => $this->generarPDF($request, $Id_comunicado_editar,$principalDestinatario($entidades,$destinatario),$total_copia_comunicado,'actualizar'),
             "mensaje" => 'Comunicado actualizado satisfactoriamente.'
         );
 
@@ -3799,6 +3806,7 @@ class CalificacionJuntasController extends Controller
                 $edit_copias_arl = $request->edit_copia_arl ? 'ARL' : '';
                 $edit_copias_jrci = $request->edit_copia_jrci ? 'JRCI': '';
                 $edit_copias_jnci = $request->edit_copia_jnci ? 'JNCI': '';
+                $final_copia_afp_conocimiento =  isset($request->edit_copia_entidad_conocimiento) ? 'AFP_Conocimiento' : '';
 
                 $total_copias = array_filter(array(
                     'edit_copia_afiliado' => $edit_copias_afiliado,
@@ -3808,6 +3816,7 @@ class CalificacionJuntasController extends Controller
                     'edit_copia_arl' => $edit_copias_arl,
                     'edit_copia_jrci' => $edit_copias_jrci,
                     'edit_copia_jnci' => $edit_copias_jnci,
+                    'copia_afp_conocimiento' => $final_copia_afp_conocimiento,
                 ));   
                 sleep(2);
 
@@ -4045,6 +4054,12 @@ class CalificacionJuntasController extends Controller
 
                     $Agregar_copias['JNCI'] = $nombre_jnci."; ".$direccion_jnci."; ".$telefonos_jnci."; ".$ciudad_jnci." - ".$departamento_jnci;
     
+                }
+
+                if (isset($copia_afp_conocimiento)) {
+                    $datos_entidades_conocimiento = $this->globalService->informacionEntidadesConocimientoEvento($ID_evento, 'pdf');
+                    $Agregar_copias['AFP_Conocimiento'] = $datos_entidades_conocimiento;
+                    
                 }
 
                 // validamos si el checkbox de la firma esta marcado
@@ -4786,6 +4801,7 @@ class CalificacionJuntasController extends Controller
                 $edit_copias_arl = $request->edit_copia_arl ? 'ARL' : '';
                 $edit_copias_jrci = $request->edit_copia_jrci ? 'JRCI': '';
                 $edit_copias_jnci = $request->edit_copia_jnci ? 'JNCI': '';
+                $final_copia_afp_conocimiento =  isset($request->edit_copia_entidad_conocimiento) ? 'AFP_Conocimiento' : '';
 
                 $total_copias = array_filter(array(
                     'edit_copia_afiliado' => $edit_copias_afiliado,
@@ -4795,6 +4811,7 @@ class CalificacionJuntasController extends Controller
                     'edit_copia_arl' => $edit_copias_arl,
                     'edit_copia_jrci' => $edit_copias_jrci,
                     'edit_copia_jnci' => $edit_copias_jnci,
+                    'copia_afp_conocimiento' => $final_copia_afp_conocimiento,
                 ));   
                 sleep(2);
 
@@ -5032,6 +5049,12 @@ class CalificacionJuntasController extends Controller
 
                     $Agregar_copias['JNCI'] = $nombre_jnci."; ".$direccion_jnci."; ".$telefonos_jnci."; ".$ciudad_jnci." - ".$departamento_jnci;
     
+                }
+
+                if (isset($copia_afp_conocimiento)) {
+                    $datos_entidades_conocimiento = $this->globalService->informacionEntidadesConocimientoEvento($ID_evento, 'pdf');
+                    $Agregar_copias['AFP_Conocimiento'] = $datos_entidades_conocimiento;
+                    
                 }
 
                 // validamos si el checkbox de la firma esta marcado
@@ -5299,6 +5322,7 @@ class CalificacionJuntasController extends Controller
                 $edit_copias_arl = $request->edit_copia_arl ? 'ARL' : '';
                 $edit_copias_jrci = $request->edit_copia_jrci ? 'JRCI': '';
                 $edit_copias_jnci = $request->edit_copia_jnci ? 'JNCI': '';
+                $final_copia_afp_conocimiento =  isset($request->edit_copia_entidad_conocimiento) ? 'AFP_Conocimiento' : '';
 
                 $total_copias = array_filter(array(
                     'edit_copia_afiliado' => $edit_copias_afiliado,
@@ -5308,6 +5332,7 @@ class CalificacionJuntasController extends Controller
                     'edit_copia_arl' => $edit_copias_arl,
                     'edit_copia_jrci' => $edit_copias_jrci,
                     'edit_copia_jnci' => $edit_copias_jnci,
+                    'copia_afp_conocimiento' => $final_copia_afp_conocimiento,
                 ));   
                 sleep(2);
 
@@ -5545,6 +5570,12 @@ class CalificacionJuntasController extends Controller
 
                     $Agregar_copias['JNCI'] = $nombre_jnci."; ".$direccion_jnci."; ".$telefonos_jnci."; ".$ciudad_jnci." - ".$departamento_jnci;
     
+                }
+
+                if (isset($copia_afp_conocimiento)) {
+                    $datos_entidades_conocimiento = $this->globalService->informacionEntidadesConocimientoEvento($ID_evento, 'pdf');
+                    $Agregar_copias['AFP_Conocimiento'] = $datos_entidades_conocimiento;
+                    
                 }
 
                 // validamos si el checkbox de la firma esta marcado
@@ -5775,6 +5806,7 @@ class CalificacionJuntasController extends Controller
                 $edit_copias_arl = $request->edit_copia_arl ? 'ARL' : '';
                 $edit_copias_jrci = $request->edit_copia_jrci ? 'JRCI': '';
                 $edit_copias_jnci = $request->edit_copia_jnci ? 'JNCI': '';
+                $final_copia_afp_conocimiento =  isset($request->edit_copia_entidad_conocimiento) ? 'AFP_Conocimiento' : '';
 
                 $total_copias = array_filter(array(
                     'edit_copia_afiliado' => $edit_copias_afiliado,
@@ -5784,6 +5816,7 @@ class CalificacionJuntasController extends Controller
                     'edit_copia_arl' => $edit_copias_arl,
                     'edit_copia_jrci' => $edit_copias_jrci,
                     'edit_copia_jnci' => $edit_copias_jnci,
+                    'copia_afp_conocimiento' => $final_copia_afp_conocimiento,
                 ));   
                 sleep(2);
 
@@ -6021,6 +6054,12 @@ class CalificacionJuntasController extends Controller
 
                     $Agregar_copias['JNCI'] = $nombre_jnci."; ".$direccion_jnci."; ".$telefonos_jnci."; ".$ciudad_jnci." - ".$departamento_jnci;
     
+                }
+
+                if (isset($copia_afp_conocimiento)) {
+                    $datos_entidades_conocimiento = $this->globalService->informacionEntidadesConocimientoEvento($ID_evento, 'pdf');
+                    $Agregar_copias['AFP_Conocimiento'] = $datos_entidades_conocimiento;
+                    
                 }
 
                 // validamos si el checkbox de la firma esta marcado
@@ -6251,6 +6290,7 @@ class CalificacionJuntasController extends Controller
                 $edit_copias_arl = $request->edit_copia_arl ? 'ARL' : '';
                 $edit_copias_jrci = $request->edit_copia_jrci ? 'JRCI': '';
                 $edit_copias_jnci = $request->edit_copia_jnci ? 'JNCI': '';
+                $final_copia_afp_conocimiento =  isset($request->edit_copia_entidad_conocimiento) ? 'AFP_Conocimiento' : '';
 
                 $total_copias = array_filter(array(
                     'edit_copia_afiliado' => $edit_copias_afiliado,
@@ -6260,6 +6300,7 @@ class CalificacionJuntasController extends Controller
                     'edit_copia_arl' => $edit_copias_arl,
                     'edit_copia_jrci' => $edit_copias_jrci,
                     'edit_copia_jnci' => $edit_copias_jnci,
+                    'copia_afp_conocimiento' => $final_copia_afp_conocimiento,
                 ));   
                 sleep(2);
 
@@ -6497,6 +6538,12 @@ class CalificacionJuntasController extends Controller
 
                     $Agregar_copias['JNCI'] = $nombre_jnci."; ".$direccion_jnci."; ".$telefonos_jnci."; ".$ciudad_jnci." - ".$departamento_jnci;
     
+                }
+
+                if (isset($copia_afp_conocimiento)) {
+                    $datos_entidades_conocimiento = $this->globalService->informacionEntidadesConocimientoEvento($ID_evento, 'pdf');
+                    $Agregar_copias['AFP_Conocimiento'] = $datos_entidades_conocimiento;
+                    
                 }
 
                 // validamos si el checkbox de la firma esta marcado
@@ -6726,6 +6773,7 @@ class CalificacionJuntasController extends Controller
                 $edit_copias_arl = $request->edit_copia_arl ? 'ARL' : '';
                 $edit_copias_jrci = $request->edit_copia_jrci ? 'JRCI': '';
                 $edit_copias_jnci = $request->edit_copia_jnci ? 'JNCI': '';
+                $final_copia_afp_conocimiento =  isset($request->edit_copia_entidad_conocimiento) ? 'AFP_Conocimiento' : '';
 
                 $total_copias = array_filter(array(
                     'edit_copia_afiliado' => $edit_copias_afiliado,
@@ -6735,6 +6783,7 @@ class CalificacionJuntasController extends Controller
                     'edit_copia_arl' => $edit_copias_arl,
                     'edit_copia_jrci' => $edit_copias_jrci,
                     'edit_copia_jnci' => $edit_copias_jnci,
+                    'copia_afp_conocimiento' => $final_copia_afp_conocimiento,
                 ));   
                 sleep(2);
 
@@ -6972,6 +7021,12 @@ class CalificacionJuntasController extends Controller
 
                     $Agregar_copias['JNCI'] = $nombre_jnci."; ".$direccion_jnci."; ".$telefonos_jnci."; ".$ciudad_jnci." - ".$departamento_jnci;
     
+                }
+
+                if (isset($copia_afp_conocimiento)) {
+                    $datos_entidades_conocimiento = $this->globalService->informacionEntidadesConocimientoEvento($ID_evento, 'pdf');
+                    $Agregar_copias['AFP_Conocimiento'] = $datos_entidades_conocimiento;
+                    
                 }
 
                 // validamos si el checkbox de la firma esta marcado
@@ -7201,6 +7256,7 @@ class CalificacionJuntasController extends Controller
                 $edit_copias_arl = $request->edit_copia_arl ? 'ARL' : '';
                 $edit_copias_jrci = $request->edit_copia_jrci ? 'JRCI': '';
                 $edit_copias_jnci = $request->edit_copia_jnci ? 'JNCI': '';
+                $final_copia_afp_conocimiento =  isset($request->edit_copia_entidad_conocimiento) ? 'AFP_Conocimiento' : '';
 
                 $total_copias = array_filter(array(
                     'edit_copia_afiliado' => $edit_copias_afiliado,
@@ -7210,6 +7266,7 @@ class CalificacionJuntasController extends Controller
                     'edit_copia_arl' => $edit_copias_arl,
                     'edit_copia_jrci' => $edit_copias_jrci,
                     'edit_copia_jnci' => $edit_copias_jnci,
+                    'copia_afp_conocimiento' => $final_copia_afp_conocimiento,
                 ));   
                 sleep(2);
 
@@ -7447,6 +7504,12 @@ class CalificacionJuntasController extends Controller
 
                     $Agregar_copias['JNCI'] = $nombre_jnci."; ".$direccion_jnci."; ".$telefonos_jnci."; ".$ciudad_jnci." - ".$departamento_jnci;
     
+                }
+
+                if (isset($copia_afp_conocimiento)) {
+                    $datos_entidades_conocimiento = $this->globalService->informacionEntidadesConocimientoEvento($ID_evento, 'pdf');
+                    $Agregar_copias['AFP_Conocimiento'] = $datos_entidades_conocimiento;
+                    
                 }
 
                 // validamos si el checkbox de la firma esta marcado
@@ -7660,6 +7723,7 @@ class CalificacionJuntasController extends Controller
                 $edit_copias_arl = $request->edit_copia_arl ? 'ARL' : '';
                 $edit_copias_jrci = $request->edit_copia_jrci ? 'JRCI': '';
                 $edit_copias_jnci = $request->edit_copia_jnci ? 'JNCI': '';
+                $final_copia_afp_conocimiento =  isset($request->edit_copia_entidad_conocimiento) ? 'AFP_Conocimiento' : '';
 
                 $total_copias = array_filter(array(
                     'edit_copia_afiliado' => $edit_copias_afiliado,
@@ -7669,6 +7733,7 @@ class CalificacionJuntasController extends Controller
                     'edit_copia_arl' => $edit_copias_arl,
                     'edit_copia_jrci' => $edit_copias_jrci,
                     'edit_copia_jnci' => $edit_copias_jnci,
+                    'copia_afp_conocimiento' => $final_copia_afp_conocimiento,
                 ));   
                 sleep(2);
 
@@ -7906,6 +7971,12 @@ class CalificacionJuntasController extends Controller
 
                     $Agregar_copias['JNCI'] = $nombre_jnci."; ".$direccion_jnci."; ".$telefonos_jnci."; ".$ciudad_jnci." - ".$departamento_jnci;
     
+                }
+
+                if (isset($copia_afp_conocimiento)) {
+                    $datos_entidades_conocimiento = $this->globalService->informacionEntidadesConocimientoEvento($ID_evento, 'pdf');
+                    $Agregar_copias['AFP_Conocimiento'] = $datos_entidades_conocimiento;
+                    
                 }
 
                 // validamos si el checkbox de la firma esta marcado
@@ -8119,6 +8190,7 @@ class CalificacionJuntasController extends Controller
                 $edit_copias_arl = $request->edit_copia_arl ? 'ARL' : '';
                 $edit_copias_jrci = $request->edit_copia_jrci ? 'JRCI': '';
                 $edit_copias_jnci = $request->edit_copia_jnci ? 'JNCI': '';
+                $final_copia_afp_conocimiento =  isset($request->edit_copia_entidad_conocimiento) ? 'AFP_Conocimiento' : '';
 
                 $total_copias = array_filter(array(
                     'edit_copia_afiliado' => $edit_copias_afiliado,
@@ -8128,6 +8200,7 @@ class CalificacionJuntasController extends Controller
                     'edit_copia_arl' => $edit_copias_arl,
                     'edit_copia_jrci' => $edit_copias_jrci,
                     'edit_copia_jnci' => $edit_copias_jnci,
+                    'copia_afp_conocimiento' => $final_copia_afp_conocimiento,
                 ));   
                 sleep(2);
 
@@ -8365,6 +8438,12 @@ class CalificacionJuntasController extends Controller
 
                     $Agregar_copias['JNCI'] = $nombre_jnci."; ".$direccion_jnci."; ".$telefonos_jnci."; ".$ciudad_jnci." - ".$departamento_jnci;
     
+                }
+
+                if (isset($copia_afp_conocimiento)) {
+                    $datos_entidades_conocimiento = $this->globalService->informacionEntidadesConocimientoEvento($ID_evento, 'pdf');
+                    $Agregar_copias['AFP_Conocimiento'] = $datos_entidades_conocimiento;
+                    
                 }
 
                 // validamos si el checkbox de la firma esta marcado
@@ -8578,6 +8657,7 @@ class CalificacionJuntasController extends Controller
                 $edit_copias_arl = $request->edit_copia_arl ? 'ARL' : '';
                 $edit_copias_jrci = $request->edit_copia_jrci ? 'JRCI': '';
                 $edit_copias_jnci = $request->edit_copia_jnci ? 'JNCI': '';
+                $final_copia_afp_conocimiento =  isset($request->edit_copia_entidad_conocimiento) ? 'AFP_Conocimiento' : '';
 
                 $total_copias = array_filter(array(
                     'edit_copia_afiliado' => $edit_copias_afiliado,
@@ -8587,6 +8667,7 @@ class CalificacionJuntasController extends Controller
                     'edit_copia_arl' => $edit_copias_arl,
                     'edit_copia_jrci' => $edit_copias_jrci,
                     'edit_copia_jnci' => $edit_copias_jnci,
+                    'copia_afp_conocimiento' => $final_copia_afp_conocimiento,
                 ));   
                 sleep(2);
 
@@ -8824,6 +8905,11 @@ class CalificacionJuntasController extends Controller
 
                     $Agregar_copias['JNCI'] = $nombre_jnci."; ".$direccion_jnci."; ".$telefonos_jnci."; ".$ciudad_jnci." - ".$departamento_jnci;
     
+                }
+
+                if (isset($copia_afp_conocimiento)) {
+                    $datos_entidades_conocimiento = $this->globalService->informacionEntidadesConocimientoEvento($ID_evento, 'pdf');
+                    $Agregar_copias['AFP_Conocimiento'] = $datos_entidades_conocimiento;
                 }
 
                 // validamos si el checkbox de la firma esta marcado

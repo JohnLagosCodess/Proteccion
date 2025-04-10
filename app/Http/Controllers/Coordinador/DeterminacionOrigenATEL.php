@@ -305,7 +305,10 @@ class DeterminacionOrigenATEL extends Controller
         ->get();
 
         $Id_servicio = 1;
+        $Id_Asignacion = $Id_asignacion_dto_atel;
         $arraylistado_documentos = DB::select('CALL psrvistadocumentos(?,?,?)',array($Id_evento_dto_atel,$Id_servicio,$Id_asignacion_dto_atel));
+
+        $entidades_conocimiento = $this->globalService->getAFPConocimientosParaCorrespondencia($Id_evento_dto_atel,$Id_asignacion_dto_atel);
 
         return view('coordinador.determinacionOrigenATEL', compact('user', 'array_datos_calificacion_origen', 
         'motivo_solicitud_actual', 'datos_apoderado_actual', 
@@ -313,7 +316,8 @@ class DeterminacionOrigenATEL extends Controller
         'dato_articulo_12', 'array_datos_diagnostico_motcalifi','info_evento',
         'array_datos_examenes_interconsultas', 'array_datos_historico_laboral', 'datos_bd_DTO_ATEL', 
         'nombre_del_evento_guardado','array_comite_interdisciplinario', 'consecutivo', 
-        'array_comunicados_correspondencia', 'afp_afiliado', 'info_afp_conocimiento', 'caso_notificado', 'N_siniestro_evento', 'datos_forma_envio', 'nombre_destinatario_principal_correspondencia', 'arraylistado_documentos', 'Id_servicio'));
+        'array_comunicados_correspondencia', 'afp_afiliado', 'info_afp_conocimiento', 'caso_notificado', 'N_siniestro_evento', 'datos_forma_envio', 'nombre_destinatario_principal_correspondencia',
+        'arraylistado_documentos', 'Id_servicio','Id_Asignacion','entidades_conocimiento'));
 
     }
 
@@ -920,6 +924,11 @@ class DeterminacionOrigenATEL extends Controller
             ['N_radicado',$request->radicado_dictamen]
             ])
         ->value('Id_Comunicado');
+
+        $actualizaOficios = $this->globalService->ValidarExistenciaOficioYCopiasOficio($request->ID_Evento, $request->Id_Asignacion,$request->Id_proceso);
+        if($actualizaOficios){
+            $this->globalService->AgregaroQuitarCopiaEntidadConocimientoDictamen($request->ID_Evento,$request->Id_Asignacion,$request->Id_proceso,$actualizaOficios);
+        }
         
         $mensajes = array(
             "parametro" => 'agregar_dto_atel',
@@ -1158,7 +1167,12 @@ class DeterminacionOrigenATEL extends Controller
             $variables_llenas[] = $afp;
         }
         if (!empty($afp_conocimiento)) {
-            $variables_llenas[] = $afp_conocimiento;
+            // $variables_llenas[] = $afp_conocimiento;
+
+            // traemos la informacion de las copias dependiendo de cuantas entidades de conocimiento hay
+            $str_entidades = $this->globalService->retornarStringCopiasEntidadConocimiento($Id_Evento_dto_atel);
+           
+            $variables_llenas[] = $str_entidades;
         }
         if (!empty($arl)) {
             $variables_llenas[] = $arl;
@@ -1326,8 +1340,6 @@ class DeterminacionOrigenATEL extends Controller
                 'Id_Comunicado' => $id_comunicado ? $id_comunicado : null,
                 "mensaje" => 'Correspondencia guardada satisfactoriamente.'
             );
-    
-            return json_decode(json_encode($mensajes, true));
             
         } 
         elseif($bandera_correspondecia_guardar_actualizar == 'Actualizar') {
@@ -1440,10 +1452,10 @@ class DeterminacionOrigenATEL extends Controller
                 "mensaje" => 'Correspondencia actualizada satisfactoriamente.'
             );
     
-            return json_decode(json_encode($mensajes, true));
         }
-        
-
+        //Se actualizan las copias de entidad conocimiento del dictamen, PBS092
+        $this->globalService->AgregaroQuitarCopiaEntidadConocimientoDictamen($Id_Evento_dto_atel,$Id_Asignacion_dto_atel,$Id_Proceso_dto_atel,$agregar_copias_comu);
+        return json_decode(json_encode($mensajes, true));
     }
     
     // Descargar proforma DML ORIGEN PREVISIONAL (DICTAMEN)
@@ -2198,48 +2210,6 @@ class DeterminacionOrigenATEL extends Controller
             $Agregar_copias['AFP'] = $nombre_afp."; ".$direccion_afp."; ".$email_afp."; ".$telefonos_afp."; ".$departamento_afp." - ".$municipio_afp;
         }
 
-        if (isset($copia_afp_conocimiento)) {
-            $dato_id_afp_conocimiento = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_afiliado_eventos as siae')
-            ->select('siae.Entidad_conocimiento', 'siae.Id_afp_entidad_conocimiento')
-            ->where([['siae.ID_evento', $Id_evento]])
-            ->get();
-
-            if (count($dato_id_afp_conocimiento) > 0) {
-
-                $si_entidad_conocimiento = $dato_id_afp_conocimiento[0]->Entidad_conocimiento;
-
-                if ($si_entidad_conocimiento == "Si") {
-                    $id_afp_conocimiento = $dato_id_afp_conocimiento[0]->Id_afp_entidad_conocimiento;
-    
-                    $datos_afp_conocimiento = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_entidades as sie')
-                    ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm', 'sie.Id_Departamento', '=', 'sldm.Id_departamento')
-                    ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm2', 'sie.Id_Ciudad', '=', 'sldm2.Id_municipios')
-                    ->select('sie.Nombre_entidad', 'sie.Direccion', 'sie.Telefonos', 'sie.Otros_Telefonos', 'sie.Emails as Email', 'sldm.Nombre_departamento as Departamento', 'sldm2.Nombre_municipio')
-                    ->where([['sie.Id_Entidad', $id_afp_conocimiento]])
-                    ->get();
-
-                    $nombre_afp_conocimiento = $datos_afp_conocimiento[0]->Nombre_entidad;
-                    $direccion_afp_conocimiento = $datos_afp_conocimiento[0]->Direccion;
-                    if ($datos_afp_conocimiento[0]->Otros_Telefonos != "") {
-                        $telefonos_afp_conocimiento = $datos_afp_conocimiento[0]->Telefonos.",".$datos_afp_conocimiento[0]->Otros_Telefonos;
-                    } else {
-                        $telefonos_afp_conocimiento = $datos_afp_conocimiento[0]->Telefonos;
-                    }
-                    $email_afp_conocimiento = $datos_afp_conocimiento[0]->Email;
-                    $departamento_afp_conocimiento = $datos_afp_conocimiento[0]->Departamento;
-                    $municipio_afp_conocimiento = $datos_afp_conocimiento[0]->Nombre_municipio;
-    
-                    $Agregar_copias['AFP_Conocimiento'] = $nombre_afp_conocimiento."; ".$direccion_afp_conocimiento."; ".$email_afp_conocimiento."; ".$telefonos_afp_conocimiento."; ".$departamento_afp_conocimiento." - ".$municipio_afp_conocimiento;
-                } else {
-                    // $Agregar_copias['AFP_Conocimiento'] = '';
-                }
-
-            } else {
-                // $Agregar_copias['AFP_Conocimiento'] = '';
-            }
-            
-        }
-
         if(isset($copia_arl)){
             $datos_arl = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_afiliado_eventos as siae')
             ->leftJoin('sigmel_gestiones.sigmel_informacion_entidades as sie', 'siae.Id_arl', '=', 'sie.Id_Entidad')
@@ -2261,6 +2231,23 @@ class DeterminacionOrigenATEL extends Controller
             $municipio_arl = $datos_arl[0]->Nombre_municipio;
 
             $Agregar_copias['ARL'] = $nombre_arl."; ".$direccion_arl."; ".$email_arl."; ".$telefonos_arl."; ".$departamento_arl." - ".$municipio_arl;
+        }
+
+        if (isset($copia_afp_conocimiento)) {
+            $dato_id_afp_conocimiento = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_afiliado_eventos as siae')
+            ->select('siae.Entidad_conocimiento')
+            ->where([['siae.ID_evento', $Id_evento]])
+            ->get();
+
+            $si_entidad_conocimiento = $dato_id_afp_conocimiento[0]->Entidad_conocimiento;
+
+            if ($si_entidad_conocimiento == "Si") {
+                $datos_entidades_conocimiento = $this->globalService->informacionEntidadesConocimientoEvento($Id_evento, 'pdf');
+                $Agregar_copias['AFP_Conocimiento'] = $datos_entidades_conocimiento;
+            }else{
+                $Agregar_copias['AFP_Conocimiento'] = '';
+            }
+            
         }
 
         /* Validación Firma Cliente */
