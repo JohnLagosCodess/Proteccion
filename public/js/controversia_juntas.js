@@ -4320,42 +4320,56 @@ $(document).ready(function(){
                 document.body.removeChild(enlaceDescarga);
             }, 1000);
         }else{
-            setTimeout(() => {
-                $.ajax({    
-                    type:'POST',
-                    url:'/DescargarProformaPronunDictaAcuerdo',
-                    data: datos_proforma_acuerdo,
-                    xhrFields: {
-                        responseType: 'blob' // Indica que la respuesta es un blob
-                    },
-                    success: function (response, status, xhr) {
-                        var blob = new Blob([response], { type: xhr.getResponseHeader('content-type') });
-                
-                        // Crear un enlace de descarga similar al ejemplo anterior
-                        
-                        var nombre_documento = "JUN_ACUERDO_"+id_asignacion+"_"+num_identificacion+"_"+nro_radicado+".pdf";                    
-                        var link = document.createElement('a');
-                        link.href = window.URL.createObjectURL(blob);
-                        link.download = nombre_documento;  // Reemplaza con el nombre deseado para el archivo PDF
-                
-                        // Adjuntar el enlace al documento y activar el evento de clic
-                        document.body.appendChild(link);
-                        link.click();
-                
-                        // Eliminar el enlace del documento
-                        document.body.removeChild(link);
-                    },
-                    error: function (error) {
-                        // Manejar casos de error
-                        console.error('Error al descargar el word:', error);
-                    },
-                    complete: function(){
-                        if(infoComunicado.Nombre_documento == null){
-                            location.reload();
-                        }
-                    }       
-                });
-            }, 2000);
+            if (infoComunicado.Nombre_documento) {
+                var nombre_doc = infoComunicado.Nombre_documento;
+                var idEvento = infoComunicado.ID_evento;
+                var enlaceDescarga = document.createElement('a');
+                enlaceDescarga.href = '/descargar-archivo/'+nombre_doc+'/'+idEvento;     
+                enlaceDescarga.target = '_self'; // Abrir en una nueva ventana/tab
+                enlaceDescarga.style.display = 'none';
+                document.body.appendChild(enlaceDescarga);
+                enlaceDescarga.click();
+                setTimeout(function() {
+                    document.body.removeChild(enlaceDescarga);
+                }, 1000);
+            }else{
+                // setTimeout(() => {
+                    $.ajax({    
+                        type:'POST',
+                        url:'/DescargarProformaPronunDictaAcuerdo',
+                        data: datos_proforma_acuerdo,
+                        xhrFields: {
+                            responseType: 'blob' // Indica que la respuesta es un blob
+                        },
+                        success: function (response, status, xhr) {
+                            var blob = new Blob([response], { type: xhr.getResponseHeader('content-type') });
+                    
+                            // Crear un enlace de descarga similar al ejemplo anterior
+                            
+                            var nombre_documento = "JUN_ACUERDO_"+id_asignacion+"_"+num_identificacion+"_"+nro_radicado+".pdf";                    
+                            var link = document.createElement('a');
+                            link.href = window.URL.createObjectURL(blob);
+                            link.download = nombre_documento;  // Reemplaza con el nombre deseado para el archivo PDF
+                    
+                            // Adjuntar el enlace al documento y activar el evento de clic
+                            document.body.appendChild(link);
+                            link.click();
+                    
+                            // Eliminar el enlace del documento
+                            document.body.removeChild(link);
+                        },
+                        error: function (error) {
+                            // Manejar casos de error
+                            console.error('Error al descargar el word:', error);
+                        },
+                        complete: function(){
+                            if(infoComunicado.Nombre_documento == null){
+                                location.reload();
+                            }
+                        }       
+                    });
+                // }, 2000);
+            }
         }
 
     });
@@ -4795,37 +4809,51 @@ $(document).ready(function(){
                 document.body.removeChild(enlaceDescarga);
             }, 1000);
         }else{
-            setTimeout(() => {
-                $.ajax({    
-                    type:'POST',
-                    url:'/DescargarProformaRecursoReposicion',
-                    data: datos_proforma_desacuerdo,
-                    xhrFields: {
-                        responseType: 'blob' // Indica que la respuesta es un blob
-                    },
-                    success: function (response, status, xhr) {
-                        var blob = new Blob([response], { type: xhr.getResponseHeader('content-type') });
-                
-                        // Crear un enlace de descarga similar al ejemplo anterior
-                        
-                        var nombre_documento = "JUN_DESACUERDO_"+id_asignacion+"_"+num_identificacion+"_"+nro_radicado+".pdf";                    
-                        var link = document.createElement('a');
-                        link.href = window.URL.createObjectURL(blob);
-                        link.download = nombre_documento;  // Reemplaza con el nombre deseado para el archivo PDF
-                
-                        // Adjuntar el enlace al documento y activar el evento de clic
-                        document.body.appendChild(link);
-                        link.click();
-                
-                        // Eliminar el enlace del documento
-                        document.body.removeChild(link);
-                    },
-                    error: function (error) {
-                        // Manejar casos de error
-                        console.error('Error al descargar el word:', error);
-                    }       
-                });
-            }, 2000);
+            if (infoComunicado.Nombre_documento) {
+                var nombre_doc = infoComunicado.Nombre_documento;
+                var idEvento = infoComunicado.ID_evento;
+                var enlaceDescarga = document.createElement('a');
+                enlaceDescarga.href = '/descargar-archivo/'+nombre_doc+'/'+idEvento;     
+                enlaceDescarga.target = '_self'; // Abrir en una nueva ventana/tab
+                enlaceDescarga.style.display = 'none';
+                document.body.appendChild(enlaceDescarga);
+                enlaceDescarga.click();
+                setTimeout(function() {
+                    document.body.removeChild(enlaceDescarga);
+                }, 1000);
+            }else{
+                // setTimeout(() => {
+                    $.ajax({    
+                        type:'POST',
+                        url:'/DescargarProformaRecursoReposicion',
+                        data: datos_proforma_desacuerdo,
+                        xhrFields: {
+                            responseType: 'blob' // Indica que la respuesta es un blob
+                        },
+                        success: function (response, status, xhr) {
+                            var blob = new Blob([response], { type: xhr.getResponseHeader('content-type') });
+                    
+                            // Crear un enlace de descarga similar al ejemplo anterior
+                            
+                            var nombre_documento = "JUN_DESACUERDO_"+id_asignacion+"_"+num_identificacion+"_"+nro_radicado+".pdf";                    
+                            var link = document.createElement('a');
+                            link.href = window.URL.createObjectURL(blob);
+                            link.download = nombre_documento;  // Reemplaza con el nombre deseado para el archivo PDF
+                    
+                            // Adjuntar el enlace al documento y activar el evento de clic
+                            document.body.appendChild(link);
+                            link.click();
+                    
+                            // Eliminar el enlace del documento
+                            document.body.removeChild(link);
+                        },
+                        error: function (error) {
+                            // Manejar casos de error
+                            console.error('Error al descargar el word:', error);
+                        }       
+                    });
+                // }, 2000);
+            }
         }
     });
 
