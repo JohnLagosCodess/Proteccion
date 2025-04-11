@@ -2310,19 +2310,6 @@ $(document).ready(function(){
                 };
 
                 break;
-            case 'arl':
-                $("#tipo_guia").text('ARL');
-                $('#listado_documentos_ed tr[id^="fila_doc_"]').not('#fila_doc_19').addClass('d-none');
-
-                var datos_lista_tipos_documentos = {
-                    '_token': token,
-                    'evento': $("#Id_Evento").val(),
-                    'servicio': 2,
-                    'parametro':"docs_complementarios",
-                    'tipo_correspondencia': 19,
-                };
-
-                break;
             default:
                 break;
         }
