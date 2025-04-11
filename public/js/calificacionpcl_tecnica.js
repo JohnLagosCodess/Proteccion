@@ -3497,19 +3497,6 @@ $(document).ready(function(){
                 };
 
                 break;
-            case 'afp_conocimiento':
-                $("#tipo_guia").text('Entidad conocimiento');
-                $('#listado_documentos_ed tr[id^="fila_doc_"]').not('#fila_doc_20').addClass('d-none');
-
-                var datos_lista_tipos_documentos = {
-                    '_token': token,
-                    'evento': $("#Id_Evento_decreto").val(),
-                    'servicio': 6,
-                    'parametro':"docs_complementarios",
-                    'tipo_correspondencia': 20,
-                };
-
-                break;
             default:
                 break;
         }

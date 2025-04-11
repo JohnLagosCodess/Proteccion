@@ -2040,9 +2040,6 @@ $(document).ready(function(){
             case 'arl':
                 $("#tipo_guia").text('ARL');
                 break;
-            case 'afp_conocimiento':
-                $("#tipo_guia").text('Entidad conocimiento');
-                break;
             case 'jrci':
                 $("#tipo_guia").text('JRCI');
                 break;
