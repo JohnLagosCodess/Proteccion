@@ -3054,7 +3054,7 @@ function edicion_parametrizacion_calificacion_pcl(id_parametrizacion_calificacio
             $('#bd_accion_automatica_calificacion_pcl_'+id_parametrizacion_calificacion_pcl_editar).append('<option value="" selected>Seleccione</option>');
             let claves = Object.keys(data);
             for (let i = 0; i < claves.length; i++) {
-                if (data[claves[i]]["Accion_ejecutar"] == $("#bd_id_accion_automatica_orgien_atel_"+id_parametrizacion_calificacion_pcl_editar).val()) {
+                if (data[claves[i]]["Accion_ejecutar"] == $("#bd_id_accion_automatica_calificacion_pcl_"+id_parametrizacion_calificacion_pcl_editar).val()) {
                     $("#bd_accion_automatica_calificacion_pcl_"+id_parametrizacion_calificacion_pcl_editar).append('<option value="'+data[claves[i]]["Accion_ejecutar"]+'" selected>'+data[claves[i]]["Accion"]+'</option>');
                 } else {
                     $("#bd_accion_automatica_calificacion_pcl_"+id_parametrizacion_calificacion_pcl_editar).append('<option value="'+data[claves[i]]["Accion_ejecutar"]+'">'+data[claves[i]]["Accion"]+'</option>');
@@ -4063,7 +4063,7 @@ function edicion_parametrizacion_juntas(id_parametrizacion_juntas_editar){
             $('#bd_accion_automatica_juntas_'+id_parametrizacion_juntas_editar).append('<option value="" selected>Seleccione</option>');
             let claves = Object.keys(data);
             for (let i = 0; i < claves.length; i++) {
-                if (data[claves[i]]["Accion_ejecutar"] == $("#bd_id_accion_automatica_orgien_atel_"+id_parametrizacion_juntas_editar).val()) {
+                if (data[claves[i]]["Accion_ejecutar"] == $("#bd_id_accion_automatica_juntas_"+id_parametrizacion_juntas_editar).val()) {
                     $("#bd_accion_automatica_juntas_"+id_parametrizacion_juntas_editar).append('<option value="'+data[claves[i]]["Accion_ejecutar"]+'" selected>'+data[claves[i]]["Accion"]+'</option>');
                 } else {
                     $("#bd_accion_automatica_juntas_"+id_parametrizacion_juntas_editar).append('<option value="'+data[claves[i]]["Accion_ejecutar"]+'">'+data[claves[i]]["Accion"]+'</option>');
@@ -4098,7 +4098,7 @@ function edicion_parametrizacion_juntas(id_parametrizacion_juntas_editar){
                     $('#bd_accion_automatica_juntas_'+id_parametrizacion_juntas_editar).append('<option value="" selected>Seleccione</option>');
                     let claves = Object.keys(data);
                     for (let i = 0; i < claves.length; i++) {
-                        if (data[claves[i]]["Accion_ejecutar"] == $("#bd_id_accion_automatica_orgien_atel_"+id_parametrizacion_juntas_editar).val()) {
+                        if (data[claves[i]]["Accion_ejecutar"] == $("#bd_id_accion_automatica_juntas_"+id_parametrizacion_juntas_editar).val()) {
                             $("#bd_accion_automatica_juntas_"+id_parametrizacion_juntas_editar).append('<option value="'+data[claves[i]]["Accion_ejecutar"]+'" selected>'+data[claves[i]]["Accion"]+'</option>');
                         } else {
                             $("#bd_accion_automatica_juntas_"+id_parametrizacion_juntas_editar).append('<option value="'+data[claves[i]]["Accion_ejecutar"]+'">'+data[claves[i]]["Accion"]+'</option>');
