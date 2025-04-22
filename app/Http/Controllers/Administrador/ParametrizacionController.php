@@ -97,6 +97,9 @@ class ParametrizacionController extends Controller
             'sipc.Porcentaje_alerta_roja',
             'sipc.Status_parametrico',
             'sipc.Motivo_descripcion_movimiento',
+            'sipc.Firmeza',
+            'sipc.Estado_Firmeza',
+            'sipc.Dictamen_Firme',
             'sipc.Nombre_usuario',
             'sipc.F_actualizacion_movimiento'
         )->where([
@@ -158,6 +161,9 @@ class ParametrizacionController extends Controller
             'sipc.Porcentaje_alerta_roja',
             'sipc.Status_parametrico',
             'sipc.Motivo_descripcion_movimiento',
+            'sipc.Firmeza',
+            'sipc.Estado_Firmeza',
+            'sipc.Dictamen_Firme',
             'sipc.Nombre_usuario',
             'sipc.F_actualizacion_movimiento'
         )->where([
@@ -219,6 +225,9 @@ class ParametrizacionController extends Controller
             'sipc.Porcentaje_alerta_roja',
             'sipc.Status_parametrico',
             'sipc.Motivo_descripcion_movimiento',
+            'sipc.Firmeza',
+            'sipc.Estado_Firmeza',
+            'sipc.Dictamen_Firme',
             'sipc.Nombre_usuario',
             'sipc.F_actualizacion_movimiento'
         )->where([
@@ -709,7 +718,7 @@ class ParametrizacionController extends Controller
             // Realizamos la combinación del array de datos y los nombres de las columnas de la tabla
             $array_datos_con_keys_parametrizacion_origen_atel = [];
             array_push($array_datos_con_keys_parametrizacion_origen_atel, array_combine($array_tabla_parametrizaciones_cliente, $array_datos_organizados_parametrizacion_origen_atel));
-
+            dd($array_datos_con_keys_parametrizacion_origen_atel);
             // Actualización de datos
             foreach ($array_datos_con_keys_parametrizacion_origen_atel as $actualizar_parametrizacion_origen_atel) {
                 sigmel_informacion_parametrizaciones_clientes::on('sigmel_gestiones')

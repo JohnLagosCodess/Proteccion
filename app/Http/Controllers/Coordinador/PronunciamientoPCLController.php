@@ -1598,6 +1598,12 @@ class PronunciamientoPCLController extends Controller
                 'Ciudad_afiliado_noti_benefi' => $Ciudad_afiliado_notibenefi,
                 'N_radicado' => $N_radicado,
                 'N_siniestro' => $N_siniestro,
+                'N_dictamen' => $Dictamen_calificador,
+                'Fecha_dictamen' => $Fecha_calificador,
+                'PCL_Porcentaje' => $Porcentaje_pcl,
+                'Tipo_evento' => $Tipo_evento,
+                'Origen' => $T_origen,
+                'F_estructuracion' => $Fecha_estruturacion,
             ];
             // $data = [
             //     'codigoQR' => $codigoQR,

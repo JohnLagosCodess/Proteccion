@@ -237,8 +237,8 @@
                                             </div>
                                             <div class="col-sm-3">
                                                 <div class="form-group">
-                                                    <label for="n_siniestro" class="col-form-label">N° de Siniestro </label>
-                                                    <input type="text" class="n_siniestro form-control" name="n_siniestro" id="n_siniestro" maxlength="25" value="{{$array_datos_info_evento[0]->N_siniestro}}">
+                                                    <label for="n_siniestro" class="col-form-label">N° de Siniestro <span style="color:red;">(*)</span></label>
+                                                    <input type="text" class="n_siniestro form-control" name="n_siniestro" id="n_siniestro" maxlength="25" value="{{$array_datos_info_evento[0]->N_siniestro}}" required>
                                                 </div>
                                             </div>
                                             <div class="col-sm-3">
@@ -1532,7 +1532,11 @@
     <script src="/js/selectores_gestion_edicion.js"></script>  
     <script src="https://cdn.jsdelivr.net/npm/resumablejs@1.1.0/resumable.min.js"></script>
     <script type="text/javascript">
-        // var conteo = 0;
+
+        if($("#id_rol").val() == 6){
+            $("#nro_identificacion").prop('disabled',false);
+        }
+
         $('#llenar_tabla_historico_empresas').click(function(){
             $('#borrar_tabla_historico_empresa').empty();
             var nro_ident = $('#listado_usuarios_asignacion_rol').val();

@@ -113,8 +113,8 @@
                                             </div>
                                             <div class="col-sm-3">
                                                 <div class="form-group">
-                                                    <label for="n_siniestro" class="col-form-label">N° de Siniestro </label>
-                                                    <input type="text" class="n_siniestro form-control" name="n_siniestro" id="n_siniestro" maxlength="25">
+                                                    <label for="n_siniestro" class="col-form-label">N° de Siniestro <span style="color:red;">(*)</span></label>
+                                                    <input type="text" class="n_siniestro form-control" name="n_siniestro" id="n_siniestro" maxlength="25" required>
                                                 </div>
                                             </div>
                                             <div class="col-sm-3">

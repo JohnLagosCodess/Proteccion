@@ -4306,7 +4306,6 @@ $(document).ready(function(){
             'id_comunicado': infoComunicado.Id_Comunicado,
             'N_siniestro': N_siniestro
         }
-        
         if(infoComunicado.Reemplazado == 1){
             var nombre_doc = infoComunicado.Nombre_documento;
             var idEvento = infoComunicado.ID_evento;

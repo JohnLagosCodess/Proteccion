@@ -67,7 +67,7 @@
                                     <h3>Paramétrica del Proceso Origen ATEL</h3>
                                 </div>
                                 <div class="card-body">
-                                    <?php if($conteo_servicios_proceso_origen_atel > 0): ?>
+                                    @if($conteo_servicios_proceso_origen_atel > 0)
                                         <div class="row">
                                             <div class="col-12">
                                                 <div class="alert alert-info" role="alert">
@@ -109,6 +109,9 @@
                                                         <th>Porcentaje alerta (Rojo)</th>
                                                         <th>Status paramétrico</th>
                                                         <th>Motivo / Descripción de movimiento</th>
+                                                        <th>Firmeza</th>
+                                                        <th>Estado firmeza</th>
+                                                        <th>Dictamen en firme</th>
                                                         <th>Usuario</th>
                                                         <th>Fecha actualización de movimiento</th>
                                                     </tr>
@@ -251,6 +254,9 @@
                                                                 <td>
                                                                     {{$parametrizacion_origen_atel_editar->Motivo_descripcion_movimiento}}
                                                                 </td>
+                                                                <td><textarea style="width:140px;" class="form-control" id="" cols="150" rows="4" disabled>{{$parametrizacion_origen_atel_editar->Firmeza}}</textarea></td>
+                                                                <td><textarea style="width:140px;" class="form-control" id="" cols="150" rows="4" disabled>{{$parametrizacion_origen_atel_editar->Estado_Firmeza}}</textarea></td>
+                                                                <td><textarea style="width:140px;" class="form-control" id="" cols="150" rows="4" disabled>{{$parametrizacion_origen_atel_editar->Dictamen_Firme}}</textarea></td>
                                                                 {{-- usuairo --}}
                                                                 <td>
                                                                     {{$parametrizacion_origen_atel_editar->Nombre_usuario}}
@@ -296,6 +302,9 @@
                                                         <th>Porcentaje alerta (Rojo)</th>
                                                         <th>Status paramétrico</th>
                                                         <th>Motivo / Descripción de movimiento</th>
+                                                        <th>Firmeza</th>
+                                                        <th>Estado firmeza</th>
+                                                        <th>Dictamen en firme</th>
                                                         <th>Usuario</th>
                                                         <th>Fecha actualización de movimiento</th>
                                                         <th class="centrar"><a href="javascript:void(0);" id="btn_agregar_parametrizacion_origen_atel"><i class="fas fa-plus-circle" style="font-size:24px; color:white;"></i></a></th>
@@ -499,6 +508,9 @@
                                                                 <td>
                                                                     <textarea style="width:140px;" class="form-control" id="bd_motivo_movimiento_origen_atel_{{$parametrizacion_origen_atel_editar->Id_parametrizacion}}" cols="150" rows="4" disabled>{{$parametrizacion_origen_atel_editar->Motivo_descripcion_movimiento}}</textarea>
                                                                 </td>
+                                                                <td><textarea style="width:140px;" class="form-control" id="" cols="150" rows="4" disabled>{{$parametrizacion_origen_atel_editar->Firmeza}}</textarea></td>
+                                                                <td><textarea style="width:140px;" class="form-control" id="" cols="150" rows="4" disabled>{{$parametrizacion_origen_atel_editar->Estado_Firmeza}}</textarea></td>
+                                                                <td><textarea style="width:140px;" class="form-control" id="" cols="150" rows="4" disabled>{{$parametrizacion_origen_atel_editar->Dictamen_Firme}}</textarea>
                                                                 {{-- usuario --}}
                                                                 <td>
                                                                     <input style="width:140px;" type="text" class="form-control d-none" id="bd_nombre_usuario_origen_atel_{{$parametrizacion_origen_atel_editar->Id_parametrizacion}}" value="{{$parametrizacion_origen_atel_editar->Nombre_usuario}}" disabled>
@@ -525,7 +537,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    <?php else: ?>
+                                    @else
                                         <div class="row">
                                             <div class="col-12">
                                                 <div class="alert alert-info" role="alert">
@@ -534,7 +546,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    <?php endif ?>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -588,6 +600,9 @@
                                                         <th>Porcentaje alerta (Rojo)</th>
                                                         <th>Status paramétrico</th>
                                                         <th>Motivo / Descripción de movimiento</th>
+                                                        <th>Firmeza</th>
+                                                        <th>Estado firmeza</th>
+                                                        <th>Dictamen en firme</th>
                                                         <th>Usuario</th>
                                                         <th>Fecha actualización de movimiento</th>
                                                     </tr>
@@ -731,6 +746,9 @@
                                                                 <td>
                                                                     {{$parametrizacion_calificacion_pcl_editar->Motivo_descripcion_movimiento}}
                                                                 </td>
+                                                                <td><textarea style="width:140px;" class="form-control" id="" cols="150" rows="4" disabled>{{$parametrizacion_calificacion_pcl_editar->Firmeza}}</textarea></td>
+                                                                <td><textarea style="width:140px;" class="form-control" id="" cols="150" rows="4" disabled>{{$parametrizacion_calificacion_pcl_editar->Estado_Firmeza}}</textarea></td>
+                                                                <td><textarea style="width:140px;" class="form-control" id="" cols="150" rows="4" disabled>{{$parametrizacion_calificacion_pcl_editar->Dictamen_Firme}}</textarea>
                                                                 {{-- usuairo --}}
                                                                 <td>
                                                                     {{$parametrizacion_calificacion_pcl_editar->Nombre_usuario}}
@@ -775,6 +793,9 @@
                                                         <th>Porcentaje alerta (Rojo)</th>
                                                         <th>Status paramétrico</th>
                                                         <th>Motivo / Descripción de movimiento</th>
+                                                        <th>Firmeza</th>
+                                                        <th>Estado firmeza</th>
+                                                        <th>Dictamen en firme</th>
                                                         <th>Usuario</th>
                                                         <th>Fecha actualización de movimiento</th>
                                                         <th class="centrar"><a href="javascript:void(0);" id="btn_agregar_parametrizacion_calificacion_pcl"><i class="fas fa-plus-circle" style="font-size:24px; color:white;"></i></a></th>
@@ -979,6 +1000,9 @@
                                                                 <td>
                                                                     <textarea style="width:140px;" class="form-control" id="bd_motivo_movimiento_calificacion_pcl_{{$parametrizacion_calificacion_pcl_editar->Id_parametrizacion}}" cols="150" rows="4" disabled>{{$parametrizacion_calificacion_pcl_editar->Motivo_descripcion_movimiento}}</textarea>
                                                                 </td>
+                                                                <td><textarea style="width:140px;" class="form-control" id="" cols="150" rows="4" disabled>{{$parametrizacion_calificacion_pcl_editar->Firmeza}}</textarea></td>
+                                                                <td><textarea style="width:140px;" class="form-control" id="" cols="150" rows="4" disabled>{{$parametrizacion_calificacion_pcl_editar->Estado_Firmeza}}</textarea></td>
+                                                                <td><textarea style="width:140px;" class="form-control" id="" cols="150" rows="4" disabled>{{$parametrizacion_calificacion_pcl_editar->Dictamen_Firme}}</textarea>
                                                                 {{-- usuario --}}
                                                                 <td>
                                                                     <input style="width:140px;" type="text" class="form-control d-none" id="bd_nombre_usuario_calificacion_pcl_{{$parametrizacion_calificacion_pcl_editar->Id_parametrizacion}}" value="{{$parametrizacion_calificacion_pcl_editar->Nombre_usuario}}" disabled>
@@ -1068,6 +1092,9 @@
                                                         <th>Porcentaje alerta (Rojo)</th>
                                                         <th>Status paramétrico</th>
                                                         <th>Motivo / Descripción de movimiento</th>
+                                                        <th>Firmeza</th>
+                                                        <th>Estado firmeza</th>
+                                                        <th>Dictamen en firme</th>
                                                         <th>Usuario</th>
                                                         <th>Fecha actualización de movimiento</th>
                                                     </tr>
@@ -1212,6 +1239,9 @@
                                                                 <td>
                                                                     {{$parametrizacion_juntas_editar->Motivo_descripcion_movimiento}}
                                                                 </td>
+                                                                <td><textarea style="width:140px;" class="form-control" id="" cols="150" rows="4" disabled>{{$parametrizacion_juntas_editar->Firmeza}}</textarea></td>
+                                                                <td><textarea style="width:140px;" class="form-control" id="" cols="150" rows="4" disabled>{{$parametrizacion_juntas_editar->Estado_Firmeza}}</textarea></td>
+                                                                <td><textarea style="width:140px;" class="form-control" id="" cols="150" rows="4" disabled>{{$parametrizacion_juntas_editar->Dictamen_Firme}}</textarea>
                                                                 {{-- usuairo --}}
                                                                 <td>
                                                                     {{$parametrizacion_juntas_editar->Nombre_usuario}}
@@ -1256,6 +1286,9 @@
                                                         <th>Porcentaje alerta (Rojo)</th>
                                                         <th>Status paramétrico</th>
                                                         <th>Motivo / Descripción de movimiento</th>
+                                                        <th>Firmeza</th>
+                                                        <th>Estado firmeza</th>
+                                                        <th>Dictamen en firme</th>
                                                         <th>Usuario</th>
                                                         <th>Fecha actualización de movimiento</th>
                                                         <th class="centrar"><a href="javascript:void(0);" id="btn_agregar_parametrizacion_juntas"><i class="fas fa-plus-circle" style="font-size:24px; color:white;"></i></a></th>
@@ -1459,6 +1492,9 @@
                                                                 <td>
                                                                     <textarea style="width:140px;" class="form-control" id="bd_motivo_movimiento_juntas_{{$parametrizacion_juntas_editar->Id_parametrizacion}}" cols="150" rows="4" disabled>{{$parametrizacion_juntas_editar->Motivo_descripcion_movimiento}}</textarea>
                                                                 </td>
+                                                                <td><textarea style="width:140px;" class="form-control" id="" cols="150" rows="4" disabled>{{$parametrizacion_juntas_editar->Firmeza}}</textarea></td>
+                                                                <td><textarea style="width:140px;" class="form-control" id="" cols="150" rows="4" disabled>{{$parametrizacion_juntas_editar->Estado_Firmeza}}</textarea></td>
+                                                                <td><textarea style="width:140px;" class="form-control" id="" cols="150" rows="4" disabled>{{$parametrizacion_juntas_editar->Dictamen_Firme}}</textarea>
                                                                 {{-- usuario --}}
                                                                 <td>
                                                                     <input style="width:140px;" type="text" class="form-control d-none" id="bd_nombre_usuario_juntas_{{$parametrizacion_juntas_editar->Id_parametrizacion}}" value="{{$parametrizacion_juntas_editar->Nombre_usuario}}" disabled>

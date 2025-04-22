@@ -2033,7 +2033,10 @@ class ControversiaJuntasController extends Controller
             ->where([
                 ['ID_evento',$newId_evento],
                 ['Id_Asignacion',$newId_asignacion]
-            ])->update($datos_correspondencia); 
+            ])->update($datos_correspondencia);
+
+            $id_comite = sigmel_informacion_comite_interdisciplinario_eventos::on('sigmel_gestiones')
+            ->insertGetId($datos_correspondencia);
             
             $datos_info_comunicado_eventos = [
                 'ID_Evento' => $newId_evento,
@@ -2079,6 +2082,17 @@ class ControversiaJuntasController extends Controller
                     ['N_radicado',$request->radicado]
                     ])
             ->update($datos_info_comunicado_eventos);
+
+            //Capturamos el Id del comunicado para poder generarlo en el servidor
+            $id_comunicado = sigmel_informacion_comunicado_eventos::on('sigmel_gestiones')
+            ->where([
+                ['ID_evento', $newId_evento],
+                ['Id_Asignacion',$newId_asignacion],
+                ['Id_proceso', $Id_proceso],
+                ['N_radicado',$request->radicado]
+            ])->value('Id_Comunicado');
+
+            $this->generarProforma($request->decision_dictamen, $id_comunicado,$id_comite,$newId_evento,$newId_asignacion,$Id_proceso, $request);
 
             $mensajes = array(
                 "parametro" => 'actualizar_correspondencia',
@@ -3690,7 +3704,6 @@ class ControversiaJuntasController extends Controller
             ->where([['sie.Id_Entidad', $id_Jrci_califi_invalidez]])->get();
 
             $array_datos_junta_regional = json_decode(json_encode($datos_junta_regional), true);
-
             if(count($array_datos_junta_regional)>0){
                 $nombre_junta = $request->nombre_junta_regional;
                 $direccion_junta = $array_datos_junta_regional[0]["Direccion"];
@@ -3931,6 +3944,11 @@ class ControversiaJuntasController extends Controller
         $ruta_footer = $plantilla_proformas->PATH_FOOTER;
         $footer = $plantilla_proformas->footer;
 
+        $tipo_evento = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_eventos as sie')
+        ->leftJoin('sigmel_gestiones.sigmel_lista_tipo_eventos as slte', 'slte.Id_Evento', '=', 'sie.Tipo_evento')
+        ->select('sie.ID_evento', 'sie.Tipo_evento', 'slte.Nombre_evento', 'sie.F_evento')
+        ->where('sie.ID_evento', $request->id_evento)
+        ->first();
         /* Extraemos los datos del footer */
         // $datos_footer = sigmel_clientes::on('sigmel_gestiones')
         // ->select('footer_dato_1', 'footer_dato_2', 'footer_dato_3', 'footer_dato_4', 'footer_dato_5')
@@ -4000,6 +4018,7 @@ class ControversiaJuntasController extends Controller
             'Nombre_footer' => $Nombre_footer,
             'Tipo_documento_footer' => $Tipo_documento_footer,
             'Numero_documento_footer' => $Numero_documento_footer,
+            'Tipo_evento' => $tipo_evento->Nombre_evento
             // 'footer_dato_1' => $footer_dato_1,
             // 'footer_dato_2' => $footer_dato_2,
             // 'footer_dato_3' => $footer_dato_3,

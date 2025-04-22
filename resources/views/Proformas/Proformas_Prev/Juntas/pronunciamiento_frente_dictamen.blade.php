@@ -231,7 +231,8 @@
                 $patron10 = '/\{\{\$decreto_calificador_jrci\}\}/';
                 $patron11 = '/\{\{\$sustentacion_jrci\}\}/';
                 $patron12 = '/\{\{\$sustentacion_jrci1\}\}/';
-
+                $patron13 = '/\{\{\$nombre_junta\}\}/';
+                $patron14 = '/\{\{\$Tipo_evento\}\}/';
                 /* Evaluamos el tipo de controversia para saber que texto hay que insertar en la proforma. 12 es Contro Origen y 13 Contro PCL*/
                 if($id_servicio == 12){
                     if (preg_match($patron1, $cuerpo) && preg_match($patron2, $cuerpo) && preg_match($patron3, $cuerpo) &&
@@ -279,24 +280,24 @@
                         $cuerpo = "";
                     }
                 }else{
-
-                    if (preg_match($patron2, $cuerpo) && preg_match($patron3, $cuerpo) &&
-                        preg_match($patron4, $cuerpo) && preg_match($patron5, $cuerpo)
+                    if (preg_match($patron1, $cuerpo) && preg_match($patron2, $cuerpo) && preg_match($patron3, $cuerpo) &&
+                        preg_match($patron4, $cuerpo) && preg_match($patron5, $cuerpo) && preg_match($patron7, $cuerpo) &&
+                        preg_match($patron13, $cuerpo) && preg_match($patron14, $cuerpo)
                     ){
-                        $cuerpo_modificado = str_replace('{{$nombre_junta}}', "<b>" . $nombre_junta . "</b>", $cuerpo);
-                        //$cuerpo_modificado = str_replace('{{$nro_dictamen}}', "<b>".$nro_dictamen."</b>", $cuerpo);
+                        $cuerpo_modificado = str_replace('{{$nombre_junta}}',"<b>".$nombre_junta."</b>", $cuerpo);
+                        $cuerpo_modificado = str_replace('{{$nro_dictamen}}', "<b>".$nro_dictamen."</b>", $cuerpo_modificado);
                         $cuerpo_modificado = str_replace('{{$f_dictamen_jrci}}', "<b>".date("d/m/Y", strtotime($f_dictamen_jrci_emitido))."</b>", $cuerpo_modificado );
                         $cuerpo_modificado = str_replace('{{$nombre_afiliado}}', "<b>".$nombre_afiliado."</b>", $cuerpo_modificado);
                         $cuerpo_modificado = str_replace('{{$tipo_identificacion_afiliado}}', "<b>".$tipo_identificacion."</b>", $cuerpo_modificado);
                         $cuerpo_modificado = str_replace('{{$num_identificacion_afiliado}}', "<b>".$num_identificacion."</b>", $cuerpo_modificado);
                         //$cuerpo_modificado = str_replace('{{$cie10_nombre_cie10_jrci}}', $string_diagnosticos_cie10_jrci, $cuerpo_modificado);
-                        //$cuerpo_modificado = str_replace('{{$pcl_jrci}}', "<b>".$porcentaje_pcl_jrci_emitido."</b>", $cuerpo_modificado);
-                        //$cuerpo_modificado = str_replace('{{$origen_dx_jrci}}', "<b>".$origen_jrci_emitido."</b>", $cuerpo_modificado);
-                        //$cuerpo_modificado = str_replace('{{$f_estructuracion_jrci}}', "<b>".date("d/m/Y", strtotime($f_estructuracion_contro_jrci_emitido))."</b>", $cuerpo_modificado);
+                        $cuerpo_modificado = str_replace('{{$pcl_jrci}}', "<b>".$porcentaje_pcl_jrci_emitido."</b>", $cuerpo_modificado);
+                        $cuerpo_modificado = str_replace('{{$origen_dx_jrci}}', "<b>".mb_strtoupper($origen_jrci_emitido,'UTF-8')."</b>", $cuerpo_modificado);
+                        $cuerpo_modificado = str_replace('{{$f_estructuracion_jrci}}', "<b>".date("d/m/Y", strtotime($f_estructuracion_contro_jrci_emitido))."</b>", $cuerpo_modificado);
                         //$cuerpo_modificado = str_replace('{{$decreto_calificador_jrci}}', "<b>".$manual_de_califi_jrci_emitido."</b>", $cuerpo_modificado);
                         $cuerpo_modificado = str_replace('ACUERDO', "<b>ACUERDO</b>", $cuerpo_modificado);
+                        $cuerpo_modificado = str_replace('{{$Tipo_evento}}', strtoupper($Tipo_evento), $cuerpo_modificado);
                         $cuerpo = nl2br($cuerpo_modificado);
-
                         /*if (preg_match($patron11, $cuerpo_modificado) && preg_match($patron12, $cuerpo_modificado)) {
                             // Ambos patrones encontrados
                             $cuerpo_modificado = str_replace('{{$sustentacion_jrci}}', $sustentacion_concepto_jrci, $cuerpo_modificado);

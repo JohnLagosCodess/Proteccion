@@ -312,9 +312,16 @@
                 $patron1 = '/\{\{\$Nombre_afiliado\}\}/';   
                 $patron2 = '/\{\{\$Tipo_documento\}\}/'; 
                 $patron3 = '/\{\{\$Nro_documento\}\}/'; 
-                $patron4 = '/\{\{\$Entidad_califi\}\}/'; 
+                $patron4 = '/\{\{\$Entidad_califi\}\}/';
+                $patron5 = '/\{\{\$N_dictamen\}\}/';
+                $patron6 = '/\{\{\$Fecha_dictamen\}\}/';
+                $patron7 = '/\{\{\$PCL_Porcentaje\}\}/';
+                $patron8 = '/\{\{\$Tipo_evento\}\}/';
+                $patron9 = '/\{\{\$Origen\}\}/';
+                $patron10 = '/\{\{\$F_estructuracion\}\}/'; 
 
-                if (preg_match($patron1, $Sustenta_cali) && preg_match($patron2, $Sustenta_cali) && preg_match($patron3, $Sustenta_cali) && preg_match($patron4, $Sustenta_cali)) {                    
+                if (preg_match($patron1, $Sustenta_cali) && preg_match($patron2, $Sustenta_cali) && preg_match($patron3, $Sustenta_cali) && preg_match($patron4, $Sustenta_cali) && preg_match($patron5, $Sustenta_cali) && preg_match($patron6, $Sustenta_cali)
+                    && preg_match($patron7, $Sustenta_cali) && preg_match($patron8, $Sustenta_cali) && preg_match($patron9, $Sustenta_cali) && preg_match($patron10, $Sustenta_cali)) {                    
 
                     if($Tipo_afiliado == 26 || $Tipo_afiliado == 28 || $Tipo_afiliado == 29){
                         $texto_modificado = str_replace('{{$Nombre_afiliado}}', $Nombre_afiliado, $Sustenta_cali);
@@ -324,6 +331,12 @@
                     $texto_modificado = str_replace('{{$Tipo_documento}}', $tipo_doc_afiliado, $texto_modificado);
                     $texto_modificado = str_replace('{{$Nro_documento}}', $nro_identificacion_afiliado, $texto_modificado);
                     $texto_modificado = str_replace('{{$Entidad_califi}}', $Nombre_entidad, $texto_modificado);
+                    $texto_modificado = str_replace('{{$N_dictamen}}',$N_dictamen,$texto_modificado);
+                    $texto_modificado = str_replace('{{$Fecha_dictamen}}',$Fecha_dictamen,$texto_modificado);
+                    $texto_modificado = str_replace('{{$PCL_Porcentaje}}',$PCL_Porcentaje,$texto_modificado);
+                    $texto_modificado = str_replace('{{$Tipo_evento}}',strtoupper($Tipo_evento),$texto_modificado);
+                    $texto_modificado = str_replace('{{$Origen}}',mb_strtoupper($Origen, 'UTF-8'),$texto_modificado);
+                    $texto_modificado = str_replace('{{$F_estructuracion}}',$F_estructuracion,$texto_modificado);
                     $cuerpo = $texto_modificado;
 
                 } else {

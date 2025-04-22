@@ -1984,7 +1984,8 @@
                                                                         @if($comite_inter->N_radicado === $comunicados->N_radicado)
                                                                             @if(($comunicados->Correspondencia === '' || $comunicados->Correspondencia === null) && $dato_rol !== '7')
                                                                                 <a href="javascript:void(0);" id="editar_correspondencia_{{$comunicados->Id_Comunicado}}"
-                                                                                    data-id_comite_inter={{$comite_inter->Id_com_inter}}              
+                                                                                    data-tupla_nro_radicado="{{$comunicados->N_radicado}}"       
+                                                                                    data-id_comite_inter={{$comite_inter->Id_com_inter}}
                                                                                     data-tupla_comunicado="{{$comunicados->Id_Comunicado}}" 
                                                                                     data-id_evento= "{{$array_datos_controversiaJuntas[0]->ID_evento}}"
                                                                                     data-id_asignacion= "{{$array_datos_controversiaJuntas[0]->Id_Asignacion}}"

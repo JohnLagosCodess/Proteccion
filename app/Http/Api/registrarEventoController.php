@@ -161,6 +161,9 @@ class registrarEventoController extends Controller
             //"id_evento" =>[
               //  "validar" => ['required', 'string']
             //],
+            'n_siniestro' => [
+                'validar' => ['required','string']
+            ],
             'proceso' => [
                 "validar" => ['required', 'string', "in:1,2,3"]
             ],
@@ -382,6 +385,7 @@ class registrarEventoController extends Controller
             'ID_evento' =>  $this->n_evento,
             'F_radicacion' => $this->request->fecha_radicacion,
             'Activador' => $this->request->activador,
+            'N_siniestro' => $this->request->n_siniestro,
             'N_Radicado_HC' => $this->request->radicado_hc,
             "estado_evento" => "activo",
             'Nombre_usuario' => Auth::user()->name,
