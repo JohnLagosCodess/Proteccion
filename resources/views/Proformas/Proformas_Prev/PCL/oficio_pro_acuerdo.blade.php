@@ -319,7 +319,7 @@
                 $patron8 = '/\{\{\$Tipo_evento\}\}/';
                 $patron9 = '/\{\{\$Origen\}\}/';
                 $patron10 = '/\{\{\$F_estructuracion\}\}/'; 
-
+                $patron11 = '/\{\{\$Tipo_entidad_primer_calificador\}\}/';
                 if (preg_match($patron1, $Sustenta_cali) && preg_match($patron2, $Sustenta_cali) && preg_match($patron3, $Sustenta_cali) && preg_match($patron4, $Sustenta_cali) && preg_match($patron5, $Sustenta_cali) && preg_match($patron6, $Sustenta_cali)
                     && preg_match($patron7, $Sustenta_cali) && preg_match($patron8, $Sustenta_cali) && preg_match($patron9, $Sustenta_cali) && preg_match($patron10, $Sustenta_cali)) {                    
 
@@ -337,6 +337,7 @@
                     $texto_modificado = str_replace('{{$Tipo_evento}}',strtoupper($Tipo_evento),$texto_modificado);
                     $texto_modificado = str_replace('{{$Origen}}',mb_strtoupper($Origen, 'UTF-8'),$texto_modificado);
                     $texto_modificado = str_replace('{{$F_estructuracion}}',$F_estructuracion,$texto_modificado);
+                    $texto_modificado = str_replace('{{$Tipo_entidad_primer_calificador}}',$Tipo_primer_calificador,$texto_modificado);
                     $cuerpo = $texto_modificado;
 
                 } else {

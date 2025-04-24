@@ -1135,7 +1135,7 @@ class PronunciamientoPCLController extends Controller
             ['pr.Id_Asignacion', '=', $Asignacion_Pronuncia_corre]
         ])
         ->get();
-
+        $Tipo_entidad_primer_calificador = $info_pronunciamiento[0]->Tipo_Entidad;
         $Ciudad_correspon = $info_pronunciamiento[0]->Ciudad_correspon;
         $Fecha_correspondencia = $info_pronunciamiento[0]->Fecha_correspondencia;
         $N_radicado = $info_pronunciamiento[0]->N_radicado;
@@ -1604,6 +1604,7 @@ class PronunciamientoPCLController extends Controller
                 'Tipo_evento' => $Tipo_evento,
                 'Origen' => $T_origen,
                 'F_estructuracion' => $Fecha_estruturacion,
+                'Tipo_primer_calificador' => $Tipo_entidad_primer_calificador
             ];
             // $data = [
             //     'codigoQR' => $codigoQR,
