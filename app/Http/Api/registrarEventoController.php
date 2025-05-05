@@ -344,8 +344,8 @@ class registrarEventoController extends Controller
         sigmel_numero_orden_eventos::on('sigmel_gestiones')
         ->where([['Proceso', 'General_Evento'], ['Estado', 'activo']])->update(['Numero_orden' => $this->n_evento]);
 
-        $this->registrar_evento()->registrar_afiliado()->registrar_info_laboral()
-        ->registrar_info_pericial()->asignar_evento()->finalizar_registro();
+        $this->registrar_afiliado()->registrar_info_laboral()
+        ->registrar_info_pericial()->registrar_evento()->asignar_evento()->finalizar_registro();
 
         return $this->getMensaje("general",102,[
             "numero_evento" => $this->n_evento
@@ -375,7 +375,7 @@ class registrarEventoController extends Controller
      * Registra el evento en sigmel_informacion_eventos
      * @return This
      */
-    private function registrar_evento(){
+    private function asignar_evento(){
 
         $cliente = sigmel_clientes::on('sigmel_gestiones')->select('Id_cliente','Tipo_cliente')->first();
 
@@ -527,7 +527,7 @@ class registrarEventoController extends Controller
      * Registra el evento en sigmel_informacion_asignacion_eventos
      * @return This
      */
-    private function asignar_evento(){
+    private function registrar_evento(){
         $cliente = sigmel_clientes::on('sigmel_gestiones')->select('Id_cliente','Tipo_cliente')->first();
         $n_orden = sigmel_numero_orden_eventos::on('sigmel_gestiones')
         ->select('Numero_orden')->first();

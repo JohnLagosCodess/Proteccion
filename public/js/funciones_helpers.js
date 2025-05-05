@@ -637,6 +637,7 @@ $(document).ready(function () {
         let profecional_asignado = $("#profesional option:selected").text();
         let id_profecional_asignado = $("#profesional option:selected").val();
         let servicio = $("#servicio").val();
+        let estado_firmeza = $("#estado_firmeza").val();
 
         let $fecha_primera_cita = $("#fecha_primera_cita");
         let $causal_incumple_pri_cita = $("#incumple_primera_cita");
@@ -655,6 +656,7 @@ $(document).ready(function () {
                 return;
             }
         }
+
         /**
          * De no haber una accion y/o profesional seleccionado no se habilitara el boton de ejecucion
          */
@@ -707,7 +709,21 @@ $(document).ready(function () {
         $("#c_f_accion").append(f_accion);
         $("#c_profesional").append(profecional_asignado);
         $("#c_servicio").append(servicio);
-        
+
+        if(accion_ejecutar == 'REPORTAR FIRMEZA CALIFICACIÓN PCL'){
+            if($("#f_acta_firmeza").val() == ''){
+                $("#alerta_accion").removeClass('d-none');
+                $("#alerta_accion").append("<i class='fas fa-info-circle'></i><strong>Importante:</strong> Para continuar debe registrar la Fecha Acta Firmeza");
+                $("#c_ejecutar_accion").prop('disabled',true);
+            }
+        }
+
+        if(estado_firmeza != ''){
+            $('#n_confirmarAccion').before(`<div class="row"><label >Estado Firmeza:</label><p class="pl-2 text-end" id="c_estado_firmeza">${estado_firmeza}</p></div>`);
+
+            $('#n_confirmarAccion').after(`<div class="row"><span class="pl-2 text-center text-info font-weight-bold"  style="font-size: 23px;" id="c_nota_firmeza">!ÉSTA ACCIÓN ACTUALIZARÁ ADVANCE!</span></div>`);
+        }
+
         //Se ejecuta la acción
         $("#c_ejecutar_accion").off('click').on('click', function() {
             $("#c_ejecutar_accion").prop("disabled",true);

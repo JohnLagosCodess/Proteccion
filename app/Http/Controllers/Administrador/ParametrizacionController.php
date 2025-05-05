@@ -649,7 +649,7 @@ class ParametrizacionController extends Controller
             'Estado','Accion_ejecutar','Accion_antecesora','Modulo_nuevo','Modulo_consultar','Bandeja_trabajo',
             'Modulo_principal','Detiene_tiempo_gestion','Equipo_trabajo','Profesional_asignado','Enviar_a_bandeja_trabajo_destino','Bandeja_trabajo_destino',
             'Estado_facturacion','Movimiento_automatico','Tiempo_movimiento','Accion_automatica','Tiempo_alerta','Porcentaje_alerta_naranja',
-            'Porcentaje_alerta_roja','Status_parametrico','Motivo_descripcion_movimiento','Nombre_usuario','F_actualizacion_movimiento'
+            'Porcentaje_alerta_roja','Status_parametrico','Motivo_descripcion_movimiento','Firmeza','Estado_Firmeza','Dictamen_Firme','Nombre_usuario','F_actualizacion_movimiento'
             ];
 
             // Realizamos la combinación del array de datos y los nombres de las columnas de la tabla
@@ -705,20 +705,20 @@ class ParametrizacionController extends Controller
             $date = date("Y-m-d", $time);
 
             
-            $array_datos_organizados_parametrizacion_origen_atel[26] = $date;
+            $array_datos_organizados_parametrizacion_origen_atel[29] = $date;
 
             // Creamos el array con el nombre de las columnas de la tabla sigmel_informacion_parametrizaciones_clientes
             $array_tabla_parametrizaciones_cliente = ['Id_cliente','Id_proceso','F_creacion_movimiento','Servicio_asociado',
             'Estado','Accion_ejecutar','Accion_antecesora','Modulo_nuevo','Modulo_consultar','Bandeja_trabajo',
             'Modulo_principal','Detiene_tiempo_gestion','Equipo_trabajo','Profesional_asignado','Enviar_a_bandeja_trabajo_destino','Bandeja_trabajo_destino',
             'Estado_facturacion','Movimiento_automatico','Tiempo_movimiento','Accion_automatica','Tiempo_alerta','Porcentaje_alerta_naranja',
-            'Porcentaje_alerta_roja','Status_parametrico','Motivo_descripcion_movimiento','Nombre_usuario','F_actualizacion_movimiento'
+            'Porcentaje_alerta_roja','Status_parametrico','Motivo_descripcion_movimiento','Firmeza','Estado_Firmeza','Dictamen_Firme','Nombre_usuario','F_actualizacion_movimiento'
             ];
 
             // Realizamos la combinación del array de datos y los nombres de las columnas de la tabla
             $array_datos_con_keys_parametrizacion_origen_atel = [];
             array_push($array_datos_con_keys_parametrizacion_origen_atel, array_combine($array_tabla_parametrizaciones_cliente, $array_datos_organizados_parametrizacion_origen_atel));
-            dd($array_datos_con_keys_parametrizacion_origen_atel);
+
             // Actualización de datos
             foreach ($array_datos_con_keys_parametrizacion_origen_atel as $actualizar_parametrizacion_origen_atel) {
                 sigmel_informacion_parametrizaciones_clientes::on('sigmel_gestiones')
@@ -781,7 +781,7 @@ class ParametrizacionController extends Controller
             'Estado','Accion_ejecutar','Accion_antecesora','Modulo_nuevo','Modulo_consultar','Bandeja_trabajo',
             'Modulo_principal','Detiene_tiempo_gestion','Equipo_trabajo','Profesional_asignado','Enviar_a_bandeja_trabajo_destino','Bandeja_trabajo_destino',
             'Estado_facturacion','Movimiento_automatico','Tiempo_movimiento','Accion_automatica','Tiempo_alerta','Porcentaje_alerta_naranja',
-            'Porcentaje_alerta_roja','Status_parametrico','Motivo_descripcion_movimiento','Nombre_usuario','F_actualizacion_movimiento'
+            'Porcentaje_alerta_roja','Status_parametrico','Motivo_descripcion_movimiento','Firmeza','Estado_Firmeza','Dictamen_Firme','Nombre_usuario','F_actualizacion_movimiento'
             ];
     
             // Realizamos la combinación del array de datos y los nombres de las columnas de la tabla
@@ -837,14 +837,14 @@ class ParametrizacionController extends Controller
             $date = date("Y-m-d", $time);
     
             
-            $array_datos_organizados_parametrizacion_calificacion_pcl[26] = $date;
+            $array_datos_organizados_parametrizacion_calificacion_pcl[29] = $date;
         
             // Creamos el array con el nombre de las columnas de la tabla sigmel_informacion_parametrizaciones_clientes
             $array_tabla_parametrizaciones_cliente = ['Id_cliente','Id_proceso','F_creacion_movimiento','Servicio_asociado',
             'Estado','Accion_ejecutar','Accion_antecesora','Modulo_nuevo','Modulo_consultar','Bandeja_trabajo',
             'Modulo_principal','Detiene_tiempo_gestion','Equipo_trabajo','Profesional_asignado','Enviar_a_bandeja_trabajo_destino','Bandeja_trabajo_destino',
             'Estado_facturacion','Movimiento_automatico','Tiempo_movimiento','Accion_automatica','Tiempo_alerta','Porcentaje_alerta_naranja',
-            'Porcentaje_alerta_roja','Status_parametrico','Motivo_descripcion_movimiento','Nombre_usuario','F_actualizacion_movimiento'
+            'Porcentaje_alerta_roja','Status_parametrico','Motivo_descripcion_movimiento','Firmeza','Estado_Firmeza','Dictamen_Firme','Nombre_usuario','F_actualizacion_movimiento'
             ];
     
             // Realizamos la combinación del array de datos y los nombres de las columnas de la tabla
@@ -913,7 +913,7 @@ class ParametrizacionController extends Controller
             'Estado','Accion_ejecutar','Accion_antecesora','Modulo_nuevo','Modulo_consultar','Bandeja_trabajo',
             'Modulo_principal','Detiene_tiempo_gestion','Equipo_trabajo','Profesional_asignado','Enviar_a_bandeja_trabajo_destino','Bandeja_trabajo_destino',
             'Estado_facturacion','Movimiento_automatico','Tiempo_movimiento','Accion_automatica','Tiempo_alerta','Porcentaje_alerta_naranja',
-            'Porcentaje_alerta_roja','Status_parametrico','Motivo_descripcion_movimiento','Nombre_usuario','F_actualizacion_movimiento'
+            'Porcentaje_alerta_roja','Status_parametrico','Motivo_descripcion_movimiento','Firmeza','Estado_Firmeza','Dictamen_Firme','Nombre_usuario','F_actualizacion_movimiento'
             ];
         
             // Realizamos la combinación del array de datos y los nombres de las columnas de la tabla
@@ -969,14 +969,14 @@ class ParametrizacionController extends Controller
             $date = date("Y-m-d", $time);
     
             
-            $array_datos_organizados_parametrizacion_juntas[26] = $date;
+            $array_datos_organizados_parametrizacion_juntas[29] = $date;
         
             // Creamos el array con el nombre de las columnas de la tabla sigmel_informacion_parametrizaciones_clientes
             $array_tabla_parametrizaciones_cliente = ['Id_cliente','Id_proceso','F_creacion_movimiento','Servicio_asociado',
             'Estado','Accion_ejecutar','Accion_antecesora','Modulo_nuevo','Modulo_consultar','Bandeja_trabajo',
             'Modulo_principal','Detiene_tiempo_gestion','Equipo_trabajo','Profesional_asignado','Enviar_a_bandeja_trabajo_destino','Bandeja_trabajo_destino',
             'Estado_facturacion','Movimiento_automatico','Tiempo_movimiento','Accion_automatica','Tiempo_alerta','Porcentaje_alerta_naranja',
-            'Porcentaje_alerta_roja','Status_parametrico','Motivo_descripcion_movimiento','Nombre_usuario','F_actualizacion_movimiento'
+            'Porcentaje_alerta_roja','Status_parametrico','Motivo_descripcion_movimiento','Firmeza','Estado_Firmeza','Dictamen_Firme','Nombre_usuario','F_actualizacion_movimiento'
             ];
     
             // Realizamos la combinación del array de datos y los nombres de las columnas de la tabla

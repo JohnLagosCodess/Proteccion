@@ -22,5 +22,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/sigmel_ws', [sigmelWSController::class, 'endpoint']);
     Route::post('/sigmel_ws/radicar', [registrarEventoController::class, 'registrar']);
     //Route::post('/sigmel_ws/generar_evento', [generarEventoController::class, 'endpoint']);
-    Route::post('/sigmel_ws/advance',[sigmel_advance::class,'registrar']);
+    //Route::post('/sigmel_ws/advance',[sigmel_advance::class,'registrar']);
 });

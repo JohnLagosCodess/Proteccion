@@ -254,9 +254,9 @@
                                                                 <td>
                                                                     {{$parametrizacion_origen_atel_editar->Motivo_descripcion_movimiento}}
                                                                 </td>
-                                                                <td><textarea style="width:140px;" class="form-control" id="" cols="150" rows="4" disabled>{{$parametrizacion_origen_atel_editar->Firmeza}}</textarea></td>
-                                                                <td><textarea style="width:140px;" class="form-control" id="" cols="150" rows="4" disabled>{{$parametrizacion_origen_atel_editar->Estado_Firmeza}}</textarea></td>
-                                                                <td><textarea style="width:140px;" class="form-control" id="" cols="150" rows="4" disabled>{{$parametrizacion_origen_atel_editar->Dictamen_Firme}}</textarea></td>
+                                                                <td><textarea style="width:140px;" class="form-control" id="firmeza_{{$parametrizacion_origen_atel_editar->Id_parametrizacion}}" cols="150" rows="4" disabled>{{$parametrizacion_origen_atel_editar->Firmeza}}</textarea></td>
+                                                                <td><textarea style="width:140px;" class="form-control" id="estado_firmerza_{{$parametrizacion_origen_atel_editar->Id_parametrizacion}}" cols="150" rows="4" disabled>{{$parametrizacion_origen_atel_editar->Estado_Firmeza}}</textarea></td>
+                                                                <td><textarea style="width:140px;" class="form-control" id="dictamen_firme__{{$parametrizacion_origen_atel_editar->Id_parametrizacion}}" cols="150" rows="4" disabled>{{$parametrizacion_origen_atel_editar->Dictamen_Firme}}</textarea></td>
                                                                 {{-- usuairo --}}
                                                                 <td>
                                                                     {{$parametrizacion_origen_atel_editar->Nombre_usuario}}
@@ -508,9 +508,9 @@
                                                                 <td>
                                                                     <textarea style="width:140px;" class="form-control" id="bd_motivo_movimiento_origen_atel_{{$parametrizacion_origen_atel_editar->Id_parametrizacion}}" cols="150" rows="4" disabled>{{$parametrizacion_origen_atel_editar->Motivo_descripcion_movimiento}}</textarea>
                                                                 </td>
-                                                                <td><textarea style="width:140px;" class="form-control" id="" cols="150" rows="4" disabled>{{$parametrizacion_origen_atel_editar->Firmeza}}</textarea></td>
-                                                                <td><textarea style="width:140px;" class="form-control" id="" cols="150" rows="4" disabled>{{$parametrizacion_origen_atel_editar->Estado_Firmeza}}</textarea></td>
-                                                                <td><textarea style="width:140px;" class="form-control" id="" cols="150" rows="4" disabled>{{$parametrizacion_origen_atel_editar->Dictamen_Firme}}</textarea>
+                                                                <td><textarea style="width:140px;" class="form-control" id="firmeza_{{$parametrizacion_origen_atel_editar->Id_parametrizacion}}" cols="150" rows="4" disabled>{{$parametrizacion_origen_atel_editar->Firmeza}}</textarea></td>
+                                                                <td><textarea style="width:140px;" class="form-control" id="estado_firmerza_{{$parametrizacion_origen_atel_editar->Id_parametrizacion}}" cols="150" rows="4" disabled>{{$parametrizacion_origen_atel_editar->Estado_Firmeza}}</textarea></td>
+                                                                <td><textarea style="width:140px;" class="form-control" id="dictamen_firme_{{$parametrizacion_origen_atel_editar->Id_parametrizacion}}" cols="150" rows="4" disabled>{{$parametrizacion_origen_atel_editar->Dictamen_Firme}}</textarea>
                                                                 {{-- usuario --}}
                                                                 <td>
                                                                     <input style="width:140px;" type="text" class="form-control d-none" id="bd_nombre_usuario_origen_atel_{{$parametrizacion_origen_atel_editar->Id_parametrizacion}}" value="{{$parametrizacion_origen_atel_editar->Nombre_usuario}}" disabled>
@@ -746,9 +746,9 @@
                                                                 <td>
                                                                     {{$parametrizacion_calificacion_pcl_editar->Motivo_descripcion_movimiento}}
                                                                 </td>
-                                                                <td><textarea style="width:140px;" class="form-control" id="" cols="150" rows="4" disabled>{{$parametrizacion_calificacion_pcl_editar->Firmeza}}</textarea></td>
-                                                                <td><textarea style="width:140px;" class="form-control" id="" cols="150" rows="4" disabled>{{$parametrizacion_calificacion_pcl_editar->Estado_Firmeza}}</textarea></td>
-                                                                <td><textarea style="width:140px;" class="form-control" id="" cols="150" rows="4" disabled>{{$parametrizacion_calificacion_pcl_editar->Dictamen_Firme}}</textarea>
+                                                                <td><textarea style="width:140px;" class="form-control" id="firmeza_{{$parametrizacion_calificacion_pcl_editar->Id_parametrizacion}}" cols="150" rows="4" disabled>{{$parametrizacion_calificacion_pcl_editar->Firmeza}}</textarea></td>
+                                                                <td><textarea style="width:140px;" class="form-control" id="estado_firmerza_{{$parametrizacion_calificacion_pcl_editar->Id_parametrizacion}}" cols="150" rows="4" disabled>{{$parametrizacion_calificacion_pcl_editar->Estado_Firmeza}}</textarea></td>
+                                                                <td><textarea style="width:140px;" class="form-control" id="dictamen_firme_{{$parametrizacion_calificacion_pcl_editar->Id_parametrizacion}}" cols="150" rows="4" disabled>{{$parametrizacion_calificacion_pcl_editar->Dictamen_Firme}}</textarea>
                                                                 {{-- usuairo --}}
                                                                 <td>
                                                                     {{$parametrizacion_calificacion_pcl_editar->Nombre_usuario}}
@@ -1000,9 +1000,9 @@
                                                                 <td>
                                                                     <textarea style="width:140px;" class="form-control" id="bd_motivo_movimiento_calificacion_pcl_{{$parametrizacion_calificacion_pcl_editar->Id_parametrizacion}}" cols="150" rows="4" disabled>{{$parametrizacion_calificacion_pcl_editar->Motivo_descripcion_movimiento}}</textarea>
                                                                 </td>
-                                                                <td><textarea style="width:140px;" class="form-control" id="" cols="150" rows="4" disabled>{{$parametrizacion_calificacion_pcl_editar->Firmeza}}</textarea></td>
-                                                                <td><textarea style="width:140px;" class="form-control" id="" cols="150" rows="4" disabled>{{$parametrizacion_calificacion_pcl_editar->Estado_Firmeza}}</textarea></td>
-                                                                <td><textarea style="width:140px;" class="form-control" id="" cols="150" rows="4" disabled>{{$parametrizacion_calificacion_pcl_editar->Dictamen_Firme}}</textarea>
+                                                                <td><textarea style="width:140px;" class="form-control" id="firmeza_{{$parametrizacion_calificacion_pcl_editar->Id_parametrizacion}}" cols="150" rows="4" disabled>{{$parametrizacion_calificacion_pcl_editar->Firmeza}}</textarea></td>
+                                                                <td><textarea style="width:140px;" class="form-control" id="estado_firmerza_{{$parametrizacion_calificacion_pcl_editar->Id_parametrizacion}}" cols="150" rows="4" disabled>{{$parametrizacion_calificacion_pcl_editar->Estado_Firmeza}}</textarea></td>
+                                                                <td><textarea style="width:140px;" class="form-control" id="dictamen_firme_{{$parametrizacion_calificacion_pcl_editar->Id_parametrizacion}}" cols="150" rows="4" disabled>{{$parametrizacion_calificacion_pcl_editar->Dictamen_Firme}}</textarea>
                                                                 {{-- usuario --}}
                                                                 <td>
                                                                     <input style="width:140px;" type="text" class="form-control d-none" id="bd_nombre_usuario_calificacion_pcl_{{$parametrizacion_calificacion_pcl_editar->Id_parametrizacion}}" value="{{$parametrizacion_calificacion_pcl_editar->Nombre_usuario}}" disabled>
@@ -1239,9 +1239,9 @@
                                                                 <td>
                                                                     {{$parametrizacion_juntas_editar->Motivo_descripcion_movimiento}}
                                                                 </td>
-                                                                <td><textarea style="width:140px;" class="form-control" id="" cols="150" rows="4" disabled>{{$parametrizacion_juntas_editar->Firmeza}}</textarea></td>
-                                                                <td><textarea style="width:140px;" class="form-control" id="" cols="150" rows="4" disabled>{{$parametrizacion_juntas_editar->Estado_Firmeza}}</textarea></td>
-                                                                <td><textarea style="width:140px;" class="form-control" id="" cols="150" rows="4" disabled>{{$parametrizacion_juntas_editar->Dictamen_Firme}}</textarea>
+                                                                <td><textarea style="width:140px;" class="form-control" id="firmeza_{{$parametrizacion_juntas_editar->Id_parametrizacion}}" cols="150" rows="4" disabled>{{$parametrizacion_juntas_editar->Firmeza}}</textarea></td>
+                                                                <td><textarea style="width:140px;" class="form-control" id="estado_firmerza_{{$parametrizacion_juntas_editar->Id_parametrizacion}}" cols="150" rows="4" disabled>{{$parametrizacion_juntas_editar->Estado_Firmeza}}</textarea></td>
+                                                                <td><textarea style="width:140px;" class="form-control" id="dictamen_firme_{{$parametrizacion_juntas_editar->Id_parametrizacion}}" cols="150" rows="4" disabled>{{$parametrizacion_juntas_editar->Dictamen_Firme}}</textarea>
                                                                 {{-- usuairo --}}
                                                                 <td>
                                                                     {{$parametrizacion_juntas_editar->Nombre_usuario}}
@@ -1492,9 +1492,9 @@
                                                                 <td>
                                                                     <textarea style="width:140px;" class="form-control" id="bd_motivo_movimiento_juntas_{{$parametrizacion_juntas_editar->Id_parametrizacion}}" cols="150" rows="4" disabled>{{$parametrizacion_juntas_editar->Motivo_descripcion_movimiento}}</textarea>
                                                                 </td>
-                                                                <td><textarea style="width:140px;" class="form-control" id="" cols="150" rows="4" disabled>{{$parametrizacion_juntas_editar->Firmeza}}</textarea></td>
-                                                                <td><textarea style="width:140px;" class="form-control" id="" cols="150" rows="4" disabled>{{$parametrizacion_juntas_editar->Estado_Firmeza}}</textarea></td>
-                                                                <td><textarea style="width:140px;" class="form-control" id="" cols="150" rows="4" disabled>{{$parametrizacion_juntas_editar->Dictamen_Firme}}</textarea>
+                                                                <td><textarea style="width:140px;" class="form-control" id="firmeza_{{$parametrizacion_juntas_editar->Id_parametrizacion}}" cols="150" rows="4" disabled>{{$parametrizacion_juntas_editar->Firmeza}}</textarea></td>
+                                                                <td><textarea style="width:140px;" class="form-control" id="estado_firmerza_{{$parametrizacion_juntas_editar->Id_parametrizacion}}" cols="150" rows="4" disabled>{{$parametrizacion_juntas_editar->Estado_Firmeza}}</textarea></td>
+                                                                <td><textarea style="width:140px;" class="form-control" id="dictamen_firme__{{$parametrizacion_juntas_editar->Id_parametrizacion}}" cols="150" rows="4" disabled>{{$parametrizacion_juntas_editar->Dictamen_Firme}}</textarea>
                                                                 {{-- usuario --}}
                                                                 <td>
                                                                     <input style="width:140px;" type="text" class="form-control d-none" id="bd_nombre_usuario_juntas_{{$parametrizacion_juntas_editar->Id_parametrizacion}}" value="{{$parametrizacion_juntas_editar->Nombre_usuario}}" disabled>

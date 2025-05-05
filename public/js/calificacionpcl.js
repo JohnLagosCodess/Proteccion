@@ -519,6 +519,7 @@ $(document).ready(function(){
 
                         // llenado del input Estado de Facturación
                         $("#estado_facturacion").val(data[0]["Estado_facturacion"]);
+                        $("#estado_firmeza").val(data[0]["Estado_Firmeza"]);
                     }
                 }
             
@@ -1213,6 +1214,7 @@ $(document).ready(function(){
         formData.append('fecha_asignacion_calificacion',$('#fecha_asignacion_calificacion').val()),
         formData.append('fecha_calificacion',$('#fecha_calificacion').val()),
         formData.append('descripcion_accion', $('#descripcion_accion').val());
+        formData.append('f_acta_firmeza', $('#f_acta_firmeza').val());
         formData.append('banderaguardar',$('#bandera_accion_guardar_actualizar').val());        
 
         $.ajax({

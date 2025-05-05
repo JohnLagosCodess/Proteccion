@@ -245,16 +245,24 @@
                                             </div>
                                         </div>
                                         <div class="col-4">
-                                            <div class="form-group">
-                                                <label for="fuente_informacion">Fuente de información</label>
-                                                <select class="fuente_informacion custom-select" name="fuente_informacion" id="fuente_informacion">
-                                                    @if (!empty($array_datos_calificacionPcl[0]->Fuente_informacion))
-                                                        <option value="{{$array_datos_calificacionPcl[0]->Fuente_informacion}}" selected>{{$array_datos_calificacionPcl[0]->Nombre_Fuente_informacion}}</option>
-                                                    @else
-                                                        <option value="">Seleccione una opción</option>
-                                                    @endif
-                                                </select>
-                                            </div>
+                                            @if ($array_datos_calificacionPcl[0]->Id_Servicio == 9)
+                                                <div class="form-group">
+                                                    <label for="f_acta_firmeza">Fecha acta firmeza</label>
+                                                    <input type="date" name="f_acta_firmeza" class="form-control" id="f_acta_firmeza" value={{$array_datos_calificacionPcl[0]->F_Acta_Firmeza ?? ""}}>
+                                                    <span class="d-none" id="f_acta_firmeza_alerta" style="color: red; font-style: italic;">La Fecha ingresada no es valida. Por favor validar</span>
+                                                </div>
+                                            @else
+                                                <div class="form-group">
+                                                    <label for="fuente_informacion">Fuente de información</label>
+                                                    <select class="fuente_informacion custom-select" name="fuente_informacion" id="fuente_informacion">
+                                                        @if (!empty($array_datos_calificacionPcl[0]->Fuente_informacion))
+                                                            <option value="{{$array_datos_calificacionPcl[0]->Fuente_informacion}}" selected>{{$array_datos_calificacionPcl[0]->Nombre_Fuente_informacion}}</option>
+                                                        @else
+                                                            <option value="">Seleccione una opción</option>
+                                                        @endif
+                                                    </select>
+                                                </div>
+                                            @endif
                                         </div>
                                         {{-- <div class="col-4">
                                             <div class="form-group">                                                
@@ -335,7 +343,7 @@
                                             <div class="col-4">
                                                 <div class="form-group">
                                                     <label for="accion">Acción <span style="color: red;">(*)</span></label>
-                                                    <input type="hidden" id="bd_id_accion" value="<?php if(!empty($array_datos_calificacionPcl[0]->Id_accion)){echo $array_datos_calificacionPcl[0]->Id_accion;}?>">
+                                                    <input type="hidden" id="bd_id_accion" value="{{$array_datos_calificacionPcl[0]->Id_accion ?? ''}}">
                                                     <select class="custom-select accion" name="accion" id="accion" required>                                          
                                                     </select>
                                                 </div>
@@ -360,6 +368,12 @@
                                                 <div class="form-group">
                                                     <label for="estado_facturacion">Estado de Facturación</label>
                                                     <input type="text" class="form-control" name="estado_facturacion" id="estado_facturacion" value="<?php if(!empty($array_datos_calificacionPcl[0]->Estado_Facturacion)){echo $array_datos_calificacionPcl[0]->Estado_Facturacion;}?>" readonly>
+                                                </div>
+                                            </div>
+                                            <div class="col-4 d-none">
+                                                <div class="form-group">
+                                                    <label for="estado_firmeza">Estado de firmeza</label>
+                                                    <input type="text" class="form-control" name="estado_firmeza" value="" id="estado_firmeza" readonly>
                                                 </div>
                                             </div>
                                             <div class="col-4">
@@ -1645,6 +1659,7 @@
         dateInputs.forEach(input => {
             //Usamos el evento change para detectar los cambios de cada uno de los inputs de tipo fecha
             input.addEventListener('change', function() {
+                if(this.value == '') return;
                 //Validamos que la fecha sea mayor a la fecha de 1900-01-01
                 if(this.value < '1900-01-01'){
                     $(`#${this.id}_alerta`).text("La fecha ingresada no es válida. Por favor valide la fecha ingresada").removeClass("d-none");

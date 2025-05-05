@@ -921,6 +921,11 @@ class CalificacionPCLController extends Controller
                 // 'F_registro' => $date,
             ];
 
+            //Solo actualizar pronunciamiento pcl
+            if($Id_servicio == 9){
+               array_push($datos_info_actualizarAsignacionEvento, ['F_acta_firmeza' => $request->f_acta_firmeza]);
+            }
+
             sigmel_informacion_asignacion_eventos::on('sigmel_gestiones')
             ->where('Id_Asignacion', $newIdAsignacion)->update($datos_info_actualizarAsignacionEvento);
 
@@ -1549,6 +1554,11 @@ class CalificacionPCLController extends Controller
                 'F_calificacion' => $Fecha_calificacion,
                 // 'F_registro' => $date,
             ];
+
+            //Solo actualizar pronunciamiento pcl
+            if($Id_servicio == 9){
+                $datos_info_actualizarAsignacionEvento['F_acta_firmeza'] = $request->f_acta_firmeza;
+            }
 
             sigmel_informacion_asignacion_eventos::on('sigmel_gestiones')
             ->where('Id_Asignacion', $newIdAsignacion)->update($datos_info_actualizarAsignacionEvento);

@@ -3195,7 +3195,7 @@ class AdministradorController extends Controller
             $id_cliente = $array_id_cliente["Cliente"];
 
             $casilla_mod_principal = DB::table(getDatabaseName('sigmel_gestiones') .'sigmel_informacion_parametrizaciones_clientes as sipc')
-            ->select('sipc.Modulo_principal', 'sipc.Estado_facturacion')
+            ->select('sipc.Modulo_principal', 'sipc.Estado_facturacion','sipc.Estado_Firmeza')
             ->where([
                 ['sipc.Id_cliente', '=', $id_cliente],
                 ['sipc.Id_proceso', '=', $request->Id_proceso],
@@ -3257,25 +3257,6 @@ class AdministradorController extends Controller
             $tipo_cliente = $request->tipo_cliente;
         }
 
-        $datos_info_evento = [
-            'Cliente' => $request->cliente,
-            'Tipo_cliente' => $tipo_cliente,
-            'Tipo_evento' => $request->tipo_evento,
-            'ID_evento' => $Id_evento,
-            'F_evento' => $request->fecha_evento,
-            'F_radicacion' => $request->fecha_radicacion,
-            'N_siniestro' => $request->n_siniestro,
-            'Activador' => $request->activador,
-            'N_Radicado_HC' => $request->n_radicado_hc,
-            'Nombre_usuario' => $nombre_usuario,
-            'F_registro' => $date
-        ];
-
-        // Inserción de datos en la tabla sigmel_informacion_eventos
-        sigmel_informacion_eventos::on('sigmel_gestiones')->insert($datos_info_evento);
-
-        // colacamos un tiempo de retardo pequeño para que alcance a insertar los datos
-        sleep(2);
 
         /* RECOLECCIÓN INFORMACIÓN PARA LA TABLA: sigmel_informacion_afiliado_eventos */
         
@@ -3911,6 +3892,23 @@ class AdministradorController extends Controller
 
         sleep(2);
 
+        $datos_info_evento = [
+            'Cliente' => $request->cliente,
+            'Tipo_cliente' => $tipo_cliente,
+            'Tipo_evento' => $request->tipo_evento,
+            'ID_evento' => $Id_evento,
+            'F_evento' => $request->fecha_evento,
+            'F_radicacion' => $request->fecha_radicacion,
+            'N_siniestro' => $request->n_siniestro,
+            'Activador' => $request->activador,
+            'N_Radicado_HC' => $request->n_radicado_hc,
+            'Nombre_usuario' => $nombre_usuario,
+            'F_registro' => $date
+        ];
+
+        // Inserción de datos en la tabla sigmel_informacion_eventos
+        sigmel_informacion_eventos::on('sigmel_gestiones')->insert($datos_info_evento);
+        
         $idEvento = $Id_evento;
         $path = public_path('Documentos_Eventos/' . $idEvento);
 
