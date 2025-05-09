@@ -93,15 +93,16 @@ class sigmel_wsController extends Controller
         }
     }
 
-    protected function formatear($campo,$target){
+    protected function formatear($campo,$target,$param = null){
         list($accion,$aplicar) = explode(":",$target);
         $acciones = [
             "date" => fn($e) => date($aplicar,strtotime($e)),
-            "concatenar" => fn($e) =>  $e . $aplicar
+            "concatenar" => fn($e) =>  $e . $aplicar,
+            "comparar" => fn($e,$operador) => eval("return \$e $operador 50;") ? 1 : 0
         ];
 
         if(isset($acciones[$accion]) && !empty($this->request->{$campo})){
-            $resultado = $acciones[$accion]($this->request->{$campo});
+            $resultado = $acciones[$accion]($this->request->{$campo},$param);
             $this->request->merge([$campo => $resultado]);
         }
     }
@@ -147,6 +148,13 @@ class sigmel_wsController extends Controller
             "&parent:" => function($param){
                 $var = explode(":",$param);
                 return $this->{$var[1]} ?? $this->request->{$var[1]};
+            },
+            "remplazar:" => function($param) use($campo){
+                $str = explode(":",$param);
+                $str = explode(",",$str[1]);
+                $campo = (bool) $this->request->{$campo};
+
+                return $campo ? $str[0] : $str[1] ?? '';
             },
             "otro" => ""
         ];

@@ -6,6 +6,7 @@ use App\Http\Api\registrarEventoController;
 use App\Http\Api\generarEventoController;
 use App\Http\Api\sigmel_advance;
 use App\Http\Api\consultarEventoController;
+use App\Http\Middleware\ControlPermisos;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,9 +19,8 @@ use App\Http\Api\consultarEventoController;
 |
 */
 /** API REST SIGMEL */
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware([ControlPermisos::class, 'auth:sanctum'])->group(function () {
     Route::get('/sigmel_ws', [sigmelWSController::class, 'endpoint']);
     Route::post('/sigmel_ws/radicar', [registrarEventoController::class, 'registrar']);
-    //Route::post('/sigmel_ws/generar_evento', [generarEventoController::class, 'endpoint']);
-    //Route::post('/sigmel_ws/advance',[sigmel_advance::class,'registrar']);
+    Route::post('/sigmel_ws/advance', [sigmel_advance::class, 'registrar']);
 });

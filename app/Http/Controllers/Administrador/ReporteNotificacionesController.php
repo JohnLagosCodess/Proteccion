@@ -95,11 +95,11 @@ class ReporteNotificacionesController extends Controller
             switch (true) {
                 case (!empty($estado_general_calificacion) && $estado_general_calificacion == 359 && empty($numero_orden)):                    
                     $reporte_notificaciones = cnvista_reportes_notificaciones_uniones::on('sigmel_gestiones')
-                    ->select('ID_evento', 'F_comunicado', 'N_radicado', 'Nombre_documento', 'Carpeta_impresion',
-                    'Observaciones', 'N_identificacion', 'Tipo_destinatario', 'Nombre_destinatario', 'Direccion_destinatario',
-                    'Telefono_destinatario', 'Ciudad_departamento', 'Email_destinatario', 'Proceso_servicio', 
-                    'Ultima_accion', 'Estado', 'N_de_orden', 'Id_destinatario', 'Tipo_correspondencia', 'N_guia',
-                    'Folios', 'F_envio', 'F_notificacion')
+                    ->select('ID_evento', 'N_identificacion', 'F_asignacion_notificaciones', 'F_comunicado', 'N_radicado', 
+                    'Nombre_documento', 'Carpeta_impresion', 'Tipo_destinatario', 
+                    'Nombre_destinatario', 'Direccion_destinatario', 'Telefono_destinatario', 'Ciudad_departamento', 
+                    'Email_destinatario', 'Proceso_servicio', 'Ultima_accion', 'Estado', 'N_de_orden', 'Id_destinatario', 
+                    'Tipo_correspondencia', 'N_guia', 'Folios', 'F_envio', 'F_notificacion')
                     ->where([
                         ['Estado_general_notificacion', $estado_general_calificacion],
                         ['Bandeja_notificaciones', 'Si']                    
@@ -138,11 +138,11 @@ class ReporteNotificacionesController extends Controller
                             } else {
                                 
                                 $reporte_notificaciones = cnvista_reportes_notificaciones_uniones::on('sigmel_gestiones')
-                                ->select('ID_evento', 'F_comunicado', 'N_radicado', 'Nombre_documento', 'Carpeta_impresion',
-                                'Observaciones', 'N_identificacion', 'Tipo_destinatario', 'Nombre_destinatario', 'Direccion_destinatario',
-                                'Telefono_destinatario', 'Ciudad_departamento', 'Email_destinatario', 'Proceso_servicio', 
-                                'Ultima_accion', 'Estado', 'N_de_orden', 'Id_destinatario', 'Tipo_correspondencia', 'N_guia',
-                                'Folios', 'F_envio', 'F_notificacion')
+                                ->select('ID_evento', 'N_identificacion', 'F_asignacion_notificaciones', 'F_comunicado', 'N_radicado', 
+                                'Nombre_documento', 'Carpeta_impresion', 'Tipo_destinatario', 
+                                'Nombre_destinatario', 'Direccion_destinatario', 'Telefono_destinatario', 'Ciudad_departamento', 
+                                'Email_destinatario', 'Proceso_servicio', 'Ultima_accion', 'Estado', 'N_de_orden', 'Id_destinatario', 
+                                'Tipo_correspondencia', 'N_guia', 'Folios', 'F_envio', 'F_notificacion')
                                 ->where([
                                     ['Estado_general_notificacion', $estado_general_calificacion],
                                     ['Bandeja_notificaciones', 'Si'],
@@ -176,11 +176,11 @@ class ReporteNotificacionesController extends Controller
                     || !empty($estado_general_calificacion) && $estado_general_calificacion == 357 && empty($numero_orden)
                     || !empty($estado_general_calificacion) && $estado_general_calificacion == 358 && empty($numero_orden)):                    
                     $reporte_notificaciones = cnvista_reportes_notificaciones_uniones::on('sigmel_gestiones')
-                    ->select('ID_evento', 'F_comunicado', 'N_radicado', 'Nombre_documento', 'Carpeta_impresion',
-                    'Observaciones', 'N_identificacion', 'Tipo_destinatario', 'Nombre_destinatario', 'Direccion_destinatario',
-                    'Telefono_destinatario', 'Ciudad_departamento', 'Email_destinatario', 'Proceso_servicio', 
-                    'Ultima_accion', 'Estado', 'N_de_orden', 'Id_destinatario', 'Tipo_correspondencia', 'N_guia',
-                    'Folios', 'F_envio', 'F_notificacion')
+                    ->select('ID_evento', 'N_identificacion', 'F_asignacion_notificaciones', 'F_comunicado', 'N_radicado', 
+                    'Nombre_documento', 'Carpeta_impresion', 'Tipo_destinatario', 
+                    'Nombre_destinatario', 'Direccion_destinatario', 'Telefono_destinatario', 'Ciudad_departamento', 
+                    'Email_destinatario', 'Proceso_servicio', 'Ultima_accion', 'Estado', 'N_de_orden', 'Id_destinatario', 
+                    'Tipo_correspondencia', 'N_guia', 'Folios', 'F_envio', 'F_notificacion')
                     ->where([
                         ['Estado_general_notificacion', $estado_general_calificacion]                        
                     ])
@@ -221,11 +221,11 @@ class ReporteNotificacionesController extends Controller
                             } else {
                                 
                                 $reporte_notificaciones = cnvista_reportes_notificaciones_uniones::on('sigmel_gestiones')
-                                ->select('ID_evento', 'F_comunicado', 'N_radicado', 'Nombre_documento', 'Carpeta_impresion',
-                                'Observaciones', 'N_identificacion', 'Tipo_destinatario', 'Nombre_destinatario', 'Direccion_destinatario',
-                                'Telefono_destinatario', 'Ciudad_departamento', 'Email_destinatario', 'Proceso_servicio', 
-                                'Ultima_accion', 'Estado', 'N_de_orden', 'Id_destinatario', 'Tipo_correspondencia', 'N_guia',
-                                'Folios', 'F_envio', 'F_notificacion')
+                                ->select('ID_evento', 'N_identificacion', 'F_asignacion_notificaciones', 'F_comunicado', 'N_radicado', 
+                                'Nombre_documento', 'Carpeta_impresion', 'Tipo_destinatario', 
+                                'Nombre_destinatario', 'Direccion_destinatario', 'Telefono_destinatario', 'Ciudad_departamento', 
+                                'Email_destinatario', 'Proceso_servicio', 'Ultima_accion', 'Estado', 'N_de_orden', 'Id_destinatario', 
+                                'Tipo_correspondencia', 'N_guia', 'Folios', 'F_envio', 'F_notificacion')
                                 ->where([
                                     ['Estado_general_notificacion', $estado_general_calificacion],
                                     ['N_de_orden', $numero_orden]
@@ -256,11 +256,11 @@ class ReporteNotificacionesController extends Controller
                 break;
                 case (!empty($estado_general_calificacion) && $estado_general_calificacion == 365 && empty($numero_orden)):                    
                     $reporte_notificaciones = cnvista_reportes_notificaciones_uniones::on('sigmel_gestiones')
-                    ->select('ID_evento', 'F_comunicado', 'N_radicado', 'Nombre_documento', 'Carpeta_impresion',
-                    'Observaciones', 'N_identificacion', 'Tipo_destinatario', 'Nombre_destinatario', 'Direccion_destinatario',
-                    'Telefono_destinatario', 'Ciudad_departamento', 'Email_destinatario', 'Proceso_servicio', 
-                    'Ultima_accion', 'Estado', 'N_de_orden', 'Id_destinatario', 'Tipo_correspondencia', 'N_guia',
-                    'Folios', 'F_envio', 'F_notificacion')
+                    ->select('ID_evento', 'N_identificacion', 'F_asignacion_notificaciones', 'F_comunicado', 'N_radicado', 
+                    'Nombre_documento', 'Carpeta_impresion', 'Tipo_destinatario', 
+                    'Nombre_destinatario', 'Direccion_destinatario', 'Telefono_destinatario', 'Ciudad_departamento', 
+                    'Email_destinatario', 'Proceso_servicio', 'Ultima_accion', 'Estado', 'N_de_orden', 'Id_destinatario', 
+                    'Tipo_correspondencia', 'N_guia', 'Folios', 'F_envio', 'F_notificacion')
                     ->whereBetween('F_comunicado', [$fecha_desde , $fecha_hasta])
                     ->orderBy('F_comunicado')
                     ->orderBy('N_radicado') 
@@ -294,11 +294,11 @@ class ReporteNotificacionesController extends Controller
                             } else {
                                 
                                 $reporte_notificaciones = cnvista_reportes_notificaciones_uniones::on('sigmel_gestiones')
-                                ->select('ID_evento', 'F_comunicado', 'N_radicado', 'Nombre_documento', 'Carpeta_impresion',
-                                'Observaciones', 'N_identificacion', 'Tipo_destinatario', 'Nombre_destinatario', 'Direccion_destinatario',
-                                'Telefono_destinatario', 'Ciudad_departamento', 'Email_destinatario', 'Proceso_servicio', 
-                                'Ultima_accion', 'Estado', 'N_de_orden', 'Id_destinatario', 'Tipo_correspondencia', 'N_guia',
-                                'Folios', 'F_envio', 'F_notificacion')
+                                ->select('ID_evento', 'N_identificacion', 'F_asignacion_notificaciones', 'F_comunicado', 'N_radicado', 
+                                'Nombre_documento', 'Carpeta_impresion', 'Tipo_destinatario', 
+                                'Nombre_destinatario', 'Direccion_destinatario', 'Telefono_destinatario', 'Ciudad_departamento', 
+                                'Email_destinatario', 'Proceso_servicio', 'Ultima_accion', 'Estado', 'N_de_orden', 'Id_destinatario', 
+                                'Tipo_correspondencia', 'N_guia', 'Folios', 'F_envio', 'F_notificacion')
                                 ->where([
                                     ['N_de_orden', $numero_orden]
                                 ])

@@ -4,6 +4,7 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Support\Facades\Log;
 
 class Kernel extends ConsoleKernel
 {
@@ -14,8 +15,9 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         // $schedule->command('app:acciones-automaticas')->cron('*/2 * * * *'); // Ejecuta cada 2 minutos
+        // Log::info('Tarea programada registrada');
         $schedule->command('app:acciones-automaticas')->dailyAt('00:10');
-
+        $schedule->command('advance:registrar')->everyMinute()->withoutOverlapping();
     }
 
     /**

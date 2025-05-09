@@ -799,6 +799,9 @@ $(document).ready(function () {
     $(document).on('click', "#limpiar_cache", function () {
         limpiar_cache();
     });
+
+
+
 });
 
 /**

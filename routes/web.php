@@ -10,6 +10,7 @@ use App\Http\Controllers\Autenticacion\LoginController;
 use App\Http\Controllers\Autenticacion\LogoutController;
 use App\Http\Controllers\Coordinador\AdicionDxDTO;
 use App\Http\Controllers\Coordinador\CalificacionPCLController;
+use App\Http\Api\sigmel_advance;
 use App\Http\Controllers\Coordinador\RecalificacionPCLController;
 use App\Http\Controllers\Coordinador\CalificacionOrigenController;
 use App\Http\Controllers\Coordinador\CalificacionNotifiController;
@@ -955,3 +956,6 @@ Route::controller(ProbandoController::class)->group(function(){
 Route::get('test_proformas', [ProbandoController::class, 'test_proformas']);
 
 Route::post('/generarZipReporteNotificaciones1', [ReporteNotificacionesController::class, 'generarZipReporteNotificaciones1']);
+
+Route::get('/notificaciones_advance', [sigmel_advance::class, 'notificar_peticiones']);
+Route::post('/finalizar_notificacion', [sigmel_advance::class, 'finalizar_notificacion']);

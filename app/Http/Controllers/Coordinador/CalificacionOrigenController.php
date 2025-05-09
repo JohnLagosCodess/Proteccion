@@ -497,7 +497,8 @@ class CalificacionOrigenController extends Controller
                 case (!empty($Movimiento_automatico) and $Movimiento_automatico == 'Si' and !empty($Tiempo_movimiento) and !empty($Accion_automatica)):
                         $info_datos_accion_automatica = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_parametrizaciones_clientes as sipc')
                         ->leftJoin('sigmel_sys.users as u', 'u.id', '=', 'sipc.Profesional_asignado')
-                        ->select('sipc.Accion_ejecutar', 'sipc.Estado', 'sipc.Profesional_asignado', 'u.name')
+                        ->select('sipc.Accion_ejecutar', 'sipc.Estado', 'sipc.Profesional_asignado', 'sipc.Enviar_a_bandeja_trabajo_destino',
+                        'sipc.Bandeja_trabajo_destino', 'sipc.Estado_facturacion', 'u.name')
                         ->where([
                             ['sipc.Accion_ejecutar', $Accion_automatica],
                             ['sipc.Id_cliente', $id_cliente],
@@ -510,6 +511,13 @@ class CalificacionOrigenController extends Controller
                             $Profesional_asignado_automatico = $info_datos_accion_automatica[0]->Profesional_asignado;
                             $NombreProfesional_asignado_automatico = $info_datos_accion_automatica[0]->name;
                             $Id_Estado_evento_automatico = $info_datos_accion_automatica[0]->Estado;
+                            $Bandeja_trabajo_destino_automatico = $info_datos_accion_automatica[0]->Enviar_a_bandeja_trabajo_destino;
+                            if ($Bandeja_trabajo_destino_automatico == 'Si') {                                
+                                $Bandeja_trabajo_automatico = $info_datos_accion_automatica[0]->Bandeja_trabajo_destino;
+                            } else {
+                                $Bandeja_trabajo_automatico = 0;                                
+                            } 
+                            $Estado_facturacion_automatico = $info_datos_accion_automatica[0]->Estado_facturacion;
                             
                             // Se suman los dias a la fecha actual para saber la fecha del movimiento automatico
                             $dateTime = new DateTime($date_time);
@@ -528,6 +536,10 @@ class CalificacionOrigenController extends Controller
                                 'F_accion' => $date_time,
                                 'Id_profesional_automatico' => $Profesional_asignado_automatico,
                                 'Nombre_profesional_automatico' => $NombreProfesional_asignado_automatico,
+                                'Bandeja_trabajo_destino_automatico' => $Bandeja_trabajo_destino_automatico,
+                                'Bandeja_trabajo_automatico' => $Bandeja_trabajo_automatico,
+                                'Estado_facturacion_automatico' => $Estado_facturacion_automatico,
+                                'N_de_orden_automatico' => $N_orden_evento,
                                 'F_movimiento_automatico' => $F_movimiento_automatico,
                                 'Estado_accion_automatica' => 'Pendiente',
                                 'Nombre_usuario' => $nombre_usuario,
@@ -1060,7 +1072,8 @@ class CalificacionOrigenController extends Controller
                 case (!empty($Movimiento_automatico) and $Movimiento_automatico == 'Si' and !empty($Tiempo_movimiento) and !empty($Accion_automatica)):
                         $info_datos_accion_automatica = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_parametrizaciones_clientes as sipc')
                         ->leftJoin('sigmel_sys.users as u', 'u.id', '=', 'sipc.Profesional_asignado')
-                        ->select('sipc.Accion_ejecutar', 'sipc.Estado', 'sipc.Profesional_asignado', 'u.name')
+                        ->select('sipc.Accion_ejecutar', 'sipc.Estado', 'sipc.Profesional_asignado', 'sipc.Enviar_a_bandeja_trabajo_destino',
+                        'sipc.Bandeja_trabajo_destino', 'sipc.Estado_facturacion', 'u.name')
                         ->where([
                             ['sipc.Accion_ejecutar', $Accion_automatica],
                             ['sipc.Id_cliente', $id_cliente],
@@ -1073,6 +1086,13 @@ class CalificacionOrigenController extends Controller
                             $Profesional_asignado_automatico = $info_datos_accion_automatica[0]->Profesional_asignado;
                             $NombreProfesional_asignado_automatico = $info_datos_accion_automatica[0]->name;
                             $Id_Estado_evento_automatico = $info_datos_accion_automatica[0]->Estado;
+                            $Bandeja_trabajo_destino_automatico = $info_datos_accion_automatica[0]->Enviar_a_bandeja_trabajo_destino;
+                            if ($Bandeja_trabajo_destino_automatico == 'Si') {                                
+                                $Bandeja_trabajo_automatico = $info_datos_accion_automatica[0]->Bandeja_trabajo_destino;
+                            } else {
+                                $Bandeja_trabajo_automatico = 0;                                
+                            } 
+                            $Estado_facturacion_automatico = $info_datos_accion_automatica[0]->Estado_facturacion;
 
                             // Se suman los dias a la fecha actual para saber la fecha del movimiento automatico
                             $dateTime = new DateTime($date_time);
@@ -1097,6 +1117,10 @@ class CalificacionOrigenController extends Controller
                                     'F_accion' => $date_time,
                                     'Id_profesional_automatico' => $Profesional_asignado_automatico,
                                     'Nombre_profesional_automatico' => $NombreProfesional_asignado_automatico,
+                                    'Bandeja_trabajo_destino_automatico' => $Bandeja_trabajo_destino_automatico,
+                                    'Bandeja_trabajo_automatico' => $Bandeja_trabajo_automatico,
+                                    'Estado_facturacion_automatico' => $Estado_facturacion_automatico,
+                                    'N_de_orden_automatico' => $N_orden_evento,
                                     'F_movimiento_automatico' => $F_movimiento_automatico,
                                     'Estado_accion_automatica' => 'Pendiente',
                                     'Nombre_usuario' => $nombre_usuario,
@@ -1123,6 +1147,10 @@ class CalificacionOrigenController extends Controller
                                     'F_accion' => $date_time,
                                     'Id_profesional_automatico' => $Profesional_asignado_automatico,
                                     'Nombre_profesional_automatico' => $NombreProfesional_asignado_automatico,
+                                    'Bandeja_trabajo_destino_automatico' => $Bandeja_trabajo_destino_automatico,
+                                    'Bandeja_trabajo_automatico' => $Bandeja_trabajo_automatico,
+                                    'Estado_facturacion_automatico' => $Estado_facturacion_automatico,
+                                    'N_de_orden_automatico' => $N_orden_evento,
                                     'F_movimiento_automatico' => $F_movimiento_automatico,
                                     'Estado_accion_automatica' => 'Pendiente',
                                     'Nombre_usuario' => $nombre_usuario,

@@ -14,6 +14,7 @@ use App\Models\sigmel_informacion_decreto_eventos;
 use App\Models\sigmel_informacion_laboral_eventos;
 use App\Models\sigmel_informacion_eventos;
 use Illuminate\Support\Facades\DB;
+use App\Models\sigmel_informacion_registro_advance;
 use Illuminate\Support\Facades\Log;
 
 return [
@@ -38,7 +39,9 @@ return [
                 ->where('Nit_entidad', $nit_entidad)->orWhere('Nit_simple', $nit_entidad)->first();
         },
         "afiliado" => function ($obtener, $evento) {
-            return sigmel_informacion_afiliado_eventos::on('sigmel_gestiones')->select($obtener)->where('ID_evento', $evento)->first();
+            return sigmel_informacion_afiliado_eventos::on('sigmel_gestiones')
+            ->leftJoin('sigmel_gestiones.sigmel_lista_parametros','Id_Parametro','Tipo_documento')
+            ->select($obtener)->where('ID_evento', $evento)->first();
         },
         "laboral" => function ($obtener, $evento) {
             return sigmel_informacion_laboral_eventos::on('sigmel_gestiones')->select($obtener)->where('ID_evento', $evento)->first();
@@ -103,6 +106,25 @@ return [
             if(!empty($decision)) $resultado = $decision->$seleccionar == 'Acuerdo' ? 'Si' : 'No';
 
             return $resultado ?? '';
-        }
+        },
+        "desencadenador" => function($seleccionar, $id_evento, $id_servicio, $id_asignacion){
+            $ultima_accion = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_historial_accion_eventos as sihae')
+            ->leftJoin('sigmel_gestiones.sigmel_informacion_acciones as sia', 'sia.Id_Accion', '=', 'sihae.Id_accion')
+            ->leftJoin('sigmel_gestiones.sigmel_informacion_parametrizaciones_clientes','Servicio_asociado','sihae.Id_servicio')
+            ->select('sihae.ID_evento', 'sihae.Id_proceso', 'sihae.Id_servicio', 'sihae.Id_accion', 'sihae.Id_Asignacion','sia.Accion','Id_parametrizacion')
+            ->where([['sihae.Id_Asignacion', $id_asignacion],["Id_servicio",$id_servicio],])->whereNotNull('Estado_Firmeza');
+    
+            return $ultima_accion->orderBy('sihae.F_accion', 'desc')->first() ?? "";
+        },
+        "advance" => function($seleccionar, $id_evento, $id_servicio, $id_asignacion){
+            $ultima_accion = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_historial_accion_eventos as sihae')
+            ->leftJoin('sigmel_gestiones.sigmel_informacion_acciones as sia', 'sia.Id_Accion', '=', 'sihae.Id_accion')
+            ->leftJoin('sigmel_gestiones.sigmel_informacion_parametrizaciones_clientes','Servicio_asociado','sihae.Id_servicio')
+            ->select('Firmeza','Estado_Firmeza','Dictamen_Firme')
+            ->where([['sihae.Id_Asignacion', $id_asignacion],["Id_servicio",$id_servicio],])->whereNotNull('Estado_Firmeza');
+            $ultima_accion = $ultima_accion->orderBy('sihae.F_accion', 'desc')->first();
+
+            return $ultima_accion->$seleccionar ?? '';
+        },
     ]
 ];

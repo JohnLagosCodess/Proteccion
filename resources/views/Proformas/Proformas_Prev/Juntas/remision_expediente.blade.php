@@ -335,11 +335,11 @@
             </tr>
             <tr>
                 <td colspan="2" class="negrita">ARL:</td>
-                <td colspan="4" class="izquierda">{{$Nombre_Afp}}</td>                
+                <td colspan="4" class="izquierda">{{$Nombre_Arl}}</td>                
             </tr>
             <tr>
                 <td colspan="2" class="negrita">Fondo de Pensión:</td>
-                <td colspan="4" class="izquierda">{{$Nombre_Arl}}</td>
+                <td colspan="4" class="izquierda">{{$Nombre_Afp}}</td>
             </tr>
             <tr>
                 <td colspan="2" class="negrita">Tipo de Afiliado:</td>

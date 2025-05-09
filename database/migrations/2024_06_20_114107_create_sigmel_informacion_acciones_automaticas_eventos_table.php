@@ -23,6 +23,10 @@ return new class extends Migration
             $table->datetime('F_accion')->nullable();
             $table->integer('Id_profesional_automatico')->nullable();
             $table->text('Nombre_profesional_automatico')->nullable();
+            $table->string('Bandeja_trabajo_destino_automatico', 2)->nullable();
+            $table->integer('Bandeja_trabajo_automatico')->default(0)->nullable();
+            $table->text('Estado_facturacion_automatico')->nullable();
+            $table->string('N_de_orden_automatico', 20)->nullable();
             $table->date('F_movimiento_automatico')->nullable();
             $table->text('Estado_accion_automatica')->nullable();              
             $table->text('Nombre_usuario')->nullable();  

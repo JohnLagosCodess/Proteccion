@@ -234,6 +234,13 @@ class CalificacionJuntasController extends Controller
             ['Nombre_documento', 'Lista_chequeo'],
         ])->get();
 
+        /* Consultamos si existe o no una controversia previamente creada  */
+        $array_existe_controversia = sigmel_informacion_controversia_juntas_eventos::on('sigmel_gestiones')
+        ->where([
+            ['ID_evento', $newIdEvento],
+            ['Id_Asignacion', $newIdAsignacion],
+        ])->get();
+
         /* 
             Validaciones para traer la info del campo Fecha envío expediente a JRCI de la sección Seguimiento a Juntas calificadoras 
             Se requiere traer la Fecha de accion más reciente cuando se haya ejecutado la acción REPORTAR NOTIFICACIÓN EXPEDIENTE JRCI (ID 61)
@@ -247,8 +254,35 @@ class CalificacionJuntasController extends Controller
             ['Id_accion', 61]
         ])->orderBy('F_accion', 'desc')->first();
         
+        /* 
+            si llega existir la acción y su correspondiente fecha entonces se realizará la actualización o la inserción de datos 
+            en la tabla sigmel_informacion_controversia_juntas_eventos dependiendo de si ya existe o no previamente una controversia
+        */
         if ($array_f_envio_exp_jrci) {
             $f_envio_exp_jrci = $array_f_envio_exp_jrci->F_accion;
+            
+            if ($array_existe_controversia->isEmpty()) {
+                $datos = [
+                    'ID_evento' => $newIdEvento,
+                    'Id_Asignacion' => $newIdAsignacion,
+                    'Id_proceso' => 3,
+                    'F_envio_jrci' => $f_envio_exp_jrci,
+                    'Nombre_usuario' => $nombre_usuario,
+                    'F_registro' => $date,
+                ];
+    
+                sigmel_informacion_controversia_juntas_eventos::on('sigmel_gestiones')->insert($datos);
+            } else {
+                $datos = [
+                    'F_envio_jrci' => $f_envio_exp_jrci,
+                    'Nombre_usuario' => $nombre_usuario,
+                    'F_registro' => $date,
+                ];
+    
+                sigmel_informacion_controversia_juntas_eventos::on('sigmel_gestiones')
+                ->where('Id_Asignacion', $newIdAsignacion)->update($datos);
+            }
+
         }else{
             $f_envio_exp_jrci = '';
         }
@@ -272,8 +306,34 @@ class CalificacionJuntasController extends Controller
         ->whereIn('Id_accion', [63,81,82])
         ->orderBy('F_accion', 'desc')->first();
 
+        /* 
+            si llega existir la acción y su correspondiente fecha entonces se realizará la actualización o la inserción de datos 
+            en la tabla sigmel_informacion_controversia_juntas_eventos dependiendo de si ya existe o no previamente una controversia
+        */
         if ($array_f_devolucion_exp_jrci) {
             $f_devolucion_exp_jrci = $array_f_devolucion_exp_jrci->F_accion;
+
+            if ($array_existe_controversia->isEmpty()) {
+                $datos = [
+                    'ID_evento' => $newIdEvento,
+                    'Id_Asignacion' => $newIdAsignacion,
+                    'Id_proceso' => 3,
+                    'F_devolucion_exp_jrci' => $f_devolucion_exp_jrci,
+                    'Nombre_usuario' => $nombre_usuario,
+                    'F_registro' => $date,
+                ];
+    
+                sigmel_informacion_controversia_juntas_eventos::on('sigmel_gestiones')->insert($datos);
+            } else {
+                $datos = [
+                    'F_devolucion_exp_jrci' => $f_devolucion_exp_jrci,
+                    'Nombre_usuario' => $nombre_usuario,
+                    'F_registro' => $date,
+                ];
+    
+                sigmel_informacion_controversia_juntas_eventos::on('sigmel_gestiones')
+                ->where('Id_Asignacion', $newIdAsignacion)->update($datos);
+            }
         }else{
             $f_devolucion_exp_jrci = '';
         }
@@ -291,8 +351,34 @@ class CalificacionJuntasController extends Controller
             ['Id_accion', 64]
         ])->orderBy('F_accion', 'desc')->first();
         
+        /* 
+            si llega existir la acción y su correspondiente fecha entonces se realizará la actualización o la inserción de datos 
+            en la tabla sigmel_informacion_controversia_juntas_eventos dependiendo de si ya existe o no previamente una controversia
+        */
         if ($array_f_reenvio_exp_jrci) {
             $f_reenvio_exp_jrci = $array_f_reenvio_exp_jrci->F_accion;
+
+            if ($array_existe_controversia->isEmpty()) {
+                $datos = [
+                    'ID_evento' => $newIdEvento,
+                    'Id_Asignacion' => $newIdAsignacion,
+                    'Id_proceso' => 3,
+                    'F_reenvio_exp_jrci' => $f_reenvio_exp_jrci,
+                    'Nombre_usuario' => $nombre_usuario,
+                    'F_registro' => $date,
+                ];
+    
+                sigmel_informacion_controversia_juntas_eventos::on('sigmel_gestiones')->insert($datos);
+            } else {
+                $datos = [
+                    'F_reenvio_exp_jrci' => $f_reenvio_exp_jrci,
+                    'Nombre_usuario' => $nombre_usuario,
+                    'F_registro' => $date,
+                ];
+    
+                sigmel_informacion_controversia_juntas_eventos::on('sigmel_gestiones')
+                ->where('Id_Asignacion', $newIdAsignacion)->update($datos);
+            }
         }else{
             $f_reenvio_exp_jrci = '';
         }
@@ -310,8 +396,34 @@ class CalificacionJuntasController extends Controller
             ['Id_accion', 86]
         ])->orderBy('F_accion', 'desc')->first();
         
+        /* 
+            si llega existir la acción y su correspondiente fecha entonces se realizará la actualización o la inserción de datos 
+            en la tabla sigmel_informacion_controversia_juntas_eventos dependiendo de si ya existe o no previamente una controversia
+        */
         if ($array_f_envio_pago_honorarios_jnci) {
             $f_envio_pago_honorarios_jnci = $array_f_envio_pago_honorarios_jnci->F_accion;
+
+            if ($array_existe_controversia->isEmpty()) {
+                $datos = [
+                    'ID_evento' => $newIdEvento,
+                    'Id_Asignacion' => $newIdAsignacion,
+                    'Id_proceso' => 3,
+                    'F_envio_jnci' => $f_envio_pago_honorarios_jnci,
+                    'Nombre_usuario' => $nombre_usuario,
+                    'F_registro' => $date,
+                ];
+    
+                sigmel_informacion_controversia_juntas_eventos::on('sigmel_gestiones')->insert($datos);
+            } else {
+                $datos = [
+                    'F_envio_jnci' => $f_envio_pago_honorarios_jnci,
+                    'Nombre_usuario' => $nombre_usuario,
+                    'F_registro' => $date,
+                ];
+    
+                sigmel_informacion_controversia_juntas_eventos::on('sigmel_gestiones')
+                ->where('Id_Asignacion', $newIdAsignacion)->update($datos);
+            }
         }else{
             $f_envio_pago_honorarios_jnci = '';
         }
@@ -1167,7 +1279,8 @@ class CalificacionJuntasController extends Controller
                 case (!empty($Movimiento_automatico) and $Movimiento_automatico == 'Si' and !empty($Tiempo_movimiento) and !empty($Accion_automatica)):
                         $info_datos_accion_automatica = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_parametrizaciones_clientes as sipc')
                         ->leftJoin('sigmel_sys.users as u', 'u.id', '=', 'sipc.Profesional_asignado')
-                        ->select('sipc.Accion_ejecutar', 'sipc.Estado', 'sipc.Profesional_asignado', 'u.name')
+                        ->select('sipc.Accion_ejecutar', 'sipc.Estado', 'sipc.Profesional_asignado', 'sipc.Enviar_a_bandeja_trabajo_destino',
+                        'sipc.Bandeja_trabajo_destino', 'sipc.Estado_facturacion', 'u.name')
                         ->where([
                             ['sipc.Accion_ejecutar', $Accion_automatica],
                             ['sipc.Id_cliente', $id_cliente],
@@ -1180,6 +1293,13 @@ class CalificacionJuntasController extends Controller
                             $Profesional_asignado_automatico = $info_datos_accion_automatica[0]->Profesional_asignado;
                             $NombreProfesional_asignado_automatico = $info_datos_accion_automatica[0]->name;
                             $Id_Estado_evento_automatico = $info_datos_accion_automatica[0]->Estado;
+                            $Bandeja_trabajo_destino_automatico = $info_datos_accion_automatica[0]->Enviar_a_bandeja_trabajo_destino;
+                            if ($Bandeja_trabajo_destino_automatico == 'Si') {                                
+                                $Bandeja_trabajo_automatico = $info_datos_accion_automatica[0]->Bandeja_trabajo_destino;
+                            } else {
+                                $Bandeja_trabajo_automatico = 0;                                
+                            } 
+                            $Estado_facturacion_automatico = $info_datos_accion_automatica[0]->Estado_facturacion;
                             
                             // Se suman los dias a la fecha actual para saber la fecha del movimiento automatico
                             $dateTime = new DateTime($date_time);
@@ -1198,6 +1318,10 @@ class CalificacionJuntasController extends Controller
                                 'F_accion' => $date_time,
                                 'Id_profesional_automatico' => $Profesional_asignado_automatico,
                                 'Nombre_profesional_automatico' => $NombreProfesional_asignado_automatico,
+                                'Bandeja_trabajo_destino_automatico' => $Bandeja_trabajo_destino_automatico,
+                                'Bandeja_trabajo_automatico' => $Bandeja_trabajo_automatico,
+                                'Estado_facturacion_automatico' => $Estado_facturacion_automatico,
+                                'N_de_orden_automatico' => $N_orden_evento,
                                 'F_movimiento_automatico' => $F_movimiento_automatico,
                                 'Estado_accion_automatica' => 'Pendiente',
                                 'Nombre_usuario' => $nombre_usuario,
@@ -1728,7 +1852,8 @@ class CalificacionJuntasController extends Controller
                 case (!empty($Movimiento_automatico) and $Movimiento_automatico == 'Si' and !empty($Tiempo_movimiento) and !empty($Accion_automatica)):
                         $info_datos_accion_automatica = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_parametrizaciones_clientes as sipc')
                         ->leftJoin('sigmel_sys.users as u', 'u.id', '=', 'sipc.Profesional_asignado')
-                        ->select('sipc.Accion_ejecutar', 'sipc.Estado', 'sipc.Profesional_asignado', 'u.name')
+                        ->select('sipc.Accion_ejecutar', 'sipc.Estado', 'sipc.Profesional_asignado', 'sipc.Enviar_a_bandeja_trabajo_destino',
+                        'sipc.Bandeja_trabajo_destino', 'sipc.Estado_facturacion', 'u.name')
                         ->where([
                             ['sipc.Accion_ejecutar', $Accion_automatica],
                             ['sipc.Id_cliente', $id_cliente],
@@ -1741,6 +1866,13 @@ class CalificacionJuntasController extends Controller
                             $Profesional_asignado_automatico = $info_datos_accion_automatica[0]->Profesional_asignado;
                             $NombreProfesional_asignado_automatico = $info_datos_accion_automatica[0]->name;
                             $Id_Estado_evento_automatico = $info_datos_accion_automatica[0]->Estado;
+                            $Bandeja_trabajo_destino_automatico = $info_datos_accion_automatica[0]->Enviar_a_bandeja_trabajo_destino;
+                            if ($Bandeja_trabajo_destino_automatico == 'Si') {                                
+                                $Bandeja_trabajo_automatico = $info_datos_accion_automatica[0]->Bandeja_trabajo_destino;
+                            } else {
+                                $Bandeja_trabajo_automatico = 0;                                
+                            } 
+                            $Estado_facturacion_automatico = $info_datos_accion_automatica[0]->Estado_facturacion;
 
                             // Se suman los dias a la fecha actual para saber la fecha del movimiento automatico
                             $dateTime = new DateTime($date_time);
@@ -1765,6 +1897,10 @@ class CalificacionJuntasController extends Controller
                                     'F_accion' => $date_time,
                                     'Id_profesional_automatico' => $Profesional_asignado_automatico,
                                     'Nombre_profesional_automatico' => $NombreProfesional_asignado_automatico,
+                                    'Bandeja_trabajo_destino_automatico' => $Bandeja_trabajo_destino_automatico,
+                                    'Bandeja_trabajo_automatico' => $Bandeja_trabajo_automatico,
+                                    'Estado_facturacion_automatico' => $Estado_facturacion_automatico,
+                                    'N_de_orden_automatico' => $N_orden_evento,
                                     'F_movimiento_automatico' => $F_movimiento_automatico,
                                     'Estado_accion_automatica' => 'Pendiente',
                                     'Nombre_usuario' => $nombre_usuario,
@@ -1791,6 +1927,10 @@ class CalificacionJuntasController extends Controller
                                     'F_accion' => $date_time,
                                     'Id_profesional_automatico' => $Profesional_asignado_automatico,
                                     'Nombre_profesional_automatico' => $NombreProfesional_asignado_automatico,
+                                    'Bandeja_trabajo_destino_automatico' => $Bandeja_trabajo_destino_automatico,
+                                    'Bandeja_trabajo_automatico' => $Bandeja_trabajo_automatico,
+                                    'Estado_facturacion_automatico' => $Estado_facturacion_automatico,
+                                    'N_de_orden_automatico' => $N_orden_evento,
                                     'F_movimiento_automatico' => $F_movimiento_automatico,
                                     'Estado_accion_automatica' => 'Pendiente',
                                     'Nombre_usuario' => $nombre_usuario,

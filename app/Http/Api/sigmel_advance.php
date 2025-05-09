@@ -2,14 +2,17 @@
 
 namespace App\Http\Api;
 
+use App\Console\Commands\registrarAdvance;
 use App\Http\Api\sigmel_wsController;
 use App\Contracts\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use App\Models\sigmel_informacion_asignacion_eventos;
 use App\Models\sigmel_auditorias_informacion_accion_eventos;
+use App\Models\sigmel_informacion_registro_advance;
 use App\Models\sigmel_informacion_correspondencia_eventos;
 use App\Models\sigmel_informacion_pagos_honorarios_eventos;
 use App\Models\sigmel_informacion_comunicado_eventos;
@@ -19,7 +22,8 @@ class sigmel_advance extends sigmel_wsController implements Api
 {
     protected $ejecutar_validaciones = [
         "id_evento" => "required",
-        'integer'
+        'integer',
+        'id_servicio' => 'required','integer'
     ];
 
     /** @var Array Contiene los servicios para los cuales se les permitira la consulta del evento */
@@ -31,6 +35,9 @@ class sigmel_advance extends sigmel_wsController implements Api
 
     protected $response = [
         "respuesta_ws" => [
+            "id_evento" => [
+                "get_var" => ["&parent:id_evento"]
+            ],
             "id_asignacion" => [
                 "get_var" => ["&parent:id_asignacion"]
             ],
@@ -38,9 +45,12 @@ class sigmel_advance extends sigmel_wsController implements Api
                 "get_info" => ["servicio:Nombre_servicio", "id_evento"]
             ],
             "consecutivo" => [
-                "get_var" => "&parent:id_evento"
+                "get_info" => ["evento:N_siniestro","id_evento"]
             ],
-            "indentificacion_afiliado" => [
+            "tipoId" => [
+                "get_info" => ["afiliado:Nombre_parametro", "id_evento"]
+            ],
+            "numeroId" => [
                 "get_info" => ["afiliado:Nro_identificacion", "id_evento"]
             ],
             "nit_empleador" => [
@@ -151,7 +161,7 @@ class sigmel_advance extends sigmel_wsController implements Api
                 "get_info" => ["evento:F_radicacion", "id_evento"],
                 "formatear" => ["date:d/m/Y"]
             ],
-            "oficina_radica" => "CODESS - SIGMEL",
+            "oficina_radica" => "",
             "f_primera_cita" => [
                 "get_info" => ["calificacion_pcl:F_primera_cita", "id_evento"],
                 "formatear" => ["date:d/m/Y"]
@@ -164,17 +174,17 @@ class sigmel_advance extends sigmel_wsController implements Api
                 "formatear" => ["date:d/m/Y"]
             ],
             "f_notificacion_pendientes" => [
-                "get_correspondencia" => ["F_notificacion", "Documento_PCL", "estado_general:357,358"],
+                "get_correspondencia" => ["F_notificacion", "Documento_PCL", "estado_general:357,358","Afiliado"],
                 "formatear" => ["date:d/m/Y"]
             ],
             "f_recepcion_pendientes" => [
                 "buscar_accion" => ["45", "id_evento", "get_column:F_accion"],
                 "formatear" => ["date:d/m/Y"]
             ],
-            //"f_notifi_cierre_administrativo" => "", //[
-            //"buscar_accion" => ["51", "id_evento", "get_column:F_accion"],
-            //"formatear" => ["date:d/m/Y"]
-            //],
+            "f_notifi_cierre_administrativo" => [
+                "buscar_accion" => ["6,7,8,10,11,14,33,34,35,36,37", "id_evento", "get_column:F_accion"],
+                "formatear" => ["date:d/m/Y"]
+            ],
             "f_emision_dictamen_ips" => [
                 "get_info" => ["comite:F_visado_comite", "id_evento"],
                 "formatear" => ["date:d/m/Y"]
@@ -188,7 +198,7 @@ class sigmel_advance extends sigmel_wsController implements Api
                 "formatear" => ["date:d/m/Y"]
             ],
             "origen" => [
-                "get_info" => ["origen_juntas", "id_evento"],
+                "get_info" => ["origen_decreto", "id_evento"],
             ],
             "f_notifi_dictamen" => [
                 "get_correspondencia" => ["F_notificacion", "Oficio", "estado_general:357,358"],
@@ -197,8 +207,59 @@ class sigmel_advance extends sigmel_wsController implements Api
             "f_solicitud_consolidada" => [
                 "fin_solicitud_consilidada" => ""
             ],
+            "Dictamen_firme" => [
+                "get_info" => ["advance:Dictamen_Firme", "id_evento"],
+            ],
+            "Estado" => [
+                "get_info" => ["advance:Estado_Firmeza", "id_evento"],
+            ],
+            "iniciar_solicitud_invalidez" => [
+                "get_info" => ["decretos:Porcentaje_pcl", "id_evento"],
+                "formatear" => ["comparar:50",">="]
+            ],
+            "tipo_modelo" => [
+                "get_var" => ["&parent:iniciar_solicitud_invalidez"],
+                "get_var" => ["remplazar:No es invalido No se puede radicar,Modelo Nuevo - Debe Radicar"]
+            ],
+            "f_firmeza_dictamen" => [
+                "buscar_accion" => ["37", "id_evento", "get_column:F_accion"],
+                "formatear" => ["date:d/m/Y"]
+            ],
+            "f_notificacion_efectiva_empleador" => [
+                "get_correspondencia" => ["F_notificacion", "Oficio", "estado_general:357,358","Empleador"]
+            ],
+            "f_firmeza_notifi_empleador" => [
+                "get_correspondencia" => ["F_notificacion", "Firmeza_PCL", "estado_general:357,358","Empleador"]
+            ],
+            "f_notificacion_efectiva_arl" => [
+                "get_correspondencia" => ["F_notificacion", "Oficio", "estado_general:357,358","arl"]
+            ],
+            "f_firmerza_notifi_arl" => [
+                "get_correspondencia" => ["F_notificacion", "Firmeza_PCL", "estado_general:357,358","arl"]
+            ],
+            "f_notificacion_efectiva_eps" => [
+                "get_correspondencia" => ["F_notificacion", "Oficio", "estado_general:357,358","eps"]
+            ],
+            "f_firmerza_notifi_eps" => [
+                "get_correspondencia" => ["F_notificacion", "Firmeza_PCL", "estado_general:357,358","eps"]
+            ],
+            "f_notificacion_efectiva_afiliado" => [
+                "get_var" => ["&parent:f_notifi_dictamen"]
+            ],
+            "f_firmerza_notifi_afiliado" => [
+                "get_correspondencia" => ["F_notificacion", "Firmeza_PCL", "estado_general:357,358","Afiliado"]
+            ],
+            "f_constancia_ejecutoria" => "",
+            "f_recepcion_dictamen_jn" => "",
+            "f_solicitud_firmeza_1" => [
+                "buscar_accion" => ["88", "id_evento", "get_column:F_accion"],
+                "formatear" => ["date:d/m/Y"]
+            ],
+            "dictamen_firme_1" => [
+                "get_var" => ["&parent:Dictamen_firme"]
+            ],
             "tramo_paralelo" => [
-                "get_info" => ["ultima_accion:Accion", "id_evento"],
+                "get_info" => ["desencadenador:Accion", "id_evento"],
             ]
         ],
         "juntas" => [
@@ -374,7 +435,6 @@ class sigmel_advance extends sigmel_wsController implements Api
                 }else{
                     $respuesta_validacion = $opciones[$tipo];
                 }
-                $this->debug(["res" => $tipo,$respuesta_validacion]);
                 if(!$respuesta_validacion) break;
             }
         }
@@ -453,7 +513,7 @@ class sigmel_advance extends sigmel_wsController implements Api
         $this->request->merge([$campo => $fecha]);
     }
 
-    protected function get_correspondencia($campo, $target, $comunicado, $filtro = null)
+    protected function get_correspondencia($campo, $target, $tipo_comunicado, $filtro = null,$tipo_correspondencia = "Afiliado")
     {
         $filtros = [
             "estado_general" => function ($var) {
@@ -463,8 +523,9 @@ class sigmel_advance extends sigmel_wsController implements Api
 
         $comunicado = sigmel_informacion_comunicado_eventos::on('sigmel_gestiones')->select('Id_Comunicado')
             ->where([
-                ['Tipo_descarga', $comunicado],
-                ['Id_Asignacion', $this->id_asignacion]
+                ['Tipo_descarga', $tipo_comunicado],
+                ['Id_Asignacion', $this->id_asignacion],
+                ['Correspondencia','LIKE', "%$tipo_correspondencia%"]
             ]);
 
         if ($filtro != null) {
@@ -476,11 +537,11 @@ class sigmel_advance extends sigmel_wsController implements Api
         }
 
         $comunicado = $comunicado->max('Id_Comunicado');
-
+        //$this->debug([$comunicado, $target, $tipo_comunicado, $filtro,$tipo_correspondencia]);
         if (!empty($comunicado)) {
             $correspondencia = sigmel_informacion_correspondencia_eventos::on('sigmel_gestiones')->select($target)->where([
                 ["Id_comunicado", $comunicado],
-                ["Tipo_destinatario", "Principal"]
+                //["Tipo_destinatario", $tipo_correspondencia]
             ])->first();
         }
 
@@ -498,7 +559,7 @@ class sigmel_advance extends sigmel_wsController implements Api
     protected function buscar_accion($campo, $acciones, $id_evento, $evaluar, $servicio = null,$setear = true)
     {
         $determinar = [
-            "ejecuto_accion" => fn($var) => $var ? "Si" : "No",
+            "ejecuto_accion" => fn($var) => $var ? 1 : 0,
             "bool" => fn($var) => $var ? true : false,
             "get_column" => fn($accion, $columna) => $accion->$columna ?? '',
             "frase" => fn($accion, $str) => $accion ? $str : ""
@@ -530,7 +591,7 @@ class sigmel_advance extends sigmel_wsController implements Api
         return $resultado;
     }
 
-    public function registrar(): JsonResponse
+    public function registrar($formato = 'json'): JsonResponse|Array
     {
         try {
 
@@ -539,11 +600,11 @@ class sigmel_advance extends sigmel_wsController implements Api
                 return response()->json($this->msg_validacion);
             }
 
-            $response = Cache::lock("runtime_sigmel_advance7")->block(10, function () {
+            $response = Cache::lock("runtime_sigmel_advance1")->block(10, function () {
                 return $this->procesar_solicitud();
             });
 
-            return response()->json($response);
+            return $formato == 'json' ? response()->json($response) : $response;
         } catch (\Throwable $th) {
 
             Log::channel('log_api')->error("Error inesperado: " . $th->getMessage(), [
@@ -554,7 +615,7 @@ class sigmel_advance extends sigmel_wsController implements Api
 
             // $this->ejecutar_auditoria("Errado");
 
-            return response()->json($this->getMensaje("general", 000));
+            return $formato == 'json' ? response()->json($this->getMensaje("general", 000)) : $this->getMensaje("general", 000);
         }
     }
 
@@ -562,30 +623,52 @@ class sigmel_advance extends sigmel_wsController implements Api
     {
         $servicios = sigmel_informacion_asignacion_eventos::on('sigmel_gestiones')
             ->select("Id_servicio", "Id_Asignacion")
-            ->where("ID_evento", $this->request->id_evento)
-            ->get();
+            ->where([
+                ["ID_evento", $this->request->id_evento],
+                ['Id_servicio', $this->request->id_servicio]
+                ])->orderBy('Id_Asignacion','ASC')->first();
 
-        $this->id_evento = $this->request->id_evento;
-
-        $respuesta_solicitud = $servicios->filter(function ($servicio) {
-            return array_key_exists($servicio->Id_servicio, $this->servicios_disponibles);
-        })->map(function ($servicio) {
-            $nombre_servicio = $this->servicios_disponibles[$servicio->Id_servicio];
-            $this->id_servicio = $servicio->Id_servicio;
-            $this->id_asignacion = $servicio->Id_Asignacion;
-
-            $this->validaciones_dinamicas["general"] = $this->response["respuesta_ws"];
+        if(!empty($servicios) && isset($this->servicios_disponibles[$servicios->Id_servicio])){
+            $this->id_evento = $this->request->id_evento;
+            $this->id_servicio = $servicios->Id_servicio;
+            $this->id_asignacion = $servicios->Id_Asignacion;
+            $nombre_servicio = $this->servicios_disponibles[$servicios->Id_servicio];
             $this->validaciones_dinamicas[$nombre_servicio] = $this->response[$nombre_servicio];
-            $this->validar(true);
+            $this->validaciones_dinamicas["general"] = $this->response["respuesta_ws"];
 
+            $this->validar(true);
             $info_general = $this->request->only(array_keys($this->response["respuesta_ws"]));
             $info_procesada = $this->request->only(array_keys($this->validaciones_dinamicas[$nombre_servicio]));
 
-            return array_merge($info_general, $info_procesada);
-        })->values()->toArray();
+            $respuesta_solicitud = array_merge($info_general, $info_procesada);
+
+        }else{
+            $respuesta_solicitud = "El evento no aun no cuenta con servicios de PCL o Controversia PCL por el momento.";
+        }
 
         return $this->getMensaje("general", 102, [
-            "Respuesta" => !empty($respuesta_solicitud) ? $respuesta_solicitud : "El evento no aun no cuenta con servicios de PCL o Controversia PCL por el momento."
+            "Respuesta" => $respuesta_solicitud
         ]);
     }
+
+    public function notificar_peticiones(){
+        $response = sigmel_informacion_registro_advance::select('ID_Asignacion','ID_evento','ID_servicio','Fecha_Ejecucion','Acta_firmeza','Estado_Ejecucion','Dictamen_firme')
+        ->where('Usuario',Auth::user()->name)
+        ->whereIn('Estado_Ejecucion',['errado','notificar'])->get();
+
+        return response()->json($response);
+    }
+
+    public function finalizar_notificacion(Request $request){
+        $request->validate([
+            "ids" => 'required|Array'
+        ]);
+  
+        sigmel_informacion_registro_advance::whereIn('ID_Asignacion',$request->ids)
+        ->Where([['Estado_Ejecucion','!=','errado'],['Usuario',Auth::user()->name]])->update(['Estado_Ejecucion' => 'ejecutado']);
+
+        sigmel_informacion_registro_advance::whereIn('ID_Asignacion',$request->ids)
+        ->Where([['Estado_Ejecucion','errado'],['Usuario',Auth::user()->name]])->update(['Estado_Ejecucion' => 'notificado y errado']);
+    }
+
 }

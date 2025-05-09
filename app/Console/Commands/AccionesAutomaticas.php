@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Console\Commands;
-
+use App\Http\Controllers\Coordinador\BandejaNotifiController;
 use Illuminate\Console\Command;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,6 +20,7 @@ use App\Models\sigmel_informacion_comunicado_eventos;
 use App\Models\cndatos_info_comunicado_eventos;
 use App\Models\sigmel_informacion_seguimientos_eventos;
 use App\Models\sigmel_informacion_comite_interdisciplinario_eventos;
+use App\Models\sigmel_numero_orden_eventos;
 use App\Models\sigmel_informacion_parametrizaciones_clientes;
 use App\Models\sigmel_informacion_acciones;
 use App\Models\sigmel_informacion_acciones_automaticas_eventos;
@@ -28,6 +29,7 @@ use App\Models\sigmel_informacion_historial_accion_eventos;
 use App\Models\sigmel_lista_documentos;
 use DateTime;
 use Illuminate\Support\Sleep;
+use Illuminate\Support\Facades\Log;
 
 class AccionesAutomaticas extends Command
 {
@@ -50,6 +52,7 @@ class AccionesAutomaticas extends Command
      */
     public function handle()
     {   
+        // Log::info('Inicio de ejecución: app:acciones-automaticas');
         $time = time();
         $date = date("Y-m-d", $time);
         $date_time = date("Y-m-d 00:00:00");
@@ -144,7 +147,7 @@ class AccionesAutomaticas extends Command
         // Funciones para realizar consulta a la tabla sigmel_informacion_parametrizaciones_clientes 
         // si existe un valor en el intem Accion_automatica del array array_info_acciones_automati se realiza la consulta
         // si no no realiza nada o cero
-
+        // Funcion para capturar el profesional asignado
         function consultaParametrizaciones_cliente($valorAccionAutomatica, $valorId_cliente, $valorId_proceso, $valorServicio_asociado) {
             
             $consultaParametrica_clientes = sigmel_informacion_parametrizaciones_clientes::on('sigmel_gestiones')
@@ -163,7 +166,7 @@ class AccionesAutomaticas extends Command
                 return 0; // en caso donde la consulta no devuelve resultados
             }
         }
-
+        // funcion para capturar el estado
         function consultaParametrizaciones_clientes($valorAccionAutomatica, $valorId_cliente, $valorId_proceso, $valorServicio_asociado) {
             
             $consultaParametrica_clientes = sigmel_informacion_parametrizaciones_clientes::on('sigmel_gestiones')
@@ -178,6 +181,118 @@ class AccionesAutomaticas extends Command
             // Validar si la consulta viene falsa o no
             if ($consultaParametrica_clientes->isNotEmpty()) {
                 return $consultaParametrica_clientes[0]->Estado;
+            } else {
+                return 0; // en caso donde la consulta no devuelve resultados
+            }
+        }
+        // Funcion para capturar si se va enviar a la bandeja de notificaciones
+        function consultaParametrizaciones_clientes1($valorAccionAutomatica, $valorId_cliente, $valorId_proceso, $valorServicio_asociado) {
+            
+            $consultaParametrica_clientes = sigmel_informacion_parametrizaciones_clientes::on('sigmel_gestiones')
+            ->select('Enviar_a_bandeja_trabajo_destino')
+            ->where([
+                ['Accion_ejecutar', $valorAccionAutomatica],
+                ['Id_cliente', $valorId_cliente],
+                ['Id_proceso', $valorId_proceso],
+                ['Servicio_asociado', $valorServicio_asociado]
+            ])
+            ->get();
+            // Validar si la consulta viene falsa o no
+            if ($consultaParametrica_clientes->isNotEmpty()) {
+                return $consultaParametrica_clientes[0]->Enviar_a_bandeja_trabajo_destino;
+            } else {
+                return 0; // en caso donde la consulta no devuelve resultados
+            }
+        }
+
+        // Funcion para capturar el id de la bandeja de notificaciones
+        function consultaParametrizaciones_clientes2($valorAccionAutomatica, $valorId_cliente, $valorId_proceso, $valorServicio_asociado) {
+            
+            $consultaParametrica_clientes = sigmel_informacion_parametrizaciones_clientes::on('sigmel_gestiones')
+            ->select('Bandeja_trabajo_destino')
+            ->where([
+                ['Accion_ejecutar', $valorAccionAutomatica],
+                ['Id_cliente', $valorId_cliente],
+                ['Id_proceso', $valorId_proceso],
+                ['Servicio_asociado', $valorServicio_asociado]
+            ])
+            ->get();
+            // Validar si la consulta viene falsa o no
+            if ($consultaParametrica_clientes->isNotEmpty()) {
+                if ($consultaParametrica_clientes[0]->Bandeja_trabajo_destino == '') {
+                    return 0;
+                } else {                    
+                    return $consultaParametrica_clientes[0]->Bandeja_trabajo_destino;
+                }
+                
+            } else {
+                return 0; // en caso donde la consulta no devuelve resultados
+            }
+        }
+
+        // Funcion para capturar el estado de la facturacion
+        function consultaParametrizaciones_clientes3($valorAccionAutomatica, $valorId_cliente, $valorId_proceso, $valorServicio_asociado) {
+            
+            $consultaParametrica_clientes = sigmel_informacion_parametrizaciones_clientes::on('sigmel_gestiones')
+            ->select('Estado_facturacion')
+            ->where([
+                ['Accion_ejecutar', $valorAccionAutomatica],
+                ['Id_cliente', $valorId_cliente],
+                ['Id_proceso', $valorId_proceso],
+                ['Servicio_asociado', $valorServicio_asociado]
+            ])
+            ->get();
+            // Validar si la consulta viene falsa o no
+            if ($consultaParametrica_clientes->isNotEmpty()) {
+                if ($consultaParametrica_clientes[0]->Estado_facturacion == '') {
+                    return 0;
+                } else {                    
+                    return $consultaParametrica_clientes[0]->Estado_facturacion;
+                }
+                
+            } else {
+                return 0; // en caso donde la consulta no devuelve resultados
+            }
+        }
+
+        // Funcion para capturar el numero de orden si entro a la bandeja de notificaciones
+        function consultaParametrizaciones_clientes4($valorAccionAutomatica, $valorId_cliente, $valorId_proceso, $valorServicio_asociado, $varloIdAsignacion, $valorIdEvento) {
+            
+            $consultaParametrica_clientes = sigmel_informacion_parametrizaciones_clientes::on('sigmel_gestiones')
+            ->select('Enviar_a_bandeja_trabajo_destino')
+            ->where([
+                ['Accion_ejecutar', $valorAccionAutomatica],
+                ['Id_cliente', $valorId_cliente],
+                ['Id_proceso', $valorId_proceso],
+                ['Servicio_asociado', $valorServicio_asociado]
+            ])
+            ->get();
+            // Validar si la consulta viene falsa o no
+            if ($consultaParametrica_clientes->isNotEmpty()) {
+                $consultaParametrica_clientes[0]->Enviar_a_bandeja_trabajo_destino;
+
+                //Trae El numero de orden actual
+                $n_orden = sigmel_numero_orden_eventos::on('sigmel_gestiones')
+                ->select('Numero_orden')
+                ->get();
+
+                $n_ordenNotificacion = DB::table(getDatabaseName('sigmel_gestiones') . "sigmel_informacion_asignacion_eventos")
+                ->select('N_de_orden')->where('Id_Asignacion', $varloIdAsignacion)->get()->first();
+
+                //Asignamos #n de orden cuado se envie un caso a notificaciones
+                if(!empty($consultaParametrica_clientes[0]->Enviar_a_bandeja_trabajo_destino) && $consultaParametrica_clientes[0]->Enviar_a_bandeja_trabajo_destino != 'No'){
+                    BandejaNotifiController::finalizarNotificacion($valorIdEvento,$varloIdAsignacion,false);
+                    $N_orden_evento= $n_ordenNotificacion->N_de_orden ?? $n_orden[0]->Numero_orden;
+                }else{
+                    BandejaNotifiController::finalizarNotificacion($valorIdEvento,$varloIdAsignacion,true);
+                    $N_orden_evento= $n_ordenNotificacion->N_de_orden ?? null;
+                }
+                if ($N_orden_evento == '') {
+                    return 0;
+                } else {
+                    return $N_orden_evento;                    
+                }
+                
             } else {
                 return 0; // en caso donde la consulta no devuelve resultados
             }
@@ -200,7 +315,7 @@ class AccionesAutomaticas extends Command
 
         unset($item); // Romper la referencia para finalizar el bucle cuando ya este listo
 
-        // Recorremos nuevamente el array_info_acciones_automati para consulta el profesional con la funcion consultaParametrizaciones_cliente
+        // Recorremos nuevamente el array_info_acciones_automati para consulta del estado del evento con la funcion consultaParametrizaciones_clientes
 
         foreach ($array_info_acciones_automati as &$item) {
             if (!empty($item['Accion_automatica']) and !empty($item['Tiempo_movimiento'])) {
@@ -210,6 +325,74 @@ class AccionesAutomaticas extends Command
                 $item['Id_Estado_evento_automatico'] = $Id_Estado_evento_automatico;
             } else {
                 $item['Id_Estado_evento_automatico'] = 0;
+                // No hacer nada si Accion_automatica está vacío
+                // echo "Accion_automatica está vacío para Id_Asignacion " . $item['Id_Asignacion'] . "\n";
+            }
+        }
+
+        unset($item); // Romper la referencia para finalizar el bucle cuando ya este listo
+
+        // Recorremos nuevamente el array_info_acciones_automati para consulta si se va enviar a la bandeja de notificaciones con la funcion consultaParametrizaciones_clientes1
+
+        foreach ($array_info_acciones_automati as &$item) {
+            if (!empty($item['Accion_automatica']) and !empty($item['Tiempo_movimiento'])) {
+                // Realizar la consulta con el valor de Accion_automatica
+                $Bandeja_trabajo_destino_automatico = consultaParametrizaciones_clientes1($item['Accion_automatica'], $item['Id_cliente'], $item['Id_proceso'], $item['Servicio_asociado']);
+                // Agregar $Bandeja_trabajo_destino_automatico al array actual usando una referencia
+                $item['Bandeja_trabajo_destino_automatico'] = $Bandeja_trabajo_destino_automatico;
+            } else {
+                $item['Bandeja_trabajo_destino_automatico'] = 0;
+                // No hacer nada si Accion_automatica está vacío
+                // echo "Accion_automatica está vacío para Id_Asignacion " . $item['Id_Asignacion'] . "\n";
+            }
+        }
+
+        unset($item); // Romper la referencia para finalizar el bucle cuando ya este listo
+
+        // Recorremos nuevamente el array_info_acciones_automati para consultar el id de la bandeja de notificaciones con la funcion consultaParametrizaciones_clientes2
+
+        foreach ($array_info_acciones_automati as &$item) {
+            if (!empty($item['Accion_automatica']) and !empty($item['Tiempo_movimiento'])) {
+                // Realizar la consulta con el valor de Accion_automatica
+                $Bandeja_trabajo_automatico = consultaParametrizaciones_clientes2($item['Accion_automatica'], $item['Id_cliente'], $item['Id_proceso'], $item['Servicio_asociado']);                
+                // Agregar $Bandeja_trabajo_automatico al array actual usando una referencia
+                $item['Bandeja_trabajo_automatico'] = $Bandeja_trabajo_automatico;
+            } else {
+                $item['Bandeja_trabajo_automatico'] = 0;
+                // No hacer nada si Accion_automatica está vacío
+                // echo "Accion_automatica está vacío para Id_Asignacion " . $item['Id_Asignacion'] . "\n";
+            }
+        }
+
+        unset($item); // Romper la referencia para finalizar el bucle cuando ya este listo
+        // print_r($array_info_acciones_automati);
+        // Recorremos nuevamente el array_info_acciones_automati para consultar el estado de la facturacion con la funcion consultaParametrizaciones_clientes3
+
+        foreach ($array_info_acciones_automati as &$item) {
+            if (!empty($item['Accion_automatica']) and !empty($item['Tiempo_movimiento'])) {
+                // Realizar la consulta con el valor de Accion_automatica
+                $Estado_facturacion_automatico = consultaParametrizaciones_clientes3($item['Accion_automatica'], $item['Id_cliente'], $item['Id_proceso'], $item['Servicio_asociado']);
+                // Agregar $Estado_facturacion_automatico al array actual usando una referencia
+                $item['Estado_facturacion_automatico'] = $Estado_facturacion_automatico;
+            } else {
+                $item['Estado_facturacion_automatico'] = 0;
+                // No hacer nada si Accion_automatica está vacío
+                // echo "Accion_automatica está vacío para Id_Asignacion " . $item['Id_Asignacion'] . "\n";
+            }
+        }
+
+        unset($item); // Romper la referencia para finalizar el bucle cuando ya este listo
+
+        // Recorremos nuevamente el array_info_acciones_automati para consultar el numero de orden con la funcion consultaParametrizaciones_clientes4
+
+        foreach ($array_info_acciones_automati as &$item) {
+            if (!empty($item['Accion_automatica']) and !empty($item['Tiempo_movimiento'])) {
+                // Realizar la consulta con el valor de Accion_automatica
+                $N_de_orden_automatico = consultaParametrizaciones_clientes4($item['Accion_automatica'], $item['Id_cliente'], $item['Id_proceso'], $item['Servicio_asociado'], $item['Id_Asignacion'], $item['ID_evento']);
+                // Agregar $N_de_orden_automatico al array actual usando una referencia
+                $item['N_de_orden_automatico'] = $N_de_orden_automatico;
+            } else {
+                $item['N_de_orden_automatico'] = 0;
                 // No hacer nada si Accion_automatica está vacío
                 // echo "Accion_automatica está vacío para Id_Asignacion " . $item['Id_Asignacion'] . "\n";
             }
@@ -344,6 +527,10 @@ class AccionesAutomaticas extends Command
             'F_accion',
             'Id_profesional_automatico',
             'Nombre_profesional_automatico',
+            'Bandeja_trabajo_destino_automatico',
+            'Bandeja_trabajo_automatico',
+            'Estado_facturacion_automatico',
+            'N_de_orden_automatico',
             'F_movimiento_automatico',
             'Estado_accion_automatica',
             'Nombre_usuario',
@@ -525,7 +712,7 @@ class AccionesAutomaticas extends Command
         // print_r($array_tiempo_alertaNaranjaRoja);
 
         // Funcion para calcular la nueva Fecha de alerta
-             // formula FA= FC+TA (FA = fecha alerta, FC = fecha accion (fecha actual) y TA = tiempo de alerta)
+        // formula FA= FC+TA (FA = fecha alerta, FC = fecha accion (fecha actual) y TA = tiempo de alerta)
         function nueva_fecha_alerta($valor_fecha_accion, $valor_tiempo_alerta){           
             $Nueva_F_Alerta = new DateTime($valor_fecha_accion);
             $horas = $valor_tiempo_alerta;
@@ -571,7 +758,7 @@ class AccionesAutomaticas extends Command
         }
 
         // Funcion para calcular  Alerta Naranja
-            // formula AN = (TA*PN)/100 (AN= Alerta naranja, TA = tiempo de alerta y PN = porcentaje de alerta naranja)
+        // formula AN = (TA*PN)/100 (AN= Alerta naranja, TA = tiempo de alerta y PN = porcentaje de alerta naranja)
         function alerta_naranja($valor_fecha_accion, $valor_tiempo_alerta, $valor_porcentaje_alerta_naranja){           
             $Alerta_Naranja = ($valor_tiempo_alerta * $valor_porcentaje_alerta_naranja) / 100;
 
@@ -616,7 +803,11 @@ class AccionesAutomaticas extends Command
             'Movimiento_automatico',
             'Tiempo_movimiento',
             'Id_profesional_automatico',
-            'Id_Estado_evento_automatico'      
+            'Id_Estado_evento_automatico',
+            'Bandeja_trabajo_destino_automatico',
+            'Bandeja_trabajo_automatico',
+            'Estado_facturacion_automatico',
+            'N_de_orden_automatico',      
         ];
 
         // Recorremos  el array array_tiempo_alertaNaranja nuevamente y eliminamos los items especificados
@@ -737,7 +928,7 @@ class AccionesAutomaticas extends Command
         }
 
         // Funcion para calcular Alerta Roja
-            // formula AR = (TA*PR)/100 (AR= Alerta roja, TA = tiempo de alerta y PR = porcentaje de alerta roja)
+        // formula AR = (TA*PR)/100 (AR= Alerta roja, TA = tiempo de alerta y PR = porcentaje de alerta roja)
         function alerta_roja($valor_fecha_accion, $valor_tiempo_alerta, $valor_porcentaje_alerta_roja){           
             $Alerta_Roja = ($valor_tiempo_alerta * $valor_porcentaje_alerta_roja) / 100;
 
@@ -1003,6 +1194,10 @@ class AccionesAutomaticas extends Command
                 'F_accion' => $item['F_accion'],
                 'Id_profesional_automatico' => $item['Id_profesional_automatico'],
                 'Nombre_profesional_automatico' => $item['Nombre_profesional_automatico'],
+                'Bandeja_trabajo_destino_automatico' => $item['Bandeja_trabajo_destino_automatico'],
+                'Bandeja_trabajo_automatico' => $item['Bandeja_trabajo_automatico'],
+                'Estado_facturacion_automatico' => $item['Estado_facturacion_automatico'],
+                'N_de_orden_automatico' => $item['N_de_orden_automatico'],
                 'F_movimiento_automatico' => $item['F_movimiento_automatico'],
                 'Estado_accion_automatica' => $item['Estado_accion_automatica'],
                 'Nombre_usuario' => $item['Nombre_usuario'],
@@ -1010,6 +1205,6 @@ class AccionesAutomaticas extends Command
             ]);
         }
         // sleep(3);
-        
+        // Log::info('Fin de ejecución: app:acciones-automaticas');       
     }
 }

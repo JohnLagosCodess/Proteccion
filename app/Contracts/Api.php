@@ -9,6 +9,6 @@ use Illuminate\Http\JsonResponse;
     /**
      * Metodo principal para que las acciones puedan ser invocadas
      */
-    public function registrar(): JsonResponse;
+    public function registrar(): JsonResponse|Array;
 }
 ?>
