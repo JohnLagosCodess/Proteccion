@@ -17,7 +17,7 @@ class sigmel_informacion_registro_advance extends Model
     public $timestamps = false;
     
     protected static function Pendientes(){
-        return static::whereIn('Estado_Ejecucion',['pendiente','errado'])->where('Reintentos','<=',1);
+        return static::whereIn('Estado_Ejecucion',['pendiente']);
     }
 
 }

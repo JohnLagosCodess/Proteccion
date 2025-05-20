@@ -13,6 +13,7 @@ use App\Models\sigmel_informacion_controversia_juntas_eventos;
 use App\Models\sigmel_informacion_decreto_eventos;
 use App\Models\sigmel_informacion_laboral_eventos;
 use App\Models\sigmel_informacion_eventos;
+use App\Models\sigmel_informacion_pronunciamiento_eventos;
 use Illuminate\Support\Facades\DB;
 use App\Models\sigmel_informacion_registro_advance;
 use Illuminate\Support\Facades\Log;
@@ -67,6 +68,9 @@ return [
         "comite" =>  function ($seleccionar, $id_evento, $id_servicio, $id_asignacion) {
             return sigmel_informacion_comite_interdisciplinario_eventos::on('sigmel_gestiones')->select($seleccionar)->where('Id_Asignacion', $id_asignacion)->first() ?? "";
         },
+        "pronunciamiento_pcl" =>  function ($seleccionar, $id_evento, $id_servicio, $id_asignacion) {
+            return sigmel_informacion_pronunciamiento_eventos::on('sigmel_gestiones')->select($seleccionar)->where('Id_Asignacion', $id_asignacion)->first() ?? "";
+        },
         "decretos" =>  function ($seleccionar, $id_evento, $id_servicio, $id_asignacion) {
             return sigmel_informacion_decreto_eventos::on('sigmel_gestiones')->select($seleccionar)->where('Id_Asignacion', $id_asignacion)->first();
         },
@@ -77,6 +81,14 @@ return [
                 ->select('slp.Nombre_parametro as Nombre_origen', 'sltp.Nombre_evento')->where('Id_Asignacion', $id_asignacion)->first();
 
             return !empty($decreto) ? "{$decreto->Nombre_evento} {$decreto->Nombre_origen}" : "";
+        },
+        "origen_pronunciamiento" =>  function ($seleccionar, $id_evento, $id_servicio, $id_asignacion) {
+            $pronunciamiento = sigmel_informacion_pronunciamiento_eventos::on('sigmel_gestiones')
+                ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slp', 'slp.Id_Parametro', 'Id_tipo_origen')
+                ->leftJoin('sigmel_gestiones.sigmel_lista_tipo_eventos as sltp', 'sltp.Id_Evento', 'Id_tipo_evento')
+                ->select('slp.Nombre_parametro as Nombre_origen', 'sltp.Nombre_evento')->where('Id_Asignacion', $id_asignacion)->first();
+
+            return !empty($pronunciamiento) ? "{$pronunciamiento->Nombre_evento} {$pronunciamiento->Nombre_origen}" : "";
         },
         "origen_jrci" =>  function ($seleccionar, $id_evento, $id_servicio, $id_asignacion) {
             $evento = DB::table('sigmel_gestiones.sigmel_informacion_controversia_juntas_eventos as ije')
@@ -103,7 +115,7 @@ return [
         },
         "aval_ips" => function($seleccionar, $id_evento, $id_servicio, $id_asignacion){
             $decision = sigmel_informacion_controversia_juntas_eventos::on('sigmel_gestiones')->select($seleccionar)->where('Id_Asignacion', $id_asignacion)->first();
-            if(!empty($decision)) $resultado = $decision->$seleccionar == 'Acuerdo' ? 'Si' : 'No';
+            if(!empty($decision)) $resultado = $decision->$seleccionar == 'Acuerdo' ? 1 : ($decision->$seleccionar == 'Desacuerdo' ? 0 : '');
 
             return $resultado ?? '';
         },
@@ -125,6 +137,46 @@ return [
             $ultima_accion = $ultima_accion->orderBy('sihae.F_accion', 'desc')->first();
 
             return $ultima_accion->$seleccionar ?? '';
+        },
+        "evaluar_porcentajes" => function($seleccionar = null, $id_evento, $id_servicio, $id_asignacion){
+            $porcentajes_juntas = sigmel_informacion_controversia_juntas_eventos::on('sigmel_gestiones')->select('porcentaje_pcl_jnci_emitido','porcentaje_pcl_jrci_emitido')->where('Id_Asignacion', $id_asignacion)->first();
+
+            if(!empty($porcentajes_juntas)){
+                return !empty($porcentajes_juntas->porcentaje_pcl_jnci_emitido) ? $porcentajes_juntas->porcentaje_pcl_jnci_emitido : (!empty($porcentajes_juntas->porcentaje_pcl_jrci_emitido) ? $porcentajes_juntas->porcentaje_pcl_jrci_emitido : '');
+            }else{
+                return '';
+            }
+        },
+        "evaluar_modelo_juntas" => function($seleccionar = null, $id_evento, $id_servicio, $id_asignacion){
+            $dictamines = sigmel_informacion_controversia_juntas_eventos::on('sigmel_gestiones')->select('F_dictamen_jnci_emitido','F_dictamen_jrci_emitido')->where('Id_Asignacion', $id_asignacion)->first();
+
+            if(!empty($dictamines)){
+                return !empty($dictamines->F_dictamen_jnci_emitido) ? $dictamines->F_dictamen_jnci_emitido : (!empty($dictamines->F_dictamen_jrci_emitido) ? $dictamines->F_dictamen_jrci_emitido : '');
+            }else{
+                return '';
+            }
+        },
+        'notificacion_afiliado' => function($seleccionar = null, $id_evento, $id_servicio, $id_asignacion){
+            $controversia = sigmel_informacion_controversia_juntas_eventos::on('sigmel_gestiones')->select('Id_Asignacion_Servicio_Anterior')
+            ->where('Id_Asignacion',$id_asignacion)->first();
+            
+            $array_fecha_notificacion = DB::table(getDatabaseName('sigmel_gestiones').'sigmel_informacion_correspondencia_eventos as sicore')
+            ->leftJoin('sigmel_gestiones.sigmel_informacion_comunicado_eventos as sicome', 'sicore.Id_comunicado', '=', 'sicome.Id_Comunicado')
+            ->select('sicore.F_notificacion')
+            ->where([
+                ['sicore.Id_Asignacion', $controversia->Id_Asignacion_Servicio_Anterior],
+                ['sicore.Tipo_correspondencia', 'Afiliado'],
+                ['sicome.Tipo_descarga', 'Oficio'],
+            ])->first();
+
+            return !empty($controversia->F_notificacion) ? $controversia->F_notificacion : (!empty($array_fecha_notificacion) && !empty($array_fecha_notificacion->F_notificacion) ? $array_fecha_notificacion->F_notificacion : '');
+        },
+        'entidades_juntas' => function($seleccionar, $id_evento, $id_servicio, $id_asignacion){
+            $controversia = sigmel_informacion_controversia_juntas_eventos::on('sigmel_gestiones')->select("Nombre_entidad as $seleccionar")
+            ->leftJoin('sigmel_gestiones.sigmel_informacion_entidades','Id_Entidad',$seleccionar)
+            ->where('Id_Asignacion',$id_asignacion)->first();
+
+            return $controversia->{$seleccionar} ?? '';
         },
     ]
 ];

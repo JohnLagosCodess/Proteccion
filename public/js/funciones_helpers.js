@@ -783,7 +783,7 @@ $(document).ready(function () {
     historial_servicios();
 
     //Mantiene el foco dentro del modal, principalmente para que sea compatible con select2
-    // $.fn.modal.Constructor.prototype._enforceFocus = function () {
+    // $.fn.modal.Constructorprototype._enforceFocus = function () {
     //     var that = this;
     //     $(document).on('focusin.modal', function (e) {
     //     if ($(e.target).hasClass('select2-input')) {
@@ -800,8 +800,13 @@ $(document).ready(function () {
         limpiar_cache();
     });
 
+    notificaciones_advance();
+    let estado = $("#estado_ejecucion").val();
 
-
+    if(estado == '' && estado != 'ejecutado'){
+        setInterval(notificaciones_advance, 60000);
+    }
+    
 });
 
 /**
@@ -2226,3 +2231,87 @@ function calc_antiguedad_empresa(){
             }
         });
     });
+
+
+function notificaciones_advance() {
+
+    $.ajax({
+        url: 'notificaciones_advance',
+        method: 'GET',
+        data: {
+            //_token: $('input[name=_token]').val(),
+            id_asignacion:  51//$("#newId_asignacion").val()
+        },
+        success: function (respuesta) {
+            respuesta.forEach(function (item, index) {
+                var estado = item.Estado_Ejecucion || '';
+                var esError = estado.toLowerCase() === 'errado';
+                console.log(estado);
+                var colorClass = esError ? 'bg-danger text-white' : (estado == 'pendiente' ? 'bg-warning text-white' : 'bg-success text-white');
+                var iconClass = esError ? 'fas fa-times-circle' : (estado == 'pendiente' ? 'fas fa-info-circle' : 'fas fa-check-circle');
+                var mensajePrincipal = esError
+                    ? 'Ocurrió un error durante la integración con Advance.'
+                    : (estado == 'pendiente' ? 'Se ha ejecutado una accion con un estado de firmeza, en un momento se realizara un registro en  advance.' : 'Se ha registrado información correctamente en Advance.' ) ;
+
+                let cuerpo_mensaje =`
+                <div class='d-flex'>
+                    <div class='row' style="font-size: 0.9em;">
+                        <div><strong>Firmeza:</strong> ${item.Acta_firmeza}</div>
+                        <div><strong>Dictamen en firme:</strong> ${item.Dictamen_firme ?? ''}</div>
+                        <div><strong>Fecha de integracion</strong> ${item.Fecha_Ejecucion}</div>
+                    </div>
+                    <div class='row'>
+                        <div><strong>Respuesta:</strong> ${mensajePrincipal}</div>
+                    </div>
+                </div>`;
+                
+                /*var toastHTML = `
+                    <div class="toast" id="${toastId}" style="position: fixed; bottom: ${20 + (index * 100)}px; left: 20px; z-index: 1055;" role="alert" aria-live="assertive" aria-atomic="true" data-delay="100000">
+                        <div class="toast-header ${colorClass}">
+                        <i class="${iconClass} mr-2"></i>
+                        <strong class="mr-auto">Notificación - Advance</strong>
+                        <small>Hace un momento</small>
+                        <button type="button" class="ml-2 mb-1 close text-white" data-dismiss="toast" aria-label="Cerrar">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        </div>
+                        <div class="toast-body" style="line-height: 1.5;">
+                        <p class="mb-2"><i class="fas fa-info-circle mr-1"></i> ${mensajePrincipal}</p>
+
+                        </div>
+                    </div>
+                    `;*/
+                
+                $("#estado_ejecucion").val(estado);    
+                $("#alerta_advance, #contenedor_alerta_advance").removeClass('d-none bg-danger bg-warning bg-success');
+                $("#titulo_alerta_advance").html(`<i class='${iconClass}'></i> Advance`);
+                $("#contenedor_alerta_advance").addClass(colorClass);
+                $("#cuerpo_alerta_advance").html(cuerpo_mensaje);
+            });
+
+            /*let idsAsignacion = respuesta.length > 0
+                ? respuesta.map(registro => registro.ID_Asignacion)
+                : '';
+
+            if (estado == 'pendiente') {
+                setTimeout(() => {
+                    $.ajax({
+                        url: '/finalizar_notificacion',
+                        method: 'POST',
+                        data: {
+                            _token: $('input[name=_token]').val(),
+                            ids: idsAsignacion
+                        },
+                        success: function (e) {
+                            console.log('Notificaciones finalizadas');
+                        }
+                    });
+                }, 4000);
+            }*/
+        },
+        error: function (xhr, status, error) {
+            console.error('Error en la petición:', error);
+        }
+    });
+
+}

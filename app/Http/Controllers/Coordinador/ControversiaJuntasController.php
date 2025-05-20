@@ -2142,6 +2142,7 @@ class ControversiaJuntasController extends Controller
             "firmar" => $request->firmar,
             "id_comunicado" => $id_comunicado,
             "N_siniestro" => $request->N_siniestro,
+            'tipo_proforma' => 'pdf'
         ];
         
         $requestTMP = new Request();

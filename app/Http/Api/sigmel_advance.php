@@ -26,357 +26,410 @@ class sigmel_advance extends sigmel_wsController implements Api
         'id_servicio' => 'required','integer'
     ];
 
+    protected $modalidad_salida = 'individual';
+
     /** @var Array Contiene los servicios para los cuales se les permitira la consulta del evento */
     protected $servicios_disponibles = [
         6  => "pcl",
         7  => "pcl",
+        9 => "pronunciamiento_pcl",
         13 => "juntas"
     ];
 
     protected $response = [
         "respuesta_ws" => [
-            "id_evento" => [
-                "get_var" => ["&parent:id_evento"]
-            ],
-            "id_asignacion" => [
-                "get_var" => ["&parent:id_asignacion"]
-            ],
-            "nombre_servicio" => [
-                "get_info" => ["servicio:Nombre_servicio", "id_evento"]
-            ],
-            "consecutivo" => [
-                "get_info" => ["evento:N_siniestro","id_evento"]
-            ],
-            "tipoId" => [
-                "get_info" => ["afiliado:Nombre_parametro", "id_evento"]
-            ],
-            "numeroId" => [
-                "get_info" => ["afiliado:Nro_identificacion", "id_evento"]
-            ],
-            "nit_empleador" => [
-                "get_info" => ["laboral:Nit_o_cc", "id_evento"]
-            ],
-            /*"dictamen_firme" => [
-                "dictamen_firme" => [[
-                    6  => 1,
-                    7  => 3,
-                    13 => 84
-                ], [
-                    "mensaje" => [
-                        6 => "PRIMERA OPORTUNIDAD PROTECCIÓN",
-                        7 => "PRIMERA OPORTUNIDAD PROTECCIÓN",
-                        13 => "JUNTA REGIONAL"
-                    ]
-                ]]
-            ],
-            "estado" => [
-                "estado_servicio" => [
-                    "validaciones" => [
-                        "val_1" => [
-                            "condiciones" => [
-                                "excluir_acciones:4",
-                                "service:6,7",
-                                "excluir_servicio:13"
-                            ],
-                            "mensaje_ok" => "EN PROCESO CALIFICACIÓN PCL"
-                        ],
-                        "val_2" => [
-                            "condiciones" => [
-                                "buscar_acciones:4",
-                                "service:6,7",
-                                "excluir_servicio:8",
-                                //"excluir_acciones:"
-                            ],
-                            "mensaje_ok" => "EN PROCESO CONTROVERSIA PRIMERA OPORTUNIDAD"
-                        ],
-                        "val_3" => [
-                            "condiciones" => [
-                                "buscar_acciones:5",
-                                "service:6",
-                                "excluir_servicio:13",
-                                "excep:2,4"
-                            ],
-                            "mensaje_ok" => "FINALIZADO PRIMERA OPORTUNIDAD"
-                        ],
-                        "val_4" => [
-                            "condiciones" => [
-                                "buscar_acciones:5",
-                                "service:6",
-                                "excluir_servicio:13",
-                                "excep:2,4"
-                            ],
-                            "mensaje_ok" => "EN PROCESO JRCI"
-                        ],
-                        "val_5" => [
-                            "condiciones" => [
-                                "buscar_acciones:5",
-                                "service:6",
-                                "excluir_servicio:13",
-                                "excep:2,4"
-                            ],
-                            "mensaje_ok" => "FINALIZADO EN JRCI"
-                        ],
-                        "val_6" => [
-                            "condiciones" => [
-                                "buscar_acciones:5",
-                                "service:6",
-                                "excluir_servicio:13",
-                                "excep:2,4"
-                            ],
-                            "mensaje_ok" => "EN PROCESO JNCI"
-                        ],
-                        "val_7" => [
-                            "condiciones" => [
-                                "buscar_acciones:5",
-                                "service:6",
-                                "excluir_servicio:13",
-                                "excep:2,4"
-                            ],
-                            "mensaje_ok" => "FINALIZADO JNCI"
-                        ]
-                    ]
+            "general" => [
+                "id_evento" => [
+                    "get_var" => ["&parent:id_evento"]
+                ],
+                "id_asignacion" => [
+                    "get_var" => ["&parent:id_asignacion"]
+                ],
+                "nombre_servicio" => [
+                    "get_info" => ["servicio:Nombre_servicio", "id_evento"]
+                ],
+                "tipo" => [
+                    "get_servicios" => ""
+                ],
+                "tipoId" => [
+                    "get_info" => ["afiliado:Nombre_parametro", "id_evento"]
+                ],
+                "numeroId" => [
+                    "get_info" => ["afiliado:Nro_identificacion", "id_evento"]
+                ],
+                "codigoAsesoria" => [
+                    "get_info" => ["evento:N_siniestro","id_evento"]
+                ],
+            ]
+        ],
+        "pronunciamiento_pcl" => [
+                "calificacion" => [
+                    "idEmpleador" => [
+                        "get_info" => ["laboral:Nit_o_cc", "id_evento"]
+                    ],
+                    "fechaRadicacion" => [
+                        "get_info" => ["evento:F_radicacion", "id_evento"],
+                        "formatear" => ["date:Y-m-d"]
+                    ],
+                    "oficinaRadicacion" => "",
+                    "fechaCitaIps" => "",
+                    "citaReprogramada" => "",
+                    "fechaCitaDosIps" => "",
+                    "fechaNotificacionPendientes" => "",
+                    "fechaRecepcionPendientes" => "",
+                    "fechaNotificacionCierreAdm" => [
+                        "buscar_accion" => ["28", "id_evento", "get_column:F_accion"],
+                        "formatear" => ["date:Y-m-d"]
+                    ],
+                    "fechaEmisionDictamen" => [
+                        "get_info" => ["pronunciamiento_pcl:Fecha_calificador", "id_evento"],
+                        "formatear" => ["date:Y-m-d"]
+                    ],
+                    "pcl" => [
+                        "get_info" => ["pronunciamiento_pcl:Porcentaje_pcl", "id_evento"],
+                        //"formatear" => ["concatenar:%"]
+                    ],
+                    "fechaEstructuracion" => [
+                        "get_info" => ["pronunciamiento_pcl:Fecha_calificador", "id_evento"],
+                        "formatear" => ["date:Y-m-d"]
+                    ],
+                    "origen" => [
+                        "get_info" => ["origen_pronunciamiento", "id_evento"],
+                    ],
+                    "fechaNotiDictamenIps" => "",
+                    "fechaFinalizacionConsolidada" => [
+                        "get_info" => ["asignacion:F_Acta_Firmeza", "id_evento"],
+                    ],
+                    "estadoSolicitudCalificacion" => [
+                        "get_info" => ["desencadenador:Accion", "id_evento"],
+                    ],
+                ],
+                "firmeza" => [
+                    "dictamenEnFirme" => [
+                        "get_info" => ["advance:Dictamen_Firme", "id_evento"],
+                    ],
+                    "estadoFirmeza" => [
+                        "get_info" => ["advance:Estado_Firmeza", "id_evento"],
+                    ],
+                    "procedeRadicacion" => [
+                        "get_info" => ["pronunciamiento_pcl:Porcentaje_pcl", "id_evento"],
+                        "formatear" => ["comparar:50",">="]
+                    ],
+                    "tipoModelo" => [
+                        "get_var" => ["&parent:iniciar_solicitud_invalidez"],
+                        "get_var" => ["remplazar:No es invalido No se puede radicar,Modelo Nuevo - Debe Radicar"]
+                    ],
+                    "fechaFirmeza" => [
+                        "get_var" => ["&parent:fechaFinalizacionConsolidada"],
+                    ],
+                    "fechaNotificacionEmpleador" => "",
+                    "fechaFirmezaEmpleador" => "",
+                    "fechaNotificacionArl" => "",
+                    "fechaFirmezaArl" => "",
+                    "fechaNotificacionEps" => "",
+                    "fechaFirmezaEps" => [
+                        "get_var" => ["&parent:fechaFinalizacionConsolidada"],
+                    ],
+                    "fechaNotificacionAfiliado" => "",
+                    "fechaFirmezaAfiliado" => "",
+                    "fechaRecConstEjecutoria" => "",
+                    "fechaRecepcionDictamenJn" => "",
+                    "fechaSolFirmeza" => "",
+                    "dictamenQuedoFirme" => [
+                        "get_var" => ["&parent:dictamenEnFirme"],
+                    ],
                 ]
-            ],
-            "iniciar_solicitud_invalidez" => "",
-            "tipo_modelo" => "",
-            "f_firmeza_dictamen" => "",
-            "f_notificacion_efectiva_empleador" => "",
-            "f_firmeza_notificacion_empleador" => "",
-            "f_notificacion_efectiva_arl" => "",
-            "f_firmeza_notificacion_arl" => "",
-            "f_notificacion_efectiva_eps" => "",
-            "f_firmeza_notificacion_eps" => "",
-            "f_notificacion_efectiva_afiliado" => "",
-            "f_firmeza_notificacion_afiliado" => "",
-            "f_recepcion_constancia_ejecutoria" => "",
-            "f_recepcion_dictamen_jn" => "",
-            "f_solicitud_firmeza_1" => "",
-            "dictamen_firme_1" => [
-                "get_var" => ["&parent:dictamen_firme"]
-            ],*/
-
         ],
         "pcl" => [
-            "f_share_point" => [
-                "get_info" => ["evento:F_radicacion", "id_evento"],
-                "formatear" => ["date:d/m/Y"]
-            ],
-            "oficina_radica" => "",
-            "f_primera_cita" => [
-                "get_info" => ["calificacion_pcl:F_primera_cita", "id_evento"],
-                "formatear" => ["date:d/m/Y"]
-            ],
-            "ips_reprogramo" => [
-                "buscar_accion" => ["51", "id_evento", "ejecuto_accion"]
-            ],
-            "f_segunda_cita" => [
-                "get_info" => ["calificacion_pcl:F_segunda_cita", "id_evento"],
-                "formatear" => ["date:d/m/Y"]
-            ],
-            "f_notificacion_pendientes" => [
-                "get_correspondencia" => ["F_notificacion", "Documento_PCL", "estado_general:357,358","Afiliado"],
-                "formatear" => ["date:d/m/Y"]
-            ],
-            "f_recepcion_pendientes" => [
-                "buscar_accion" => ["45", "id_evento", "get_column:F_accion"],
-                "formatear" => ["date:d/m/Y"]
-            ],
-            "f_notifi_cierre_administrativo" => [
-                "buscar_accion" => ["6,7,8,10,11,14,33,34,35,36,37", "id_evento", "get_column:F_accion"],
-                "formatear" => ["date:d/m/Y"]
-            ],
-            "f_emision_dictamen_ips" => [
-                "get_info" => ["comite:F_visado_comite", "id_evento"],
-                "formatear" => ["date:d/m/Y"]
-            ],
-            "perdida_capacidad_laboral" => [
-                "get_info" => ["decretos:Porcentaje_pcl", "id_evento"],
-                "formatear" => ["concatenar:%"]
-            ],
-            "f_estructuracion" => [
-                "get_info" => ["decretos:F_estructuracion", "id_evento"],
-                "formatear" => ["date:d/m/Y"]
-            ],
-            "origen" => [
-                "get_info" => ["origen_decreto", "id_evento"],
-            ],
-            "f_notifi_dictamen" => [
-                "get_correspondencia" => ["F_notificacion", "Oficio", "estado_general:357,358"],
-                "formatear" => ["date:d/m/Y"]
-            ],
-            "f_solicitud_consolidada" => [
-                "fin_solicitud_consilidada" => ""
-            ],
-            "Dictamen_firme" => [
-                "get_info" => ["advance:Dictamen_Firme", "id_evento"],
-            ],
-            "Estado" => [
-                "get_info" => ["advance:Estado_Firmeza", "id_evento"],
-            ],
-            "iniciar_solicitud_invalidez" => [
-                "get_info" => ["decretos:Porcentaje_pcl", "id_evento"],
-                "formatear" => ["comparar:50",">="]
-            ],
-            "tipo_modelo" => [
-                "get_var" => ["&parent:iniciar_solicitud_invalidez"],
-                "get_var" => ["remplazar:No es invalido No se puede radicar,Modelo Nuevo - Debe Radicar"]
-            ],
-            "f_firmeza_dictamen" => [
-                "buscar_accion" => ["37", "id_evento", "get_column:F_accion"],
-                "formatear" => ["date:d/m/Y"]
-            ],
-            "f_notificacion_efectiva_empleador" => [
-                "get_correspondencia" => ["F_notificacion", "Oficio", "estado_general:357,358","Empleador"]
-            ],
-            "f_firmeza_notifi_empleador" => [
-                "get_correspondencia" => ["F_notificacion", "Firmeza_PCL", "estado_general:357,358","Empleador"]
-            ],
-            "f_notificacion_efectiva_arl" => [
-                "get_correspondencia" => ["F_notificacion", "Oficio", "estado_general:357,358","arl"]
-            ],
-            "f_firmerza_notifi_arl" => [
-                "get_correspondencia" => ["F_notificacion", "Firmeza_PCL", "estado_general:357,358","arl"]
-            ],
-            "f_notificacion_efectiva_eps" => [
-                "get_correspondencia" => ["F_notificacion", "Oficio", "estado_general:357,358","eps"]
-            ],
-            "f_firmerza_notifi_eps" => [
-                "get_correspondencia" => ["F_notificacion", "Firmeza_PCL", "estado_general:357,358","eps"]
-            ],
-            "f_notificacion_efectiva_afiliado" => [
-                "get_var" => ["&parent:f_notifi_dictamen"]
-            ],
-            "f_firmerza_notifi_afiliado" => [
-                "get_correspondencia" => ["F_notificacion", "Firmeza_PCL", "estado_general:357,358","Afiliado"]
-            ],
-            "f_constancia_ejecutoria" => "",
-            "f_recepcion_dictamen_jn" => "",
-            "f_solicitud_firmeza_1" => [
-                "buscar_accion" => ["88", "id_evento", "get_column:F_accion"],
-                "formatear" => ["date:d/m/Y"]
-            ],
-            "dictamen_firme_1" => [
-                "get_var" => ["&parent:Dictamen_firme"]
-            ],
-            "tramo_paralelo" => [
-                "get_info" => ["desencadenador:Accion", "id_evento"],
+            "calificacion" =>[ 
+                "idEmpleador" => [
+                        "get_info" => ["laboral:Nit_o_cc", "id_evento"]
+                ],
+                "fechaRadicacion" => [
+                    "get_info" => ["evento:F_radicacion", "id_evento"],
+                    "formatear" => ["date:Y-m-d"]
+                ],
+                "oficina_radica" => "",
+                "fechaCitaIps" => [
+                    "get_info" => ["calificacion_pcl:F_primera_cita", "id_evento"],
+                    "formatear" => ["date:Y-m-d"]
+                ],
+                "citaReprogramada" => [
+                    "buscar_accion" => ["51", "id_evento", "ejecuto_accion"]
+                ],
+                "fechaCitaDosIps" => [
+                    "get_info" => ["calificacion_pcl:F_segunda_cita", "id_evento"],
+                    "formatear" => ["date:Y-m-d"]
+                ],
+                "fechaNotificacionPendientes" => [
+                    "get_correspondencia" => ["F_notificacion", "Documento_PCL", "estado_general:357,358","Afiliado"],
+                    "formatear" => ["date:Y-m-d"]
+                ],
+                "fechaRecepcionPendientes" => [
+                    "buscar_accion" => ["45", "id_evento", "get_column:F_accion"],
+                    "formatear" => ["date:Y-m-d"]
+                ],
+                "fechaNotificacionCierreAdm" => [
+                    "buscar_accion" => ["6,7,8,10,127,11,14,33,34,35,36,37", "id_evento", "get_column:F_accion"],
+                    "formatear" => ["date:Y-m-d"]
+                ],
+                "fechaEmisionDictamen" => [
+                    "get_info" => ["comite:F_visado_comite", "id_evento"],
+                    "formatear" => ["date:Y-m-d"]
+                ],
+                "pcl" => [
+                    "get_info" => ["decretos:Porcentaje_pcl", "id_evento"],
+                    //"formatear" => ["concatenar:%"]
+                ],
+                "fechaEstructuracion" => [
+                    "get_info" => ["decretos:F_estructuracion", "id_evento"],
+                    "formatear" => ["date:Y-m-d"]
+                ],
+                "origen" => [
+                    "get_info" => ["origen_decreto", "id_evento"],
+                ],
+                "fechaNotiDictamenIps" => [
+                    "get_correspondencia" => ["F_notificacion", "Oficio", "estado_general:357,358"],
+                    "formatear" => ["date:Y-m-d"]
+                ],
+                "fechaFinalizacionConsolidada" => [
+                    "fin_solicitud_consilidada" => ""
+                ],
+                "estadoSolicitudCalificacion" => [
+                        "get_info" => ["desencadenador:Accion", "id_evento"],
+                ],
+                ],
+            "firmeza" => [
+                "dictamenEnFirme" => [
+                    "get_info" => ["advance:Dictamen_Firme", "id_evento"],
+                ],
+                "estadoFirmeza" => [
+                    "get_info" => ["advance:Estado_Firmeza", "id_evento"],
+                ],
+                "procedeRadicacion" => [
+                    "get_info" => ["decretos:Porcentaje_pcl", "id_evento"],
+                    "formatear" => ["comparar:50",">="]
+                ],
+                "tipoModelo" => [
+                    "get_var" => ["&parent:iniciar_solicitud_invalidez"],
+                    "get_var" => ["remplazar:No es invalido No se puede radicar,Modelo Nuevo - Debe Radicar"]
+                ],
+                "fechaFirmeza" => [
+                    "buscar_accion" => ["37", "id_evento", "get_column:F_accion"],
+                    "formatear" => ["date:Y-m-d"]
+                ],
+                "fechaNotificacionEmpleador" => [
+                    "get_correspondencia" => ["F_notificacion", "Oficio", "estado_general:357,358","Empleador"]
+                ],
+                "fechaFirmezaEmpleador" => [
+                    "get_correspondencia" => ["F_notificacion", "Firmeza_PCL", "estado_general:357,358","Empleador"]
+                ],
+                "fechaNotificacionArl" => [
+                    "get_correspondencia" => ["F_notificacion", "Oficio", "estado_general:357,358","arl"]
+                ],
+                "fechaFirmezaArl" => [
+                    "get_correspondencia" => ["F_notificacion", "Firmeza_PCL", "estado_general:357,358","arl"]
+                ],
+                "fechaNotificacionEps" => [
+                    "get_correspondencia" => ["F_notificacion", "Oficio", "estado_general:357,358","eps"]
+                ],
+                "fechaFirmezaEps" => [
+                    "get_correspondencia" => ["F_notificacion", "Firmeza_PCL", "estado_general:357,358","eps"]
+                ],
+                "fechaNotificacionAfiliado" => [
+                    "get_var" => ["&parent:f_notifi_dictamen"]
+                ],
+                "fechaFirmezaAfiliado" => [
+                    "get_correspondencia" => ["F_notificacion", "Firmeza_PCL", "estado_general:357,358","Afiliado"]
+                ],
+                "fechaRecConstEjecutoria" => "",
+                "fechaRecepcionDictamenJn" => "",
+                "fechaSolFirmeza" => [
+                    "buscar_accion" => ["88", "id_evento", "get_column:F_accion"],
+                    "formatear" => ["date:Y-m-d"]
+                ],
+                "dictamenQuedoFirme" => [
+                    "get_var" => ["&parent:Dictamen_firme"]
+                ],
             ]
         ],
         "juntas" => [
-            "f_recepcion_apelacion_oficina" => [
-                "get_info" => ["juntas:F_contro_radi_califi", "id_evento"],
-                "formatear" => ["date:d/m/Y"]
+            "juntaRegional " => [
+                "idEmpleador" => [
+                    "get_info" => ["laboral:Nit_o_cc", "id_evento"]
+                ],
+                "fechaRecepcionApelacionOds" => [
+                    "get_info" => ["juntas:F_contro_radi_califi", "id_evento"],
+                    "formatear" => ["date:Y-m-d"]
+                ],
+                "fechaPagoHonorariosJr" => [
+                    "info_honorarios" => 4,"F_pago_honorarios",
+                    "formatear" => ["date:Y-m-d"]
+                ],
+                "fechaEnvioExpedienteJr" => [
+                    "get_info" => ["juntas:F_envio_jrci", "id_evento"],
+                    "formatear" => ["date:Y-m-d"]
+                ],
+                "junta_regional" => [
+                    "get_info" => ["entidades_juntas:Jrci_califi_invalidez", "id_evento"],
+                ],
+                "fechaRecepcionExpedienteJr" => [
+                    "buscar_accion" => ["61", "id_evento", "get_column:F_accion"],
+                    "formatear" => ["date:Y-m-d"]
+                ],
+                "expedienteDevueltoSuspendido" => [
+                    "buscar_accion" => ["63,81,82", "id_evento", "ejecuto_accion"],
+                ],
+                "fechaDevolucionExpedienteJr" => [
+                    "get_info" => ["juntas:F_devolucion_exp_jrci", "id_evento"],
+                    "formatear" => ["date:Y-m-d"]
+                ],
+                "causalDevolucion" => [
+                    "get_info" => ["juntas:Causal_devo_exp_jrci", "id_evento"],
+                ],
+                "fechaNuevoEnvExpedienteRjx" => [
+                    "get_info" => ["juntas:F_reenvio_exp_jrci", "id_evento"],
+                    "formatear" => ["date:Y-m-d"]
+                ],
+                "nombreExamen" => "",
+                "fechaSolExamenesMedicos" => "",
+                "fechaRecepcionDictamenJr" => "",
+                "fechaRecepcionDictamenJr" => [
+                    "get_info" => ["juntas:F_radica_dictamen_jrci", "id_evento"],
+                    "formatear" => ["date:Y-m-d"]
+                ],
+                "fechaEstructuracion" => [
+                    "get_info" => ["juntas:f_estructuracion_contro_jrci_emitido", "id_evento"],
+                    "formatear" => ["date:Y-m-d"]
+                ],
+                "origen" => [
+                    "get_info" => ["origen_jrci", "id_evento"],
+                ],
+                "pcl" => [
+                    "get_info" => ["juntas:porcentaje_pcl_jrci_emitido", "id_evento"],
+                    //"formatear" => ["concatenar:%"]
+                ],
+                "resIpsRevisionDictamenJr" => [
+                    "get_info" => ["aval_ips:Decision_dictamen_jrci", "id_evento"],
+                ],
+                "fechaRadicacionRecurso" => [
+                    "buscar_accion" => ["38", "id_evento", "get_column:F_accion"],
+                    "formatear" => ["date:Y-m-d"]
+                ],
+                "fechaEnvioIps" => [
+                    "buscar_accion" => ["22", "id_evento", "get_column:F_accion"],
+                    "formatear" => ["date:Y-m-d"]
+                ],
+                "fechaRadicacionDpNro1" => [
+                    "buscar_accion" => ["66", "id_evento", "get_column:F_accion"],
+                    "formatear" => ["date:Y-m-d"]
+                ],
+                "fechaRespuestaDpNro1" => "",
+                "fechaRadicacionDpNro2" => [
+                    "buscar_accion" => ["68", "id_evento", "get_column:F_accion"],
+                    "formatear" => ["date:Y-m-d"]
+                ],
+                "fechaRespuestaDpNro2" => "",
+                "fechaRadicacionTutelaJr" => "",
+                "fechaFalloTutelaJr" => "",
+                "fechaSolConstEjecutoria" => [
+                    "buscar_accion" => ["70", "id_evento", "get_column:F_accion"],
+                    "formatear" => ["date:Y-m-d"]
+                ],
+                "fechaRecConstEjecutoria" => [
+                    "get_info" => ["juntas:f_acta_ejecutoria_emitida_jrci", "id_evento"],
+                ],
+                "estadoJr" => [
+                    "estado_jr" => ["id_evento"],
+                ]
             ],
-            "f_pago_jr" => [
-                "info_honorarios" => 4,"F_pago_honorarios",
-                "formatear" => ["date:d/m/Y"]
+            "juntaNacional" => [
+                "idEmpleador" => [
+                    "get_info" => ["laboral:Nit_o_cc", "id_evento"]
+                ],
+                "fechaSolPagoHonorariosJn" => [
+                    "get_info" => ["juntas:f_soli_pago_hono_jnci", "id_evento"],
+                    "formatear" => ["date:Y-m-d"]
+                ],
+                "fechaPagoHonorariosJn" => [
+                    "info_honorarios" => 5,
+                    "F_pago_honorarios",
+                    "formatear" => ["date:Y-m-d"]
+                ],
+                "fechaCitaValoracionJn" => [
+                    "get_info" => ["juntas:f_cita_jnci", "id_evento"],
+                    "formatear" => ["date:Y-m-d"]
+                ],
+                "fechaRadicacionDpJrEnvExp" => [
+                    "buscar_accion" => ["75", "id_evento", "get_column:F_accion"],
+                    "formatear" => ["date:Y-m-d"]
+                ],
+                "fechaSolExamenesMedicosJn" => "",
+                "fechaEnvResultadosExamenes" => "",
+                "fechaRecepcionDictamenJn" => [
+                    "get_info" => ["juntas:F_noti_ante_jnci", "id_evento"],
+                    "formatear" => ["date:Y-m-d"]
+                ],
+                "fechaEstructuracion_jn" => [
+                    "get_info" => ["juntas:f_estructuracion_contro_jnci_emitido", "id_evento"],
+                    "formatear" => ["date:Y-m-d"]
+                ],
+                "origen_1" => [
+                    "get_info" => ["origen_jnci", "id_evento"],
+                ],
+                "pcl_1" => [
+                    "get_info" => ["juntas:porcentaje_pcl_jnci_emitido", "id_evento"],
+                    //"formatear" => ["concatenar:%"]
+                ],
+                "estadoJn" => [
+                    "estado_jn" => ["id_evento"],
+                ]
             ],
-            "f_envio_expediente_junta" => [
-                "get_info" => ["juntas:F_envio_jrci", "id_evento"],
-                "formatear" => ["date:d/m/Y"]
-            ],
-            "f_recepcion_expediente_junta" => [
-                "buscar_accion" => ["61", "id_evento", "get_column:F_accion"],
-                "formatear" => ["date:d/m/Y"]
-            ],
-            "jr_devuelve_expediente" => [
-                "buscar_accion" => ["64,81,82", "id_evento", "ejecuto_accion"],
-            ],
-            "f_devolucion_expediente" => [
-                "get_info" => ["juntas:F_devolucion_exp_jrci", "id_evento"],
-                "formatear" => ["date:d/m/Y"]
-            ],
-            "causal_devolucion_expediente" => [
-                "get_info" => ["juntas:Causal_devo_exp_jrci", "id_evento"],
-            ],
-            "f_nuevo_envio_expediente" => [
-                "get_info" => ["juntas:F_reenvio_exp_jrci", "id_evento"],
-                "formatear" => ["date:d/m/Y"]
-            ],
-            "nombre_examen" => "",
-            "f_solicitud_examen_j" => "",
-            "f_envio_examen_j" => "",
-            "f_recepcion_dictamen_jr_pr" => [
-                "get_info" => ["juntas:F_radica_dictamen_jrci", "id_evento"],
-                "formatear" => ["date:d/m/Y"]
-            ],
-            "f_estructuracion" => [
-                "get_info" => ["juntas:f_estructuracion_contro_jrci_emitido", "id_evento"],
-                "formatear" => ["date:d/m/Y"]
-            ],
-            "origen" => [
-                "get_info" => ["origen_jrci", "id_evento"],
-            ],
-            "pcl" => [
-                "get_info" => ["juntas:porcentaje_pcl_jrci_emitido", "id_evento"],
-                "formatear" => ["concatenar:%"]
-            ],
-            "avalo_ips" => [
-                "get_info" => ["aval_ips:Decision_dictamen_jrci", "id_evento"],
-            ],
-            "f_envio_dictamen_ips" => [
-                "buscar_accion" => ["22", "id_evento", "get_column:F_accion"],
-                "formatear" => ["date:d/m/Y"]
-            ],
-            "f_radicacion_recurso_jr" => [
-                "buscar_accion" => ["61", "id_evento", "get_column:F_accion"],
-                "formatear" => ["date:d/m/Y"]
-            ],
-            "f_radicacion_dep_1" => [
-                "buscar_accion" => ["66", "id_evento", "get_column:F_accion"],
-                "formatear" => ["date:d/m/Y"]
-            ],
-            "f_respuesta_dep_1" => "",
-            "f_radicacion_dep_2" => [
-                "buscar_accion" => ["68", "id_evento", "get_column:F_accion"],
-                "formatear" => ["date:d/m/Y"]
-            ],
-            "f_respuesta_dep_2" => "",
-            "f_radicacion_tutela_jz" => "",
-            "f_fallo" => "",
-            "f_solicitud_ejecutoria_jr" => [
-                "buscar_accion" => ["70", "id_evento", "get_column:F_accion"],
-                "formatear" => ["date:d/m/Y"]
-            ],
-            "f_recepcion_ejecutoria_jr" => [
-                "get_info" => ["juntas:f_acta_ejecutoria_emitida_jrci", "id_evento"],
-            ],
-            "f_aviso_pago_jn" => [
-                "get_info" => ["juntas:f_soli_pago_hono_jnci", "id_evento"],
-                "formatear" => ["date:d/m/Y"]
-            ],
-            "f_pago_honorarios_jn" => [
-                "info_honorarios" => 5,
-                "F_pago_honorarios",
-                "formatear" => ["date:d/m/Y"]
-            ],
-            "f_cita_jn" => [
-                "get_info" => ["juntas:f_cita_jnci", "id_evento"],
-                "formatear" => ["date:d/m/Y"]
-            ],
-            "derecho_peticion_expediente_jr" => [
-                "buscar_accion" => ["75", "id_evento", "get_column:F_accion"],
-                "formatear" => ["date:d/m/Y"]
-            ],
-            "f_solicitud_examen_junta_1" => "",
-            "f_resultado_examen_junta_1" => "",
-            //"f_recepcion_dictamen_jn_pr" => "¿?",
-            "f_estructuracion_1" => [
-                "get_info" => ["juntas:f_estructuracion_contro_jnci_emitido", "id_evento"],
-                "formatear" => ["date:d/m/Y"]
-            ],
-            "origen_1" => [
-                "get_info" => ["origen_jnci", "id_evento"],
-            ],
-            "pcl_1" => [
-                "get_info" => ["juntas:porcentaje_pcl_jnci_emitido", "id_evento"],
-                "formatear" => ["concatenar:%"]
-            ],
-            "estado_solicitud_jr" => [
-                "get_ultima_accion" => ["Accion", "76,97,98"]
-            ],
-            "estado_solicitud_jn" => [
-                "buscar_accion" => ["76,97,98", "id_evento", "get_column:Accion"],
+            "Firmeza" => [
+                "dictamenEnFirme" => [
+                    "get_info" => ["advance:Dictamen_Firme", "id_evento"],
+                ],
+                "estadoFirmeza" => [
+                    "get_info" => ["advance:Estado_Firmeza", "id_evento"],
+                ],
+                "procedeRadicacion" => [
+                    "get_info" => ["evaluar_porcentajes", "id_evento"],
+                    "formatear" => ["comparar:50",">="]
+                ],
+                "tipoModelo" => [
+                    "get_var" => ["&parent:iniciar_solicitud_invalidez"],
+                    "get_var" => ["remplazar:No es invalido No se puede radicar,Modelo Nuevo - Debe Radicar"]
+                ],
+                "fechaFirmeza" => [
+                    "get_info" => ["evaluar_modelo_juntas", "id_evento"],
+                    "formatear" => ["date:Y-m-d"]
+                ],
+                "fechaNotificacionEmpleador" => "",
+                "fechaFirmezaEmpleador" => "",
+                "fechaNotificacionArl" => "",
+                "fechaFirmezaArl" => "",
+                "fechaNotificacionEps" => "",
+                "fechaFirmezaEps" => "",
+                "fechaNotificacionAfiliado" => [
+                    "get_info" => ["notificacion_afiliado", "id_evento"],
+                    "formatear" => ["date:Y-m-d"]
+                ],
+                "fechaFirmezaAfiliado" => "",
+                "fechaRecConstEjecutoria" => [
+                    "get_info" => ["juntas:F_acta_ejecutoria_emitida_jrci", "id_evento"],
+                    "formatear" => ["date:Y-m-d"]
+                ],
+                "fechaRecepcionDictamenJn" => [
+                    "get_info" => ["juntas:F_dictamen_jnci_emitido", "id_evento"],
+                    "formatear" => ["date:Y-m-d"]
+                ],
+                "fechaSolFirmeza" => [
+                    "get_info" => ["juntas:F_plazo_controversia", "id_evento"],
+                    "formatear" => ["date:Y-m-d"]
+                ],
+                "dictamenQuedoFirme" => [
+                    "get_var" => ["&parent:dictamenEnFirme"],
+                ]
             ],
         ]
     ];
@@ -395,6 +448,55 @@ class sigmel_advance extends sigmel_wsController implements Api
         $this->validar();
     }
 
+    public function estado_jr($campo){
+        $ultima_accion = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_historial_accion_eventos as sihae')
+        ->leftJoin('sigmel_gestiones.sigmel_informacion_acciones as sia', 'sia.Id_Accion', '=', 'sihae.Id_accion')
+        ->leftJoin('sigmel_gestiones.sigmel_informacion_parametrizaciones_clientes','Servicio_asociado','sihae.Id_servicio')
+        ->select('sihae.ID_evento', 'sihae.Id_proceso', 'sihae.Id_servicio', 'sihae.Id_accion', 'sihae.Id_Asignacion','sia.Accion','Id_parametrizacion')
+        ->where([
+            ['sihae.Id_Asignacion', $this->id_asignacion],
+            ["Id_servicio",$this->id_servicio],
+        ])->whereNotNull('Estado_Firmeza');
+    
+        $ultima_accion->where(function ($query) { 
+            $query->where('Motivo_descripcion_movimiento', 'not LIKE', '%SEGUINIENTO JNCI%')
+            ->orWhere('Motivo_descripcion_movimiento', 'not LIKE', '%CERRADO EN JUNTA NACIONAL%'); 
+        });
+
+        $ultima_accion = $ultima_accion->orderBy('sihae.F_accion', 'desc')->first();
+
+        $this->request->merge([$campo => $ultima_accion->Accion ?? 'N/A']);
+    }
+
+    public function estado_jn($campo){
+        $ultima_accion = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_historial_accion_eventos as sihae')
+        ->leftJoin('sigmel_gestiones.sigmel_informacion_acciones as sia', 'sia.Id_Accion', '=', 'sihae.Id_accion')
+        ->leftJoin('sigmel_gestiones.sigmel_informacion_parametrizaciones_clientes','Servicio_asociado','sihae.Id_servicio')
+        ->select('sihae.ID_evento', 'sihae.Id_proceso', 'sihae.Id_servicio', 'sihae.Id_accion', 'sihae.Id_Asignacion','sia.Accion','Id_parametrizacion')
+        ->where([
+            ['sihae.Id_Asignacion', $this->id_asignacion],
+            ["Id_servicio",$this->id_servicio],
+        ])->whereNotNull('Estado_Firmeza');
+    
+        $ultima_accion->where(function ($query) { 
+            $query->where('Motivo_descripcion_movimiento', 'not LIKE', '%SEGUINIENTO JNCI%')
+            ->orWhere('Motivo_descripcion_movimiento', 'not LIKE', '%CERRADO EN JUNTA NACIONAL%'); 
+        });
+
+        $ultima_accion = $ultima_accion->orderBy('sihae.F_accion', 'desc')->first();
+
+        $this->request->merge([$campo => $ultima_accion->Accion ?? 'N/A']);
+    }
+
+    public function get_servicios($campo){
+        if(isset($this->servicios_disponibles[$this->id_servicio])){
+            $nombre_servicio = $this->servicios_disponibles[$this->id_servicio];
+            $servicios = $nombre_servicio == 'juntas' ? ['junta_nacional','junta_regional'] : [$nombre_servicio];
+            $servicios = array_merge($servicios,['firmeza']);
+
+            $this->request->merge([$campo => $servicios ?? '']);
+        }
+    }
     protected function estado_servicio($campo, $validaciones)
     {
         foreach ($validaciones as $nombre => $config) {
@@ -404,7 +506,7 @@ class sigmel_advance extends sigmel_wsController implements Api
                 if(isset($config["mensaje_ok"])){
                     echo "paso {$this->id_asignacion} -  $nombre  {$config['mensaje_ok']} \n"; break;
                 }else{
-                    echo "paso {$this->id_asignacion} $nombre Paila \n";
+                    echo "no paso {$this->id_asignacion} $nombre \n";
                 }
             }else{
                 continue;
@@ -637,11 +739,15 @@ class sigmel_advance extends sigmel_wsController implements Api
             $this->validaciones_dinamicas["general"] = $this->response["respuesta_ws"];
 
             $this->validar(true);
-            $info_general = $this->request->only(array_keys($this->response["respuesta_ws"]));
-            $info_procesada = $this->request->only(array_keys($this->validaciones_dinamicas[$nombre_servicio]));
 
-            $respuesta_solicitud = array_merge($info_general, $info_procesada);
+            $info_general = $this->request->only(array_keys($this->response["respuesta_ws"]["general"]));
+            $segmentar = $this->validaciones_dinamicas[$nombre_servicio];
 
+            foreach ( $segmentar as $proceso => $campos) {
+               $body[$proceso] = $this->request->only(array_keys($campos));
+            }
+
+            $respuesta_solicitud = array_merge($info_general,$body);
         }else{
             $respuesta_solicitud = "El evento no aun no cuenta con servicios de PCL o Controversia PCL por el momento.";
         }
@@ -651,12 +757,20 @@ class sigmel_advance extends sigmel_wsController implements Api
         ]);
     }
 
-    public function notificar_peticiones(){
-        $response = sigmel_informacion_registro_advance::select('ID_Asignacion','ID_evento','ID_servicio','Fecha_Ejecucion','Acta_firmeza','Estado_Ejecucion','Dictamen_firme')
-        ->where('Usuario',Auth::user()->name)
-        ->whereIn('Estado_Ejecucion',['errado','notificar'])->get();
+    public function notificar_peticiones(Request $request){
 
-        return response()->json($response);
+        $request->validate([
+            'id_asignacion' => 'required|integer'
+        ]);
+        
+        $response = sigmel_informacion_registro_advance::select('id','ID_Asignacion','ID_evento','ID_servicio','Fecha_Ejecucion','Acta_firmeza','Estado_Ejecucion','Dictamen_firme')
+        ->where([
+            ['Usuario',Auth::user()->name],
+            ['ID_Asignacion',$request->id_asignacion],
+            ])->get();
+        //->whereIn('Estado_Ejecucion',['errado','notificar'])->get();
+
+        return response()->json($response); 
     }
 
     public function finalizar_notificacion(Request $request){

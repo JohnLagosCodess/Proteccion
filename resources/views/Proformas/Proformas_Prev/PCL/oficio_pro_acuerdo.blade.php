@@ -339,8 +339,19 @@
                     $texto_modificado = str_replace('{{$F_estructuracion}}',$F_estructuracion,$texto_modificado);
                     $texto_modificado = str_replace('{{$Tipo_entidad_primer_calificador}}',$Tipo_primer_calificador,$texto_modificado);
                     $cuerpo = $texto_modificado;
-
-                } else {
+                } 
+                else if (preg_match($patron1, $Sustenta_cali) && preg_match($patron2, $Sustenta_cali) && preg_match($patron3, $Sustenta_cali) && preg_match($patron4, $Sustenta_cali)) {
+                    if($Tipo_afiliado == 26 || $Tipo_afiliado == 28 || $Tipo_afiliado == 29){
+                        $texto_modificado = str_replace('{{$Nombre_afiliado}}', $Nombre_afiliado, $Sustenta_cali);
+                    }elseif ($Tipo_afiliado == 27) {
+                        $texto_modificado = str_replace('{{$Nombre_afiliado}}', $Nombre_afiliado, $Sustenta_cali);
+                    }
+                    $texto_modificado = str_replace('{{$Tipo_documento}}', $tipo_doc_afiliado, $texto_modificado);
+                    $texto_modificado = str_replace('{{$Nro_documento}}', $nro_identificacion_afiliado, $texto_modificado);
+                    $texto_modificado = str_replace('{{$Entidad_califi}}', $Nombre_entidad, $texto_modificado);
+                    $cuerpo = $texto_modificado;
+                }
+                else {
                     $cuerpo = "";
                 }                
                 print_r($cuerpo);

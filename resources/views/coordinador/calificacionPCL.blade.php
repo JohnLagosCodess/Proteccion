@@ -15,7 +15,7 @@
 @stop
 @section('content')
     <div class="row">
-        <div class="col-8">
+        <div class="col-6">
             <div>
                 <?php if (isset($_POST['badera_modulo_principal_origen']) &&  $_POST['badera_modulo_principal_origen'] == 'desdebus_mod_origen' ):?>
                     <a href="{{route("busquedaEvento")}}" class="btn btn-success" type="button"><i class="fa fa-arrow-left"></i> Regresar</a>
@@ -40,7 +40,16 @@
                 </p>
             </div>
         </div>
+        <div class="col-6 d-none" id="alerta_advance">
+            <div class="alert" role="alert" id="contenedor_alerta_advance">
+                <h6 class="alert-heading" id="titulo_alerta_advance"></h6>
+                <div id="cuerpo_alerta_advance">
+                    <input type="hidden" name="estado_ejecucion" value="">
+                </div>
+            </div>
+        </div>
     </div>
+
     <div class="card-info" style="border: 1px solid black;">
         <div class="card-header text-center">
             <h4>Calificación PCL - Evento: <u><a onclick="document.getElementById('botonVerEdicionEvento').click();" style="cursor:pointer;">{{$array_datos_calificacionPcl[0]->ID_evento}}</a></u> - Afiliado: {{$array_datos_calificacionPcl[0]->Nombre_afiliado}} {{$array_datos_calificacionPcl[0]->Nombre_tipo_documento}} {{$array_datos_calificacionPcl[0]->Nro_identificacion}} - {{$array_datos_calificacionPcl[0]->Tipo_afiliado}}</h4>

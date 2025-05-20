@@ -106,18 +106,14 @@ class registrarAdvance extends Command
                     Log::info("Reintento #$attempts por error: " . $exception->getMessage());
                     return true;
                 })
-                ->post($this->end_point, [
-                    'codigo_error' => $response['codigo_error'],
-                    'mensaje' => $response['mensaje'],
-                    'Respuesta' => $response['Respuesta'] ?? null,
-                ]);
+                ->post($this->end_point, $response['Respuesta']);
             
 
             if ($response->successful()){
                 $this->model_advance->update([
                     'Descripcion' => $response->json(),
                     'Reintentos' => $attempts,
-                    "Estado_Ejecucion" => 'notificar',
+                    "Estado_Ejecucion" => 'ejecutado',
                     'Fecha_Ejecucion' => now()
                 ]);
             }else{

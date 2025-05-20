@@ -47,6 +47,9 @@ class sigmel_wsController extends Controller
         "config_manager" => \App\Http\Api\configManager::class
     ];
 
+    /** @var String {compactar | individual} indica la modalidad de salidad de la respuesta */
+    protected $modalidad_salida = 'compactar';
+
     public function __construct(Request $request)
     {
         $configManager = app($this->call_instance["config_manager"]);
@@ -81,13 +84,28 @@ class sigmel_wsController extends Controller
     protected function procesar_validaciones_dinamicas(){
         if(empty($this->validaciones_dinamicas)) return;
 
-        foreach ($this->validaciones_dinamicas as $secciones => $campos) {
-            foreach ($campos as $campo => $atributos) {
-                if(is_array($atributos)){
-                    $acciones = array_filter($atributos, fn($key) => $key !== 'validar', ARRAY_FILTER_USE_KEY);
-                    $this->invocar_acciones($acciones, $campo);
-                }else{
-                    $this->request->merge([$campo => $atributos]);
+        if($this->modalidad_salida == 'compactar'){
+            foreach ($this->validaciones_dinamicas as $secciones => $campos) {
+                foreach ($campos as $campo => $atributos) {
+                    if(is_array($atributos)){
+                        $acciones = array_filter($atributos, fn($key) => $key !== 'validar', ARRAY_FILTER_USE_KEY);
+                        $this->invocar_acciones($acciones, $campo);
+                    }else{
+                        $this->request->merge([$campo => $atributos]);
+                    }
+                }
+            }
+        }else{
+            foreach ($this->validaciones_dinamicas as $secciones => $proceso) {
+                foreach ($proceso as $x => $campos) {
+                    foreach ($campos as $campo => $atributos) {
+                        if(is_array($atributos)){
+                            $acciones = array_filter($atributos, fn($key) => $key !== 'validar', ARRAY_FILTER_USE_KEY);
+                            $this->invocar_acciones($acciones, $campo);
+                        }else{
+                            $this->request->merge([$campo => $atributos]);
+                        }
+                    }
                 }
             }
         }
@@ -98,7 +116,7 @@ class sigmel_wsController extends Controller
         $acciones = [
             "date" => fn($e) => date($aplicar,strtotime($e)),
             "concatenar" => fn($e) =>  $e . $aplicar,
-            "comparar" => fn($e,$operador) => eval("return \$e $operador 50;") ? 1 : 0
+            "comparar" => fn($e,$operador) => eval("return \$e $operador 50;") ? 1 : ($e != '' ? 0 : '')
         ];
 
         if(isset($acciones[$accion]) && !empty($this->request->{$campo})){
