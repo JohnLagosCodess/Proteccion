@@ -515,8 +515,7 @@ class ReporteNotificacionesController extends Controller
                     $archivosAgregados = 0;
 
                     foreach ($array_datos_reporte_notificaciones as $archivo) {
-                        $analizar = json_encode($archivo);
-                        Log::info("DATA: ".$analizar);
+                        
                         if ($archivo->Nombre_documento <> 'N/A') {
                     
                             $rutaArchivoValidar = "Documentos_Eventos/{$archivo->ID_evento}/{$archivo->Nombre_documento}";
