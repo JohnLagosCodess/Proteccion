@@ -3083,7 +3083,8 @@ $(document).ready(function(){
         $("button[id^='CargarDocumento_']").prop('disabled', true);
         $("#listado_tipos_documentos_guias").prop('disabled', true);
         $("#CargarDocumento_guias").prop('disabled', true);
-        
+        $("#cargarComunicado").prop('disabled', true);
+        $("#cargue_comunicados").prop('disabled', true);
     }
 
     // A los usuarios que no tengan el rol Administrador se les aplica los siguientes controles en el formulario de correspondencia:

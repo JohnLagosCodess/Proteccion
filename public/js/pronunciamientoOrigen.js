@@ -1724,6 +1724,8 @@ $(document).ready(function(){
         $("button[id^='CargarDocumento_']").prop('disabled', true);
         $("#listado_tipos_documentos_guias").prop('disabled', true);
         $("#CargarDocumento_guias").prop('disabled', true);
+        $("#cargarComunicado").prop('disabled', true);
+        $("#cargue_comunicados").prop('disabled', true);
     };
 
     /* Códigos para el tema del rol administrador (modelo a seguir) */
