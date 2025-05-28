@@ -800,13 +800,19 @@ $(document).ready(function () {
         limpiar_cache();
     });
 
-    notificaciones_advance();
-    let estado = $("#estado_ejecucion").val();
+    /** @var {Array} serviciosAdvance Si el servicio cargado en el dom es alguno de los siguiente 13,6,7,9 se validara el procrso de advance.*/
+    const serviciosAdvance = [13, 6, 9];
+    const estadoEjecucion = $("#estado_ejecucion").val();
+    const servicioId = $("#Id_servicio").val();
+    const estado = estadoEjecucion.trim().toLowerCase();
 
-    if(estado == '' && estado != 'ejecutado'){
-        setInterval(notificaciones_advance, 60000);
+    if (serviciosAdvance.includes(servicioId)) {
+        notificaciones_advance();
+
+        if (estado !== '' && estado !== 'ejecutado') {
+            setInterval(notificaciones_advance, 60000);
+        }
     }
-    
 });
 
 /**
@@ -2240,7 +2246,7 @@ function notificaciones_advance() {
         method: 'GET',
         data: {
             //_token: $('input[name=_token]').val(),
-            id_asignacion:  51//$("#newId_asignacion").val()
+            id_asignacion:  $("#newId_asignacion").val()
         },
         success: function (respuesta) {
             respuesta.forEach(function (item, index) {
@@ -2254,16 +2260,16 @@ function notificaciones_advance() {
                     : (estado == 'pendiente' ? 'Se ha ejecutado una accion con un estado de firmeza, en un momento se realizara un registro en  advance.' : 'Se ha registrado información correctamente en Advance.' ) ;
 
                 let cuerpo_mensaje =`
-                <div class='d-flex'>
                     <div class='row' style="font-size: 0.9em;">
-                        <div><strong>Firmeza:</strong> ${item.Acta_firmeza}</div>
-                        <div><strong>Dictamen en firme:</strong> ${item.Dictamen_firme ?? ''}</div>
-                        <div><strong>Fecha de integracion</strong> ${item.Fecha_Ejecucion}</div>
-                    </div>
-                    <div class='row'>
-                        <div><strong>Respuesta:</strong> ${mensajePrincipal}</div>
-                    </div>
-                </div>`;
+                        <div class='col-md-6'>
+                            <div><strong>Firmeza:</strong> ${item.Acta_firmeza}</div>
+                            <div><strong>Dictamen en firme:</strong> ${item.Dictamen_firme ?? ''}</div>
+                            <div><strong>Fecha de integración:</strong> ${item.Fecha_Ejecucion}</div>
+                        </div>
+                        <div class='col-md-6'>
+                            <div><strong>Respuesta:</strong> ${mensajePrincipal}</div>
+                        </div>
+                    </div>`;
                 
                 /*var toastHTML = `
                     <div class="toast" id="${toastId}" style="position: fixed; bottom: ${20 + (index * 100)}px; left: 20px; z-index: 1055;" role="alert" aria-live="assertive" aria-atomic="true" data-delay="100000">

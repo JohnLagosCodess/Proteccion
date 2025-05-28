@@ -501,12 +501,20 @@ function filtro_bandejaNotifi(procesos) {
 }
 
 function capturar_informacion_bandejaNotifi(response,estilos) {
+    // Altura dinámica del scroll
+    let filaAltura = 115; // Altura estimada de una fila
+    let maxAltura = 600; // Altura máxima deseada del contenedor
+    let scrollAltura = Math.min(response.length * filaAltura, maxAltura);
+
+    // $('#Bandeja_Notifi').DataTable().clear().destroy();
+    // $('#Bandeja_Notifi thead .filters').remove(); // Limpiar filtros previos
+
     //Datatable Bandeja Notifi
     $('#Bandeja_Notifi thead tr').clone(true).addClass('filters').appendTo('#Bandeja_Notifi thead');
     Bandeja_Notifi =  $('#Bandeja_Notifi').DataTable({
             orderCellsTop: true,
             fixedHeader: true,
-            scrollY: 350,
+            scrollY: scrollAltura,
             scrollX: true,
             autoWidth: false,
             initComplete: function () {
@@ -589,7 +597,8 @@ function capturar_informacion_bandejaNotifi(response,estilos) {
             },
             "destroy": true,
             "data": response,
-            "pageLength": 20,
+            "paging": false,
+            "info": false,
             "order": [[5, 'desc']],
             "columns": [
                 {"data": "moduloNotifi"},
@@ -665,7 +674,7 @@ function capturar_informacion_bandejaNotifi(response,estilos) {
             "language": {
                 "search": "Buscar",
                 "lengthMenu": "Mostrar _MENU_ resgistros",
-                "info": "Mostrando registros _START_ a _END_ de un total de _TOTAL_ registros",
+                // "info": "Mostrando registros _START_ a _END_ de un total de _TOTAL_ registros",
                 "paginate": {
                     "previous": "Anterior",
                     "next": "Siguiente",

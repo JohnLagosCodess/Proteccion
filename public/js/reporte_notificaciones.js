@@ -69,16 +69,22 @@ $(document).ready(function () {
             buttons:[
                 {
                     extend:"excel",
-                    title: function(){
-                        return fechaActual + "_" + $('#nro_orden').val();
+                    filename: function(){
+                        return fechaActual + "_NOTIFICACIONES-PROTECCIÓN_SIGMEL_(" + $('#fecha_desde').val() + "_" + $('#fecha_hasta').val() + ")";
                     },
                     text:'Exportar datos',
                     className: 'btn btn-success',
-                    "excelStyles": [                      // Add an excelStyles definition
+                    "excelStyles": [
                                                  
                     ],
                     exportOptions: {
-                        columns: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]
+                        columns: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22]
+                    },
+                    customize: function (xlsx) {
+                        var sheet = xlsx.xl.worksheets['sheet1.xml'];
+
+                        // Elimina la primera fila (row 1)
+                        $('row[r="1"]', sheet).remove();
                     }
                 }
             ]
@@ -235,21 +241,20 @@ function renderizarRegistros(data, inicio, fin, reporteNotificacionesTable) {
         var datos = [
             data[a].Cons,
             data[a].ID_evento,
+            data[a].N_identificacion,
+            data[a].F_asignacion_notificaciones,
             data[a].F_comunicado,
             data[a].N_radicado,
             data[a].Nombre_documento,
-            data[a].Carpeta_impresion,
-            data[a].Observaciones,
-            data[a].N_identificacion,
+            data[a].Carpeta_primaria,
             data[a].Tipo_destinatario,
+            data[a].Medio_envio,
             data[a].Nombre_destinatario,
-            data[a].Direccion_destinatario,
-            data[a].Telefono_destinatario,
-            data[a].Ciudad_departamento,            
-            data[a].Email_destinatario,
-            data[a].Proceso_servicio,           
-            data[a].Ultima_accion,
-            data[a].Estado,
+            data[a].Dir_Tel_CiuDep,
+            data[a].Email_destinatario,            
+            data[a].Proceso_servicio,
+            data[a].Ultima_accion,           
+            data[a].Estados_generales_notificacion,
             data[a].N_de_orden,
             data[a].Id_destinatario,
             data[a].Tipo_correspondencia,

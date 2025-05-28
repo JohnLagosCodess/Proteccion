@@ -87,7 +87,7 @@ class sigmel_advance extends sigmel_wsController implements Api
                     ],
                     "pcl" => [
                         "get_info" => ["pronunciamiento_pcl:Porcentaje_pcl", "id_evento"],
-                        //"formatear" => ["concatenar:%"]
+                        "formatear" => ["convertir:float"]
                     ],
                     "fechaEstructuracion" => [
                         "get_info" => ["pronunciamiento_pcl:Fecha_calificador", "id_evento"],
@@ -179,7 +179,7 @@ class sigmel_advance extends sigmel_wsController implements Api
                 ],
                 "pcl" => [
                     "get_info" => ["decretos:Porcentaje_pcl", "id_evento"],
-                    //"formatear" => ["concatenar:%"]
+                    "formatear" => ["convertir:float"]
                 ],
                 "fechaEstructuracion" => [
                     "get_info" => ["decretos:F_estructuracion", "id_evento"],
@@ -307,7 +307,7 @@ class sigmel_advance extends sigmel_wsController implements Api
                 ],
                 "pcl" => [
                     "get_info" => ["juntas:porcentaje_pcl_jrci_emitido", "id_evento"],
-                    //"formatear" => ["concatenar:%"]
+                    "formatear" => ["convertir:float"]
                 ],
                 "resIpsRevisionDictamenJr" => [
                     "get_info" => ["aval_ips:Decision_dictamen_jrci", "id_evento"],
@@ -379,13 +379,13 @@ class sigmel_advance extends sigmel_wsController implements Api
                 ],
                 "pcl_1" => [
                     "get_info" => ["juntas:porcentaje_pcl_jnci_emitido", "id_evento"],
-                    //"formatear" => ["concatenar:%"]
+                    "formatear" => ["convertir:float"]
                 ],
                 "estadoJn" => [
                     "estado_jn" => ["id_evento"],
                 ]
             ],
-            "Firmeza" => [
+            "firmeza" => [
                 "dictamenEnFirme" => [
                     "get_info" => ["advance:Dictamen_Firme", "id_evento"],
                 ],
@@ -491,10 +491,9 @@ class sigmel_advance extends sigmel_wsController implements Api
     public function get_servicios($campo){
         if(isset($this->servicios_disponibles[$this->id_servicio])){
             $nombre_servicio = $this->servicios_disponibles[$this->id_servicio];
-            $servicios = $nombre_servicio == 'juntas' ? ['junta_nacional','junta_regional'] : [$nombre_servicio];
-            $servicios = array_merge($servicios,['firmeza']);
+            $proceso = $this->response[$nombre_servicio];
 
-            $this->request->merge([$campo => $servicios ?? '']);
+            $this->request->merge([$campo => array_keys($proceso) ?? '']);
         }
     }
     protected function estado_servicio($campo, $validaciones)

@@ -81,23 +81,22 @@
                                         <table id="datos_reporte_notificaciones" class="table table-striped table-bordered" style="width:100%">
                                             <thead>
                                                 <tr class="bg-info">
-                                                    <th>CONS</th>                                                    
+                                                    <th>N°</th>                                                    
                                                     <th>ID EVENTO</th>
+                                                    <th>N° DE IDENTIFICACIÓN</th>
+                                                    <th>FECHA DE ASIGNACIÓN NOTIFICACIONES</th>
                                                     <th>FECHA COMUNICADO</th>
                                                     <th>N° RADICADO</th>
-                                                    <th>DOCUMENTO</th>
+                                                    <th>NOMBRE DOCUMENTO</th>
                                                     <th>CARPETA DE IMPRESIÓN</th>
-                                                    <th>OBSERVACIONES</th>
-                                                    <th>N° DE IDENTIFICACIÓN</th>
                                                     <th>DESTINATARIO</th>
+                                                    <th>MEDIO ENVÍO</th>
                                                     <th>NOMBRE DESTINATARIO</th>
-                                                    <th>DIRECCION</th>
-                                                    <th>TELÉFONO</th>	
-                                                    <th>CIUDAD - DEPARTAMENTO</th>                                                    
-                                                    <th>CORREO ELECTRONICO</th>
+                                                    <th>DIRECCIÓN / TELÉFONO / CIUDAD - DEPARTAMENTO</th>                                                                                                       
+                                                    <th>CORREO ELECTRÓNICO</th>
                                                     <th>PROCESO - SERVICIO</th>                                                    
-                                                    <th>ULTIMA ACCIÓN</th>
-                                                    <th>ESTADO</th>
+                                                    <th>ÚLTIMA ACCIÓN</th>
+                                                    <th>ESTADO GENERAL NOTIFICACIÓN</th>
                                                     <th>N° DE ORDEN</th>
                                                     <th>ID DESTINATARIO</th>
                                                     <th>TIPO DESTINATARIO</th>

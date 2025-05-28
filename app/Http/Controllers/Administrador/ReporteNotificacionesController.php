@@ -15,7 +15,11 @@ use App\Models\cndatos_reportes_notificaciones;
 use App\Models\cndatos_reportes_notificaciones_manuales;
 use App\Models\cnvista_reportes_notificaciones_uniones;
 use App\Models\sigmel_lista_parametros;
+use App\Models\sigmel_registro_documentos_eventos;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Str;
+
+use Illuminate\Support\Facades\Log;
 
 use ZipArchive;
 
@@ -95,10 +99,9 @@ class ReporteNotificacionesController extends Controller
             switch (true) {
                 case (!empty($estado_general_calificacion) && $estado_general_calificacion == 359 && empty($numero_orden)):                    
                     $reporte_notificaciones = cnvista_reportes_notificaciones_uniones::on('sigmel_gestiones')
-                    ->select('ID_evento', 'N_identificacion', 'F_asignacion_notificaciones', 'F_comunicado', 'N_radicado', 
-                    'Nombre_documento', 'Carpeta_impresion', 'Tipo_destinatario', 
-                    'Nombre_destinatario', 'Direccion_destinatario', 'Telefono_destinatario', 'Ciudad_departamento', 
-                    'Email_destinatario', 'Proceso_servicio', 'Ultima_accion', 'Estado', 'N_de_orden', 'Id_destinatario', 
+                    ->select('ID_evento', 'N_identificacion', 'F_asignacion_notificaciones', 'F_comunicado', 'N_radicado', 'Nombre_documento', 
+                    'Carpeta_primaria', 'Tipo_destinatario', 'Medio_envio', 'Nombre_destinatario', 'Dir_Tel_CiuDep', 
+                    'Email_destinatario', 'Proceso_servicio', 'Ultima_accion', 'Estados_generales_notificacion', 'N_de_orden', 'Id_destinatario', 
                     'Tipo_correspondencia', 'N_guia', 'Folios', 'F_envio', 'F_notificacion')
                     ->where([
                         ['Estado_general_notificacion', $estado_general_calificacion],
@@ -139,10 +142,9 @@ class ReporteNotificacionesController extends Controller
                                 
                                 $reporte_notificaciones = cnvista_reportes_notificaciones_uniones::on('sigmel_gestiones')
                                 ->select('ID_evento', 'N_identificacion', 'F_asignacion_notificaciones', 'F_comunicado', 'N_radicado', 
-                                'Nombre_documento', 'Carpeta_impresion', 'Tipo_destinatario', 
-                                'Nombre_destinatario', 'Direccion_destinatario', 'Telefono_destinatario', 'Ciudad_departamento', 
-                                'Email_destinatario', 'Proceso_servicio', 'Ultima_accion', 'Estado', 'N_de_orden', 'Id_destinatario', 
-                                'Tipo_correspondencia', 'N_guia', 'Folios', 'F_envio', 'F_notificacion')
+                                'Nombre_documento', 'Carpeta_primaria', 'Tipo_destinatario', 'Medio_envio', 'Nombre_destinatario', 
+                                'Dir_Tel_CiuDep', 'Email_destinatario', 'Proceso_servicio', 'Ultima_accion', 'Estados_generales_notificacion', 
+                                'N_de_orden', 'Id_destinatario', 'Tipo_correspondencia', 'N_guia', 'Folios', 'F_envio', 'F_notificacion')
                                 ->where([
                                     ['Estado_general_notificacion', $estado_general_calificacion],
                                     ['Bandeja_notificaciones', 'Si'],
@@ -176,11 +178,10 @@ class ReporteNotificacionesController extends Controller
                     || !empty($estado_general_calificacion) && $estado_general_calificacion == 357 && empty($numero_orden)
                     || !empty($estado_general_calificacion) && $estado_general_calificacion == 358 && empty($numero_orden)):                    
                     $reporte_notificaciones = cnvista_reportes_notificaciones_uniones::on('sigmel_gestiones')
-                    ->select('ID_evento', 'N_identificacion', 'F_asignacion_notificaciones', 'F_comunicado', 'N_radicado', 
-                    'Nombre_documento', 'Carpeta_impresion', 'Tipo_destinatario', 
-                    'Nombre_destinatario', 'Direccion_destinatario', 'Telefono_destinatario', 'Ciudad_departamento', 
-                    'Email_destinatario', 'Proceso_servicio', 'Ultima_accion', 'Estado', 'N_de_orden', 'Id_destinatario', 
-                    'Tipo_correspondencia', 'N_guia', 'Folios', 'F_envio', 'F_notificacion')
+                    ->select('ID_evento', 'N_identificacion', 'F_asignacion_notificaciones', 'F_comunicado', 'N_radicado', 'Nombre_documento', 
+                    'Carpeta_primaria', 'Tipo_destinatario', 'Medio_envio', 'Nombre_destinatario', 'Dir_Tel_CiuDep', 
+                    'Email_destinatario', 'Proceso_servicio', 'Ultima_accion', 'Estados_generales_notificacion', 'N_de_orden', 
+                    'Id_destinatario', 'Tipo_correspondencia', 'N_guia', 'Folios', 'F_envio', 'F_notificacion')
                     ->where([
                         ['Estado_general_notificacion', $estado_general_calificacion]                        
                     ])
@@ -222,10 +223,9 @@ class ReporteNotificacionesController extends Controller
                                 
                                 $reporte_notificaciones = cnvista_reportes_notificaciones_uniones::on('sigmel_gestiones')
                                 ->select('ID_evento', 'N_identificacion', 'F_asignacion_notificaciones', 'F_comunicado', 'N_radicado', 
-                                'Nombre_documento', 'Carpeta_impresion', 'Tipo_destinatario', 
-                                'Nombre_destinatario', 'Direccion_destinatario', 'Telefono_destinatario', 'Ciudad_departamento', 
-                                'Email_destinatario', 'Proceso_servicio', 'Ultima_accion', 'Estado', 'N_de_orden', 'Id_destinatario', 
-                                'Tipo_correspondencia', 'N_guia', 'Folios', 'F_envio', 'F_notificacion')
+                                'Nombre_documento', 'Carpeta_primaria', 'Tipo_destinatario', 'Medio_envio', 'Nombre_destinatario', 
+                                'Dir_Tel_CiuDep', 'Email_destinatario', 'Proceso_servicio', 'Ultima_accion', 'Estados_generales_notificacion', 
+                                'N_de_orden', 'Id_destinatario', 'Tipo_correspondencia', 'N_guia', 'Folios', 'F_envio', 'F_notificacion')
                                 ->where([
                                     ['Estado_general_notificacion', $estado_general_calificacion],
                                     ['N_de_orden', $numero_orden]
@@ -256,10 +256,9 @@ class ReporteNotificacionesController extends Controller
                 break;
                 case (!empty($estado_general_calificacion) && $estado_general_calificacion == 365 && empty($numero_orden)):                    
                     $reporte_notificaciones = cnvista_reportes_notificaciones_uniones::on('sigmel_gestiones')
-                    ->select('ID_evento', 'N_identificacion', 'F_asignacion_notificaciones', 'F_comunicado', 'N_radicado', 
-                    'Nombre_documento', 'Carpeta_impresion', 'Tipo_destinatario', 
-                    'Nombre_destinatario', 'Direccion_destinatario', 'Telefono_destinatario', 'Ciudad_departamento', 
-                    'Email_destinatario', 'Proceso_servicio', 'Ultima_accion', 'Estado', 'N_de_orden', 'Id_destinatario', 
+                    ->select('ID_evento', 'N_identificacion', 'F_asignacion_notificaciones', 'F_comunicado', 'N_radicado', 'Nombre_documento', 
+                    'Carpeta_primaria', 'Tipo_destinatario', 'Medio_envio', 'Nombre_destinatario', 'Dir_Tel_CiuDep', 
+                    'Email_destinatario', 'Proceso_servicio', 'Ultima_accion', 'Estados_generales_notificacion', 'N_de_orden', 'Id_destinatario', 
                     'Tipo_correspondencia', 'N_guia', 'Folios', 'F_envio', 'F_notificacion')
                     ->whereBetween('F_comunicado', [$fecha_desde , $fecha_hasta])
                     ->orderBy('F_comunicado')
@@ -295,10 +294,9 @@ class ReporteNotificacionesController extends Controller
                                 
                                 $reporte_notificaciones = cnvista_reportes_notificaciones_uniones::on('sigmel_gestiones')
                                 ->select('ID_evento', 'N_identificacion', 'F_asignacion_notificaciones', 'F_comunicado', 'N_radicado', 
-                                'Nombre_documento', 'Carpeta_impresion', 'Tipo_destinatario', 
-                                'Nombre_destinatario', 'Direccion_destinatario', 'Telefono_destinatario', 'Ciudad_departamento', 
-                                'Email_destinatario', 'Proceso_servicio', 'Ultima_accion', 'Estado', 'N_de_orden', 'Id_destinatario', 
-                                'Tipo_correspondencia', 'N_guia', 'Folios', 'F_envio', 'F_notificacion')
+                                'Nombre_documento', 'Carpeta_primaria', 'Tipo_destinatario', 'Medio_envio', 'Nombre_destinatario', 
+                                'Dir_Tel_CiuDep', 'Email_destinatario', 'Proceso_servicio', 'Ultima_accion', 'Estados_generales_notificacion', 
+                                'N_de_orden', 'Id_destinatario', 'Tipo_correspondencia', 'N_guia', 'Folios', 'F_envio', 'F_notificacion')
                                 ->where([
                                     ['N_de_orden', $numero_orden]
                                 ])
@@ -327,7 +325,8 @@ class ReporteNotificacionesController extends Controller
                     }  
                     
                 break;
-            }           
+            }
+
         }
     }
 
@@ -396,11 +395,10 @@ class ReporteNotificacionesController extends Controller
             switch (true) {
                 case (!empty($estado_general_calificacion) && $estado_general_calificacion == 359 && empty($numero_orden)):                    
                     $datos_reporte_notificaciones = cnvista_reportes_notificaciones_uniones::on('sigmel_gestiones')
-                    ->select('ID_evento', 'F_comunicado', 'N_radicado', 'Nombre_documento', 'Carpeta_impresion',
-                    'Observaciones', 'N_identificacion', 'Tipo_destinatario', 'Nombre_destinatario', 'Direccion_destinatario',
-                    'Telefono_destinatario', 'Ciudad_departamento', 'Email_destinatario', 'Proceso_servicio', 
-                    'Ultima_accion', 'Estado', 'N_de_orden', 'Id_destinatario', 'Tipo_correspondencia', 'N_guia',
-                    'Folios', 'F_envio', 'F_notificacion')
+                    ->select('ID_evento', 'Id_Asignacion', 'Id_servicio', 'N_identificacion', 'F_asignacion_notificaciones', 'F_comunicado', 'N_radicado', 'Nombre_documento', 
+                    'Carpeta_primaria', 'Carpeta_impresion', 'Carpeta_terciaria', 'Nombre_destinatario', 'Dir_Tel_CiuDep', 
+                    'Email_destinatario', 'Proceso_servicio', 'Ultima_accion', 'Estados_generales_notificacion', 'N_de_orden', 'Id_destinatario', 
+                    'Tipo_correspondencia', 'N_guia', 'Folios', 'F_envio', 'F_notificacion')
                     ->where([
                         ['Estado_general_notificacion', $estado_general_calificacion],
                         ['Bandeja_notificaciones', 'Si']                    
@@ -415,11 +413,10 @@ class ReporteNotificacionesController extends Controller
                     if (!empty($nro_orden)) {                                                
                                                                                     
                         $datos_reporte_notificaciones = cnvista_reportes_notificaciones_uniones::on('sigmel_gestiones')
-                        ->select('ID_evento', 'F_comunicado', 'N_radicado', 'Nombre_documento', 'Carpeta_impresion',
-                        'Observaciones', 'N_identificacion', 'Tipo_destinatario', 'Nombre_destinatario', 'Direccion_destinatario',
-                        'Telefono_destinatario', 'Ciudad_departamento', 'Email_destinatario', 'Proceso_servicio', 
-                        'Ultima_accion', 'Estado', 'N_de_orden', 'Id_destinatario', 'Tipo_correspondencia', 'N_guia',
-                        'Folios', 'F_envio', 'F_notificacion')
+                        ->select('ID_evento', 'Id_Asignacion','Id_servicio', 'N_identificacion', 'F_asignacion_notificaciones', 'F_comunicado', 'N_radicado', 
+                        'Nombre_documento', 'Carpeta_primaria', 'Carpeta_impresion', 'Carpeta_terciaria', 'Nombre_destinatario', 
+                        'Dir_Tel_CiuDep', 'Email_destinatario', 'Proceso_servicio', 'Ultima_accion', 'Estados_generales_notificacion', 
+                        'N_de_orden', 'Id_destinatario', 'Tipo_correspondencia', 'N_guia', 'Folios', 'F_envio', 'F_notificacion')
                         ->where([
                             ['Estado_general_notificacion', $estado_general_calificacion],
                             ['Bandeja_notificaciones', 'Si'],
@@ -435,11 +432,10 @@ class ReporteNotificacionesController extends Controller
                     || !empty($estado_general_calificacion) && $estado_general_calificacion == 357 && empty($numero_orden)
                     || !empty($estado_general_calificacion) && $estado_general_calificacion == 358 && empty($numero_orden)):                    
                     $datos_reporte_notificaciones = cnvista_reportes_notificaciones_uniones::on('sigmel_gestiones')
-                    ->select('ID_evento', 'F_comunicado', 'N_radicado', 'Nombre_documento', 'Carpeta_impresion',
-                    'Observaciones', 'N_identificacion', 'Tipo_destinatario', 'Nombre_destinatario', 'Direccion_destinatario',
-                    'Telefono_destinatario', 'Ciudad_departamento', 'Email_destinatario', 'Proceso_servicio', 
-                    'Ultima_accion', 'Estado', 'N_de_orden', 'Id_destinatario', 'Tipo_correspondencia', 'N_guia',
-                    'Folios', 'F_envio', 'F_notificacion')
+                    ->select('ID_evento', 'Id_Asignacion','Id_servicio', 'N_identificacion', 'F_asignacion_notificaciones', 'F_comunicado', 'N_radicado', 'Nombre_documento', 
+                    'Carpeta_primaria', 'Carpeta_impresion', 'Carpeta_terciaria', 'Nombre_destinatario', 'Dir_Tel_CiuDep', 
+                    'Email_destinatario', 'Proceso_servicio','Ultima_accion', 'Estados_generales_notificacion', 'N_de_orden', 'Id_destinatario', 
+                    'Tipo_correspondencia', 'N_guia', 'Folios', 'F_envio', 'F_notificacion')
                     ->where([
                         ['Estado_general_notificacion', $estado_general_calificacion]                        
                     ])
@@ -454,11 +450,10 @@ class ReporteNotificacionesController extends Controller
                     if (!empty($nro_orden)) {                                                
                             
                             $datos_reporte_notificaciones = cnvista_reportes_notificaciones_uniones::on('sigmel_gestiones')
-                            ->select('ID_evento', 'F_comunicado', 'N_radicado', 'Nombre_documento', 'Carpeta_impresion',
-                            'Observaciones', 'N_identificacion', 'Tipo_destinatario', 'Nombre_destinatario', 'Direccion_destinatario',
-                            'Telefono_destinatario', 'Ciudad_departamento', 'Email_destinatario', 'Proceso_servicio', 
-                            'Ultima_accion', 'Estado', 'N_de_orden', 'Id_destinatario', 'Tipo_correspondencia', 'N_guia',
-                            'Folios', 'F_envio', 'F_notificacion')
+                            ->select('ID_evento', 'Id_Asignacion','Id_servicio', 'N_identificacion', 'F_asignacion_notificaciones', 'F_comunicado', 'N_radicado', 
+                            'Nombre_documento', 'Carpeta_primaria', 'Carpeta_impresion', 'Carpeta_terciaria', 'Nombre_destinatario', 
+                            'Dir_Tel_CiuDep', 'Email_destinatario', 'Proceso_servicio', 'Ultima_accion', 'Estados_generales_notificacion', 
+                            'N_de_orden', 'Id_destinatario', 'Tipo_correspondencia', 'N_guia', 'Folios', 'F_envio', 'F_notificacion')
                             ->where([
                                 ['Estado_general_notificacion', $estado_general_calificacion],
                                 ['N_de_orden', $numero_orden]
@@ -471,11 +466,10 @@ class ReporteNotificacionesController extends Controller
                 break;
                 case (!empty($estado_general_calificacion) && $estado_general_calificacion == 365 && empty($numero_orden)):                    
                     $datos_reporte_notificaciones = cnvista_reportes_notificaciones_uniones::on('sigmel_gestiones')
-                    ->select('ID_evento', 'F_comunicado', 'N_radicado', 'Nombre_documento', 'Carpeta_impresion',
-                    'Observaciones', 'N_identificacion', 'Tipo_destinatario', 'Nombre_destinatario', 'Direccion_destinatario',
-                    'Telefono_destinatario', 'Ciudad_departamento', 'Email_destinatario', 'Proceso_servicio', 
-                    'Ultima_accion', 'Estado', 'N_de_orden', 'Id_destinatario', 'Tipo_correspondencia', 'N_guia',
-                    'Folios', 'F_envio', 'F_notificacion')
+                    ->select('ID_evento', 'Id_Asignacion','Id_servicio', 'N_identificacion', 'F_asignacion_notificaciones', 'F_comunicado', 'N_radicado', 'Nombre_documento', 
+                    'Carpeta_primaria', 'Carpeta_impresion', 'Carpeta_terciaria', 'Nombre_destinatario', 'Dir_Tel_CiuDep', 
+                    'Email_destinatario', 'Proceso_servicio', 'Ultima_accion', 'Estados_generales_notificacion', 'N_de_orden', 'Id_destinatario', 
+                    'Tipo_correspondencia', 'N_guia', 'Folios', 'F_envio', 'F_notificacion')
                     ->whereBetween('F_comunicado', [$fecha_desde , $fecha_hasta])
                     ->orderBy('F_comunicado')
                     ->orderBy('N_radicado') 
@@ -485,11 +479,10 @@ class ReporteNotificacionesController extends Controller
                     if (!empty($nro_orden)) {                       
                             
                         $datos_reporte_notificaciones = cnvista_reportes_notificaciones_uniones::on('sigmel_gestiones')
-                        ->select('ID_evento', 'F_comunicado', 'N_radicado', 'Nombre_documento', 'Carpeta_impresion',
-                        'Observaciones', 'N_identificacion', 'Tipo_destinatario', 'Nombre_destinatario', 'Direccion_destinatario',
-                        'Telefono_destinatario', 'Ciudad_departamento', 'Email_destinatario', 'Proceso_servicio', 
-                        'Ultima_accion', 'Estado', 'N_de_orden', 'Id_destinatario', 'Tipo_correspondencia', 'N_guia',
-                        'Folios', 'F_envio', 'F_notificacion')
+                        ->select('ID_evento', 'Id_Asignacion','Id_servicio', 'N_identificacion', 'F_asignacion_notificaciones', 'F_comunicado', 'N_radicado', 
+                        'Nombre_documento', 'Carpeta_primaria', 'Carpeta_impresion', 'Carpeta_terciaria', 'Nombre_destinatario', 
+                        'Dir_Tel_CiuDep', 'Email_destinatario', 'Proceso_servicio', 'Ultima_accion', 'Estados_generales_notificacion', 
+                        'N_de_orden', 'Id_destinatario', 'Tipo_correspondencia', 'N_guia', 'Folios', 'F_envio', 'F_notificacion')
                         ->where([
                             ['N_de_orden', $numero_orden]
                         ])
@@ -500,6 +493,7 @@ class ReporteNotificacionesController extends Controller
                     }
                 break;
             }   
+
             /* guardarmos los datos en un array */
             $array_datos_reporte_notificaciones = json_decode(json_encode($datos_reporte_notificaciones, true));
 
@@ -515,35 +509,93 @@ class ReporteNotificacionesController extends Controller
                 return json_decode(json_encode($mensajes, true));
             } else {
                 
-                // // Crear un nuevo archivo zip
+                // Crear un nuevo archivo zip
                 $zip = new ZipArchive;
                 if ($zip->open($rutaArchivoComprimido, ZipArchive::CREATE | ZipArchive::OVERWRITE) === TRUE) {
                     $archivosAgregados = 0;
 
                     foreach ($array_datos_reporte_notificaciones as $archivo) {
-                        
-                        if ($archivo->Nombre_documento <> 'No Descargado' && $archivo->Nombre_documento <> 'N/A') {
-                            
-                            $nombreArchivo = $archivo->Nombre_documento;
-                            $rutaArchivo = "Documentos_Eventos/{$archivo->ID_evento}/{$nombreArchivo}";
-            
-                            if (file_exists($rutaArchivo)) {
+                        $analizar = json_encode($archivo);
+                        Log::info("DATA: ".$analizar);
+                        if ($archivo->Nombre_documento <> 'N/A') {
+                    
+                            $rutaArchivoValidar = "Documentos_Eventos/{$archivo->ID_evento}/{$archivo->Nombre_documento}";
+                            if (file_exists($rutaArchivoValidar)) {
                                 
-                                if ($archivo->Carpeta_impresion <> "N/A" && $archivo->Carpeta_impresion <> "No Tiene Copia") {
+                                if ($archivo->Carpeta_impresion <> "N/A") {
             
-                                    $nombre_carpeta = $archivo->Carpeta_impresion;
-                                    // Crear la estructura de carpetas en el ZIP
-                                    if (!$zip->locateName($nombre_carpeta, ZipArchive::FL_NOCASE | ZipArchive::FL_NODIR)) {
-                                        $zip->addEmptyDir($nombre_carpeta);
-                                    }
-            
-                                    // Agregar el archivo al ZIP en la subcarpeta
-                                    $zip->addFile($rutaArchivo, $nombre_carpeta . '/' . $nombreArchivo);
+                                    $carpeta_primaria = $archivo->Carpeta_primaria;
+                                    $carpeta_secundaria = $archivo->Carpeta_impresion;
+                                    $carpeta_terciaria = $archivo->Carpeta_terciaria;
 
-                                    $archivosAgregados++;
+                                    /* 
+                                        Construimos la ruta completa de las carpetas para el ZIP en base de las siguientes validaciones
+                                        1. Para la carpeta DESCONOCIDO no se le crea carpeta terciaria (CORREO y/o FÍSICO)
+                                        2. Si en la data existe un comunicado de Remsión Expediente JRCI dentro de una carpeta que inicie con JRCI -
+                                            se debe traer el listado de documentos del evento asociados al nro de identificación del afiliado del evento.
+                                        3. Para los demás casos, se construye acorde al requerimiento PBS 095
+                                    */
+                                    if($carpeta_primaria <> "NA"){
+
+                                        if ($carpeta_primaria == 'CARGADOS MANUALMENTE' && $carpeta_secundaria == 'DESCONOCIDO') {
+                                            $estructura_carpeta = "{$carpeta_primaria}/{$carpeta_secundaria}";
+                                            $nombreArchivo = $archivo->Nombre_documento;
+                                        }
+                                        elseif ($carpeta_primaria == '16. EXPEDIENTES JUNTAS' && 
+                                            Str::startsWith($archivo->Nombre_documento, 'JUN_REM_EXPEDIENTE_') && 
+                                            Str::startsWith($carpeta_secundaria, 'JRCI - ')
+                                        ) {
+                                            /* Insertamos primero los documentos asociados a la gestion del comunicado */
+                                            $estructura_carpeta = "{$carpeta_primaria}/{$carpeta_secundaria}/{$carpeta_terciaria}";
+                                            $nombreArchivo = $archivo->Nombre_documento;
+    
+                                            /* Insertamos después los documentos generales del evento */
+                                            $documentos_evento = sigmel_registro_documentos_eventos::on('sigmel_gestiones')
+                                            ->select('Nombre_documento','Formato_documento')
+                                            ->where([
+                                                ['ID_evento', $archivo->ID_evento],
+                                                ['Id_servicio', $archivo->Id_servicio],
+                                                ['Id_Asignacion', $archivo->Id_Asignacion]
+                                            ])
+                                            ->get();
+    
+                                            $array_documentos_evento = json_decode(json_encode($documentos_evento, true));
+                                            
+                                            foreach ($array_documentos_evento as $docs_evento) {
+                                                $carpeta_afiliado = "{$archivo->N_identificacion}_{$archivo->Id_Asignacion}";
+                                                $estructura_carpeta_docs_evento = "{$carpeta_primaria}/{$carpeta_secundaria}/{$carpeta_afiliado}";
+                                                $nombreArchivo_docs_evento = "{$docs_evento->Nombre_documento}.{$docs_evento->Formato_documento}";
+                                                $rutaArchivo_docs_evento = "Documentos_Eventos/{$archivo->ID_evento}/{$nombreArchivo_docs_evento}";
+    
+                                                if (file_exists($rutaArchivo_docs_evento)) {
+                                                    if (!$zip->locateName($estructura_carpeta_docs_evento, ZipArchive::FL_NOCASE | ZipArchive::FL_NODIR)) {
+                                                        $zip->addEmptyDir($estructura_carpeta_docs_evento);
+                                                    }
+                                                    $zip->addFile($rutaArchivo_docs_evento, $estructura_carpeta_docs_evento . '/' . $nombreArchivo_docs_evento);
+                                                }
+                                            }
+                                        }
+                                        else{
+                                            $estructura_carpeta = "{$carpeta_primaria}/{$carpeta_secundaria}/{$carpeta_terciaria}";
+                                            $nombreArchivo = $archivo->Nombre_documento;
+                                        }
+                                        
+                                        // Crear la estructura de carpetas si no existe ya
+                                        $rutaArchivo = "Documentos_Eventos/{$archivo->ID_evento}/{$nombreArchivo}";
+    
+                                        // Agregar los archivos dependiendo de la estructura de las carpetas
+                                        if (file_exists($rutaArchivo)) {
+                                            if (!$zip->locateName($estructura_carpeta, ZipArchive::FL_NOCASE | ZipArchive::FL_NODIR)) {
+                                                $zip->addEmptyDir($estructura_carpeta);
+                                            }
+
+                                            $zip->addFile($rutaArchivo, $estructura_carpeta . '/' . $nombreArchivo);
+                                        }
+
+                                        $archivosAgregados++;
+                                    }
                                 }
                             }
-            
                         }
                     }
             

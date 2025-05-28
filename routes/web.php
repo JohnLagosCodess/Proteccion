@@ -957,5 +957,13 @@ Route::get('test_proformas', [ProbandoController::class, 'test_proformas']);
 
 Route::post('/generarZipReporteNotificaciones1', [ReporteNotificacionesController::class, 'generarZipReporteNotificaciones1']);
 
-Route::get('/notificaciones_advance', [sigmel_advance::class, 'notificar_peticiones'])->name('');
+Route::get('/notificaciones_advance', [sigmel_advance::class, 'notificar_peticiones']);
 Route::post('/finalizar_notificacion', [sigmel_advance::class, 'finalizar_notificacion']);
+
+Route::post('/test_api',function(Request $request){
+    return response()->json([
+        'codigo' => 200,
+        'mensaje' => "proceso exitoso",
+        'response' => $request->all()
+    ]);
+});

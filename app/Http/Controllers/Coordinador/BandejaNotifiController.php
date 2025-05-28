@@ -424,9 +424,17 @@ class BandejaNotifiController extends Controller
             $query = DB::table(getDatabaseName('sigmel_gestiones') . 'cndatos_bandeja_eventos')
                 ->whereIn('Accion',$accion_antesesora)
                 ->whereIn('Id_Servicio',$servicios_asociados)
-                ->where(function($query){
-                    $query->whereNull('Enviar_bd_Notificacion')->orWhere('Enviar_bd_Notificacion', '=', 'Si');
+                // ->where(function($query){
+                //     $query->whereNull('Enviar_bd_Notificacion')->orWhere('Enviar_bd_Notificacion', '=', 'Si');
+                // });
+                ->where(function($query) {
+                    $query->where(function($q) {
+                        $q->whereNull('Enviar_bd_Notificacion')
+                        ->orWhere('Enviar_bd_Notificacion', '=', 'Si');
+                    });
+                    // ->where('Id_estado_gral_notifi', '=', 357);
                 });
+                
 
             //Filtra los eventos de acuerdo al usuario
             if (in_array($request->newId_rol, ['3', '5', '10'])) {
@@ -434,6 +442,7 @@ class BandejaNotifiController extends Controller
             }
 
             $eventos = $query->get();
+            // dd($eventos);
          }
  
          $response = [

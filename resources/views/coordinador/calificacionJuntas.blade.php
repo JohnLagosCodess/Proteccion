@@ -4,18 +4,26 @@
     <link rel="stylesheet" type="text/css" href="/plugins/summernote/summernote.min.css">
 @stop
 @section('content_header') 
-    <div class='row mb-2'>
-        <div class='col-sm-6'>
+    <div class='row'>
+        <div class='col-6'>
             <?php 
                 $dato_rol=$captura_id_rol = session('id_cambio_rol');
             ?>
+        </div>
+        <div class="col-6 d-none" id="alerta_advance" style="font-size: 14px;">
+            <div class="alert" role="alert" id="contenedor_alerta_advance">
+                <h6 class="alert-heading" id="titulo_alerta_advance"></h6>
+                <div id="cuerpo_alerta_advance">
+                    <input type="hidden" name="estado_ejecucion" value="">
+                </div>
+            </div>
         </div>
     </div>
 
 @stop
 @section('content')
     <div class="row">
-        <div class="col-8">
+        <div class="col-6">
             <div>                
                 <?php if (isset($_POST['badera_modulo_principal_juntas']) &&  $_POST['badera_modulo_principal_juntas'] == 'desdebus_mod_juntas' ):?>
                     <a href="{{route("busquedaEvento")}}" class="btn btn-success" type="button"><i class="fa fa-arrow-left"></i> Regresar</a>                

@@ -169,7 +169,8 @@ class CalificacionPCLController extends Controller
        $cantidad_documentos_cargados = sigmel_registro_documentos_eventos::on('sigmel_gestiones')
        ->where([
            ['ID_evento', $newIdEvento],
-           ['Id_servicio', $Id_servicio]
+           ['Id_servicio', $Id_servicio],
+           ['Id_Asignacion', $newIdAsignacion]
        ])->get();
 
         $arraycampa_documento_solicitado = sigmel_informacion_documentos_solicitados_eventos::on('sigmel_gestiones')
@@ -204,7 +205,7 @@ class CalificacionPCLController extends Controller
         
         return view('coordinador.calificacionPCL', compact('user','array_datos_calificacionPcl', 'array_datos_destinatarios', 'listado_documentos_solicitados', 
         'arraylistado_documentos', 'cantidad_documentos_cargados', 'dato_validacion_no_aporta_docs', 'SubModulo','consecutivo','arraycampa_documento_solicitado', 
-        'info_comite_inter', 'Id_servicio', 'info_accion_eventos', 'enviar_notificaciones','N_siniestro_evento', 'Id_Asignacion','info_afp_conocimiento','entidades_conocimiento'));
+        'info_comite_inter', 'Id_servicio', 'newIdAsignacion', 'info_accion_eventos', 'enviar_notificaciones','N_siniestro_evento', 'Id_Asignacion','info_afp_conocimiento','entidades_conocimiento'));
     }
 
     public function cargueListadoSelectoresModuloCalifcacionPcl(Request $request){
@@ -930,13 +931,8 @@ class CalificacionPCLController extends Controller
                 'F_detencion_tiempo_gestion' => $F_detencion_tiempo_gestion,
                 'F_asignacion_calificacion' => $Fecha_asignacion_calificacion,
                 'F_calificacion' => $Fecha_calificacion,
-                // 'F_registro' => $date,
+                'F_acta_firmeza' => $request->f_acta_firmeza
             ];
-
-            //Solo actualizar pronunciamiento pcl
-            if($Id_servicio == 9){
-               array_push($datos_info_actualizarAsignacionEvento, ['F_acta_firmeza' => $request->f_acta_firmeza]);
-            }
 
             sigmel_informacion_asignacion_eventos::on('sigmel_gestiones')
             ->where('Id_Asignacion', $newIdAsignacion)->update($datos_info_actualizarAsignacionEvento);

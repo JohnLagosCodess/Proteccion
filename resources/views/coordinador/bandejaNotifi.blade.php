@@ -90,10 +90,43 @@
         <form id="form_proser_bandejaNotifi" method="POST" class="d-none">
             @csrf
             <div class="row contenedor_casos_notifi">
-                <div class="col-12">                                           
+                <div class="col-12">                          
                     &nbsp; <label for="nro_registros" class="col-form-label" id="num_registroslabel">Se encontraron <span id="num_registros"></span> registros</label>
                     <br>&nbsp;<label for="nro_orden" class="col-form-label" id="num_ordenlabel">N° de orden: {{$n_orden[0]->Numero_orden}}</label>
                     <div class="card-body" id="contenedorTable">
+                        <div class="col-12">
+                            <div class="row">
+                                <div class="col-2">
+                                    <div class="form-group">
+                                        <label for="f_accion" class="form-label col-form-label">Fecha de acción</label>
+                                        <input type="datetime" class="form-control" name="f_accion" id="f_accion" value="{{now()->format('Y-m-d h:s')}}" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="form-group">
+                                        <label for="accion_ejecutar" class="col-form-label">Acción <span style="color:red;">(*)</span></label>
+                                        <select class="custom-select initSelect2" id="accion_ejecutar" name="accion_ejecutar" style="width: 100%" required>
+                                            <option value=""></option>
+                                            @foreach ($listado_Acciones as $acciones )
+                                                <option value="{{$acciones->Accion_ejecutar}}">{{$acciones->Accion}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>   
+                                <div class="col-4">
+                                    <div class="form-group">    
+                                        <label for="profesional" class="col-form-label">Descripcion</label>
+                                        <textarea name="descripcion" class="form-control" id="descripcion"  rows="3"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="form-group">
+                                        <label for="f_alerta" class="col-form-label">Fecha de alerta</label>
+                                        <input type="datetime-local" class="form-control" name="f_alerta" id="f_alerta">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-12">
                             <div class="text-center">                                
                                 <div class="alert alert-primary d-none"  id="actualizando_bandeja">
@@ -153,7 +186,7 @@
                                 <div class="col-12">
                                     <div class="alerta_completado alert alert-success mt-2 mr-auto d-none" role="alert"></div>
                                     <div class="alerta_error alert alert-danger mt-2 mr-auto d-none" role="alert"></div>        
-                                    <div class="row">
+                                    {{-- <div class="row">
                                         <div class="col-2">
                                             <div class="form-group">
                                                 <label for="f_accion" class="form-label col-form-label">Fecha de acción</label>
@@ -183,7 +216,7 @@
                                                 <input type="datetime-local" class="form-control" name="f_alerta" id="f_alerta">
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
                         </div>

@@ -116,7 +116,8 @@ class sigmel_wsController extends Controller
         $acciones = [
             "date" => fn($e) => date($aplicar,strtotime($e)),
             "concatenar" => fn($e) =>  $e . $aplicar,
-            "comparar" => fn($e,$operador) => eval("return \$e $operador 50;") ? 1 : ($e != '' ? 0 : '')
+            "comparar" => fn($e,$operador) => eval("return \$e $operador 50;") ? 1 : ($e != '' ? 0 : ''),
+            "convertir" => fn($e) => eval(" return ($aplicar) \$e;"),
         ];
 
         if(isset($acciones[$accion]) && !empty($this->request->{$campo})){

@@ -40,7 +40,7 @@
                 </p>
             </div>
         </div>
-        <div class="col-6 d-none" id="alerta_advance">
+        <div class="col-6 d-none" id="alerta_advance" style="font-size: 14px;">
             <div class="alert" role="alert" id="contenedor_alerta_advance">
                 <h6 class="alert-heading" id="titulo_alerta_advance"></h6>
                 <div id="cuerpo_alerta_advance">

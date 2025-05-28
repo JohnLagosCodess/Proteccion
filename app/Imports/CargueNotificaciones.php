@@ -78,10 +78,12 @@ class CargueNotificaciones implements ToModel, WithHeadingRow
 
         // Id destinarios como inserta en la tabla de comunicados       
         $idDestinatario = $row['id_destinatario'];
-        // Se eliminan las convenciones o las mi primeras 3 letras y el guion y se mantiene solo el consecutivo
-        $idDestinatarioConsecutivo = substr($idDestinatario, 4);
-        // Se mantiene las convenciones o las mi primeras 3 letras y se elimna el guion y el consecutivo
-        $idDestinatarioConvencion = substr($idDestinatario, 0, 3);
+        // Separar la cadena por el guion bajo
+        $parts = explode('_', $idDestinatario);
+        // Se eliminan las convenciones o las mi primeras 3 o 4 letras y el guion y se mantiene solo el consecutivo        
+        $idDestinatarioConsecutivo = $parts[1];
+        // Se mantiene las convenciones o las mi primeras 3 o 4 letras y se elimna el guion y el consecutivo        
+        $idDestinatarioConvencion = $parts[0];
         
         // Log::info('id destinarios listo para actualizar: '. $idDestinatario);
         // Log::info('id destinarios listo solo consecutivo: '. $idDestinatarioConsecutivo);
@@ -220,7 +222,7 @@ class CargueNotificaciones implements ToModel, WithHeadingRow
                 // Case 5: Capturar datos del arl
                 // Case 6: Capturar datos del jrci
                 // Case 7: Capturar datos del jnci
-                // Case 8: Capturar datos del afp_conocimiento
+                // Case 8 al 15: Capturar datos de las entidades de conocimiento
                 switch ($idDestinatarioConvencion) {
                     case 'AFI':
                         $info_destinatario_afiliado = sigmel_informacion_afiliado_eventos::on('sigmel_gestiones') 
@@ -241,8 +243,8 @@ class CargueNotificaciones implements ToModel, WithHeadingRow
                             $Telefono_destinatario = $info_destinatario_afiliado->Telefono_contacto;                        
                             $Email_destinatario = $info_destinatario_afiliado->Email;
                             $Medio_notificacion = $info_destinatario_afiliado->Medio_notificacion;
-        
-                            
+                            $Id_entidad_conocimiento = null;
+                            $Tipo_entidad_conocimiento = null;
                         } else {
                             // Log::warning('No se encontró ningún afiliado con ID_evento: ' . $idEvento);
                         }
@@ -256,7 +258,7 @@ class CargueNotificaciones implements ToModel, WithHeadingRow
                         
                          // Verificar si se encontró un registro
                         if ($info_destinatario_laboral) {
-                            // Log::info('Afiliado encontrado: ' . json_encode($info_destinatario_afiliado));            
+                            // Log::info('Afiliado encontrado: ' . json_encode($info_destinatario_laboral));            
                             // Acceder a los datos del afiliado
                             $Tipo_correspondencia = 'Empleador';
                             $Nombre_destinatario = $info_destinatario_laboral->Empresa;
@@ -266,7 +268,8 @@ class CargueNotificaciones implements ToModel, WithHeadingRow
                             $Telefono_destinatario = $info_destinatario_laboral->Telefono_empresa;                        
                             $Email_destinatario = $info_destinatario_laboral->Email;
                             $Medio_notificacion = $info_destinatario_laboral->Medio_notificacion;
-        
+                            $Id_entidad_conocimiento = null;
+                            $Tipo_entidad_conocimiento = null;
                             
                         } else {
                             // Log::warning('No se encontró ningún afiliado con ID_evento: ' . $idEvento);
@@ -287,7 +290,7 @@ class CargueNotificaciones implements ToModel, WithHeadingRow
 
                              // Verificar si se encontró un registro
                             if ($info_destinatario_eps) {
-                                // Log::info('Afiliado encontrado: ' . json_encode($info_destinatario_afiliado));            
+                                // Log::info('Afiliado encontrado: ' . json_encode($info_destinatario_eps));            
                                 // Acceder a los datos de la entidad
                                 $Tipo_correspondencia = 'eps';
                                 $Nombre_destinatario = $info_destinatario_eps->Nombre_entidad;
@@ -297,7 +300,9 @@ class CargueNotificaciones implements ToModel, WithHeadingRow
                                 $Telefono_destinatario = $info_destinatario_eps->Telefonos;                        
                                 $Email_destinatario = $info_destinatario_eps->Emails;
                                 $Medio_notificacion = $info_destinatario_eps->Nombre_parametro;
-                                
+                                $Id_entidad_conocimiento = null;
+                                $Tipo_entidad_conocimiento = null;
+
                             } else {
                                 // Log::warning('No se encontró ningún afiliado con ID_evento: ' . $idEvento);
                             }
@@ -313,7 +318,7 @@ class CargueNotificaciones implements ToModel, WithHeadingRow
                             
                              // Verificar si se encontró un registro
                             if ($info_destinatario_eps) {
-                                // Log::info('Afiliado encontrado: ' . json_encode($info_destinatario_afiliado));            
+                                // Log::info('Afiliado encontrado: ' . json_encode($info_destinatario_eps));            
                                 // Acceder a los datos del afiliado
                                 $Tipo_correspondencia = 'eps';
                                 $Nombre_destinatario = $info_destinatario_eps->Nombre_entidad;
@@ -323,7 +328,8 @@ class CargueNotificaciones implements ToModel, WithHeadingRow
                                 $Telefono_destinatario = $info_destinatario_eps->Telefonos;                        
                                 $Email_destinatario = $info_destinatario_eps->Emails;
                                 $Medio_notificacion = $info_destinatario_eps->Nombre_parametro;
-            
+                                $Id_entidad_conocimiento = null;
+                                $Tipo_entidad_conocimiento = null;
                                 
                             } else {
                                 // Log::warning('No se encontró ningún afiliado con ID_evento: ' . $idEvento);
@@ -345,7 +351,7 @@ class CargueNotificaciones implements ToModel, WithHeadingRow
 
                              // Verificar si se encontró un registro
                             if ($info_destinatario_afp) {
-                                // Log::info('Afiliado encontrado: ' . json_encode($info_destinatario_afiliado));            
+                                // Log::info('Afiliado encontrado: ' . json_encode($info_destinatario_afp));            
                                 // Acceder a los datos de la entidad
                                 $Tipo_correspondencia = 'afp';
                                 $Nombre_destinatario = $info_destinatario_afp->Nombre_entidad;
@@ -355,7 +361,9 @@ class CargueNotificaciones implements ToModel, WithHeadingRow
                                 $Telefono_destinatario = $info_destinatario_afp->Telefonos;                        
                                 $Email_destinatario = $info_destinatario_afp->Emails;
                                 $Medio_notificacion = $info_destinatario_afp->Nombre_parametro;
-                                
+                                $Id_entidad_conocimiento = null;
+                                $Tipo_entidad_conocimiento = null;
+
                             } else {
                                 // Log::warning('No se encontró ningún afiliado con ID_evento: ' . $idEvento);
                             }
@@ -372,7 +380,7 @@ class CargueNotificaciones implements ToModel, WithHeadingRow
                             
                              // Verificar si se encontró un registro
                             if ($info_destinatario_afp) {
-                                // Log::info('Afiliado encontrado: ' . json_encode($info_destinatario_afiliado));            
+                                // Log::info('Afiliado encontrado: ' . json_encode($info_destinatario_afp));            
                                 // Acceder a los datos del afiliado
                                 $Tipo_correspondencia = 'afp';
                                 $Nombre_destinatario = $info_destinatario_afp->Nombre_entidad;
@@ -382,7 +390,8 @@ class CargueNotificaciones implements ToModel, WithHeadingRow
                                 $Telefono_destinatario = $info_destinatario_afp->Telefonos;                        
                                 $Email_destinatario = $info_destinatario_afp->Emails;
                                 $Medio_notificacion = $info_destinatario_afp->Nombre_parametro;
-            
+                                $Id_entidad_conocimiento = null;
+                                $Tipo_entidad_conocimiento = null;
                                 
                             } else {
                                 // Log::warning('No se encontró ningún afiliado con ID_evento: ' . $idEvento);
@@ -405,7 +414,7 @@ class CargueNotificaciones implements ToModel, WithHeadingRow
 
                              // Verificar si se encontró un registro
                             if ($info_destinatario_arl) {
-                                // Log::info('Afiliado encontrado: ' . json_encode($info_destinatario_afiliado));            
+                                // Log::info('Afiliado encontrado: ' . json_encode($info_destinatario_arl));            
                                 // Acceder a los datos de la entidad
                                 $Tipo_correspondencia = 'arl';
                                 $Nombre_destinatario = $info_destinatario_arl->Nombre_entidad;
@@ -415,7 +424,9 @@ class CargueNotificaciones implements ToModel, WithHeadingRow
                                 $Telefono_destinatario = $info_destinatario_arl->Telefonos;                        
                                 $Email_destinatario = $info_destinatario_arl->Emails;
                                 $Medio_notificacion = $info_destinatario_arl->Nombre_parametro;
-                                
+                                $Id_entidad_conocimiento = null;
+                                $Tipo_entidad_conocimiento = null;
+
                             } else {
                                 // Log::warning('No se encontró ningún afiliado con ID_evento: ' . $idEvento);
                             }
@@ -432,7 +443,7 @@ class CargueNotificaciones implements ToModel, WithHeadingRow
                             
                              // Verificar si se encontró un registro
                             if ($info_destinatario_arl) {
-                                // Log::info('Afiliado encontrado: ' . json_encode($info_destinatario_afiliado));            
+                                // Log::info('Afiliado encontrado: ' . json_encode($info_destinatario_arl));            
                                 // Acceder a los datos del afiliado
                                 $Tipo_correspondencia = 'arl';
                                 $Nombre_destinatario = $info_destinatario_arl->Nombre_entidad;
@@ -442,8 +453,9 @@ class CargueNotificaciones implements ToModel, WithHeadingRow
                                 $Telefono_destinatario = $info_destinatario_arl->Telefonos;                        
                                 $Email_destinatario = $info_destinatario_arl->Emails;
                                 $Medio_notificacion = $info_destinatario_arl->Nombre_parametro;
-            
-                                
+                                $Id_entidad_conocimiento = null;
+                                $Tipo_entidad_conocimiento = null;
+                                                                
                             } else {
                                 // Log::warning('No se encontró ningún afiliado con ID_evento: ' . $idEvento);
                             }
@@ -466,7 +478,7 @@ class CargueNotificaciones implements ToModel, WithHeadingRow
 
                              // Verificar si se encontró un registro
                             if ($info_destinatario_jrci) {
-                                // Log::info('Afiliado encontrado: ' . json_encode($info_destinatario_afiliado));            
+                                // Log::info('Afiliado encontrado: ' . json_encode($info_destinatario_jrci));            
                                 // Acceder a los datos de la entidad
                                 $Tipo_correspondencia = 'jrci';
                                 $Nombre_destinatario = $info_destinatario_jrci->Nombre_entidad;
@@ -476,7 +488,9 @@ class CargueNotificaciones implements ToModel, WithHeadingRow
                                 $Telefono_destinatario = $info_destinatario_jrci->Telefonos;                        
                                 $Email_destinatario = $info_destinatario_jrci->Emails;
                                 $Medio_notificacion = $info_destinatario_jrci->Nombre_parametro;
-                                
+                                $Id_entidad_conocimiento = null;
+                                $Tipo_entidad_conocimiento = null;
+
                             } else {
                                 // Log::warning('No se encontró ningún afiliado con ID_evento: ' . $idEvento);
                             }
@@ -492,7 +506,7 @@ class CargueNotificaciones implements ToModel, WithHeadingRow
                             
                              // Verificar si se encontró un registro
                             if ($info_destinatario_jrci) {
-                                // Log::info('Afiliado encontrado: ' . json_encode($info_destinatario_afiliado));            
+                                // Log::info('Afiliado encontrado: ' . json_encode($info_destinatario_jrci));            
                                 // Acceder a los datos del afiliado
                                 $Tipo_correspondencia = 'jrci';
                                 $Nombre_destinatario = $info_destinatario_jrci->Nombre_entidad;
@@ -502,7 +516,8 @@ class CargueNotificaciones implements ToModel, WithHeadingRow
                                 $Telefono_destinatario = $info_destinatario_jrci->Telefonos;                        
                                 $Email_destinatario = $info_destinatario_jrci->Emails;
                                 $Medio_notificacion = $info_destinatario_jrci->Nombre_parametro;
-            
+                                $Id_entidad_conocimiento = null;
+                                $Tipo_entidad_conocimiento = null;
                                 
                             } else {
                                 $Nombre_destinatario = '';
@@ -512,6 +527,8 @@ class CargueNotificaciones implements ToModel, WithHeadingRow
                                 $Telefono_destinatario = '';                        
                                 $Email_destinatario = '';
                                 $Medio_notificacion = '';
+                                $Id_entidad_conocimiento = null;
+                                $Tipo_entidad_conocimiento = null;
                                 // Log::warning('No se encontró ningún afiliado con ID_evento: ' . $idEvento);
                             }
                         }
@@ -527,7 +544,7 @@ class CargueNotificaciones implements ToModel, WithHeadingRow
                         
                          // Verificar si se encontró un registro
                         if ($info_destinatario_jnci) {
-                            // Log::info('Afiliado encontrado: ' . json_encode($info_destinatario_afiliado));            
+                            // Log::info('Afiliado encontrado: ' . json_encode($info_destinatario_jnci));            
                             // Acceder a los datos del afiliado
                             $Tipo_correspondencia = 'jnci';
                             $Nombre_destinatario = $info_destinatario_jnci->Nombre_entidad;
@@ -537,24 +554,29 @@ class CargueNotificaciones implements ToModel, WithHeadingRow
                             $Telefono_destinatario = $info_destinatario_jnci->Telefonos;                        
                             $Email_destinatario = $info_destinatario_jnci->Emails;
                             $Medio_notificacion = $info_destinatario_jnci->Nombre_parametro;
-                            
+                            $Id_entidad_conocimiento = null;
+                            $Tipo_entidad_conocimiento = null;
                         } else {
                             // Log::warning('No se encontró ningún afiliado con ID_evento: ' . $idEvento);
                         }
                     break;
                     case 'FPC':
                         $info_destinatario_afp_conocimiento = sigmel_informacion_afiliado_eventos::on('sigmel_gestiones') 
-                        ->select('sie.Nombre_entidad', 'sie.Direccion', 'sldm.Nombre_departamento', 'sldm.Nombre_municipio', 
+                        ->select('sie.Id_Entidad', 'sie.IdTipo_entidad', 'sie.Nombre_entidad', 'sie.Direccion', 'sldm.Nombre_departamento', 'sldm.Nombre_municipio', 
                         'sie.Telefonos', 'sie.Emails', 'slp.Nombre_parametro')
                         ->leftJoin('sigmel_informacion_entidades as sie', 'sie.Id_Entidad', '=', 'sigmel_informacion_afiliado_eventos.Id_afp_entidad_conocimiento')
                         ->leftJoin('sigmel_lista_departamentos_municipios as sldm', 'sldm.Id_municipios', '=', 'sie.Id_Ciudad')
                         ->leftJoin('sigmel_lista_parametros as slp', 'slp.Id_Parametro', '=', 'sie.Id_Medio_Noti')
                         ->where('sigmel_informacion_afiliado_eventos.ID_evento', $ID_evento)
+                        ->where(function ($query) {
+                            $query->where('sigmel_informacion_afiliado_eventos.Id_afp_entidad_conocimiento', '<>', '0')
+                                ->orWhere('sigmel_informacion_afiliado_eventos.Id_afp_entidad_conocimiento', '<>', '');
+                        })
                         ->first();   
                         
                          // Verificar si se encontró un registro
                         if ($info_destinatario_afp_conocimiento) {
-                            // Log::info('Afiliado encontrado: ' . json_encode($info_destinatario_afiliado));            
+                            // Log::info('Afiliado encontrado: ' . json_encode($info_destinatario_afp_conocimiento));            
                             // Acceder a los datos del afiliado
                             $Tipo_correspondencia = 'afp_conocimiento';
                             $Nombre_destinatario = $info_destinatario_afp_conocimiento->Nombre_entidad;
@@ -564,6 +586,23 @@ class CargueNotificaciones implements ToModel, WithHeadingRow
                             $Telefono_destinatario = $info_destinatario_afp_conocimiento->Telefonos;                        
                             $Email_destinatario = $info_destinatario_afp_conocimiento->Emails;
                             $Medio_notificacion = $info_destinatario_afp_conocimiento->Nombre_parametro;
+                            $Id_entidad_conocimiento = $info_destinatario_afp_conocimiento->Id_Entidad;
+                            $IdTipo_entidad = $info_destinatario_afp_conocimiento->IdTipo_entidad;
+                            
+                            if ($IdTipo_entidad == '1') {
+                                $Tipo_entidad_conocimiento = 'ARL';
+                            } elseif ($IdTipo_entidad == '2'){
+                                $Tipo_entidad_conocimiento = 'AFP';                                
+                            } elseif ($IdTipo_entidad == '3'){
+                                $Tipo_entidad_conocimiento = 'EPS';
+                            } elseif ($IdTipo_entidad == '4'){
+                                $Tipo_entidad_conocimiento = 'JRCI';
+                            } elseif ($IdTipo_entidad == '5'){
+                                $Tipo_entidad_conocimiento = 'JNCI';
+                            } elseif ($IdTipo_entidad == '6'){
+                                $Tipo_entidad_conocimiento = 'Otro/¿Cual?';
+                            }
+                            
         
                             
                         } else {
@@ -574,6 +613,414 @@ class CargueNotificaciones implements ToModel, WithHeadingRow
                             $Telefono_destinatario = '';                        
                             $Email_destinatario = '';
                             $Medio_notificacion = '';
+                            $Id_entidad_conocimiento = null;
+                            $Tipo_entidad_conocimiento = null;
+                            // Log::warning('No se encontró ningún afiliado con ID_evento: ' . $idEvento);
+                        }
+                    break;
+                    case 'FPC2':
+                        $info_destinatario_afp_conocimiento = sigmel_informacion_afiliado_eventos::on('sigmel_gestiones') 
+                        ->select('sie.Id_Entidad', 'sie.IdTipo_entidad', 'sie.Nombre_entidad', 'sie.Direccion', 'sldm.Nombre_departamento', 'sldm.Nombre_municipio', 
+                        'sie.Telefonos', 'sie.Emails', 'slp.Nombre_parametro')
+                        ->leftJoin('sigmel_informacion_entidades as sie', 'sie.Id_Entidad', '=', 'sigmel_informacion_afiliado_eventos.Id_afp_entidad_conocimiento2')
+                        ->leftJoin('sigmel_lista_departamentos_municipios as sldm', 'sldm.Id_municipios', '=', 'sie.Id_Ciudad')
+                        ->leftJoin('sigmel_lista_parametros as slp', 'slp.Id_Parametro', '=', 'sie.Id_Medio_Noti')
+                        ->where('sigmel_informacion_afiliado_eventos.ID_evento', $ID_evento)
+                        ->where(function ($query) {
+                            $query->where('sigmel_informacion_afiliado_eventos.Id_afp_entidad_conocimiento2', '<>', '0')
+                                ->orWhere('sigmel_informacion_afiliado_eventos.Id_afp_entidad_conocimiento2', '<>', '');
+                        })
+                        ->first();   
+                        
+                         // Verificar si se encontró un registro
+                        if ($info_destinatario_afp_conocimiento) {
+                            // Log::info('Afiliado encontrado: ' . json_encode($info_destinatario_afp_conocimiento));            
+                            // Acceder a los datos del afiliado
+                            $Tipo_correspondencia = 'afp_conocimiento2';
+                            $Nombre_destinatario = $info_destinatario_afp_conocimiento->Nombre_entidad;
+                            $Direccion_destinatario = $info_destinatario_afp_conocimiento->Direccion;                      
+                            $Departamento = $info_destinatario_afp_conocimiento->Nombre_departamento;                        
+                            $Ciudad = $info_destinatario_afp_conocimiento->Nombre_municipio;                        
+                            $Telefono_destinatario = $info_destinatario_afp_conocimiento->Telefonos;                        
+                            $Email_destinatario = $info_destinatario_afp_conocimiento->Emails;
+                            $Medio_notificacion = $info_destinatario_afp_conocimiento->Nombre_parametro;
+                            $Id_entidad_conocimiento = $info_destinatario_afp_conocimiento->Id_Entidad;
+                            $IdTipo_entidad = $info_destinatario_afp_conocimiento->IdTipo_entidad;
+                            
+                            if ($IdTipo_entidad == '1') {
+                                $Tipo_entidad_conocimiento = 'ARL';
+                            } elseif ($IdTipo_entidad == '2'){
+                                $Tipo_entidad_conocimiento = 'AFP';                                
+                            } elseif ($IdTipo_entidad == '3'){
+                                $Tipo_entidad_conocimiento = 'EPS';
+                            } elseif ($IdTipo_entidad == '4'){
+                                $Tipo_entidad_conocimiento = 'JRCI';
+                            } elseif ($IdTipo_entidad == '5'){
+                                $Tipo_entidad_conocimiento = 'JNCI';
+                            } elseif ($IdTipo_entidad == '6'){
+                                $Tipo_entidad_conocimiento = 'Otro/¿Cual?';
+                            }
+                            
+        
+                            
+                        } else {
+                            $Nombre_destinatario = '';
+                            $Direccion_destinatario = '';                      
+                            $Departamento = '';                        
+                            $Ciudad = '';                        
+                            $Telefono_destinatario = '';                        
+                            $Email_destinatario = '';
+                            $Medio_notificacion = '';
+                            $Id_entidad_conocimiento = null;
+                            $Tipo_entidad_conocimiento = null;
+                            // Log::warning('No se encontró ningún afiliado con ID_evento: ' . $idEvento);
+                        }
+                    break;
+                    case 'FPC3':
+                        $info_destinatario_afp_conocimiento = sigmel_informacion_afiliado_eventos::on('sigmel_gestiones') 
+                        ->select('sie.Id_Entidad', 'sie.IdTipo_entidad', 'sie.Nombre_entidad', 'sie.Direccion', 'sldm.Nombre_departamento', 'sldm.Nombre_municipio', 
+                        'sie.Telefonos', 'sie.Emails', 'slp.Nombre_parametro')
+                        ->leftJoin('sigmel_informacion_entidades as sie', 'sie.Id_Entidad', '=', 'sigmel_informacion_afiliado_eventos.Id_afp_entidad_conocimiento3')
+                        ->leftJoin('sigmel_lista_departamentos_municipios as sldm', 'sldm.Id_municipios', '=', 'sie.Id_Ciudad')
+                        ->leftJoin('sigmel_lista_parametros as slp', 'slp.Id_Parametro', '=', 'sie.Id_Medio_Noti')
+                        ->where('sigmel_informacion_afiliado_eventos.ID_evento', $ID_evento)
+                        ->where(function ($query) {
+                            $query->where('sigmel_informacion_afiliado_eventos.Id_afp_entidad_conocimiento3', '<>', '0')
+                                ->orWhere('sigmel_informacion_afiliado_eventos.Id_afp_entidad_conocimiento3', '<>', '');
+                        })
+                        ->first();   
+                        
+                         // Verificar si se encontró un registro
+                        if ($info_destinatario_afp_conocimiento) {
+                            // Log::info('Afiliado encontrado: ' . json_encode($info_destinatario_afp_conocimiento));            
+                            // Acceder a los datos del afiliado
+                            $Tipo_correspondencia = 'afp_conocimiento3';
+                            $Nombre_destinatario = $info_destinatario_afp_conocimiento->Nombre_entidad;
+                            $Direccion_destinatario = $info_destinatario_afp_conocimiento->Direccion;                      
+                            $Departamento = $info_destinatario_afp_conocimiento->Nombre_departamento;                        
+                            $Ciudad = $info_destinatario_afp_conocimiento->Nombre_municipio;                        
+                            $Telefono_destinatario = $info_destinatario_afp_conocimiento->Telefonos;                        
+                            $Email_destinatario = $info_destinatario_afp_conocimiento->Emails;
+                            $Medio_notificacion = $info_destinatario_afp_conocimiento->Nombre_parametro;
+                            $Id_entidad_conocimiento = $info_destinatario_afp_conocimiento->Id_Entidad;
+                            $IdTipo_entidad = $info_destinatario_afp_conocimiento->IdTipo_entidad;
+                            
+                            if ($IdTipo_entidad == '1') {
+                                $Tipo_entidad_conocimiento = 'ARL';
+                            } elseif ($IdTipo_entidad == '2'){
+                                $Tipo_entidad_conocimiento = 'AFP';                                
+                            } elseif ($IdTipo_entidad == '3'){
+                                $Tipo_entidad_conocimiento = 'EPS';
+                            } elseif ($IdTipo_entidad == '4'){
+                                $Tipo_entidad_conocimiento = 'JRCI';
+                            } elseif ($IdTipo_entidad == '5'){
+                                $Tipo_entidad_conocimiento = 'JNCI';
+                            } elseif ($IdTipo_entidad == '6'){
+                                $Tipo_entidad_conocimiento = 'Otro/¿Cual?';
+                            }
+                            
+        
+                            
+                        } else {
+                            $Nombre_destinatario = '';
+                            $Direccion_destinatario = '';                      
+                            $Departamento = '';                        
+                            $Ciudad = '';                        
+                            $Telefono_destinatario = '';                        
+                            $Email_destinatario = '';
+                            $Medio_notificacion = '';
+                            $Id_entidad_conocimiento = null;
+                            $Tipo_entidad_conocimiento = null;
+                            // Log::warning('No se encontró ningún afiliado con ID_evento: ' . $idEvento);
+                        }
+                    break;
+                    case 'FPC4':
+                        $info_destinatario_afp_conocimiento = sigmel_informacion_afiliado_eventos::on('sigmel_gestiones') 
+                        ->select('sie.Id_Entidad', 'sie.IdTipo_entidad', 'sie.Nombre_entidad', 'sie.Direccion', 'sldm.Nombre_departamento', 'sldm.Nombre_municipio', 
+                        'sie.Telefonos', 'sie.Emails', 'slp.Nombre_parametro')
+                        ->leftJoin('sigmel_informacion_entidades as sie', 'sie.Id_Entidad', '=', 'sigmel_informacion_afiliado_eventos.Id_afp_entidad_conocimiento4')
+                        ->leftJoin('sigmel_lista_departamentos_municipios as sldm', 'sldm.Id_municipios', '=', 'sie.Id_Ciudad')
+                        ->leftJoin('sigmel_lista_parametros as slp', 'slp.Id_Parametro', '=', 'sie.Id_Medio_Noti')
+                        ->where('sigmel_informacion_afiliado_eventos.ID_evento', $ID_evento)
+                        ->where(function ($query) {
+                            $query->where('sigmel_informacion_afiliado_eventos.Id_afp_entidad_conocimiento4', '<>', '0')
+                                ->orWhere('sigmel_informacion_afiliado_eventos.Id_afp_entidad_conocimiento4', '<>', '');
+                        })
+                        ->first();   
+                        
+                         // Verificar si se encontró un registro
+                        if ($info_destinatario_afp_conocimiento) {
+                            // Log::info('Afiliado encontrado: ' . json_encode($info_destinatario_afp_conocimiento));            
+                            // Acceder a los datos del afiliado
+                            $Tipo_correspondencia = 'afp_conocimiento4';
+                            $Nombre_destinatario = $info_destinatario_afp_conocimiento->Nombre_entidad;
+                            $Direccion_destinatario = $info_destinatario_afp_conocimiento->Direccion;                      
+                            $Departamento = $info_destinatario_afp_conocimiento->Nombre_departamento;                        
+                            $Ciudad = $info_destinatario_afp_conocimiento->Nombre_municipio;                        
+                            $Telefono_destinatario = $info_destinatario_afp_conocimiento->Telefonos;                        
+                            $Email_destinatario = $info_destinatario_afp_conocimiento->Emails;
+                            $Medio_notificacion = $info_destinatario_afp_conocimiento->Nombre_parametro;
+                            $Id_entidad_conocimiento = $info_destinatario_afp_conocimiento->Id_Entidad;
+                            $IdTipo_entidad = $info_destinatario_afp_conocimiento->IdTipo_entidad;
+                            
+                            if ($IdTipo_entidad == '1') {
+                                $Tipo_entidad_conocimiento = 'ARL';
+                            } elseif ($IdTipo_entidad == '2'){
+                                $Tipo_entidad_conocimiento = 'AFP';                                
+                            } elseif ($IdTipo_entidad == '3'){
+                                $Tipo_entidad_conocimiento = 'EPS';
+                            } elseif ($IdTipo_entidad == '4'){
+                                $Tipo_entidad_conocimiento = 'JRCI';
+                            } elseif ($IdTipo_entidad == '5'){
+                                $Tipo_entidad_conocimiento = 'JNCI';
+                            } elseif ($IdTipo_entidad == '6'){
+                                $Tipo_entidad_conocimiento = 'Otro/¿Cual?';
+                            }
+                            
+        
+                            
+                        } else {
+                            $Nombre_destinatario = '';
+                            $Direccion_destinatario = '';                      
+                            $Departamento = '';                        
+                            $Ciudad = '';                        
+                            $Telefono_destinatario = '';                        
+                            $Email_destinatario = '';
+                            $Medio_notificacion = '';
+                            $Id_entidad_conocimiento = null;
+                            $Tipo_entidad_conocimiento = null;
+                            // Log::warning('No se encontró ningún afiliado con ID_evento: ' . $idEvento);
+                        }
+                    break;
+                    case 'FPC5':
+                        $info_destinatario_afp_conocimiento = sigmel_informacion_afiliado_eventos::on('sigmel_gestiones') 
+                        ->select('sie.Id_Entidad', 'sie.IdTipo_entidad', 'sie.Nombre_entidad', 'sie.Direccion', 'sldm.Nombre_departamento', 'sldm.Nombre_municipio', 
+                        'sie.Telefonos', 'sie.Emails', 'slp.Nombre_parametro')
+                        ->leftJoin('sigmel_informacion_entidades as sie', 'sie.Id_Entidad', '=', 'sigmel_informacion_afiliado_eventos.Id_afp_entidad_conocimiento5')
+                        ->leftJoin('sigmel_lista_departamentos_municipios as sldm', 'sldm.Id_municipios', '=', 'sie.Id_Ciudad')
+                        ->leftJoin('sigmel_lista_parametros as slp', 'slp.Id_Parametro', '=', 'sie.Id_Medio_Noti')
+                        ->where('sigmel_informacion_afiliado_eventos.ID_evento', $ID_evento)
+                        ->where(function ($query) {
+                            $query->where('sigmel_informacion_afiliado_eventos.Id_afp_entidad_conocimiento5', '<>', '0')
+                                ->orWhere('sigmel_informacion_afiliado_eventos.Id_afp_entidad_conocimiento5', '<>', '');
+                        })
+                        ->first();   
+                        
+                         // Verificar si se encontró un registro
+                        if ($info_destinatario_afp_conocimiento) {
+                            // Log::info('Afiliado encontrado: ' . json_encode($info_destinatario_afp_conocimiento));            
+                            // Acceder a los datos del afiliado
+                            $Tipo_correspondencia = 'afp_conocimiento5';
+                            $Nombre_destinatario = $info_destinatario_afp_conocimiento->Nombre_entidad;
+                            $Direccion_destinatario = $info_destinatario_afp_conocimiento->Direccion;                      
+                            $Departamento = $info_destinatario_afp_conocimiento->Nombre_departamento;                        
+                            $Ciudad = $info_destinatario_afp_conocimiento->Nombre_municipio;                        
+                            $Telefono_destinatario = $info_destinatario_afp_conocimiento->Telefonos;                        
+                            $Email_destinatario = $info_destinatario_afp_conocimiento->Emails;
+                            $Medio_notificacion = $info_destinatario_afp_conocimiento->Nombre_parametro;
+                            $Id_entidad_conocimiento = $info_destinatario_afp_conocimiento->Id_Entidad;
+                            $IdTipo_entidad = $info_destinatario_afp_conocimiento->IdTipo_entidad;
+                            
+                            if ($IdTipo_entidad == '1') {
+                                $Tipo_entidad_conocimiento = 'ARL';
+                            } elseif ($IdTipo_entidad == '2'){
+                                $Tipo_entidad_conocimiento = 'AFP';                                
+                            } elseif ($IdTipo_entidad == '3'){
+                                $Tipo_entidad_conocimiento = 'EPS';
+                            } elseif ($IdTipo_entidad == '4'){
+                                $Tipo_entidad_conocimiento = 'JRCI';
+                            } elseif ($IdTipo_entidad == '5'){
+                                $Tipo_entidad_conocimiento = 'JNCI';
+                            } elseif ($IdTipo_entidad == '6'){
+                                $Tipo_entidad_conocimiento = 'Otro/¿Cual?';
+                            }
+                            
+        
+                            
+                        } else {
+                            $Nombre_destinatario = '';
+                            $Direccion_destinatario = '';                      
+                            $Departamento = '';                        
+                            $Ciudad = '';                        
+                            $Telefono_destinatario = '';                        
+                            $Email_destinatario = '';
+                            $Medio_notificacion = '';
+                            $Id_entidad_conocimiento = null;
+                            $Tipo_entidad_conocimiento = null;
+                            // Log::warning('No se encontró ningún afiliado con ID_evento: ' . $idEvento);
+                        }
+                    break;
+                    case 'FPC6':
+                        $info_destinatario_afp_conocimiento = sigmel_informacion_afiliado_eventos::on('sigmel_gestiones') 
+                        ->select('sie.Id_Entidad', 'sie.IdTipo_entidad', 'sie.Nombre_entidad', 'sie.Direccion', 'sldm.Nombre_departamento', 'sldm.Nombre_municipio', 
+                        'sie.Telefonos', 'sie.Emails', 'slp.Nombre_parametro')
+                        ->leftJoin('sigmel_informacion_entidades as sie', 'sie.Id_Entidad', '=', 'sigmel_informacion_afiliado_eventos.Id_afp_entidad_conocimiento6')
+                        ->leftJoin('sigmel_lista_departamentos_municipios as sldm', 'sldm.Id_municipios', '=', 'sie.Id_Ciudad')
+                        ->leftJoin('sigmel_lista_parametros as slp', 'slp.Id_Parametro', '=', 'sie.Id_Medio_Noti')
+                        ->where('sigmel_informacion_afiliado_eventos.ID_evento', $ID_evento)
+                        ->where(function ($query) {
+                            $query->where('sigmel_informacion_afiliado_eventos.Id_afp_entidad_conocimiento6', '<>', '0')
+                                ->orWhere('sigmel_informacion_afiliado_eventos.Id_afp_entidad_conocimiento6', '<>', '');
+                        })
+                        ->first();   
+                        
+                         // Verificar si se encontró un registro
+                        if ($info_destinatario_afp_conocimiento) {
+                            // Log::info('Afiliado encontrado: ' . json_encode($info_destinatario_afp_conocimiento));            
+                            // Acceder a los datos del afiliado
+                            $Tipo_correspondencia = 'afp_conocimiento6';
+                            $Nombre_destinatario = $info_destinatario_afp_conocimiento->Nombre_entidad;
+                            $Direccion_destinatario = $info_destinatario_afp_conocimiento->Direccion;                      
+                            $Departamento = $info_destinatario_afp_conocimiento->Nombre_departamento;                        
+                            $Ciudad = $info_destinatario_afp_conocimiento->Nombre_municipio;                        
+                            $Telefono_destinatario = $info_destinatario_afp_conocimiento->Telefonos;                        
+                            $Email_destinatario = $info_destinatario_afp_conocimiento->Emails;
+                            $Medio_notificacion = $info_destinatario_afp_conocimiento->Nombre_parametro;
+                            $Id_entidad_conocimiento = $info_destinatario_afp_conocimiento->Id_Entidad;
+                            $IdTipo_entidad = $info_destinatario_afp_conocimiento->IdTipo_entidad;
+                            
+                            if ($IdTipo_entidad == '1') {
+                                $Tipo_entidad_conocimiento = 'ARL';
+                            } elseif ($IdTipo_entidad == '2'){
+                                $Tipo_entidad_conocimiento = 'AFP';                                
+                            } elseif ($IdTipo_entidad == '3'){
+                                $Tipo_entidad_conocimiento = 'EPS';
+                            } elseif ($IdTipo_entidad == '4'){
+                                $Tipo_entidad_conocimiento = 'JRCI';
+                            } elseif ($IdTipo_entidad == '5'){
+                                $Tipo_entidad_conocimiento = 'JNCI';
+                            } elseif ($IdTipo_entidad == '6'){
+                                $Tipo_entidad_conocimiento = 'Otro/¿Cual?';
+                            }
+                            
+        
+                            
+                        } else {
+                            $Nombre_destinatario = '';
+                            $Direccion_destinatario = '';                      
+                            $Departamento = '';                        
+                            $Ciudad = '';                        
+                            $Telefono_destinatario = '';                        
+                            $Email_destinatario = '';
+                            $Medio_notificacion = '';
+                            $Id_entidad_conocimiento = null;
+                            $Tipo_entidad_conocimiento = null;
+                            // Log::warning('No se encontró ningún afiliado con ID_evento: ' . $idEvento);
+                        }
+                    break;
+                    case 'FPC7':
+                        $info_destinatario_afp_conocimiento = sigmel_informacion_afiliado_eventos::on('sigmel_gestiones') 
+                        ->select('sie.Id_Entidad', 'sie.IdTipo_entidad', 'sie.Nombre_entidad', 'sie.Direccion', 'sldm.Nombre_departamento', 'sldm.Nombre_municipio', 
+                        'sie.Telefonos', 'sie.Emails', 'slp.Nombre_parametro')
+                        ->leftJoin('sigmel_informacion_entidades as sie', 'sie.Id_Entidad', '=', 'sigmel_informacion_afiliado_eventos.Id_afp_entidad_conocimiento7')
+                        ->leftJoin('sigmel_lista_departamentos_municipios as sldm', 'sldm.Id_municipios', '=', 'sie.Id_Ciudad')
+                        ->leftJoin('sigmel_lista_parametros as slp', 'slp.Id_Parametro', '=', 'sie.Id_Medio_Noti')
+                        ->where('sigmel_informacion_afiliado_eventos.ID_evento', $ID_evento)
+                        ->where(function ($query) {
+                            $query->where('sigmel_informacion_afiliado_eventos.Id_afp_entidad_conocimiento7', '<>', '0')
+                                ->orWhere('sigmel_informacion_afiliado_eventos.Id_afp_entidad_conocimiento7', '<>', '');
+                        })
+                        ->first();   
+                        
+                         // Verificar si se encontró un registro
+                        if ($info_destinatario_afp_conocimiento) {
+                            // Log::info('Afiliado encontrado: ' . json_encode($info_destinatario_afp_conocimiento));            
+                            // Acceder a los datos del afiliado
+                            $Tipo_correspondencia = 'afp_conocimiento7';
+                            $Nombre_destinatario = $info_destinatario_afp_conocimiento->Nombre_entidad;
+                            $Direccion_destinatario = $info_destinatario_afp_conocimiento->Direccion;                      
+                            $Departamento = $info_destinatario_afp_conocimiento->Nombre_departamento;                        
+                            $Ciudad = $info_destinatario_afp_conocimiento->Nombre_municipio;                        
+                            $Telefono_destinatario = $info_destinatario_afp_conocimiento->Telefonos;                        
+                            $Email_destinatario = $info_destinatario_afp_conocimiento->Emails;
+                            $Medio_notificacion = $info_destinatario_afp_conocimiento->Nombre_parametro;
+                            $Id_entidad_conocimiento = $info_destinatario_afp_conocimiento->Id_Entidad;
+                            $IdTipo_entidad = $info_destinatario_afp_conocimiento->IdTipo_entidad;
+                            
+                            if ($IdTipo_entidad == '1') {
+                                $Tipo_entidad_conocimiento = 'ARL';
+                            } elseif ($IdTipo_entidad == '2'){
+                                $Tipo_entidad_conocimiento = 'AFP';                                
+                            } elseif ($IdTipo_entidad == '3'){
+                                $Tipo_entidad_conocimiento = 'EPS';
+                            } elseif ($IdTipo_entidad == '4'){
+                                $Tipo_entidad_conocimiento = 'JRCI';
+                            } elseif ($IdTipo_entidad == '5'){
+                                $Tipo_entidad_conocimiento = 'JNCI';
+                            } elseif ($IdTipo_entidad == '6'){
+                                $Tipo_entidad_conocimiento = 'Otro/¿Cual?';
+                            }
+                            
+        
+                            
+                        } else {
+                            $Nombre_destinatario = '';
+                            $Direccion_destinatario = '';                      
+                            $Departamento = '';                        
+                            $Ciudad = '';                        
+                            $Telefono_destinatario = '';                        
+                            $Email_destinatario = '';
+                            $Medio_notificacion = '';
+                            $Id_entidad_conocimiento = null;
+                            $Tipo_entidad_conocimiento = null;
+                            // Log::warning('No se encontró ningún afiliado con ID_evento: ' . $idEvento);
+                        }
+                    break;
+                    case 'FPC8':
+                        $info_destinatario_afp_conocimiento = sigmel_informacion_afiliado_eventos::on('sigmel_gestiones') 
+                        ->select('sie.Id_Entidad', 'sie.IdTipo_entidad', 'sie.Nombre_entidad', 'sie.Direccion', 'sldm.Nombre_departamento', 'sldm.Nombre_municipio', 
+                        'sie.Telefonos', 'sie.Emails', 'slp.Nombre_parametro')
+                        ->leftJoin('sigmel_informacion_entidades as sie', 'sie.Id_Entidad', '=', 'sigmel_informacion_afiliado_eventos.Id_afp_entidad_conocimiento8')
+                        ->leftJoin('sigmel_lista_departamentos_municipios as sldm', 'sldm.Id_municipios', '=', 'sie.Id_Ciudad')
+                        ->leftJoin('sigmel_lista_parametros as slp', 'slp.Id_Parametro', '=', 'sie.Id_Medio_Noti')
+                        ->where('sigmel_informacion_afiliado_eventos.ID_evento', $ID_evento)
+                        ->where(function ($query) {
+                            $query->where('sigmel_informacion_afiliado_eventos.Id_afp_entidad_conocimiento8', '<>', '0')
+                                ->orWhere('sigmel_informacion_afiliado_eventos.Id_afp_entidad_conocimiento8', '<>', '');
+                        })
+                        ->first();   
+                        
+                         // Verificar si se encontró un registro
+                        if ($info_destinatario_afp_conocimiento) {
+                            // Log::info('Afiliado encontrado: ' . json_encode($info_destinatario_afp_conocimiento));            
+                            // Acceder a los datos del afiliado
+                            $Tipo_correspondencia = 'afp_conocimiento8';
+                            $Nombre_destinatario = $info_destinatario_afp_conocimiento->Nombre_entidad;
+                            $Direccion_destinatario = $info_destinatario_afp_conocimiento->Direccion;                      
+                            $Departamento = $info_destinatario_afp_conocimiento->Nombre_departamento;                        
+                            $Ciudad = $info_destinatario_afp_conocimiento->Nombre_municipio;                        
+                            $Telefono_destinatario = $info_destinatario_afp_conocimiento->Telefonos;                        
+                            $Email_destinatario = $info_destinatario_afp_conocimiento->Emails;
+                            $Medio_notificacion = $info_destinatario_afp_conocimiento->Nombre_parametro;
+                            $Id_entidad_conocimiento = $info_destinatario_afp_conocimiento->Id_Entidad;
+                            $IdTipo_entidad = $info_destinatario_afp_conocimiento->IdTipo_entidad;
+                            
+                            if ($IdTipo_entidad == '1') {
+                                $Tipo_entidad_conocimiento = 'ARL';
+                            } elseif ($IdTipo_entidad == '2'){
+                                $Tipo_entidad_conocimiento = 'AFP';                                
+                            } elseif ($IdTipo_entidad == '3'){
+                                $Tipo_entidad_conocimiento = 'EPS';
+                            } elseif ($IdTipo_entidad == '4'){
+                                $Tipo_entidad_conocimiento = 'JRCI';
+                            } elseif ($IdTipo_entidad == '5'){
+                                $Tipo_entidad_conocimiento = 'JNCI';
+                            } elseif ($IdTipo_entidad == '6'){
+                                $Tipo_entidad_conocimiento = 'Otro/¿Cual?';
+                            }
+                            
+        
+                            
+                        } else {
+                            $Nombre_destinatario = '';
+                            $Direccion_destinatario = '';                      
+                            $Departamento = '';                        
+                            $Ciudad = '';                        
+                            $Telefono_destinatario = '';                        
+                            $Email_destinatario = '';
+                            $Medio_notificacion = '';
+                            $Id_entidad_conocimiento = null;
+                            $Tipo_entidad_conocimiento = null;
                             // Log::warning('No se encontró ningún afiliado con ID_evento: ' . $idEvento);
                         }
                     break;
@@ -586,6 +1033,8 @@ class CargueNotificaciones implements ToModel, WithHeadingRow
                         $Telefono_destinatario = '';                        
                         $Email_destinatario = '';
                         $Medio_notificacion = '';
+                        $Id_entidad_conocimiento = null;
+                        $Tipo_entidad_conocimiento = null;
                     break;
                 }
         
@@ -658,7 +1107,9 @@ class CargueNotificaciones implements ToModel, WithHeadingRow
                         'F_notificacion' => $row['f_notificacion'],
                         'Tipo_correspondencia' => $Tipo_correspondencia,
                         'Id_Estado_corresp' => $Id_Estado_corresp,  
-                        'Id_destinatario' => $idDestinatarioConsecutivo,                                    
+                        'Id_destinatario' => $idDestinatarioConsecutivo,
+                        'Id_entidad_conocimiento' => $Id_entidad_conocimiento,
+                        'Tipo_entidad_conocimiento' => $Tipo_entidad_conocimiento,
                         'Nombre_usuario' => $usuario,
                         'F_registro' => $date,
                     ]);

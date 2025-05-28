@@ -2512,6 +2512,9 @@ class BuscarEventoController extends Controller
         sigmel_informacion_historial_accion_eventos::on('sigmel_gestiones')->insert($datos_historial_accion_eventos);
         sleep(2);
 
+        //Saca los documentos que esten dentro de la carpeta temporal
+        AdministradorController::mover_archivoTEMP($request->id_evento,$Id_Asignacion,$request->selector_nuevo_servicio);
+
         //Procesamos la informacion del formulario asociado al nuevo servicio
         $this->procesarFormulariosJuntas($request->id_evento, $Id_Asignacion,$request->selector_nuevo_servicio,$request->tupla_proceso_escogido,$request->selector_nuevo_proceso,$request->id_servicio_actual_nuevo_proceso);
         
@@ -2754,7 +2757,8 @@ class BuscarEventoController extends Controller
     *   @param proceso Corresponde al proceso asociado al nuevo servicio
     *   @return void
     */
-    public function procesarFormulariosJuntas($evento, $nuevo_id_asignacion,$servicioNuevo,$Id_Asignacion_origen,$proceso,$servicioOrigen) {
+    public function procesarFormulariosJuntas($evento, $nuevo_id_asignacion, $servicioNuevo, $Id_Asignacion_origen, $proceso,$servicioOrigen)
+    {
         /**
          *  Reglas sobre las cuales se estaran insertado los datos en el nuevo servicio siempre y cuando se cumplan las condiciones
          *  @var servico_nuevo corresponde a Controversia origen o Controversia pcl
@@ -2767,53 +2771,44 @@ class BuscarEventoController extends Controller
                 'accion' => 'traer_informacion',
             ],
             [
-                'servicio_origen' => ['Calificación técnica', 'Recalificación', 'Revisión pensión','Controversia PCL'],
+                'servicio_origen' => ['Calificación técnica', 'Recalificación', 'Revisión pensión', 'Controversia PCL'],
                 'servicio_nuevo' => 13, //PCL
                 'accion' => 'traer_informacion',
             ],
         ];
-    
+
         $date = date("Y-m-d", time());
         $nombre_usuario = Auth::user()->name;
 
-        Log::channel('seguimiento_juntas')->info("Iniciando copiado hacia el sercio $servicioNuevo desde  el servvicio $servicioOrigen");
-    
-        // Info del servicio a partir del cual se está creando el nuevo proceso.
-        $query = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_lista_procesos_servicios as lps')
-        // ->leftJoin('sigmel_gestiones.sigmel_informacion_historial_accion_eventos as ihae', 'ihae.id_servicio', 'lps.id_servicio')
-        ->leftJoin('sigmel_gestiones.sigmel_informacion_asignacion_eventos as ihae', 'ihae.id_servicio', 'lps.id_servicio')
+        //Info del servico a partir del cual se esta creando el nuevo proceso.
+        $servicio = (array) DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_lista_procesos_servicios as lps')
+        ->leftJoin('sigmel_gestiones.sigmel_informacion_historial_accion_eventos as ihae', 'ihae.id_servicio', 'lps.id_servicio')
         ->select('Nombre_proceso', 'Nombre_servicio')
-        ->where([['ihae.ID_evento', $evento], ['ihae.Id_Asignacion', $Id_Asignacion_origen]]);
-
-        // Obtener la consulta SQL generada
-        $sql = $query->toSql();
-        $bindings = $query->getBindings();
-        $fullQuery = vsprintf(str_replace('?', "'%s'", $sql), $bindings);
-
-        // Ejecutar la consulta
-        $servicio = (Array) $query->first();
+        ->where([['ihae.ID_evento', $evento], ['ihae.Id_Asignacion', $Id_Asignacion_origen]])
+        ->first();
 
         if(empty($servicio)){
-            Log::channel('seguimiento_juntas')->notice("No es posible continuar con el proceso dado que no el servicio destino no fue encontrado. Query: " . $fullQuery);
             return;
         }
+
         foreach ($reglas as $regla) {
+
             //Info. que se llenaran tanto para origen como para pcl
             if (in_array($servicio['Nombre_servicio'], $regla['servicio_origen']) && ($servicioNuevo == 12 || $servicioNuevo == 13)) {
                 if ($regla['accion'] == 'traer_informacion') {
                     $InfoControvertido = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_eventos as IE')
-                        ->leftJoin('sigmel_gestiones.sigmel_clientes AS SC', 'SC.Id_cliente', 'IE.cliente')
-                        ->leftJoin('sigmel_gestiones.sigmel_lista_tipo_clientes AS TC', 'TC.Id_TipoCliente', 'IE.Tipo_cliente')
-                        ->leftJoin('sigmel_gestiones.sigmel_lista_parametros AS LP', 'LP.Nombre_parametro', 'TC.Nombre_tipo_cliente')
-                        ->select(
-                            'Nombre_cliente',
-                            'Id_Parametro as TipoCliente',
-                            'Tipo_evento'
-                            )->where([
-                            ['IE.ID_evento', $evento],
-                            ['LP.Tipo_lista','Juntas Controversia']
-                            ])->first();
-    
+                    ->leftJoin('sigmel_gestiones.sigmel_clientes AS SC', 'SC.Id_cliente', 'IE.cliente')
+                    ->leftJoin('sigmel_gestiones.sigmel_lista_tipo_clientes AS TC', 'TC.Id_TipoCliente', 'IE.Tipo_cliente')
+                    ->leftJoin('sigmel_gestiones.sigmel_lista_parametros AS LP', 'LP.Nombre_parametro', 'TC.Nombre_tipo_cliente')
+                    ->select(
+                        'Nombre_cliente',
+                        'Id_Parametro as TipoCliente',
+                        'Tipo_evento'
+                    )->where([
+                        ['IE.ID_evento', $evento],
+                        ['LP.Tipo_lista', 'Juntas Controversia']
+                    ])->first();
+
                     $Controvertido = [
                         'ID_evento' => $evento,
                         'Id_asignacion' => $nuevo_id_asignacion,
@@ -2824,9 +2819,6 @@ class BuscarEventoController extends Controller
                         'F_registro' => $date
                     ];
                 }
-    
-                Log::channel('seguimiento_juntas')->notice("Se agregaron los datos inciales para la junta: " . json_encode($Controvertido));
-                break;
             }
         }
 
@@ -2871,7 +2863,7 @@ class BuscarEventoController extends Controller
                     ->where([
                         ['ID_evento', $evento],
                         ['Id_Asignacion', $Id_Asignacion_origen],
-                        //['Estado', '=', 'Activo']
+                       //['Estado', '=', 'Activo']
                     ])
                     ->get()
                         ->map(function ($item) use ($nombre_usuario, $date, $evento, $nuevo_id_asignacion, $proceso) {
@@ -2911,14 +2903,22 @@ class BuscarEventoController extends Controller
                     $Controvertido['Porcentaje_pcl'] = optional($informacionComite)->_pcl;
                     $Controvertido['F_estructuracion_contro'] = optional($informacionComite)->F_estructuracion;
                     $Controvertido['Id_Asignacion_Servicio_Anterior'] = $Id_Asignacion_origen;
+                
+                    /*$notificacion_afiliado = DB::table(getDatabaseName('sigmel_gestiones').'sigmel_informacion_correspondencia_eventos as sicore')
+                    ->leftJoin('sigmel_gestiones.sigmel_informacion_comunicado_eventos as sicome', 'sicore.Id_comunicado', '=', 'sicome.Id_Comunicado')
+                    ->select('sicore.F_notificacion')
+                    ->where([
+                        ['sicore.Id_Asignacion', $Id_Asignacion_origen],
+                        ['sicore.Tipo_correspondencia', 'Afiliado'],
+                        ['sicome.Tipo_descarga', 'Dictamen']
+                    ])->first();*/
 
                     //Se copian los documentos siempre y cuando no se una controversia y cumpla las reglas.
                     if($servicio['Nombre_servicio'] != 'Controversia PCL'){
-                        $this->copiarLisdatoGeneralDocumentos($evento,$servicioNuevo,$servicioOrigen,$nuevo_id_asignacion);
+                        //$Controvertido['F_notifi_afiliado'] = $notificacion_afiliado->F_notificacion ?? null;
+                        //$info_dictamen = $this->copiar_dictamenes($evento,$Id_Asignacion_origen,$servicioNuevo,$nuevo_id_asignacion);
+                        $this->copiarLisdatoGeneralDocumentos($evento,$servicioNuevo,$servicioOrigen,$Id_Asignacion_origen,$nuevo_id_asignacion);
                     }
-
-                    Log::channel('seguimiento_juntas')->notice("Se agregaron datos para la junta en PCL: " . json_encode($Controvertido));
-                    Log::channel('seguimiento_juntas')->notice("Se agregaron los diagnosticoss para la junta en PCL: " . json_encode($diagnostico));
 
                 } elseif ($regla['servicio_nuevo'] == 12) {
                     //Caso Origen
@@ -2956,68 +2956,133 @@ class BuscarEventoController extends Controller
                     $Controvertido['N_siniestro'] = optional($origen[0])->N_siniestro;
                     $Controvertido['Id_Asignacion_Servicio_Anterior'] = $Id_Asignacion_origen;
 
-                    //Se copian los documentos siempre y cuando no se una controversia y cumpla las reglas.
-                    $this->copiarLisdatoGeneralDocumentos($evento,$servicioNuevo,$servicioOrigen,$nuevo_id_asignacion);
+                    $notificacion_afiliado = DB::table(getDatabaseName('sigmel_gestiones').'sigmel_informacion_correspondencia_eventos as sicore')
+                    ->leftJoin('sigmel_gestiones.sigmel_informacion_comunicado_eventos as sicome', 'sicore.Id_comunicado', '=', 'sicome.Id_Comunicado')
+                    ->select('sicore.F_notificacion')
+                    ->where([
+                        ['sicore.Id_Asignacion', $Id_Asignacion_origen],
+                        ['sicore.Tipo_correspondencia', 'Afiliado'],
+                        ['sicome.Tipo_descarga', 'Dictamen']
+                    ])->first();
 
-                    Log::channel('seguimiento_juntas')->notice("Se agregaron datos para la junta en Origen: " . json_encode($Controvertido));
-                    Log::channel('seguimiento_juntas')->notice("Se agregaron los diagnosticoss para la junta en Origen: " . json_encode($diagnostico));
+                    $Controvertido['F_notifi_afiliado'] = $notificacion_afiliado->F_notificacion ?? null;
+                    $info_dictamen = $this->copiar_dictamenes($evento,$Id_Asignacion_origen,$servicioNuevo,$nuevo_id_asignacion);
+
+                    //Se copian los documentos siempre y cuando no se una controversia y cumpla las reglas.
+                    $this->copiarLisdatoGeneralDocumentos($evento,$servicioNuevo,$servicioOrigen,$Id_Asignacion_origen,$nuevo_id_asignacion,$info_dictamen);
 
                     break;
                 }
-
             }
         }
-
-        if(isset($Controvertido)){
-            Log::channel('seguimiento_juntas')->info("Finalizo el copiado para controvertido");
-            DB::table('sigmel_gestiones.sigmel_informacion_controversia_juntas_eventos')->insert($Controvertido);
+        //echo "<script>console.log(".json_encode($Controvertido).",".json_encode($diagnostico),true.");</script>";
+        if (isset($Controvertido)) {
+             DB::table('sigmel_gestiones.sigmel_informacion_controversia_juntas_eventos')->insert($Controvertido);
             sleep(1);
-        }else{
-            Log::channel('seguimiento_juntas')->info("No se insertaron datos para la informacion del controvertido");
         }
 
         //Siempre y cuando el diagnostico no este vacio se insertera la informacion en la tabla
-        if(isset($diagnostico) && !$diagnostico->isEmpty()){
-            Log::channel('seguimiento_juntas')->info("Finalizo el copiado para los diagnosticos");
+        if (isset($diagnostico) && !$diagnostico->isEmpty()) {
             $diagnostico = json_decode(json_encode($diagnostico->toArray()),true);
             DB::table('sigmel_gestiones.sigmel_informacion_diagnosticos_eventos')->insert($diagnostico);
-        }else{
-            Log::channel('seguimiento_juntas')->info("No se insertaron diagnosticos para el servicio");
         }
+       
+      /*  $log = [
+            'controversia' => [
+                'insertID' =>  $idControversia,
+                'info' => $Controvertido
+            ],
+            'diagnostico' => [
+                'Info' => $diagnostico
+            ]
+        ];
+        Log::info('Fin copiado Info', $log); */
 
-        Log::channel('seguimiento_juntas')->info("Finalizo el proceso de copiado /n");
     }
 
     /**
      * Copia todos los documentos cargados a partir del servicio origen del cual fue creado
-     * @param string $evento Id del evento
-     * @param int $servicio Id del nuevo sercio que se esta creando.
-     * @param int $servicioOrigen Id del servico origen del cual se esta creando el nuvo proceso.
+     * @param String $evento Id del evento
+     * @param Int $servicio Id del nuevo sercio que se esta creando.
+     * @param Int $servicioOrigen Id del servico origen del cual se esta creando el nuvo proceso.
+     * @param Int $Id_Asignacion_origen Id de asignacion del evento origen
+     * @param Int $nuevo_id_asignacion nuevo id de asignacion para el evento
+     * @param Array $documentos_adicionales Docomentos adicionales para copiar y registrar en el listado de documentos, debe tener la siguiente estructura
+     * @example
+     *        $info_documentos[] = [
+                "bandera" => "doc_adicional",
+                'ID_evento' => $id_evento, 
+                "Id_Documento" => 13,
+                "nuevo_nombre" => $nuevo_nombre, 
+                "Alias" => "Peptio", //Nombre que tendra registrado en la db 
+                "Nombre_fisico" => $nombre_dictamen,
+                "Formato_documento" => $extension,
+                "Id_servicio" => $servicioNuevo,
+                "Estado" => "activo",
+                "estado_documento" => "Cargado",
+                "Nombre_usuario" => Auth::user()->name
+     *            ];
      */
-    public function copiarLisdatoGeneralDocumentos(string $evento,int $servicio,int $servicioOrigen, int $nuevo_id_asignacion){
-        $documentos = DB::select('CALL psrvistadocumentos(?,?,?)', array($evento,$servicioOrigen,$nuevo_id_asignacion));
-        
+    public function copiarLisdatoGeneralDocumentos(string $evento,int $servicio,int $servicioOrigen,int $Id_Asignacion_origen, int $nuevo_id_asignacion,$documentos_adicionales = []){
+        $documentos = DB::select('CALL psrvistadocumentos(?,?,?)', array($evento,$servicioOrigen,$Id_Asignacion_origen));
+        //Convierte los resultados en un array
+        $documentos = array_map(function ($value) { return (array)$value;  }, $documentos);
+
         $contador = 0;
+        $dictamen_repetido = 0;
 
+        /** @var Array Campos permetidos para la insercion de la tabla de registros, si el campos a insertar no esta en el array, este no se incluira*/
+        $campos_insertar = [ "F_cargue_documento", "F_registro","Id_Asignacion", "ID_evento" , "Id_Documento", "Nombre_documento", "Formato_documento", "Id_servicio", "Estado", "Nombre_usuario", "Tipo"];
+        $campos_insertar = array_flip($campos_insertar);
+
+        //Si hay documentos adicionales para incluir, estos se añadiran al listado
+        if(!empty($documentos_adicionales)){
+            $documentos = array_merge($documentos,$documentos_adicionales);
+        }
+
+        /**
+         * Genera la estructura para el documento a copiar y lo copia en el nuevo evento
+         */
         foreach($documentos as $documento){
-            if($documento->estado_documento == 'Cargado'){
-                $doc = sigmel_registro_documentos_eventos::on('sigmel_gestiones')->select('*')->where('Id_Registro_Documento',$documento->id_Registro_Documento)->get()->toArray();
+            if($documento["estado_documento"] == 'Cargado'){
 
-                $infoDocumento[$contador] =  $doc[0];
-            
+                //Para los dictamenes que esten repetidos se evaluaran como complementario
+                $dictamen_repetido += ($documento["Id_Documento"] === 13) ? 1 : 0;
+
+                if(isset($documento["bandera"]) && $documento["bandera"] == "doc_adicional"){
+                    $infoDocumento[$contador] = $documento;
+                    $infoDocumento[$contador]["Tipo"] = $dictamen_repetido > 1 ? "Complementario" : null;
+                    $nombreDocumento = $dictamen_repetido > 1 ? $infoDocumento[$contador]['Alias'] . "_IdEvento_{$evento}_IdServicio_{$servicio}_IdAsignacion_{$nuevo_id_asignacion}" : $infoDocumento[$contador]['nuevo_nombre']; //Deja el nombre del pdf, en caso de que sea un dictamen
+
+                    $nombreFisico = $infoDocumento[$contador]['Nombre_fisico'];
+
+                    Log::channel('seguimiento_juntas')->info("Copiando dictamen $nombreFisico >>> $nombreDocumento ");
+                }else{
+
+                    //Info del documento cargado
+                    $infoDocumento[$contador] =  sigmel_registro_documentos_eventos::on('sigmel_gestiones')->select('*')->where('Id_Registro_Documento',$documento["id_Registro_Documento"])->first()->toArray();
+                    $nombreDocumento = $infoDocumento[$contador]['Nombre_documento'];
+                    $nombreFisico = $infoDocumento[$contador]['Nombre_documento'];
+                }
+
                 $infoDocumento[$contador]['Id_servicio'] = $servicio;
-
-                unset($infoDocumento[$contador]['Id_Registro_Documento']);
-
-                $nombrePdf = "{$infoDocumento[$contador]['Nombre_documento']}";
-                $documentoOrigen = public_path("Documentos_Eventos/$evento/$nombrePdf.{$infoDocumento[$contador]['Formato_documento']}");
-                $directorioDestino = public_path("Documentos_Eventos/$evento");
                 
-                $nombrePdf = substr($nombrePdf,0,strlen($nombrePdf)-13);
-                $nuevoNombre = "{$nombrePdf}_IdServicio_{$servicio}";
+                //Homologacion de los nombres con base al nuevo servicio y id de asignacion
+                $patron = "/_IdAsignacion_(\d+)?$/";
 
-                $documentoDestino = "$directorioDestino/{$nuevoNombre}.{$infoDocumento[$contador]['Formato_documento']}";
+                // Agrega '_IdAsignacion_' al final si no están presentes
+                if (strpos($nombreDocumento, '_IdAsignacion_') === false) {
+                    $nombreDocumento = "{$nombreDocumento}_IdAsignacion_{$nuevo_id_asignacion}";
+                }
+
+                $nombrePdf = preg_replace("/_IdServicio_$servicioOrigen(?!\d)/", "_IdServicio_$servicio", $nombreDocumento);
+                $nombrePdf = preg_replace_callback($patron, function($matches) use ($nuevo_id_asignacion) {
+                    return "_IdAsignacion_$nuevo_id_asignacion";
+                }, $nombrePdf);
                 
+                $documentoOrigen = public_path("Documentos_Eventos/$evento/$nombreFisico.{$infoDocumento[$contador]['Formato_documento']}");
+                $documentoDestino = public_path("Documentos_Eventos/$evento/{$nombrePdf}.{$infoDocumento[$contador]['Formato_documento']}");
+
                 // Copia el archivo si existe en el origen
                 if (file_exists($documentoOrigen)) {
                     copy($documentoOrigen, $documentoDestino);
@@ -3026,11 +3091,24 @@ class BuscarEventoController extends Controller
                     Log::channel('seguimiento_juntas')->info("Se intento copiar el archivo $documentoOrigen >>> $documentoDestino pero el documento origen no se encontro");
                 }
 
-                $infoDocumento[$contador]['Nombre_documento'] = $nuevoNombre;
+                //Informacion complementaria para el registro del documento
+                $infoDocumento[$contador]['Nombre_documento'] = $nombrePdf;
+                $infoDocumento[$contador]['F_cargue_documento'] = date('Y-m-d',time());
+                $infoDocumento[$contador]['F_registro'] =  date('Y-m-d',time());
+                $infoDocumento[$contador]['Id_Asignacion'] = $nuevo_id_asignacion;
+
+                //Ajusta la informacion del documento acorde a los campos permetidos en $campos_insertar
+                $infoDocumento[$contador] = array_filter($infoDocumento[$contador], function($key) use ($campos_insertar) {
+                    return array_key_exists($key, $campos_insertar);
+                }, ARRAY_FILTER_USE_KEY);
+
+                Log::channel('seguimiento_juntas')->info("Documento para registrar: ",$infoDocumento);
+
                 $contador++;
             }
         }
 
+        //Si hay informacion para insertar l
         if(isset($infoDocumento)){
             sigmel_registro_documentos_eventos::on('sigmel_gestiones')->insert($infoDocumento);
         }

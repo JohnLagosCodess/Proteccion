@@ -108,7 +108,8 @@ class CalificacionJuntasController extends Controller
         $cantidad_documentos_cargados = sigmel_registro_documentos_eventos::on('sigmel_gestiones')
         ->where([
             ['ID_evento', $newIdEvento],
-            ['Id_servicio', $Id_servicio]
+            ['Id_servicio', $Id_servicio],
+            ['Id_Asignacion', $newIdAsignacion]
         ])->get();
 
         // Consulta Informacion de afiliado
@@ -591,7 +592,8 @@ class CalificacionJuntasController extends Controller
 
         return view('coordinador.calificacionJuntas', compact('user','array_datos_calificacionJuntas','arraylistado_documentos', 'cantidad_documentos_cargados', 'arrayinfo_afiliado',
         'arrayinfo_controvertido','arrayinfo_pagos','listado_documentos_solicitados','dato_validacion_no_aporta_docs',
-        'arraycampa_documento_solicitado','consecutivo','hitorialAgregarSeguimiento','SubModulo', 'Id_servicio','enviar_notificaciones', 'N_siniestro_evento', 'info_evento', 'validar_lista_chequeo', 'info_cuadro_expedientes',
+        'arraycampa_documento_solicitado','consecutivo','hitorialAgregarSeguimiento','SubModulo', 'Id_servicio', 'newIdAsignacion', 
+        'enviar_notificaciones', 'N_siniestro_evento', 'info_evento', 'validar_lista_chequeo', 'info_cuadro_expedientes',
         'f_envio_exp_jrci', 'f_devolucion_exp_jrci', 'f_reenvio_exp_jrci', 'f_envio_pago_honorarios_jnci', 'fecha_notificacion', 'f_radicacion',
         'Id_Asignacion','info_afp_conocimiento','entidades_conocimiento'));
     }
@@ -9226,10 +9228,10 @@ class CalificacionJuntasController extends Controller
                     $documento_incluido = true;
 
                     //Actualizamos la tabla sigmel_registro_documentos_eventos para chequearlo
-                    $this->actualizarListaChequeo($request->Id_evento, $documento->Id_Documento, 'Si','registro_documentos');
+                    $this->actualizarListaChequeo($request->Id_evento, $documento->Id_Documento, $request->Id_asignacion, 'Si','registro_documentos');
                     break;
                 } else {
-                    $this->actualizarListaChequeo($request->Id_evento, $documento->Id_Documento, 'No','registro_documentos');
+                    $this->actualizarListaChequeo($request->Id_evento, $documento->Id_Documento, $request->Id_asignacion, 'No','registro_documentos');
                 }
             }
 
@@ -9277,18 +9279,20 @@ class CalificacionJuntasController extends Controller
             'lista_chequeo' => $lista_chequeo
         ];
         //Verificamos si existe algun radicado asociado a la lista
-        $radicado_comunicado = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_comunicado_eventos')
-        ->select('N_radicado')->where([
-            ['ID_evento',$request->Id_evento],
-            ['Asunto','LIKE','Lista_chequeo%']
-        ])->first();
+        // $radicado_comunicado = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_comunicado_eventos')
+        // ->select('N_radicado')->where([
+        //     ['ID_evento',$request->Id_evento],
+        //     ['Asunto','LIKE','Lista_chequeo%']
+        // ])->first();
         
-        $n_radicado = !empty($radicado_comunicado) ? $radicado_comunicado->N_radicado  :$this->getRadicado('juntas',$request->Id_evento); //Para cada lista de chequeo se le debe generar un radicado
-
+        // $n_radicado = !empty($radicado_comunicado) ? $radicado_comunicado->N_radicado  :$this->getRadicado('juntas',$request->Id_evento); //Para cada lista de chequeo se le debe generar un radicado
+        
+        // creación de consecutivo para la lista de chequeo
+       $n_radicado = $this->getRadicado('juntas',$request->Id_evento);
 
         $extension_proforma = "pdf";
         $ruta_proforma = '/Proformas/Proformas_Prev/Juntas/lista_chequeo';
-        $nombre_documento = "Lista_chequeo";
+        $nombre_documento = "Lista_chequeo_"."IdEvento_".$request->Id_evento."_IdServicio_".$request->Id_servicio."_IdAsignacion_".$request->Id_asignacion;
 
         /* Creación del pdf */
         $pdf = app('dompdf.wrapper');
@@ -9302,12 +9306,14 @@ class CalificacionJuntasController extends Controller
         file_put_contents(public_path("Documentos_Eventos/{$request->Id_evento}/{$nombre_pdf}"), $output);
 
         //Registramos una unica vez la lista de chequeo
-        if ($request->bandera == 'Guardar' && !empty($indice_lista_chequeo) && empty($radicado_comunicado)) {
+        // if ($request->bandera == 'Guardar' && !empty($indice_lista_chequeo) && empty($radicado_comunicado)) {
+        if ($request->bandera == 'Guardar' && !empty($indice_lista_chequeo)) {
 
             $fecha_actual = date("Y-m-d", time());
             
             // datps sigmel_registro_documentos_eventos
             $registro_documento = [
+                'Id_Asignacion' => $request->Id_asignacion,
                 'Id_Documento' => $indice_lista_chequeo , //id Lista de chequeo
                 'ID_evento' => $request->Id_evento,
                 'Nombre_documento' => $nombre_documento,
@@ -9346,41 +9352,42 @@ class CalificacionJuntasController extends Controller
 
             //Consultar los documentos de la lista de chequeo del evento y servicio
 
-            $info_registros_documentos = sigmel_registro_documentos_eventos::on('sigmel_gestiones')
-            ->where([
-                ['ID_evento', $request->Id_evento],
-                ['Id_servicio', $request->Id_servicio],
-                ['Lista_chequeo', 'Si']
-            ])->get();
+            // $info_registros_documentos = sigmel_registro_documentos_eventos::on('sigmel_gestiones')
+            // ->where([
+            //     ['ID_evento', $request->Id_evento],
+            //     ['Id_servicio', $request->Id_servicio],
+            //     ['Id_Asignacion', $request->Id_asignacion],
+            //     ['Lista_chequeo', 'Si']
+            // ])->get();
 
-            $info_array_registros_documentos = $info_registros_documentos->toArray();          
+            // $info_array_registros_documentos = $info_registros_documentos->toArray();          
 
             // Recorremos el array $info_array_registros_documentos para capturar la info necesaria para insertarlos 
             // en la tabla sigmel_informacion_expedientes_eventos
-            foreach ($info_array_registros_documentos as $registro_documentos) {
+            // foreach ($info_array_registros_documentos as $registro_documentos) {
 
-                // Organizamos el array para la insercion de los datos encontrados en el array
-                $info_datos_expedientes = [
-                    'Id_Documento' => $registro_documentos['Id_Documento'],
-                    'ID_evento' => $registro_documentos['ID_evento'],
-                    'Nombre_documento' => $registro_documentos['Nombre_documento'],
-                    'Formato_documento' => $registro_documentos['Formato_documento'],
-                    'Id_servicio' => $registro_documentos['Id_servicio'],
-                    'Estado' => 'activo',
-                    'Nombre_usuario' => Auth::user()->name,
-                    'F_registro' => $fecha_actual
-                ];
+            //     // Organizamos el array para la insercion de los datos encontrados en el array
+            //     $info_datos_expedientes = [
+            //         'Id_Documento' => $registro_documentos['Id_Documento'],
+            //         'ID_evento' => $registro_documentos['ID_evento'],
+            //         'Nombre_documento' => $registro_documentos['Nombre_documento'],
+            //         'Formato_documento' => $registro_documentos['Formato_documento'],
+            //         'Id_servicio' => $registro_documentos['Id_servicio'],
+            //         'Estado' => 'activo',
+            //         'Nombre_usuario' => Auth::user()->name,
+            //         'F_registro' => $fecha_actual
+            //     ];
 
-                // Condicionalmente agregamos 'Posicion' y 'Folear' si cumple la condición
-                if ($registro_documentos['Nombre_documento'] == 'Lista_chequeo') {
-                    $info_datos_expedientes['Posicion'] = 2;
-                    $info_datos_expedientes['Folear'] = 'No';
-                }
+            //     // Condicionalmente agregamos 'Posicion' y 'Folear' si cumple la condición
+            //     if ($registro_documentos['Nombre_documento'] == 'Lista_chequeo') {
+            //         $info_datos_expedientes['Posicion'] = 2;
+            //         $info_datos_expedientes['Folear'] = 'No';
+            //     }
 
-                // Insertamos los registros en la tabla  sigmel_informacion_expedientes_eventos
+            //     // Insertamos los registros en la tabla  sigmel_informacion_expedientes_eventos
 
-                sigmel_informacion_expedientes_eventos::on('sigmel_gestiones')->insert($info_datos_expedientes);
-            }
+            //     sigmel_informacion_expedientes_eventos::on('sigmel_gestiones')->insert($info_datos_expedientes);
+            // }
 
             $mensaje = 'Registro agregado satisfactoriamente.';
         }else{
@@ -9406,13 +9413,14 @@ class CalificacionJuntasController extends Controller
     * @param string $estado
     * @return void
     */
-    function actualizarListaChequeo($id_evento, $id_documento, $estado, $tabla) {
+    function actualizarListaChequeo($id_evento, $id_documento, $id_asignacion, $estado, $tabla) {
         switch($tabla){
             case 'registro_documentos' :
                     sigmel_registro_documentos_eventos::on('sigmel_gestiones')
                     ->where([
                         ['ID_evento', $id_evento],
-                        ['Id_Documento', $id_documento]
+                        ['Id_Documento', $id_documento],
+                        ['Id_Asignacion', $id_asignacion]
                     ])->update(['Lista_chequeo' => $estado]);
                 break;
             case 'info_comunicados' :

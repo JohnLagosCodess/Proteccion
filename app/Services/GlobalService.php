@@ -679,8 +679,10 @@ class GlobalService
         ->select('siae.Id_afp_entidad_conocimiento', 'siae.Id_afp_entidad_conocimiento2','siae.Id_afp_entidad_conocimiento3','siae.Id_afp_entidad_conocimiento4','siae.Id_afp_entidad_conocimiento5','siae.Id_afp_entidad_conocimiento6','siae.Id_afp_entidad_conocimiento7','siae.Id_afp_entidad_conocimiento8')
         ->where([['siae.ID_evento', $id_evento]])
         ->first();
-
-        if ($entidades_conocimiento) {
+        
+        if ($entidades_conocimiento && collect((array) $entidades_conocimiento)->filter(function ($value) {
+            return $value !== null && $value !== '' && $value !== 0;
+        })->isNotEmpty()) {
             $entidades = [
                 $entidades_conocimiento->Id_afp_entidad_conocimiento,
                 $entidades_conocimiento->Id_afp_entidad_conocimiento2,
@@ -701,59 +703,60 @@ class GlobalService
 
             // Convertimos en array para el WHERE IN
             $array_string_entidades = explode(',', $string_entidades);
+
+            // dd($array_string_entidades);
+            $datos_entidades_conocimiento = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_entidades as sie')
+            ->leftJoin('sigmel_gestiones.sigmel_lista_entidades as sle', 'sie.IdTipo_entidad', '=', 'sle.Id_Entidad')
+            // ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm', 'sie.Id_Departamento', '=', 'sldm.Id_departamento')
+            // ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm2', 'sie.Id_Ciudad', '=', 'sldm2.Id_municipios')
+            ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm', function ($join) {
+                $join->on('sie.Id_departamento', '=', 'sldm.Id_departamento')
+                    ->on('sie.Id_Ciudad', '=', 'sldm.Id_municipios');
+            })
+            ->select(
+                'sie.Id_Entidad',
+                'sle.Tipo_Entidad',
+                'sie.Nombre_entidad',
+                'sie.Direccion',
+                'sie.Emails as Email',
+                'sie.Telefonos',
+                'sldm.Nombre_municipio as Ciudad',
+                'sldm.Nombre_departamento as Departamento'
+            )
+            ->whereIn('sie.Id_Entidad', $array_string_entidades)
+            ->orderByRaw("FIELD(sie.Id_Entidad, " . implode(',', $array_string_entidades) . ")")
+            ->get();
+    
+            $array_datos_entidades_conocimiento = json_decode(json_encode($datos_entidades_conocimiento, true));
+    
+            // echo "<pre>";
+            // print_r($array_datos_entidades_conocimiento);
+            // echo "</pre>";
+    
+            $string_entidades = '';
+            for ($i=0; $i < count($array_datos_entidades_conocimiento); $i++) {
+                $tipo_entidad = $array_datos_entidades_conocimiento[$i]->Tipo_Entidad;
+                $nombre_entidad = $array_datos_entidades_conocimiento[$i]->Nombre_entidad;
+                $direccion_entidad = $array_datos_entidades_conocimiento[$i]->Direccion;
+                $email_entidad = $array_datos_entidades_conocimiento[$i]->Email;
+                $telefono_entidad = $array_datos_entidades_conocimiento[$i]->Telefonos;
+                $ciudad_entidad = $array_datos_entidades_conocimiento[$i]->Ciudad;
+                $departamento_entidad = $array_datos_entidades_conocimiento[$i]->Departamento;
+                
+                if ($tipo_proforma == 'pdf') {
+                    $string_entidades .= "<tr><td class='copias'><span class='negrita'>{$tipo_entidad}: </span>{$nombre_entidad} - {$direccion_entidad}; {$email_entidad}; {$telefono_entidad}; {$ciudad_entidad}; {$departamento_entidad}</td></tr>";
+                }elseif ($tipo_proforma == 'word') {
+                    $string_entidades .= "<tr><td style='border: 1px solid #000; padding: 5px; text-align: justify; font-family: Verdana; font-size: 8pt; font-style: italic;'><span style='font-weight:bold;'>{$tipo_entidad}: </span>{$nombre_entidad} - {$direccion_entidad}; {$email_entidad}; {$telefono_entidad}; {$ciudad_entidad}; {$departamento_entidad}</td></tr>";
+                }else if($tipo_proforma == 'otra_forma'){
+                    $string_entidades .= "<tr class='fuente_todo_texto'><td colspan='8'><span class='negrita'>{$tipo_entidad}: </span>{$nombre_entidad} - {$direccion_entidad}; {$email_entidad}; {$telefono_entidad}; {$ciudad_entidad}; {$departamento_entidad}</td></tr>";
+                }
+            }
+            return $string_entidades;
+
         } else {
             $string_entidades = '';
-            $array_string_entidades = [];
+            return $string_entidades;
         }
-        
-        // dd($array_string_entidades);
-        $datos_entidades_conocimiento = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_entidades as sie')
-        ->leftJoin('sigmel_gestiones.sigmel_lista_entidades as sle', 'sie.IdTipo_entidad', '=', 'sle.Id_Entidad')
-        // ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm', 'sie.Id_Departamento', '=', 'sldm.Id_departamento')
-        // ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm2', 'sie.Id_Ciudad', '=', 'sldm2.Id_municipios')
-        ->leftJoin('sigmel_gestiones.sigmel_lista_departamentos_municipios as sldm', function ($join) {
-            $join->on('sie.Id_departamento', '=', 'sldm.Id_departamento')
-                ->on('sie.Id_Ciudad', '=', 'sldm.Id_municipios');
-        })
-        ->select(
-            'sie.Id_Entidad',
-            'sle.Tipo_Entidad',
-            'sie.Nombre_entidad',
-            'sie.Direccion',
-            'sie.Emails as Email',
-            'sie.Telefonos',
-            'sldm.Nombre_municipio as Ciudad',
-            'sldm.Nombre_departamento as Departamento'
-        )
-        ->whereIn('sie.Id_Entidad', $array_string_entidades)
-        ->orderByRaw("FIELD(sie.Id_Entidad, " . implode(',', $array_string_entidades) . ")")
-        ->get();
-
-        $array_datos_entidades_conocimiento = json_decode(json_encode($datos_entidades_conocimiento, true));
-
-        // echo "<pre>";
-        // print_r($array_datos_entidades_conocimiento);
-        // echo "</pre>";
-
-        $string_entidades = '';
-        for ($i=0; $i < count($array_datos_entidades_conocimiento); $i++) {
-            $tipo_entidad = $array_datos_entidades_conocimiento[$i]->Tipo_Entidad;
-            $nombre_entidad = $array_datos_entidades_conocimiento[$i]->Nombre_entidad;
-            $direccion_entidad = $array_datos_entidades_conocimiento[$i]->Direccion;
-            $email_entidad = $array_datos_entidades_conocimiento[$i]->Email;
-            $telefono_entidad = $array_datos_entidades_conocimiento[$i]->Telefonos;
-            $ciudad_entidad = $array_datos_entidades_conocimiento[$i]->Ciudad;
-            $departamento_entidad = $array_datos_entidades_conocimiento[$i]->Departamento;
-            
-            if ($tipo_proforma == 'pdf') {
-                $string_entidades .= "<tr><td class='copias'><span class='negrita'>{$tipo_entidad}: </span>{$nombre_entidad} - {$direccion_entidad}; {$email_entidad}; {$telefono_entidad}; {$ciudad_entidad}; {$departamento_entidad}</td></tr>";
-            }elseif ($tipo_proforma == 'word') {
-                $string_entidades .= "<tr><td style='border: 1px solid #000; padding: 5px; text-align: justify; font-family: Verdana; font-size: 8pt; font-style: italic;'><span style='font-weight:bold;'>{$tipo_entidad}: </span>{$nombre_entidad} - {$direccion_entidad}; {$email_entidad}; {$telefono_entidad}; {$ciudad_entidad}; {$departamento_entidad}</td></tr>";
-            }else if($tipo_proforma == 'otra_forma'){
-                $string_entidades .= "<tr class='fuente_todo_texto'><td colspan='8'><span class='negrita'>{$tipo_entidad}: </span>{$nombre_entidad} - {$direccion_entidad}; {$email_entidad}; {$telefono_entidad}; {$ciudad_entidad}; {$departamento_entidad}</td></tr>";
-            }
-        }
-        return $string_entidades;
     }
 
     //Retorna el string de copias de entidad de conocimiento
