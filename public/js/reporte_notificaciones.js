@@ -69,6 +69,7 @@ $(document).ready(function () {
             buttons:[
                 {
                     extend:"excel",
+                    title: '',
                     filename: function(){
                         return fechaActual + "_NOTIFICACIONES-PROTECCIÓN_SIGMEL_(" + $('#fecha_desde').val() + "_" + $('#fecha_hasta').val() + ")";
                     },
