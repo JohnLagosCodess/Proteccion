@@ -244,7 +244,11 @@ class CalificacionJuntasController extends Controller
 
         /* 
             Validaciones para traer la info del campo Fecha envío expediente a JRCI de la sección Seguimiento a Juntas calificadoras 
-            Se requiere traer la Fecha de accion más reciente cuando se haya ejecutado la acción REPORTAR NOTIFICACIÓN EXPEDIENTE JRCI (ID 61)
+            Se requiere traer la Fecha de accion más reciente cuando se haya ejecutado la acción REPORTAR NOTIFICACIÓN EXPEDIENTE JRCI (ID 61) ---> YA NO ES CON ESTA ACCIÓN:
+
+            ACORDE A LA FICHA SS5 SERÁ CON LAS ACCIONES:
+            REPORTAR ENVÍO DE EXPEDIENTE DIGITAL (ID 122)
+            REPORTAR ENVÍO DE EXPEDIENTE EN FÍSICO (ID 120)
         */
         $array_f_envio_exp_jrci = sigmel_informacion_historial_accion_eventos::on('sigmel_gestiones')
         ->selectRaw('DATE(F_accion) as F_accion')
@@ -252,8 +256,9 @@ class CalificacionJuntasController extends Controller
             ['Id_Asignacion', $newIdAsignacion],
             ['ID_evento', $newIdEvento],
             ['Id_servicio', $Id_servicio],
-            ['Id_accion', 61]
-        ])->orderBy('F_accion', 'desc')->first();
+        ])
+        ->whereIn('Id_accion', [122, 120])
+        ->orderBy('F_accion', 'desc')->first();
         
         /* 
             si llega existir la acción y su correspondiente fecha entonces se realizará la actualización o la inserción de datos 
@@ -295,6 +300,9 @@ class CalificacionJuntasController extends Controller
             RENOTIFICAR DEVOLUCIÓN DE EXPEDIENTE (ID 63)
             RENOTIFICAR DEVOLUCIÓN DE EXPEDIENTE NO 2 (ID 81)
             RENOTIFICAR DEVOLUCIÓN DE EXPEDIENTE NO 3 (ID 82)
+
+            ACORDE A LA FICHA SS5 SE ADICIONA LA ACCIÓN:
+            RENOTIFICAR DEVOLUCIÓN DE EXPEDIENTE CON COBRO (ID 123)
         */
 
         $array_f_devolucion_exp_jrci = sigmel_informacion_historial_accion_eventos::on('sigmel_gestiones')
@@ -304,7 +312,7 @@ class CalificacionJuntasController extends Controller
             ['ID_evento', $newIdEvento],
             ['Id_servicio', $Id_servicio]
         ])
-        ->whereIn('Id_accion', [63,81,82])
+        ->whereIn('Id_accion', [63,81,82,123])
         ->orderBy('F_accion', 'desc')->first();
 
         /* 
@@ -341,16 +349,22 @@ class CalificacionJuntasController extends Controller
 
         /* 
             Validaciones para traer la info del campo Fecha de reenvío expediente a JRCI de la sección Seguimiento a Juntas calificadoras 
-            Se requiere traer la Fecha de accion más reciente cuando se haya ejecutado la acción REPORTAR RENOTIFICACIÓN DE EXPEDIENTE (ID 64)
+            Se requiere traer la Fecha de accion más reciente cuando se haya ejecutado la acción REPORTAR RENOTIFICACIÓN DE EXPEDIENTE (ID 64) ---> YA NO ES CON ESTA ACCIÓN:
+
+            ACORDE A LA FICHA SS5 SERÁ CON LAS ACCIONES:
+            REPORTAR REENVÍO DE EXPEDIENTE DIGITAL CON COBRO (ID 124)
+            REPORTAR REENVÍO DE EXPEDIENTE EN FÍSICO CON COBRO (ID 125)
+            REPORTAR REENVÍO DE EXPEDIENTE SIN COBRO (ID 139)
         */
         $array_f_reenvio_exp_jrci = sigmel_informacion_historial_accion_eventos::on('sigmel_gestiones')
         ->selectRaw('DATE(F_accion) as F_accion')
         ->where([
             ['Id_Asignacion', $newIdAsignacion],
             ['ID_evento', $newIdEvento],
-            ['Id_servicio', $Id_servicio],
-            ['Id_accion', 64]
-        ])->orderBy('F_accion', 'desc')->first();
+            ['Id_servicio', $Id_servicio]
+        ])
+        ->whereIn('Id_accion', [124,125,139])
+        ->orderBy('F_accion', 'desc')->first();
         
         /* 
             si llega existir la acción y su correspondiente fecha entonces se realizará la actualización o la inserción de datos 
