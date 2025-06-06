@@ -30,6 +30,12 @@ return new class extends Migration
             $table->enum('Enviar_a_bandeja_trabajo_destino', ['Si', 'No'])->nullable();
             $table->integer('Bandeja_trabajo_destino')->nullable();
             $table->text('Estado_facturacion')->nullable();
+            $table->decimal('Tarifa_gestion', 10, 0)->default(0);
+            $table->decimal('Tarifa_notificacion', 10, 0)->default(0);
+            $table->decimal('Tarifa_adicional', 10, 0)->default(0);
+            $table->decimal('Valor_total', 10, 0)->default(0);
+            $table->decimal('Porcentaje_glosa', 4, 1)->default(0.0);
+            $table->integer('ans_dias')->default(0);
             $table->text('Movimiento_automatico')->nullable();
             $table->text('Tiempo_movimiento')->nullable();
             $table->text('Accion_automatica')->nullable();

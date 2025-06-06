@@ -11,6 +11,7 @@ use App\Http\Controllers\Autenticacion\LogoutController;
 use App\Http\Controllers\Coordinador\AdicionDxDTO;
 use App\Http\Controllers\Coordinador\CalificacionPCLController;
 use App\Http\Api\sigmel_advance;
+use App\Http\Controllers\Administrador\ReporteFacturacionController;
 use App\Http\Controllers\Coordinador\RecalificacionPCLController;
 use App\Http\Controllers\Coordinador\CalificacionOrigenController;
 use App\Http\Controllers\Coordinador\CalificacionNotifiController;
@@ -931,6 +932,13 @@ Route::post('/consultaReporteTrazabilidadPcl', [ReporteTrazabilidadPclController
 Route::get('/Sigmel/ReporteTrazabilidadJuntas', [ReporteTrazabilidadJuntasController::class, 'show'])->name('reporteTrazabilidadJuntas');
 // Acción: Consulta de Reporte Trazabilidad PCL
 Route::post('/consultaReporteTrazabilidadJuntas', [ReporteTrazabilidadJuntasController::class, 'consultaReporteTrazabilidadJuntas']);
+
+
+// Creación vista reporte facturación 19/05/2025
+Route::get('/Sigmel/ReporteFacturacion', [ReporteFacturacionController::class, 'show'])->name('reporteFacturacion');
+// Acción: Consulta de Reporte Estados Eventos
+Route::post('/consultaReporteFacturacion', [ReporteFacturacionController::class, 'consultaReporteFacturacion']);
+
 
 
 /* FIN SECCION: AQUI SE RENDERIZARÁN LAS RUTAS DE LOS DEMÁS ROLES: */

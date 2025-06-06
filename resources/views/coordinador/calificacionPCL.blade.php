@@ -850,6 +850,14 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <div class="col-2">
+                                                    <div class="form-group">
+                                                        <div class="form-check custom-control custom-radio">
+                                                            <input class="form-check-input custom-control-input custom-control-input-info" type="radio" name="tipo_documento_descarga_califi" id="no_localizacion" value="No_Localizacion" required>
+                                                            <label class="form-check-label custom-control-label" for="no_localizacion"><strong>NO LOCALIZACIÓN</strong></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             @endif
                                         @endif
                                         <div class="col-2">
@@ -1256,6 +1264,15 @@
                                                         <div class="form-check custom-control custom-radio">
                                                             <input class="form-check-input custom-control-input custom-control-input-info" type="radio" name="tipo_documento_descarga_califi_editar" id="firmeza_pcl_editar" value="Firmeza_PCL" required>
                                                             <label class="form-check-label custom-control-label" for="firmeza_pcl_editar"><strong>FIRMEZA PCL</strong></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-2">
+                                                    <div class="form-group">
+                                                        <div class="form-check custom-control custom-radio">
+                                                            <input class="form-check-input custom-control-input custom-control-input-info" type="radio" name="tipo_documento_descarga_califi_editar" id="no_localizacion_editar" value="No_Localizacion" required>
+                                                            <label class="form-check-label custom-control-label" for="no_localizacion_editar"><strong>NO LOCALIZACIÓN</strong></label>
                                                         </div>
                                                     </div>
                                                 </div>

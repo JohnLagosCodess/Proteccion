@@ -1708,6 +1708,9 @@ $(document).ready(function(){
                     else if(row.Tipo_descarga === 'Firmeza_PCL'){
                         return 'FIRMEZA_PCL';
                     }
+                    else if(row.Tipo_descarga === 'No_Localizacion'){
+                        return 'NO LOCALIZACIÓN';
+                    }
                     else if(row.Tipo_descarga === 'Formato_B_Revision_pension'){
                         return 'RATIFICACIÓN PENSIÓN';
                     }
@@ -2332,6 +2335,7 @@ $(document).ready(function(){
             $("#documento_revisionpension_editar").prop("checked", false);
             $("#No_procede_recali_editar").prop("checked", false);
             $("#firmarcomunicado_editar").prop('disabled', true);
+            $("#no_localizacion_editar").prop("checked", false);
         }else if (tipo_descarga == "Formato_B_Revision_pension") {
             $("#documentos_pcl_editar").prop("checked", false);
             $("#otro_documento_pcl_editar").prop("checked", false);
@@ -2345,6 +2349,7 @@ $(document).ready(function(){
             $("#documento_revisionpension_editar").prop("checked", false);
             $("#No_procede_recali_editar").prop("checked", false);
             $("#firmarcomunicado_editar").prop('disabled', true);
+            $("#no_localizacion_editar").prop("checked", false);
         }else if (tipo_descarga == "Documento_Revision_pension") {
             $("#asunto").prop('readonly', false);
             $("#asunto_editar").prop('readonly', false);
@@ -2360,6 +2365,7 @@ $(document).ready(function(){
             $("#documento_revisionpension_editar").prop("checked", true);
             $("#No_procede_recali_editar").prop("checked", false);
             $("#firmarcomunicado_editar").prop('disabled', true);
+            $("#no_localizacion_editar").prop("checked", false);
         }else if (tipo_descarga == "Reiteracion_Documento_Revision_pension") {
             $("#asunto").prop('readonly', false);
             $("#asunto_editar").prop('readonly', false);
@@ -2375,6 +2381,7 @@ $(document).ready(function(){
             $("#suspension_de_mesada_editar").prop("checked", false);
             $("#No_procede_recali_editar").prop("checked", false);
             $("#firmarcomunicado_editar").prop('disabled', true);
+            $("#no_localizacion_editar").prop("checked", false);
         }else if (tipo_descarga == "Suspension_Mesada_Revision_pension") {
             $("#asunto").prop('readonly', false);
             $("#asunto_editar").prop('readonly', false);
@@ -2390,6 +2397,7 @@ $(document).ready(function(){
             $("#suspension_de_mesada_editar").prop("checked", true);
             $("#No_procede_recali_editar").prop("checked", false);
             $("#firmarcomunicado_editar").prop('disabled', false);
+            $("#no_localizacion_editar").prop("checked", false);
         }else if (tipo_descarga == "Documento_No_Recalificacion") {
             $("#documentos_pcl_editar").prop("checked", false);
             $("#otro_documento_pcl_editar").prop("checked", false);
@@ -2407,6 +2415,7 @@ $(document).ready(function(){
             $('#btn_insertar_porPcl_editar').removeClass('d-none')
             $('#btn_insertar_F_estructuracion_editar').removeClass('d-none')
             $("#firmarcomunicado_editar").prop('disabled', true);
+            $("#no_localizacion_editar").prop("checked", false);
         }else if (tipo_descarga == "Desistimiento_PCL") {
             $("#documentos_pcl_editar").prop("checked", false);
             $("#otro_documento_pcl_editar").prop("checked", false);
@@ -2424,6 +2433,7 @@ $(document).ready(function(){
             $('#btn_insertar_porPcl_editar').removeClass('d-none')
             $('#btn_insertar_F_estructuracion_editar').removeClass('d-none')
             $("#firmarcomunicado_editar").prop('disabled', true);
+            $("#no_localizacion_editar").prop("checked", false);
         }else if (tipo_descarga == "Cierre_MMM_PCL") {
             $("#documentos_pcl_editar").prop("checked", false);
             $("#otro_documento_pcl_editar").prop("checked", false);
@@ -2441,6 +2451,7 @@ $(document).ready(function(){
             $('#btn_insertar_porPcl_editar').removeClass('d-none')
             $('#btn_insertar_F_estructuracion_editar').removeClass('d-none')
             $("#firmarcomunicado_editar").prop('disabled', true);
+            $("#no_localizacion_editar").prop("checked", false);
         }else if (tipo_descarga == "Cierre_Cita_PCL") {
             $("#documentos_pcl_editar").prop("checked", false);
             $("#otro_documento_pcl_editar").prop("checked", false);
@@ -2458,6 +2469,7 @@ $(document).ready(function(){
             $('#btn_insertar_porPcl_editar').removeClass('d-none')
             $('#btn_insertar_F_estructuracion_editar').removeClass('d-none')
             $("#firmarcomunicado_editar").prop('disabled', true);
+            $("#no_localizacion_editar").prop("checked", false);
         }else if (tipo_descarga == "Firmeza_PCL") {
             $("#documentos_pcl_editar").prop("checked", false);
             $("#otro_documento_pcl_editar").prop("checked", false);
@@ -2475,7 +2487,27 @@ $(document).ready(function(){
             $('#btn_insertar_porPcl_editar').removeClass('d-none')
             $('#btn_insertar_F_estructuracion_editar').removeClass('d-none')
             $("#firmarcomunicado_editar").prop('disabled', true);
-        }else {
+            $("#no_localizacion_editar").prop("checked", false);
+        }else if (tipo_descarga == "No_Localizacion") {
+            $("#no_localizacion_editar").prop("checked", true);
+            $("#documentos_pcl_editar").prop("checked", false);
+            $("#otro_documento_pcl_editar").prop("checked", false);
+            $("#formatoB_revisionpension_editar").prop("checked", false);
+            $("#reiteracion_documento_revisionpension_editar").prop("checked", false);
+            $("#suspension_de_mesada_editar").prop("checked", false);
+            $("#documento_revisionpension_editar").prop("checked", false);
+            $("#desistimiento_pcl_editar").prop("checked", false);
+            $("#cierre_mmm_pcl_editar").prop("checked", false);
+            $("#cierre_cita_pcl_editar").prop("checked", false);
+            $("#firmeza_pcl_editar").prop("checked", false);
+            $("#No_procede_recali_editar").prop("checked", false);
+            $('#btn_insertar_Origen_editar').removeClass('d-none')
+            $('#btn_insertar_nombreCIE10_editar').removeClass('d-none')
+            $('#btn_insertar_porPcl_editar').removeClass('d-none')
+            $('#btn_insertar_F_estructuracion_editar').removeClass('d-none')
+            $("#firmarcomunicado_editar").prop('disabled', true);
+        }
+        else {
             $("#documentos_pcl_editar").prop("checked", false);
             $("#otro_documento_pcl_editar").prop("checked", true);
             $("#formatoB_revisionpension_editar").prop("checked", false);
@@ -2488,6 +2520,7 @@ $(document).ready(function(){
             $("#documento_revisionpension_editar").prop("checked", false);
             $("#No_procede_recali_editar").prop("checked", false);
             $("#firmarcomunicado_editar").prop('disabled', false);
+            $("#no_localizacion_editar").prop("checked", false);
         }
 
         document.getElementById('nombre_destinatario_editar').value=nombre_destinatario;        
@@ -3520,7 +3553,46 @@ $(document).ready(function(){
             $("#firmarcomunicado_editar").prop('disabled', true);
             $("#firmarcomunicado_editar").prop('checked', true);
 
-        }else{
+        }else if (opc_seleccionada == 'No_Localizacion'){
+            $("#asunto_editar").prop('readonly', false);
+            $(".note-editable").attr("contenteditable", true);
+            $("#asunto_editar").val("CIERRE ADMINISTRATIVO SOLICITUD DE CALIFICACIÓN POR NO LOCALIZACIÓN");
+            var texto_insertar = "<p>Respetado(a) Señor(a):</p>"+
+            "<p>Reciba un cordial saludo de la Administradora de Fondos de Pensiones y Cesantías <b>PROTECCIÓN S.A.</b></p>"+
+            "<p>Una vez evaluada su solicitud de trámite ante el fondo de pensiones y teniendo presente la legislación actual vigente, "+
+            "decreto 2463 del 2001 y decreto 1507 del 2014, encontramos que es indispensable que usted sea citado y valorado por medicina laboral.</p>"+
+            "<p>Por lo tanto, se evidencia que no ha sido posible contacto con usted para asignar la cita, debido a que los teléfonos proporcionados no son efectivos.</p>"+
+            "<p>En virtud de lo anterior nos permitimos informarle que, a partir de la fecha de notificación de la presente carta, hemos dado por terminada su reclamación ante el fondo, ya que ha operado el <b>DESISTIMIENTO</b> tácito de su trámite.</p>"+
+            "<p class='cuerpo_doc_revPen'>“…Cuando en el curso de una actuación administrativa la autoridad advierta que el peticionario debe realizar una gestión de trámite a su cargo, "+
+            "necesaria para adoptar una decisión de fondo, lo requerirá por una sola vez para que la efectúe en el término de un (1) mes, lapso durante el cual se suspenderá el término para decidir. "+
+            "<b>Se entenderá que el peticionario ha desistido de su solicitud o de la actuación cuando no satisfaga el requerimiento</b>, salvo que antes de vencer el plazo concedido solicite prórroga hasta por un término igual”.</p>"+
+            "<p>No obstante, lo anterior le informamos que la solicitud de reapertura de su caso puede ser presentada en cualquier momento con los documentos que se requieran para el estudio del mismo, con la finalidad de que exista un pronunciamiento de fondo.</p>"+
+            "<p>Si tiene alguna duda o quiere conocer más acerca de esta información, puede comunicarse con nuestro Asesor Virtual Pronto en nuestro Portal Web www.proteccion.com y App o "+
+            "comunicarse con nuestra línea de servicio en Bogotá 7444464, en Medellín y Cali 5109099, Barranquilla 319 7999, Cartagena 6424999 y desde el resto del país 01 8000 52 8000.</p>";
+            
+            $('#cuerpo_comunicado_editar').summernote('code', texto_insertar);
+
+            // Auto selección de la opción Afiliado (Destinatario Principal)
+            $('#afiliado_comunicado_editar').click();
+
+             // Seteo automático del nro de anexos:
+            var seteo_nro_anexos = 0;
+            $("#anexos_editar").val(seteo_nro_anexos);
+
+            // Deselección automática de las copias a partes interesadas:
+            $("#edit_copia_afiliado").prop('checked', false);
+            $("#edit_copia_empleador").prop('checked', false);
+            $("#edit_copia_afp").prop('checked', false);
+            $("#edit_copia_eps").prop('checked', false);
+            $("#edit_copia_arl").prop('checked', false);
+            $("#edit_copia_afp_conocimiento").prop('checked', false);
+
+            // Selección automática del checkbox firmar
+            $("#firmarcomunicado_editar").prop('disabled', true);
+            $("#firmarcomunicado_editar").prop('checked', true);
+
+        }
+        else{
             $("#asunto_editar").val("");
             $('#cuerpo_comunicado_editar').summernote('code', '');
             $('#btn_insertar_Origen_editar').addClass('d-none');
@@ -4874,7 +4946,46 @@ $(document).ready(function(){
             // Selección automática del checkbox firmar
             $("#firmarcomunicado").prop('disabled', true);
             $("#firmarcomunicado").prop('checked', true);
-        }else{
+        }else if (opc_seleccionada == 'No_Localizacion'){
+            $("#asunto").prop('readonly', false);
+            $(".note-editable").attr("contenteditable", true);
+            $("#asunto").val("CIERRE ADMINISTRATIVO SOLICITUD DE CALIFICACIÓN POR NO LOCALIZACIÓN");
+            var texto_insertar = "<p>Respetado(a) Señor(a):</p>"+
+            "<p>Reciba un cordial saludo de la Administradora de Fondos de Pensiones y Cesantías <b>PROTECCIÓN S.A.</b></p>"+
+            "<p>Una vez evaluada su solicitud de trámite ante el fondo de pensiones y teniendo presente la legislación actual vigente, "+
+            "decreto 2463 del 2001 y decreto 1507 del 2014, encontramos que es indispensable que usted sea citado y valorado por medicina laboral.</p>"+
+            "<p>Por lo tanto, se evidencia que no ha sido posible contacto con usted para asignar la cita, debido a que los teléfonos proporcionados no son efectivos.</p>"+
+            "<p>En virtud de lo anterior nos permitimos informarle que, a partir de la fecha de notificación de la presente carta, hemos dado por terminada su reclamación ante el fondo, ya que ha operado el <b>DESISTIMIENTO</b> tácito de su trámite.</p>"+
+            "<p class='cuerpo_doc_revPen'>“…Cuando en el curso de una actuación administrativa la autoridad advierta que el peticionario debe realizar una gestión de trámite a su cargo, "+
+            "necesaria para adoptar una decisión de fondo, lo requerirá por una sola vez para que la efectúe en el término de un (1) mes, lapso durante el cual se suspenderá el término para decidir. "+
+            "<b>Se entenderá que el peticionario ha desistido de su solicitud o de la actuación cuando no satisfaga el requerimiento</b>, salvo que antes de vencer el plazo concedido solicite prórroga hasta por un término igual”.</p>"+
+            "<p>No obstante, lo anterior le informamos que la solicitud de reapertura de su caso puede ser presentada en cualquier momento con los documentos que se requieran para el estudio del mismo, con la finalidad de que exista un pronunciamiento de fondo.</p>"+
+            "<p>Si tiene alguna duda o quiere conocer más acerca de esta información, puede comunicarse con nuestro Asesor Virtual Pronto en nuestro Portal Web www.proteccion.com y App o "+
+            "comunicarse con nuestra línea de servicio en Bogotá 7444464, en Medellín y Cali 5109099, Barranquilla 319 7999, Cartagena 6424999 y desde el resto del país 01 8000 52 8000.</p>";
+            
+            $('#cuerpo_comunicado').summernote('code', texto_insertar);
+
+            // Auto selección de la opción Afiliado (Destinatario Principal)
+            $('#afiliado_comunicado').click();
+
+             // Seteo automático del nro de anexos:
+            var seteo_nro_anexos = 0;
+            $("#anexos").val(seteo_nro_anexos);
+
+            // Deselección automática de las copias a partes interesadas:
+            $("#copia_afiliado").prop('checked', false);
+            $("#copia_empleador").prop('checked', false);
+            $("#copia_afp").prop('checked', false);
+            $("#copia_eps").prop('checked', false);
+            $("#copia_arl").prop('checked', false);
+            $("#copia_afp_conocimiento").prop('checked', false);
+
+            // Selección automática del checkbox firmar
+            $("#firmarcomunicado").prop('disabled', true);
+            $("#firmarcomunicado").prop('checked', true);
+
+        }
+        else{
             $("#asunto").prop('readonly', false);
             $(".note-editable").attr("contenteditable", true);
             $("#asunto").val("");

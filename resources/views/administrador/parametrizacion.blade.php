@@ -101,6 +101,12 @@
                                                         <th>Enviar a</th>
                                                         <th>Bandeja de trabajo destino</th>
                                                         <th>Estado de Facturación</th>
+                                                        <th>Tarifa de gestión</th>
+                                                        <th>Tarifa de notificación</th>
+                                                        <th>Tarifa adicional</th>
+                                                        <th>Valor total</th>
+                                                        <th>Porcentaje glosa</th>
+                                                        <th>ANS (Días)</th>
                                                         <th>Movimiento automático</th>
                                                         <th>Tiempo para el movimiento (Días)</th>
                                                         <th>Acción automática</th>
@@ -215,6 +221,30 @@
                                                                 <td>
                                                                     {{$parametrizacion_origen_atel_editar->Estado_facturacion}}
                                                                 </td>
+                                                                {{-- tarifa gestion --}}
+                                                                <td>
+                                                                    {{$parametrizacion_origen_atel_editar->Tarifa_gestion}}
+                                                                </td>
+                                                                {{-- tarifa notificacion --}}
+                                                                <td>
+                                                                    {{$parametrizacion_origen_atel_editar->Tarifa_notificacion}}
+                                                                </td>
+                                                                {{-- tarifa adicional --}}
+                                                                <td>
+                                                                    {{$parametrizacion_origen_atel_editar->Tarifa_adicional}}
+                                                                </td>
+                                                                {{-- Valor total --}}
+                                                                <td>
+                                                                    {{$parametrizacion_origen_atel_editar->Valor_total}}
+                                                                </td>
+                                                                {{-- Porcentaje glosa --}}
+                                                                <td>
+                                                                    {{$parametrizacion_origen_atel_editar->Porcentaje_glosa}}
+                                                                </td>
+                                                                {{-- ANS (Días) --}}
+                                                                <td>
+                                                                    {{$parametrizacion_origen_atel_editar->ans_dias}}
+                                                                </td>
                                                                 {{-- movimiento automático --}}
                                                                 <td>
                                                                     <?php if($parametrizacion_origen_atel_editar->Movimiento_automatico == "Si"):?>
@@ -294,6 +324,12 @@
                                                         <th>Enviar a</th>
                                                         <th>Bandeja de trabajo destino</th>
                                                         <th>Estado de Facturación</th>
+                                                        <th>Tarifa de gestión</th>
+                                                        <th>Tarifa de notificación</th>
+                                                        <th>Tarifa adicional</th>
+                                                        <th>Valor total</th>
+                                                        <th>Porcentaje glosa</th>
+                                                        <th>ANS (Días)</th>
                                                         <th>Movimiento automático</th>
                                                         <th>Tiempo para el movimiento (Días)</th>
                                                         <th>Acción automática</th>
@@ -458,6 +494,36 @@
                                                                     <input type="text" class="form-control d-none" id="bd_estado_facturacion_origen_atel_{{$parametrizacion_origen_atel_editar->Id_parametrizacion}}" value="{{$parametrizacion_origen_atel_editar->Estado_facturacion}}" disabled>
                                                                     <span style="width:156px; height:auto;" class="form-control" readonly>{{$parametrizacion_origen_atel_editar->Estado_facturacion}}</span>
                                                                 </td>
+                                                                {{-- Tarifa gestión --}}
+                                                                <td>
+                                                                    <input type="text" class="form-control d-none tarifa-input" id="bd_tarifa_gestion_origen_atel_{{$parametrizacion_origen_atel_editar->Id_parametrizacion}}" maxlength="9" value="{{$parametrizacion_origen_atel_editar->Tarifa_gestion}}" disabled>
+                                                                    <span style="width:156px; height:auto;" class="form-control" readonly>${{ number_format($parametrizacion_origen_atel_editar->Tarifa_gestion, 0, ',', '.') }}</span>
+                                                                </td>
+                                                                {{-- Tarifa notificación --}}
+                                                                <td>
+                                                                    <input type="text" class="form-control d-none tarifa-input" id="bd_tarifa_notificacion_origen_atel_{{$parametrizacion_origen_atel_editar->Id_parametrizacion}}" maxlength="9" value="{{$parametrizacion_origen_atel_editar->Tarifa_notificacion}}" disabled>
+                                                                    <span style="width:156px; height:auto;" class="form-control" readonly>${{ number_format($parametrizacion_origen_atel_editar->Tarifa_notificacion, 0, ',', '.') }}</span>
+                                                                </td>
+                                                                {{-- Tarifa adicional --}}
+                                                                <td>
+                                                                    <input type="text" class="form-control d-none tarifa-input" id="bd_tarifa_adicional_origen_atel_{{$parametrizacion_origen_atel_editar->Id_parametrizacion}}" maxlength="9" value="{{$parametrizacion_origen_atel_editar->Tarifa_adicional}}" disabled>
+                                                                    <span style="width:156px; height:auto;" class="form-control" readonly>${{number_format($parametrizacion_origen_atel_editar->Tarifa_adicional, 0, ',', '.')}}</span>
+                                                                </td>
+                                                                {{-- Valor total --}}
+                                                                <td>
+                                                                    <input type="text" class="form-control d-none" id="bd_valor_total_origen_atel_{{$parametrizacion_origen_atel_editar->Id_parametrizacion}}" maxlength="12" value="{{$parametrizacion_origen_atel_editar->Valor_total}}" disabled>
+                                                                    <span style="width:156px; height:auto;" class="form-control" readonly>${{number_format($parametrizacion_origen_atel_editar->Valor_total, 0, ',', '.')}}</span>
+                                                                </td>
+                                                                {{-- Porcentaje glosa --}}
+                                                                <td>
+                                                                    <input type="number" class="form-control d-none porcentaje-glosa-input" id="bd_porcentaje_glosa_origen_atel_{{$parametrizacion_origen_atel_editar->Id_parametrizacion}}" value="{{ $parametrizacion_origen_atel_editar->Porcentaje_glosa }}" min="0.0" max="100.0" step="0.5" disabled/>
+                                                                    <span style="width:156px; height:auto;" class="form-control" readonly>{{ $parametrizacion_origen_atel_editar->Porcentaje_glosa !== null && $parametrizacion_origen_atel_editar->Porcentaje_glosa !== '' ? $parametrizacion_origen_atel_editar->Porcentaje_glosa : '0,0' }}</span>
+                                                                </td>
+                                                                {{-- ANS (Días) --}}
+                                                                <td>
+                                                                    <input type="text" class="form-control d-none" id="bd_ans_dias_origen_atel_{{$parametrizacion_origen_atel_editar->Id_parametrizacion}}" value="{{$parametrizacion_origen_atel_editar->ans_dias}}" disabled>
+                                                                    <span style="width:156px; height:auto;" class="form-control" readonly>{{$parametrizacion_origen_atel_editar->ans_dias}}</span>
+                                                                </td>
                                                                 {{-- movimiento automático --}}
                                                                 <td>
                                                                     <div style="text-align:center;">
@@ -592,6 +658,12 @@
                                                         <th>Enviar a</th>
                                                         <th>Bandeja de trabajo destino</th>
                                                         <th>Estado de Facturación</th>
+                                                        <th>Tarifa de gestión</th>
+                                                        <th>Tarifa de notificación</th>
+                                                        <th>Tarifa adicional</th>
+                                                        <th>Valor total</th>
+                                                        <th>Porcentaje glosa</th>
+                                                        <th>ANS (Días)</th>
                                                         <th>Movimiento automático</th>
                                                         <th>Tiempo para el movimiento (Días)</th>
                                                         <th>Acción automática</th>
@@ -706,6 +778,30 @@
                                                                 <td>
                                                                     {{$parametrizacion_calificacion_pcl_editar->Estado_facturacion}}
                                                                 </td>
+                                                                {{-- tarifa gestion --}}
+                                                                <td>
+                                                                    {{$parametrizacion_calificacion_pcl_editar->Tarifa_gestion}}
+                                                                </td>
+                                                                {{-- tarifa notificacion --}}
+                                                                <td>
+                                                                    {{$parametrizacion_calificacion_pcl_editar->Tarifa_notificacion}}
+                                                                </td>
+                                                                {{-- tarifa adicional --}}
+                                                                <td>
+                                                                    {{$parametrizacion_calificacion_pcl_editar->Tarifa_adicional}}
+                                                                </td>
+                                                                {{-- Valor total --}}
+                                                                <td>
+                                                                    {{$parametrizacion_calificacion_pcl_editar->Valor_total}}
+                                                                </td>
+                                                                {{-- Porcentaje glosa --}}
+                                                                <td>
+                                                                    {{$parametrizacion_calificacion_pcl_editar->Porcentaje_glosa}}
+                                                                </td>
+                                                                {{-- ANS (Días) --}}
+                                                                <td>
+                                                                    {{$parametrizacion_calificacion_pcl_editar->ans_dias}}
+                                                                </td>
                                                                 {{-- movimiento automático --}}
                                                                 <td>
                                                                     <?php if($parametrizacion_calificacion_pcl_editar->Movimiento_automatico == "Si"):?>
@@ -785,6 +881,12 @@
                                                         <th>Enviar a</th>
                                                         <th>Bandeja de trabajo destino</th>
                                                         <th>Estado de Facturación</th>
+                                                        <th>Tarifa de gestión</th>
+                                                        <th>Tarifa de notificación</th>
+                                                        <th>Tarifa adicional</th>
+                                                        <th>Valor total</th>
+                                                        <th>Porcentaje glosa</th>
+                                                        <th>ANS (Días)</th>
                                                         <th>Movimiento automático</th>
                                                         <th>Tiempo para el movimiento (Días)</th>
                                                         <th>Acción automática</th>
@@ -949,6 +1051,36 @@
                                                                     <input type="text" class="form-control d-none" id="bd_estado_facturacion_calificacion_pcl_{{$parametrizacion_calificacion_pcl_editar->Id_parametrizacion}}" value="{{$parametrizacion_calificacion_pcl_editar->Estado_facturacion}}" disabled>
                                                                     <span style="width:156px; height:auto;" class="form-control" readonly>{{$parametrizacion_calificacion_pcl_editar->Estado_facturacion}}</span>
                                                                 </td>
+                                                                {{-- Tarifa gestión --}}
+                                                                <td>
+                                                                    <input type="text" class="form-control d-none tarifa-input" id="bd_tarifa_gestion_calificacion_pcl_{{$parametrizacion_calificacion_pcl_editar->Id_parametrizacion}}" maxlength="9" value="{{$parametrizacion_calificacion_pcl_editar->Tarifa_gestion}}" disabled>
+                                                                    <span style="width:156px; height:auto;" class="form-control" readonly>${{ number_format($parametrizacion_calificacion_pcl_editar->Tarifa_gestion, 0, ',', '.') }}</span>
+                                                                </td>
+                                                                {{-- Tarifa notificación --}}
+                                                                <td>
+                                                                    <input type="text" class="form-control d-none tarifa-input" id="bd_tarifa_notificacion_calificacion_pcl_{{$parametrizacion_calificacion_pcl_editar->Id_parametrizacion}}" maxlength="9" value="{{$parametrizacion_calificacion_pcl_editar->Tarifa_notificacion}}" disabled>
+                                                                    <span style="width:156px; height:auto;" class="form-control" readonly>${{number_format($parametrizacion_calificacion_pcl_editar->Tarifa_notificacion, 0, ',', '.')}}</span>
+                                                                </td>
+                                                                {{-- Tarifa adicional --}}
+                                                                <td>
+                                                                    <input type="text" class="form-control d-none tarifa-input" id="bd_tarifa_adicional_calificacion_pcl_{{$parametrizacion_calificacion_pcl_editar->Id_parametrizacion}}" maxlength="9" value="{{$parametrizacion_calificacion_pcl_editar->Tarifa_adicional}}" disabled>
+                                                                    <span style="width:156px; height:auto;" class="form-control" readonly>${{number_format($parametrizacion_calificacion_pcl_editar->Tarifa_adicional, 0, ',', '.')}}</span>
+                                                                </td>
+                                                                {{-- Valor total --}}
+                                                                <td>
+                                                                    <input type="text" class="form-control d-none" id="bd_valor_total_calificacion_pcl_{{$parametrizacion_calificacion_pcl_editar->Id_parametrizacion}}" maxlength="12" value="{{$parametrizacion_calificacion_pcl_editar->Valor_total}}" disabled>
+                                                                    <span style="width:156px; height:auto;" class="form-control" readonly>${{number_format($parametrizacion_calificacion_pcl_editar->Valor_total, 0, ',', '.')}}</span>
+                                                                </td>
+                                                                {{-- Porcentaje glosa --}}
+                                                                <td>
+                                                                    <input type="number" class="form-control d-none" id="bd_porcentaje_glosa_calificacion_pcl_{{$parametrizacion_calificacion_pcl_editar->Id_parametrizacion}}" value="{{$parametrizacion_calificacion_pcl_editar->Porcentaje_glosa}}" min="0.0" max="100.0" step="0.5" disabled/>
+                                                                    <span style="width:156px; height:auto;" class="form-control" readonly>{{$parametrizacion_calificacion_pcl_editar->Porcentaje_glosa}}</span>
+                                                                </td>
+                                                                {{-- ANS (Días) --}}
+                                                                <td>
+                                                                    <input type="text" class="form-control d-none" id="bd_ans_dias_calificacion_pcl_{{$parametrizacion_calificacion_pcl_editar->Id_parametrizacion}}" value="{{$parametrizacion_calificacion_pcl_editar->ans_dias}}" disabled>
+                                                                    <span style="width:156px; height:auto;" class="form-control" readonly>{{$parametrizacion_calificacion_pcl_editar->ans_dias}}</span>
+                                                                </td>
                                                                 {{-- movimiento automático --}}
                                                                 <td>
                                                                     <div style="text-align:center;">
@@ -1084,6 +1216,12 @@
                                                         <th>Enviar a</th>
                                                         <th>Bandeja de trabajo destino</th>
                                                         <th>Estado de Facturación</th>
+                                                        <th>Tarifa de gestión</th>
+                                                        <th>Tarifa de notificación</th>
+                                                        <th>Tarifa adicional</th>
+                                                        <th>Valor total</th>
+                                                        <th>Porcentaje glosa</th>
+                                                        <th>ANS (Días)</th>
                                                         <th>Movimiento automático</th>
                                                         <th>Tiempo para el movimiento (Días)</th>
                                                         <th>Acción automática</th>
@@ -1198,6 +1336,30 @@
                                                                 <td>
                                                                     {{$parametrizacion_juntas_editar->Estado_facturacion}}
                                                                 </td>
+                                                                {{-- tarifa gestion --}}
+                                                                <td>
+                                                                    {{$parametrizacion_juntas_editar->Tarifa_gestion}}
+                                                                </td>
+                                                                {{-- tarifa notificacion --}}
+                                                                <td>
+                                                                    {{$parametrizacion_juntas_editar->Tarifa_notificacion}}
+                                                                </td>
+                                                                {{-- tarifa adicional --}}
+                                                                <td>
+                                                                    {{$parametrizacion_juntas_editar->Tarifa_adicional}}
+                                                                </td>
+                                                                {{-- Valor total --}}
+                                                                <td>
+                                                                    {{$parametrizacion_juntas_editar->Valor_total}}
+                                                                </td>
+                                                                {{-- Porcentaje glosa --}}
+                                                                <td>
+                                                                    {{$parametrizacion_juntas_editar->Porcentaje_glosa}}
+                                                                </td>
+                                                                {{-- ANS (Días) --}}
+                                                                <td>
+                                                                    {{$parametrizacion_juntas_editar->ans_dias}}
+                                                                </td>
                                                                 {{-- movimiento automático --}}
                                                                 <td>
                                                                     <?php if($parametrizacion_juntas_editar->Movimiento_automatico == "Si"):?>
@@ -1278,6 +1440,12 @@
                                                         <th>Enviar a</th>
                                                         <th>Bandeja de trabajo destino</th>
                                                         <th>Estado de Facturación</th>
+                                                        <th>Tarifa de gestión</th>
+                                                        <th>Tarifa de notificación</th>
+                                                        <th>Tarifa adicional</th>
+                                                        <th>Valor total</th>
+                                                        <th>Porcentaje glosa</th>
+                                                        <th>ANS (Días)</th>
                                                         <th>Movimiento automático</th>
                                                         <th>Tiempo para el movimiento (Días)</th>
                                                         <th>Acción automática</th>
@@ -1441,6 +1609,37 @@
                                                                     </div> --}}
                                                                     <input type="text" class="form-control d-none" id="bd_estado_facturacion_juntas_{{$parametrizacion_juntas_editar->Id_parametrizacion}}" value="{{$parametrizacion_juntas_editar->Estado_facturacion}}" disabled>
                                                                     <span style="width:156px; height:auto;" class="form-control" readonly>{{$parametrizacion_juntas_editar->Estado_facturacion}}</span>
+                                                                </td>
+                                                                {{-- Tarifa gestión --}}
+                                                                <td>
+                                                                    <input type="text" class="form-control d-none tarifa-input" id="bd_tarifa_gestion_juntas_{{$parametrizacion_juntas_editar->Id_parametrizacion}}" maxlength="9" value="{{$parametrizacion_juntas_editar->Tarifa_gestion}}" disabled>
+                                                                    <span style="width:156px; height:auto;" class="form-control" readonly>${{ number_format($parametrizacion_juntas_editar->Tarifa_gestion, 0, ',', '.') }}</span>
+                                                                </td>
+                                                                {{-- Tarifa notificación --}}
+                                                                <td>
+                                                                    <input type="text" class="form-control d-none tarifa-input" id="bd_tarifa_notificacion_juntas_{{$parametrizacion_juntas_editar->Id_parametrizacion}}" maxlength="9" value="{{$parametrizacion_juntas_editar->Tarifa_notificacion}}" disabled>
+                                                                    <span style="width:156px; height:auto;" class="form-control" readonly>${{number_format($parametrizacion_juntas_editar->Tarifa_notificacion, 0, ',', '.')}}</span>
+                                                                </td>
+                                                                {{-- Tarifa adicional --}}
+                                                                <td>
+                                                                    <input type="text" class="form-control d-none tarifa-input" id="bd_tarifa_adicional_juntas_{{$parametrizacion_juntas_editar->Id_parametrizacion}}" maxlength="9" value="{{$parametrizacion_juntas_editar->Tarifa_adicional}}" disabled>
+                                                                    <span style="width:156px; height:auto;" class="form-control" readonly>${{number_format($parametrizacion_juntas_editar->Tarifa_adicional, 0, ',', '.')}}</span>
+                                                                </td>
+                                                                {{-- Valor total --}}
+                                                                <td>
+                                                                    <input type="text" class="form-control d-none" id="bd_valor_total_juntas_{{$parametrizacion_juntas_editar->Id_parametrizacion}}" maxlength="12" value="{{$parametrizacion_juntas_editar->Valor_total}}" disabled>
+                                                                    <span style="width:156px; height:auto;" class="form-control" readonly>${{number_format($parametrizacion_juntas_editar->Valor_total, 0, ',', '.')}}</span>
+                                                                </td>
+                                                                {{-- Porcentaje glosa --}}
+                                                                <td>
+                                                                    <input type="number" class="form-control d-none porcentaje-glosa-input" id="bd_porcentaje_glosa_juntas_{{$parametrizacion_juntas_editar->Id_parametrizacion}}" value="{{ $parametrizacion_juntas_editar->Porcentaje_glosa }}" min="0.0" max="100.0" step="0.5" disabled/>
+                                                                    <span style="width:156px; height:auto;" class="form-control" readonly>{{ $parametrizacion_juntas_editar->Porcentaje_glosa !== null && $parametrizacion_juntas_editar->Porcentaje_glosa !== '' ? $parametrizacion_juntas_editar->Porcentaje_glosa : '0,0' }}</span>
+                                                                    {{-- <span style="width:156px; height:auto;" class="form-control" readonly>{{$parametrizacion_juntas_editar->Porcentaje_glosa}}</span> --}}
+                                                                </td>
+                                                                {{-- ANS (Días) --}}
+                                                                <td>
+                                                                    <input type="text" class="form-control d-none" id="bd_ans_dias_juntas_{{$parametrizacion_juntas_editar->Id_parametrizacion}}" value="{{$parametrizacion_juntas_editar->ans_dias}}" disabled>
+                                                                    <span style="width:156px; height:auto;" class="form-control" readonly>{{$parametrizacion_juntas_editar->ans_dias}}</span>
                                                                 </td>
                                                                 {{-- movimiento automático --}}
                                                                 <td>

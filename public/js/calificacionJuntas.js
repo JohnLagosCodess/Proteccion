@@ -134,9 +134,12 @@ $(document).ready(function(){
         success:function(data){
             let fuente_info = $("#fuente_info_juntas").val();
             for(const key in data){
-                $("#fuente_info_juntas").append(`<option value='${data[key].Id_Parametro}'>${data[key].Nombre_parametro}</option>`);
+                if (data[key].Id_Parametro == 328 && data[key].Nombre_parametro == 'Afiliado') {
+                    $('#fuente_info_juntas').append('<option value="'+data[key].Id_Parametro+'" selected>'+data[key].Nombre_parametro+'</option>');
+                } else {
+                    $("#fuente_info_juntas").append(`<option value='${data[key].Id_Parametro}'>${data[key].Nombre_parametro}</option>`);
+                }
             }
-
         }
     });
 

@@ -278,16 +278,17 @@ class CalificacionJuntasController extends Controller
                 ];
     
                 sigmel_informacion_controversia_juntas_eventos::on('sigmel_gestiones')->insert($datos);
-            } else {
-                $datos = [
-                    'F_envio_jrci' => $f_envio_exp_jrci,
-                    'Nombre_usuario' => $nombre_usuario,
-                    'F_registro' => $date,
-                ];
+            } 
+            // else {
+            //     $datos = [
+            //         'F_envio_jrci' => $f_envio_exp_jrci,
+            //         'Nombre_usuario' => $nombre_usuario,
+            //         'F_registro' => $date,
+            //     ];
     
-                sigmel_informacion_controversia_juntas_eventos::on('sigmel_gestiones')
-                ->where('Id_Asignacion', $newIdAsignacion)->update($datos);
-            }
+            //     sigmel_informacion_controversia_juntas_eventos::on('sigmel_gestiones')
+            //     ->where('Id_Asignacion', $newIdAsignacion)->update($datos);
+            // }
 
         }else{
             $f_envio_exp_jrci = '';
@@ -333,16 +334,17 @@ class CalificacionJuntasController extends Controller
                 ];
     
                 sigmel_informacion_controversia_juntas_eventos::on('sigmel_gestiones')->insert($datos);
-            } else {
-                $datos = [
-                    'F_devolucion_exp_jrci' => $f_devolucion_exp_jrci,
-                    'Nombre_usuario' => $nombre_usuario,
-                    'F_registro' => $date,
-                ];
+            } 
+            // else {
+            //     $datos = [
+            //         'F_devolucion_exp_jrci' => $f_devolucion_exp_jrci,
+            //         'Nombre_usuario' => $nombre_usuario,
+            //         'F_registro' => $date,
+            //     ];
     
-                sigmel_informacion_controversia_juntas_eventos::on('sigmel_gestiones')
-                ->where('Id_Asignacion', $newIdAsignacion)->update($datos);
-            }
+            //     sigmel_informacion_controversia_juntas_eventos::on('sigmel_gestiones')
+            //     ->where('Id_Asignacion', $newIdAsignacion)->update($datos);
+            // }
         }else{
             $f_devolucion_exp_jrci = '';
         }
@@ -384,16 +386,17 @@ class CalificacionJuntasController extends Controller
                 ];
     
                 sigmel_informacion_controversia_juntas_eventos::on('sigmel_gestiones')->insert($datos);
-            } else {
-                $datos = [
-                    'F_reenvio_exp_jrci' => $f_reenvio_exp_jrci,
-                    'Nombre_usuario' => $nombre_usuario,
-                    'F_registro' => $date,
-                ];
-    
-                sigmel_informacion_controversia_juntas_eventos::on('sigmel_gestiones')
-                ->where('Id_Asignacion', $newIdAsignacion)->update($datos);
             }
+            // else {
+            //     $datos = [
+            //         'F_reenvio_exp_jrci' => $f_reenvio_exp_jrci,
+            //         'Nombre_usuario' => $nombre_usuario,
+            //         'F_registro' => $date,
+            //     ];
+    
+            //     sigmel_informacion_controversia_juntas_eventos::on('sigmel_gestiones')
+            //     ->where('Id_Asignacion', $newIdAsignacion)->update($datos);
+            // }
         }else{
             $f_reenvio_exp_jrci = '';
         }
@@ -429,16 +432,17 @@ class CalificacionJuntasController extends Controller
                 ];
     
                 sigmel_informacion_controversia_juntas_eventos::on('sigmel_gestiones')->insert($datos);
-            } else {
-                $datos = [
-                    'F_envio_jnci' => $f_envio_pago_honorarios_jnci,
-                    'Nombre_usuario' => $nombre_usuario,
-                    'F_registro' => $date,
-                ];
-    
-                sigmel_informacion_controversia_juntas_eventos::on('sigmel_gestiones')
-                ->where('Id_Asignacion', $newIdAsignacion)->update($datos);
             }
+            // else {
+            //     $datos = [
+            //         'F_envio_jnci' => $f_envio_pago_honorarios_jnci,
+            //         'Nombre_usuario' => $nombre_usuario,
+            //         'F_registro' => $date,
+            //     ];
+    
+            //     sigmel_informacion_controversia_juntas_eventos::on('sigmel_gestiones')
+            //     ->where('Id_Asignacion', $newIdAsignacion)->update($datos);
+            // }
         }else{
             $f_envio_pago_honorarios_jnci = '';
         }

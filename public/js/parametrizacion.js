@@ -26,7 +26,7 @@ $(document).ready(function(){
             var api = this.api();
 
             // Columnas específicas a las que se aplicará el código de filtros
-            var targetColumns = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26];
+            var targetColumns = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33,34,35];
             
             // Para cada columna
             api.columns().eq(0).each(function (colIdx) {
@@ -89,7 +89,7 @@ $(document).ready(function(){
                                                 
                     ],
                     exportOptions: {
-                        columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26]
+                        columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35]
                     }
                 }
             ]
@@ -115,7 +115,7 @@ $(document).ready(function(){
                 var api = this.api();
     
                 // Columnas específicas a las que se aplicará el código de filtros
-                var targetColumns = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27];
+                var targetColumns = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35];
                 
                 // Para cada columna
                 api.columns().eq(0).each(function (colIdx) {
@@ -199,6 +199,41 @@ $(document).ready(function(){
         var id_fila_parametrizacion_editar = $(this).data("id_fila_parametrizacion_editar");
         $("#id_parametrizacion_origen_atel_editar").val(id_fila_parametrizacion_editar);
 
+        $(`#bd_porcentaje_glosa_origen_atel_`+id_fila_parametrizacion_editar).on('input change',function() {
+            let $input = $(this);
+            let rawValue = $input.val().replace(',', '.');
+
+            // Permitir solo caracteres válidos temporalmente
+            if (!/^(\d+([.]\d{0,1})?)?$/.test(rawValue)) {
+                rawValue = rawValue.slice(0, -1); // Elimina último carácter si no es válido
+                $input.val(rawValue);
+                return;
+            }
+
+            let numericValue = parseFloat(rawValue);
+
+            // Si no es número, salir (evita NaN)
+            if (isNaN(numericValue)) return;
+
+            // Limitar entre 0.0 y 100.0
+            numericValue = Math.min(Math.max(numericValue, 0), 100);
+
+            // Redondear a un decimal
+            numericValue = Math.round(numericValue * 10) / 10;
+
+            // Reasignar valor formateado al input
+            $input.val(numericValue);
+        });
+
+        $(`.tarifa-input`).on('input change',function() {
+            let tarifa_gestion = parseInt($('#bd_tarifa_gestion_origen_atel_'+id_fila_parametrizacion_editar).val()) || 0;
+            let tarifa_notificacion = parseInt($('#bd_tarifa_notificacion_origen_atel_'+id_fila_parametrizacion_editar).val()) || 0;
+            let tarifa_adicional = parseInt($('#bd_tarifa_adicional_origen_atel_'+id_fila_parametrizacion_editar).val()) || 0;
+            const Valor_total = tarifa_gestion + tarifa_notificacion + tarifa_adicional;
+            $('#bd_valor_total_origen_atel_'+id_fila_parametrizacion_editar).val(Valor_total);
+            $('#bd_valor_total_origen_atel_'+id_fila_parametrizacion_editar).next('span').text(`$${Valor_total.toLocaleString('es-CO')}`);
+        });
+
         var row = $(this).closest('tr');
         row.find('input, textarea, select').prop('readonly', false).prop('disabled', false);
         row.find('input').removeClass('d-none');
@@ -219,23 +254,31 @@ $(document).ready(function(){
         // Esta función realiza los controles de cada elemento por fila
         edicion_parametrizacion_origen_atel(id_fila_parametrizacion_editar);
 
-//Si no hay niguna accion selecionada setea los valores de enviar como vacio
-$(`#bd_accion_ejecutar_origen_atel_${id_parametrizacion_calificacion_pcl_editar} `).change(function(){
-    if($(this).val() == 0){
-        console.log('q');
-        $('#bd_enviar_a_origen_atel_'+id_parametrizacion_calificacion_pcl_editar).prop('disabled',true);
-        $('#bd_enviar_a_origen_atel_'+id_parametrizacion_calificacion_pcl_editar).prop('checked',false);
-        $('#bd_bandeja_trabajo_destino_origen_atel_'+id_parametrizacion_calificacion_pcl_editar).empty();
-    }else{
-        $('#bd_enviar_a_origen_atel_'+id_parametrizacion_calificacion_pcl_editar).prop('disabled',false);
-    }
-});
+        //Deshabilitar el campo de valor total, ya que no debe poderse cambiar
+        $('#bd_valor_total_origen_atel_'+id_fila_parametrizacion_editar).prop('disabled',true);
+
+        //Si no hay niguna accion selecionada setea los valores de enviar como vacio
+        $(`#bd_accion_ejecutar_origen_atel_${id_fila_parametrizacion_editar} `).change(function(){
+            if($(this).val() == 0){
+                console.log('q');
+                $('#bd_enviar_a_origen_atel_'+id_fila_parametrizacion_editar).prop('disabled',true);
+                $('#bd_enviar_a_origen_atel_'+id_fila_parametrizacion_editar).prop('checked',false);
+                $('#bd_bandeja_trabajo_destino_origen_atel_'+id_fila_parametrizacion_editar).empty();
+            }else{
+                $('#bd_enviar_a_origen_atel_'+id_fila_parametrizacion_editar).prop('disabled',false);
+            }
+        });
     });
     
     /* ACTUALIZAR PARAMETRIZACIÓN ORIGEN ATEL */
     $(document).on('click', "a[id^='bd_guardar_fila_origen_atel_']", function(){
         let token = $("input[name='_token']").val();
         var id_parametrizacion_origen_atel_editar = $("#id_parametrizacion_origen_atel_editar").val();
+
+        let porcentaje_glosa = $(`#bd_porcentaje_glosa_origen_atel_`+id_parametrizacion_origen_atel_editar).val();
+        if(porcentaje_glosa == '' || porcentaje_glosa == 0 || porcentaje_glosa == null){
+            $(`#bd_porcentaje_glosa_origen_atel_`+id_parametrizacion_origen_atel_editar).val(0.0);
+        }
         // Capturamos los datos de cada tr
         var row = $(this).closest('tr');
         // A todos los input, textarea, select se les adiciona las propiedades readonlu y disabled
@@ -345,6 +388,12 @@ $(`#bd_accion_ejecutar_origen_atel_${id_parametrizacion_calificacion_pcl_editar}
             '<div style="text-align:center;"><input type="checkbox" class="scales" name="enviar_a_origen_atel" id="enviar_a_origen_atel_'+contador_origen_atel+'" disabled></div>',
             '<select disabled class="custom-select bandeja_trabajo_destino_origen_atel_'+contador_origen_atel+'" name="bandeja_trabajo_destino_origen_atel" id="bandeja_trabajo_destino_origen_atel_'+contador_origen_atel+'"><option value=""></option></select>',
             '<input type="text" class="form-control" name="estado_facturacion_origen_atel" id="estado_facturacion_origen_atel_'+contador_origen_atel+'">',
+            '<input type="text" class="form-control" id="tarifa_gestion_origen_atel_'+contador_origen_atel+'" maxlength="9">',
+            '<input type="text" class="form-control" id="tarifa_notificacion_origen_atel_'+contador_origen_atel+'" maxlength="9">',
+            '<input type="text" class="form-control" id="tarifa_adicional_origen_atel_'+contador_origen_atel+'" maxlength="9">',
+            '<input type="text" class="form-control" id="valor_total_origen_atel_'+contador_origen_atel+'" maxlength="12">',
+            '<input type="text" class="form-control" id="procentaje_glosa_origen_atel_'+contador_origen_atel+'">',
+            '<input type="text" class="form-control" id="ans_dias_origen_atel_'+contador_origen_atel+'">',
             '<div style="text-align:center;"><input type="checkbox" class="scales" name="movimiento_automatico_origen_atel" id="movimiento_automatico_origen_atel_'+contador_origen_atel+'" data-id_movimiento_automatico_origen_atel="'+contador_origen_atel+'"></div>',
             '<input disabled style="width:140px;" type="number" class="form-control" name="tiempo_movimiento_origen_atel" id="tiempo_movimiento_origen_atel_'+contador_origen_atel+'">',
             '<select disabled class="custom-select accion_automatica_origen_atel'+contador_origen_atel+'" name="accion_automatica_origen_atel" id="accion_automatica_origen_atel_'+contador_origen_atel+'"><option value=""></option></select>',
@@ -387,7 +436,7 @@ $(`#bd_accion_ejecutar_origen_atel_${id_parametrizacion_calificacion_pcl_editar}
             var api = this.api();
 
             // Columnas específicas a las que se aplicará el código de filtros
-            var targetColumns = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26];
+            var targetColumns = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35];
             
             // Para cada columna
             api.columns().eq(0).each(function (colIdx) {
@@ -450,7 +499,7 @@ $(`#bd_accion_ejecutar_origen_atel_${id_parametrizacion_calificacion_pcl_editar}
                                                 
                     ],
                     exportOptions: {
-                        columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26]
+                        columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35]
                     }
                 }
             ]
@@ -476,7 +525,7 @@ $(`#bd_accion_ejecutar_origen_atel_${id_parametrizacion_calificacion_pcl_editar}
                 var api = this.api();
     
                 // Columnas específicas a las que se aplicará el código de filtros
-                var targetColumns = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27];
+                var targetColumns = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33,34,35];
                 
                 // Para cada columna
                 api.columns().eq(0).each(function (colIdx) {
@@ -558,6 +607,41 @@ $(`#bd_accion_ejecutar_origen_atel_${id_parametrizacion_calificacion_pcl_editar}
         var id_fila_parametrizacion_editar = $(this).data("id_fila_parametrizacion_editar");
         $("#id_parametrizacion_calificacion_pcl_editar").val(id_fila_parametrizacion_editar);
 
+        $(`#bd_porcentaje_glosa_calificacion_pcl_`+id_fila_parametrizacion_editar).on('input change',function() {
+            let $input = $(this);
+            let rawValue = $input.val().replace(',', '.');
+
+            // Permitir solo caracteres válidos temporalmente
+            if (!/^(\d+([.]\d{0,1})?)?$/.test(rawValue)) {
+                rawValue = rawValue.slice(0, -1); // Elimina último carácter si no es válido
+                $input.val(rawValue);
+                return;
+            }
+
+            let numericValue = parseFloat(rawValue);
+
+            // Si no es número, salir (evita NaN)
+            if (isNaN(numericValue)) return;
+
+            // Limitar entre 0.0 y 100.0
+            numericValue = Math.min(Math.max(numericValue, 0), 100);
+
+            // Redondear a un decimal
+            numericValue = Math.round(numericValue * 10) / 10;
+
+            // Reasignar valor formateado al input
+            $input.val(numericValue);
+        });
+
+        $(`.tarifa-input`).on('input change',function() {
+            let tarifa_gestion = parseInt($('#bd_tarifa_gestion_calificacion_pcl_'+id_fila_parametrizacion_editar).val()) || 0;
+            let tarifa_notificacion = parseInt($('#bd_tarifa_notificacion_calificacion_pcl_'+id_fila_parametrizacion_editar).val()) || 0;
+            let tarifa_adicional = parseInt($('#bd_tarifa_adicional_calificacion_pcl_'+id_fila_parametrizacion_editar).val()) || 0;
+            const Valor_total = tarifa_gestion + tarifa_notificacion + tarifa_adicional;
+            $('#bd_valor_total_calificacion_pcl_'+id_fila_parametrizacion_editar).val(Valor_total);
+            $('#bd_valor_total_calificacion_pcl_'+id_fila_parametrizacion_editar).next('span').text(`$${Valor_total.toLocaleString('es-CO')}`);
+        });
+
         var row = $(this).closest('tr');
         row.find('input, textarea, select').prop('readonly', false).prop('disabled', false);
         row.find('input').removeClass('d-none');
@@ -577,12 +661,20 @@ $(`#bd_accion_ejecutar_origen_atel_${id_parametrizacion_calificacion_pcl_editar}
 
         // Esta función realiza los controles de cada elemento por fila
         edicion_parametrizacion_calificacion_pcl(id_fila_parametrizacion_editar);
+
+        //Deshabilitar el campo de valor total, ya que no debe poderse cambiar
+        $('#bd_valor_total_calificacion_pcl_'+id_fila_parametrizacion_editar).prop('disabled',true);
     });
 
     /* ACTUALIZAR PARAMETRIZACIÓN CALIFICACIÓN PCL */
     $(document).on('click', "a[id^='bd_guardar_fila_calificacion_pcl_']", function(){
         let token = $("input[name='_token']").val();
         var id_parametrizacion_calificacion_pcl_editar = $("#id_parametrizacion_calificacion_pcl_editar").val();
+
+        let porcentaje_glosa = $(`#bd_porcentaje_glosa_calificacion_pcl_`+id_parametrizacion_calificacion_pcl_editar).val();
+        if(porcentaje_glosa == '' || porcentaje_glosa == 0 || porcentaje_glosa == null){
+            $(`#bd_porcentaje_glosa_calificacion_pcl_`+id_parametrizacion_calificacion_pcl_editar).val(0.0);
+        }
         // Capturamos los datos de cada tr
         var row = $(this).closest('tr');
         // A todos los input, textarea, select se les adiciona las propiedades readonlu y disabled
@@ -691,6 +783,12 @@ $(`#bd_accion_ejecutar_origen_atel_${id_parametrizacion_calificacion_pcl_editar}
             '<div style="text-align:center;"><input type="checkbox" class="scales" name="enviar_a_calificacion_pcl" id="enviar_a_calificacion_pcl_'+contador_calificacion_pcl+'" disabled></div>',
             '<select disabled class="custom-select bandeja_trabajo_destino_calificacion_pcl_'+contador_calificacion_pcl+'" name="bandeja_trabajo_destino_calificacion_pcl" id="bandeja_trabajo_destino_calificacion_pcl_'+contador_calificacion_pcl+'"><option value=""></option></select>',
             '<input type="text" class="form-control" name="estado_facturacion_calificacion_pcl" id="estado_facturacion_calificacion_pcl_'+contador_calificacion_pcl+'">',
+            '<input type="text" class="form-control" id="tarifa_gestion_calificacion_pcl_'+contador_calificacion_pcl+'" maxlength="9">',
+            '<input type="text" class="form-control" id="tarifa_notificacion_calificacion_pcl_'+contador_calificacion_pcl+'" maxlength="9">',
+            '<input type="text" class="form-control" id="tarifa_adicional_calificacion_pcl_'+contador_calificacion_pcl+'" maxlength="9">',
+            '<input type="text" class="form-control" id="valor_total_calificacion_pcl_'+contador_calificacion_pcl+'" maxlength="12">',
+            '<input type="text" class="form-control" id="procentaje_glosa_calificacion_pcl_'+contador_calificacion_pcl+'">',
+            '<input type="text" class="form-control" id="ans_dias_calificacion_pcl_'+contador_calificacion_pcl+'">',
             '<div style="text-align:center;"><input type="checkbox" class="scales" name="movimiento_automatico_calificacion_pcl" id="movimiento_automatico_calificacion_pcl_'+contador_calificacion_pcl+'" data-id_movimiento_automatico_calificacion_pcl="'+contador_calificacion_pcl+'"></div>',
             '<input disabled style="width:140px;" type="number" class="form-control" name="tiempo_movimiento_calificacion_pcl" id="tiempo_movimiento_calificacion_pcl_'+contador_calificacion_pcl+'">',
             '<select disabled class="custom-select accion_automatica_calificacion_pcl'+contador_calificacion_pcl+'" name="accion_automatica_calificacion_pcl" id="accion_automatica_calificacion_pcl_'+contador_calificacion_pcl+'"><option value=""></option></select>',
@@ -733,7 +831,7 @@ $(`#bd_accion_ejecutar_origen_atel_${id_parametrizacion_calificacion_pcl_editar}
             var api = this.api();
 
             // Columnas específicas a las que se aplicará el código de filtros
-            var targetColumns = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26];            
+            var targetColumns = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33,34,35];           
 
             // Para cada columna
             api.columns().eq(0).each(function (colIdx) {
@@ -796,7 +894,7 @@ $(`#bd_accion_ejecutar_origen_atel_${id_parametrizacion_calificacion_pcl_editar}
                                                 
                     ],
                     exportOptions: {
-                        columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24, 25, 26]
+                        columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24, 25, 26,27,28,29,30,31,32,33,34,35]
                     }
                 }
             ]
@@ -821,7 +919,7 @@ $(`#bd_accion_ejecutar_origen_atel_${id_parametrizacion_calificacion_pcl_editar}
                 var api = this.api();
     
                 // Columnas específicas a las que se aplicará el código de filtros
-                var targetColumns = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27];
+                var targetColumns = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33,34,35];
                 
                 // Para cada columna
                 api.columns().eq(0).each(function (colIdx) {
@@ -925,6 +1023,41 @@ $(`#bd_accion_ejecutar_origen_atel_${id_parametrizacion_calificacion_pcl_editar}
         var id_fila_parametrizacion_editar = $(this).data("id_fila_parametrizacion_editar");
         $("#id_parametrizacion_juntas_editar").val(id_fila_parametrizacion_editar);
 
+        $(`#bd_porcentaje_glosa_juntas_`+id_fila_parametrizacion_editar).on('input change',function() {
+            let $input = $(this);
+            let rawValue = $input.val().replace(',', '.');
+
+            // Permitir solo caracteres válidos temporalmente
+            if (!/^(\d+([.]\d{0,1})?)?$/.test(rawValue)) {
+                rawValue = rawValue.slice(0, -1); // Elimina último carácter si no es válido
+                $input.val(rawValue);
+                return;
+            }
+
+            let numericValue = parseFloat(rawValue);
+
+            // Si no es número, salir (evita NaN)
+            if (isNaN(numericValue)) return;
+
+            // Limitar entre 0.0 y 100.0
+            numericValue = Math.min(Math.max(numericValue, 0), 100);
+
+            // Redondear a un decimal
+            numericValue = Math.round(numericValue * 10) / 10;
+
+            // Reasignar valor formateado al input
+            $input.val(numericValue);
+        });
+
+        $(`.tarifa-input`).on('input change',function() {
+            let tarifa_gestion = parseInt($('#bd_tarifa_gestion_juntas_'+id_fila_parametrizacion_editar).val()) || 0;
+            let tarifa_notificacion = parseInt($('#bd_tarifa_notificacion_juntas_'+id_fila_parametrizacion_editar).val()) || 0;
+            let tarifa_adicional = parseInt($('#bd_tarifa_adicional_juntas_'+id_fila_parametrizacion_editar).val()) || 0;
+            const Valor_total = tarifa_gestion + tarifa_notificacion + tarifa_adicional;
+            $('#bd_valor_total_juntas_'+id_fila_parametrizacion_editar).val(Valor_total);
+            $('#bd_valor_total_juntas_'+id_fila_parametrizacion_editar).next('span').text(`$${Valor_total.toLocaleString('es-CO')}`);
+        });
+
         var row = $(this).closest('tr');
         row.find('input, textarea, select').prop('readonly', false).prop('disabled', false);
         row.find('input').removeClass('d-none');
@@ -944,12 +1077,20 @@ $(`#bd_accion_ejecutar_origen_atel_${id_parametrizacion_calificacion_pcl_editar}
 
         // Esta función realiza los controles de cada elemento por fila
         edicion_parametrizacion_juntas(id_fila_parametrizacion_editar);
+
+        //Deshabilitar el campo de valor total, ya que no debe poderse cambiar
+        $('#bd_valor_total_juntas_'+id_fila_parametrizacion_editar).prop('disabled',true);
     });
 
     /* ACTUALIZAR PARAMETRIZACIÓN JUNTAS */
     $(document).on('click', "a[id^='bd_guardar_fila_juntas_']", function(){
         let token = $("input[name='_token']").val();
         var id_parametrizacion_juntas_editar = $("#id_parametrizacion_juntas_editar").val();
+
+        let porcentaje_glosa = $(`#bd_porcentaje_glosa_juntas_`+id_parametrizacion_juntas_editar).val();
+        if(porcentaje_glosa == '' || porcentaje_glosa == 0 || porcentaje_glosa == null){
+            $(`#bd_porcentaje_glosa_juntas_`+id_parametrizacion_juntas_editar).val(0.0);
+        }
         // Capturamos los datos de cada tr
         var row = $(this).closest('tr');
         // A todos los input, textarea, select se les adiciona las propiedades readonlu y disabled
@@ -1058,6 +1199,12 @@ $(`#bd_accion_ejecutar_origen_atel_${id_parametrizacion_calificacion_pcl_editar}
             '<div style="text-align:center;"><input type="checkbox" class="scales" name="enviar_a_juntas" id="enviar_a_juntas_'+contador_juntas+'" disabled></div>',
             '<select disabled class="custom-select bandeja_trabajo_destino_juntas_'+contador_juntas+'" name="bandeja_trabajo_destino_juntas" id="bandeja_trabajo_destino_juntas_'+contador_juntas+'"><option value=""></option></select>',
             '<input type="text" class="form-control" name="estado_facturacion_juntas" id="estado_facturacion_juntas_'+contador_juntas+'">',
+            '<input type="text" class="form-control" id="tarifa_gestion_juntas_'+contador_juntas+'" maxlength="9">',
+            '<input type="text" class="form-control" id="tarifa_notificacion_juntas_'+contador_juntas+'" maxlength="9">',
+            '<input type="text" class="form-control" id="tarifa_adicional_juntas_'+contador_juntas+'" maxlength="9">',
+            '<input type="text" class="form-control" id="valor_total_juntas_'+contador_juntas+'" maxlength="12">',
+            '<input type="text" class="form-control" id="procentaje_glosa_juntas_'+contador_juntas+'">',
+            '<input type="text" class="form-control" id="ans_dias_juntas_'+contador_juntas+'">',
             '<div style="text-align:center;"><input type="checkbox" class="scales" name="movimiento_automatico_juntas" id="movimiento_automatico_juntas_'+contador_juntas+'" data-id_movimiento_automatico_juntas="'+contador_juntas+'"></div>',
             '<input disabled style="width:140px;" type="number" class="form-control" name="tiempo_movimiento_juntas" id="tiempo_movimiento_juntas_'+contador_juntas+'">',
             '<select disabled class="custom-select accion_automatica_juntas'+contador_juntas+'" name="accion_automatica_juntas" id="accion_automatica_juntas_'+contador_juntas+'"><option value=""></option></select>',
