@@ -791,8 +791,6 @@
                                                 <input type="date" class="form-control" name="f_envio_jrci" id="f_envio_jrci" max="{{now()->format('Y-m-d')}}" min='1900-01-01' 
                                                 value="<?php if (!empty($arrayinfo_controvertido[0]->F_envio_jrci)) {
                                                         echo $arrayinfo_controvertido[0]->F_envio_jrci;
-                                                    }else{
-                                                        echo $f_envio_exp_jrci;
                                                     }
                                                 ?>">
                                                 <span class="d-none" id="f_envio_jrci_alerta" style="color: red; font-style: italic;"></span>
@@ -804,8 +802,6 @@
                                                 <input type="date" class="form-control" name="f_devolucion_exp_jrci" id="f_devolucion_exp_jrci" 
                                                 value="<?php if (!empty($arrayinfo_controvertido[0]->F_devolucion_exp_jrci)) {
                                                         echo $arrayinfo_controvertido[0]->F_devolucion_exp_jrci;
-                                                    } else {
-                                                        echo $f_devolucion_exp_jrci;
                                                     }
                                                 ?>">
                                             </div>
@@ -827,8 +823,6 @@
                                                 <input type="date" class="form-control" name="f_reenvio_exp_jrci" id="f_reenvio_exp_jrci" 
                                                 value="<?php if (!empty($arrayinfo_controvertido[0]->F_reenvio_exp_jrci)) {
                                                         echo $arrayinfo_controvertido[0]->F_reenvio_exp_jrci;
-                                                    } else {
-                                                        echo $f_reenvio_exp_jrci;
                                                     }
                                                 ?>">
                                             </div>
@@ -865,8 +859,6 @@
                                                 <input type="date" class="form-control" name="f_envio_jnci" id="f_envio_jnci" max="{{now()->format('Y-m-d')}}" min='1900-01-01' 
                                                 value="<?php if (!empty($arrayinfo_controvertido[0]->F_envio_jnci)) {
                                                         echo $arrayinfo_controvertido[0]->F_envio_jnci;
-                                                    } else {
-                                                        echo $f_envio_pago_honorarios_jnci;
                                                     }
                                                 ?>">
                                                 <span class="d-none" id="f_envio_jnci_alerta" style="color: red; font-style: italic;"></span>

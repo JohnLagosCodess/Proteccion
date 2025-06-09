@@ -235,218 +235,6 @@ class CalificacionJuntasController extends Controller
             ['Nombre_documento', 'Lista_chequeo'],
         ])->get();
 
-        /* Consultamos si existe o no una controversia previamente creada  */
-        $array_existe_controversia = sigmel_informacion_controversia_juntas_eventos::on('sigmel_gestiones')
-        ->where([
-            ['ID_evento', $newIdEvento],
-            ['Id_Asignacion', $newIdAsignacion],
-        ])->get();
-
-        /* 
-            Validaciones para traer la info del campo Fecha envío expediente a JRCI de la sección Seguimiento a Juntas calificadoras 
-            Se requiere traer la Fecha de accion más reciente cuando se haya ejecutado la acción REPORTAR NOTIFICACIÓN EXPEDIENTE JRCI (ID 61) ---> YA NO ES CON ESTA ACCIÓN:
-
-            ACORDE A LA FICHA SS5 SERÁ CON LAS ACCIONES:
-            REPORTAR ENVÍO DE EXPEDIENTE DIGITAL (ID 122)
-            REPORTAR ENVÍO DE EXPEDIENTE EN FÍSICO (ID 120)
-        */
-        $array_f_envio_exp_jrci = sigmel_informacion_historial_accion_eventos::on('sigmel_gestiones')
-        ->selectRaw('DATE(F_accion) as F_accion')
-        ->where([
-            ['Id_Asignacion', $newIdAsignacion],
-            ['ID_evento', $newIdEvento],
-            ['Id_servicio', $Id_servicio],
-        ])
-        ->whereIn('Id_accion', [122, 120])
-        ->orderBy('F_accion', 'desc')->first();
-        
-        /* 
-            si llega existir la acción y su correspondiente fecha entonces se realizará la actualización o la inserción de datos 
-            en la tabla sigmel_informacion_controversia_juntas_eventos dependiendo de si ya existe o no previamente una controversia
-        */
-        if ($array_f_envio_exp_jrci) {
-            $f_envio_exp_jrci = $array_f_envio_exp_jrci->F_accion;
-            
-            if ($array_existe_controversia->isEmpty()) {
-                $datos = [
-                    'ID_evento' => $newIdEvento,
-                    'Id_Asignacion' => $newIdAsignacion,
-                    'Id_proceso' => 3,
-                    'F_envio_jrci' => $f_envio_exp_jrci,
-                    'Nombre_usuario' => $nombre_usuario,
-                    'F_registro' => $date,
-                ];
-    
-                sigmel_informacion_controversia_juntas_eventos::on('sigmel_gestiones')->insert($datos);
-            } 
-            else {
-                $datos = [
-                    'F_envio_jrci' => $f_envio_exp_jrci,
-                    'Nombre_usuario' => $nombre_usuario,
-                    'F_registro' => $date,
-                ];
-    
-                sigmel_informacion_controversia_juntas_eventos::on('sigmel_gestiones')
-                ->where('Id_Asignacion', $newIdAsignacion)->update($datos);
-            }
-
-        }else{
-            $f_envio_exp_jrci = '';
-        }
-
-        /* 
-            Validaciones para traer la info del campo Fecha devolución expediente JRCI de la sección Seguimiento a Juntas calificadoras 
-            Se requiere traer la Fecha de accion más reciente cuando se haya ejecutado alguna de estas acciones
-
-            RENOTIFICAR DEVOLUCIÓN DE EXPEDIENTE (ID 63)
-            RENOTIFICAR DEVOLUCIÓN DE EXPEDIENTE NO 2 (ID 81)
-            RENOTIFICAR DEVOLUCIÓN DE EXPEDIENTE NO 3 (ID 82)
-
-            ACORDE A LA FICHA SS5 SE ADICIONA LA ACCIÓN:
-            RENOTIFICAR DEVOLUCIÓN DE EXPEDIENTE CON COBRO (ID 123)
-        */
-
-        $array_f_devolucion_exp_jrci = sigmel_informacion_historial_accion_eventos::on('sigmel_gestiones')
-        ->selectRaw('DATE(F_accion) as F_accion')
-        ->where([
-            ['Id_Asignacion', $newIdAsignacion],
-            ['ID_evento', $newIdEvento],
-            ['Id_servicio', $Id_servicio]
-        ])
-        ->whereIn('Id_accion', [63,81,82,123])
-        ->orderBy('F_accion', 'desc')->first();
-
-        /* 
-            si llega existir la acción y su correspondiente fecha entonces se realizará la actualización o la inserción de datos 
-            en la tabla sigmel_informacion_controversia_juntas_eventos dependiendo de si ya existe o no previamente una controversia
-        */
-        if ($array_f_devolucion_exp_jrci) {
-            $f_devolucion_exp_jrci = $array_f_devolucion_exp_jrci->F_accion;
-
-            if ($array_existe_controversia->isEmpty()) {
-                $datos = [
-                    'ID_evento' => $newIdEvento,
-                    'Id_Asignacion' => $newIdAsignacion,
-                    'Id_proceso' => 3,
-                    'F_devolucion_exp_jrci' => $f_devolucion_exp_jrci,
-                    'Nombre_usuario' => $nombre_usuario,
-                    'F_registro' => $date,
-                ];
-    
-                sigmel_informacion_controversia_juntas_eventos::on('sigmel_gestiones')->insert($datos);
-            } 
-            else {
-                $datos = [
-                    'F_devolucion_exp_jrci' => $f_devolucion_exp_jrci,
-                    'Nombre_usuario' => $nombre_usuario,
-                    'F_registro' => $date,
-                ];
-    
-                sigmel_informacion_controversia_juntas_eventos::on('sigmel_gestiones')
-                ->where('Id_Asignacion', $newIdAsignacion)->update($datos);
-            }
-        }else{
-            $f_devolucion_exp_jrci = '';
-        }
-
-        /* 
-            Validaciones para traer la info del campo Fecha de reenvío expediente a JRCI de la sección Seguimiento a Juntas calificadoras 
-            Se requiere traer la Fecha de accion más reciente cuando se haya ejecutado la acción REPORTAR RENOTIFICACIÓN DE EXPEDIENTE (ID 64) ---> YA NO ES CON ESTA ACCIÓN:
-
-            ACORDE A LA FICHA SS5 SERÁ CON LAS ACCIONES:
-            REPORTAR REENVÍO DE EXPEDIENTE DIGITAL CON COBRO (ID 124)
-            REPORTAR REENVÍO DE EXPEDIENTE EN FÍSICO CON COBRO (ID 125)
-            REPORTAR REENVÍO DE EXPEDIENTE SIN COBRO (ID 139)
-        */
-        $array_f_reenvio_exp_jrci = sigmel_informacion_historial_accion_eventos::on('sigmel_gestiones')
-        ->selectRaw('DATE(F_accion) as F_accion')
-        ->where([
-            ['Id_Asignacion', $newIdAsignacion],
-            ['ID_evento', $newIdEvento],
-            ['Id_servicio', $Id_servicio]
-        ])
-        ->whereIn('Id_accion', [124,125,139])
-        ->orderBy('F_accion', 'desc')->first();
-        
-        /* 
-            si llega existir la acción y su correspondiente fecha entonces se realizará la actualización o la inserción de datos 
-            en la tabla sigmel_informacion_controversia_juntas_eventos dependiendo de si ya existe o no previamente una controversia
-        */
-        if ($array_f_reenvio_exp_jrci) {
-            $f_reenvio_exp_jrci = $array_f_reenvio_exp_jrci->F_accion;
-
-            if ($array_existe_controversia->isEmpty()) {
-                $datos = [
-                    'ID_evento' => $newIdEvento,
-                    'Id_Asignacion' => $newIdAsignacion,
-                    'Id_proceso' => 3,
-                    'F_reenvio_exp_jrci' => $f_reenvio_exp_jrci,
-                    'Nombre_usuario' => $nombre_usuario,
-                    'F_registro' => $date,
-                ];
-    
-                sigmel_informacion_controversia_juntas_eventos::on('sigmel_gestiones')->insert($datos);
-            }
-            else {
-                $datos = [
-                    'F_reenvio_exp_jrci' => $f_reenvio_exp_jrci,
-                    'Nombre_usuario' => $nombre_usuario,
-                    'F_registro' => $date,
-                ];
-    
-                sigmel_informacion_controversia_juntas_eventos::on('sigmel_gestiones')
-                ->where('Id_Asignacion', $newIdAsignacion)->update($datos);
-            }
-        }else{
-            $f_reenvio_exp_jrci = '';
-        }
-
-        /* 
-            Validaciones para traer la info del campo Fecha envío pago de honorarios a JNCI de la sección Seguimiento a Juntas calificadoras 
-            Se requiere traer la Fecha de accion más reciente cuando se haya ejecutado la acción REPORTAR ENVÍO PAGO DE HONORARIOS JNCI (ID 86)
-        */
-        $array_f_envio_pago_honorarios_jnci = sigmel_informacion_historial_accion_eventos::on('sigmel_gestiones')
-        ->selectRaw('DATE(F_accion) as F_accion')
-        ->where([
-            ['Id_Asignacion', $newIdAsignacion],
-            ['ID_evento', $newIdEvento],
-            ['Id_servicio', $Id_servicio],
-            ['Id_accion', 86]
-        ])->orderBy('F_accion', 'desc')->first();
-        
-        /* 
-            si llega existir la acción y su correspondiente fecha entonces se realizará la actualización o la inserción de datos 
-            en la tabla sigmel_informacion_controversia_juntas_eventos dependiendo de si ya existe o no previamente una controversia
-        */
-        if ($array_f_envio_pago_honorarios_jnci) {
-            $f_envio_pago_honorarios_jnci = $array_f_envio_pago_honorarios_jnci->F_accion;
-
-            if ($array_existe_controversia->isEmpty()) {
-                $datos = [
-                    'ID_evento' => $newIdEvento,
-                    'Id_Asignacion' => $newIdAsignacion,
-                    'Id_proceso' => 3,
-                    'F_envio_jnci' => $f_envio_pago_honorarios_jnci,
-                    'Nombre_usuario' => $nombre_usuario,
-                    'F_registro' => $date,
-                ];
-    
-                sigmel_informacion_controversia_juntas_eventos::on('sigmel_gestiones')->insert($datos);
-            }
-            else {
-                $datos = [
-                    'F_envio_jnci' => $f_envio_pago_honorarios_jnci,
-                    'Nombre_usuario' => $nombre_usuario,
-                    'F_registro' => $date,
-                ];
-    
-                sigmel_informacion_controversia_juntas_eventos::on('sigmel_gestiones')
-                ->where('Id_Asignacion', $newIdAsignacion)->update($datos);
-            }
-        }else{
-            $f_envio_pago_honorarios_jnci = '';
-        }
-
         /*  Validaciones para traer la información a los siguientes campos: 
             1. Campo Fecha notificación al afiliado de la sección Datos del Dictamen Controvertido
             2. Campo Fecha radicación primera oportunidad de la sección Datos del Dictamen Controvertido
@@ -612,7 +400,7 @@ class CalificacionJuntasController extends Controller
         'arrayinfo_controvertido','arrayinfo_pagos','listado_documentos_solicitados','dato_validacion_no_aporta_docs',
         'arraycampa_documento_solicitado','consecutivo','hitorialAgregarSeguimiento','SubModulo', 'Id_servicio', 'newIdAsignacion', 
         'enviar_notificaciones', 'N_siniestro_evento', 'info_evento', 'validar_lista_chequeo', 'info_cuadro_expedientes',
-        'f_envio_exp_jrci', 'f_devolucion_exp_jrci', 'f_reenvio_exp_jrci', 'f_envio_pago_honorarios_jnci', 'fecha_notificacion', 'f_radicacion',
+        'fecha_notificacion', 'f_radicacion',
         'Id_Asignacion','info_afp_conocimiento','entidades_conocimiento'));
     }
     //Cargar Selectores Juntas
@@ -1688,7 +1476,132 @@ class CalificacionJuntasController extends Controller
             ];
 
             sigmel_informacion_historial_accion_eventos::on('sigmel_gestiones')
-            ->where('Id_historial_accion',$idInsertado)->update($nombre_documento_historial);           
+            ->where('Id_historial_accion',$idInsertado)->update($nombre_documento_historial);
+            
+            sleep(1);
+            
+            /* 
+                Acorde a la ficha SS5 se debe capturar y guardar la información de la fecha de accion
+                de los siguientes campos acorde a la selección de las siguientes acciones:
+
+                Fecha envío expediente a JRCI:
+                    Acciones:   REPORTAR ENVÍO DE EXPEDIENTE DIGITAL (ID 122)
+                                REPORTAR ENVÍO DE EXPEDIENTE EN FÍSICO (ID 120)
+                Fecha devolución expediente JRCI:
+                    Acciones:   RENOTIFICAR DEVOLUCIÓN DE EXPEDIENTE (ID 63)
+                                RENOTIFICAR DEVOLUCIÓN DE EXPEDIENTE NO 2 (ID 81)
+                                RENOTIFICAR DEVOLUCIÓN DE EXPEDIENTE NO 3 (ID 82)
+                                RENOTIFICAR DEVOLUCIÓN DE EXPEDIENTE CON COBRO (ID 123)
+                Fecha reenvío expediente a JRCI:
+                    Acciones:   REPORTAR REENVÍO DE EXPEDIENTE DIGITAL CON COBRO (ID 124)
+                                REPORTAR REENVÍO DE EXPEDIENTE EN FÍSICO CON COBRO (ID 125)
+                                REPORTAR REENVÍO DE EXPEDIENTE SIN COBRO (ID 139)
+                Fecha envío pago de honorarios a JNCI:
+                    Acciones: REPORTAR ENVÍO PAGO DE HONORARIOS JNCI (ID 86)
+            */
+
+            /* Consultamos si existe o no una controversia previamente creada  */
+            $array_existe_controversia = sigmel_informacion_controversia_juntas_eventos::on('sigmel_gestiones')
+            ->where([
+                ['ID_evento', $newIdEvento],
+                ['Id_Asignacion', $newIdAsignacion],
+            ])->get();
+
+            if($Accion_realizar == 122 || $Accion_realizar == 120){
+                if ($array_existe_controversia->isEmpty()) {
+                    $datos = [
+                        'ID_evento' => $newIdEvento,
+                        'Id_Asignacion' => $newIdAsignacion,
+                        'Id_proceso' => 3,
+                        'F_envio_jrci' => $date,
+                        'Nombre_usuario' => $nombre_usuario,
+                        'F_registro' => $date,
+                    ];
+        
+                    sigmel_informacion_controversia_juntas_eventos::on('sigmel_gestiones')->insert($datos);
+                } 
+                else {
+                    $datos = [
+                        'F_envio_jrci' => $date,
+                        'Nombre_usuario' => $nombre_usuario,
+                        'F_registro' => $date,
+                    ];
+        
+                    sigmel_informacion_controversia_juntas_eventos::on('sigmel_gestiones')
+                    ->where('Id_Asignacion', $newIdAsignacion)->update($datos);
+                }
+            }else if ($Accion_realizar == 63 || $Accion_realizar == 81 || 
+                    $Accion_realizar == 82 || $Accion_realizar == 123){
+
+                if ($array_existe_controversia->isEmpty()) {
+                    $datos = [
+                        'ID_evento' => $newIdEvento,
+                        'Id_Asignacion' => $newIdAsignacion,
+                        'Id_proceso' => 3,
+                        'F_devolucion_exp_jrci' => $date,
+                        'Nombre_usuario' => $nombre_usuario,
+                        'F_registro' => $date,
+                    ];
+        
+                    sigmel_informacion_controversia_juntas_eventos::on('sigmel_gestiones')->insert($datos);
+                } 
+                else {
+                    $datos = [
+                        'F_devolucion_exp_jrci' => $date,
+                        'Nombre_usuario' => $nombre_usuario,
+                        'F_registro' => $date,
+                    ];
+        
+                    sigmel_informacion_controversia_juntas_eventos::on('sigmel_gestiones')
+                    ->where('Id_Asignacion', $newIdAsignacion)->update($datos);
+                }
+            }else if ($Accion_realizar == 124 || $Accion_realizar == 125 || $Accion_realizar == 139){
+                if ($array_existe_controversia->isEmpty()) {
+                    $datos = [
+                        'ID_evento' => $newIdEvento,
+                        'Id_Asignacion' => $newIdAsignacion,
+                        'Id_proceso' => 3,
+                        'F_reenvio_exp_jrci' => $date,
+                        'Nombre_usuario' => $nombre_usuario,
+                        'F_registro' => $date,
+                    ];
+        
+                    sigmel_informacion_controversia_juntas_eventos::on('sigmel_gestiones')->insert($datos);
+                }
+                else {
+                    $datos = [
+                        'F_reenvio_exp_jrci' => $date,
+                        'Nombre_usuario' => $nombre_usuario,
+                        'F_registro' => $date,
+                    ];
+        
+                    sigmel_informacion_controversia_juntas_eventos::on('sigmel_gestiones')
+                    ->where('Id_Asignacion', $newIdAsignacion)->update($datos);
+                }
+            }else if ($Accion_realizar == 86){
+                if ($array_existe_controversia->isEmpty()) {
+                    $datos = [
+                        'ID_evento' => $newIdEvento,
+                        'Id_Asignacion' => $newIdAsignacion,
+                        'Id_proceso' => 3,
+                        'F_envio_jnci' => $date,
+                        'Nombre_usuario' => $nombre_usuario,
+                        'F_registro' => $date,
+                    ];
+                    
+                    sigmel_informacion_controversia_juntas_eventos::on('sigmel_gestiones')->insert($datos);
+                }
+                else {
+                    $datos = [
+                        'F_envio_jnci' => $date,
+                        'Nombre_usuario' => $nombre_usuario,
+                        'F_registro' => $date,
+                    ];
+                    
+                    sigmel_informacion_controversia_juntas_eventos::on('sigmel_gestiones')
+                    ->where('Id_Asignacion', $newIdAsignacion)->update($datos);
+                }
+            }
 
             sleep(2);
             
@@ -2392,7 +2305,132 @@ class CalificacionJuntasController extends Controller
             ];
 
             sigmel_informacion_historial_accion_eventos::on('sigmel_gestiones')
-            ->where('Id_historial_accion',$idInsertado)->update($nombre_documento_historial);           
+            ->where('Id_historial_accion',$idInsertado)->update($nombre_documento_historial);
+            
+            sleep(1);
+            
+            /* 
+                Acorde a la ficha SS5 se debe capturar y guardar la información de la fecha de accion
+                de los siguientes campos acorde a la selección de las siguientes acciones:
+
+                Fecha envío expediente a JRCI:
+                    Acciones:   REPORTAR ENVÍO DE EXPEDIENTE DIGITAL (ID 122)
+                                REPORTAR ENVÍO DE EXPEDIENTE EN FÍSICO (ID 120)
+                Fecha devolución expediente JRCI:
+                    Acciones:   RENOTIFICAR DEVOLUCIÓN DE EXPEDIENTE (ID 63)
+                                RENOTIFICAR DEVOLUCIÓN DE EXPEDIENTE NO 2 (ID 81)
+                                RENOTIFICAR DEVOLUCIÓN DE EXPEDIENTE NO 3 (ID 82)
+                                RENOTIFICAR DEVOLUCIÓN DE EXPEDIENTE CON COBRO (ID 123)
+                Fecha reenvío expediente a JRCI:
+                    Acciones:   REPORTAR REENVÍO DE EXPEDIENTE DIGITAL CON COBRO (ID 124)
+                                REPORTAR REENVÍO DE EXPEDIENTE EN FÍSICO CON COBRO (ID 125)
+                                REPORTAR REENVÍO DE EXPEDIENTE SIN COBRO (ID 139)
+                Fecha envío pago de honorarios a JNCI:
+                    Acciones: REPORTAR ENVÍO PAGO DE HONORARIOS JNCI (ID 86)
+            */
+
+            /* Consultamos si existe o no una controversia previamente creada  */
+            $array_existe_controversia = sigmel_informacion_controversia_juntas_eventos::on('sigmel_gestiones')
+            ->where([
+                ['ID_evento', $newIdEvento],
+                ['Id_Asignacion', $newIdAsignacion],
+            ])->get();
+
+            if($Accion_realizar == 122 || $Accion_realizar == 120){
+                if ($array_existe_controversia->isEmpty()) {
+                    $datos = [
+                        'ID_evento' => $newIdEvento,
+                        'Id_Asignacion' => $newIdAsignacion,
+                        'Id_proceso' => 3,
+                        'F_envio_jrci' => $date,
+                        'Nombre_usuario' => $nombre_usuario,
+                        'F_registro' => $date,
+                    ];
+        
+                    sigmel_informacion_controversia_juntas_eventos::on('sigmel_gestiones')->insert($datos);
+                } 
+                else {
+                    $datos = [
+                        'F_envio_jrci' => $date,
+                        'Nombre_usuario' => $nombre_usuario,
+                        'F_registro' => $date,
+                    ];
+        
+                    sigmel_informacion_controversia_juntas_eventos::on('sigmel_gestiones')
+                    ->where('Id_Asignacion', $newIdAsignacion)->update($datos);
+                }
+            }else if ($Accion_realizar == 63 || $Accion_realizar == 81 || 
+                    $Accion_realizar == 82 || $Accion_realizar == 123){
+
+                if ($array_existe_controversia->isEmpty()) {
+                    $datos = [
+                        'ID_evento' => $newIdEvento,
+                        'Id_Asignacion' => $newIdAsignacion,
+                        'Id_proceso' => 3,
+                        'F_devolucion_exp_jrci' => $date,
+                        'Nombre_usuario' => $nombre_usuario,
+                        'F_registro' => $date,
+                    ];
+        
+                    sigmel_informacion_controversia_juntas_eventos::on('sigmel_gestiones')->insert($datos);
+                } 
+                else {
+                    $datos = [
+                        'F_devolucion_exp_jrci' => $date,
+                        'Nombre_usuario' => $nombre_usuario,
+                        'F_registro' => $date,
+                    ];
+        
+                    sigmel_informacion_controversia_juntas_eventos::on('sigmel_gestiones')
+                    ->where('Id_Asignacion', $newIdAsignacion)->update($datos);
+                }
+            }else if ($Accion_realizar == 124 || $Accion_realizar == 125 || $Accion_realizar == 139){
+                if ($array_existe_controversia->isEmpty()) {
+                    $datos = [
+                        'ID_evento' => $newIdEvento,
+                        'Id_Asignacion' => $newIdAsignacion,
+                        'Id_proceso' => 3,
+                        'F_reenvio_exp_jrci' => $date,
+                        'Nombre_usuario' => $nombre_usuario,
+                        'F_registro' => $date,
+                    ];
+        
+                    sigmel_informacion_controversia_juntas_eventos::on('sigmel_gestiones')->insert($datos);
+                }
+                else {
+                    $datos = [
+                        'F_reenvio_exp_jrci' => $date,
+                        'Nombre_usuario' => $nombre_usuario,
+                        'F_registro' => $date,
+                    ];
+        
+                    sigmel_informacion_controversia_juntas_eventos::on('sigmel_gestiones')
+                    ->where('Id_Asignacion', $newIdAsignacion)->update($datos);
+                }
+            }else if ($Accion_realizar == 86){
+                if ($array_existe_controversia->isEmpty()) {
+                    $datos = [
+                        'ID_evento' => $newIdEvento,
+                        'Id_Asignacion' => $newIdAsignacion,
+                        'Id_proceso' => 3,
+                        'F_envio_jnci' => $date,
+                        'Nombre_usuario' => $nombre_usuario,
+                        'F_registro' => $date,
+                    ];
+                    
+                    sigmel_informacion_controversia_juntas_eventos::on('sigmel_gestiones')->insert($datos);
+                }
+                else {
+                    $datos = [
+                        'F_envio_jnci' => $date,
+                        'Nombre_usuario' => $nombre_usuario,
+                        'F_registro' => $date,
+                    ];
+                    
+                    sigmel_informacion_controversia_juntas_eventos::on('sigmel_gestiones')
+                    ->where('Id_Asignacion', $newIdAsignacion)->update($datos);
+                }
+            }
 
             sleep(2);
 
