@@ -80,12 +80,6 @@ $(document).ready(function () {
                     ],
                     exportOptions: {
                         columns: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22]
-                    },
-                    customize: function (xlsx) {
-                        var sheet = xlsx.xl.worksheets['sheet1.xml'];
-
-                        // Elimina la primera fila (row 1)
-                        $('row[r="1"]', sheet).remove();
                     }
                 }
             ]
