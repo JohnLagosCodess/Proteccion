@@ -723,7 +723,7 @@ class ParametrizacionController extends Controller
             $date = date("Y-m-d", $time);
 
             
-            $array_datos_organizados_parametrizacion_origen_atel[29] = $date;
+            $array_datos_organizados_parametrizacion_origen_atel[35] = $date;
 
             // Creamos el array con el nombre de las columnas de la tabla sigmel_informacion_parametrizaciones_clientes
             $array_tabla_parametrizaciones_cliente = ['Id_cliente','Id_proceso','F_creacion_movimiento','Servicio_asociado',
@@ -855,7 +855,7 @@ class ParametrizacionController extends Controller
             $date = date("Y-m-d", $time);
     
             
-            $array_datos_organizados_parametrizacion_calificacion_pcl[29] = $date;
+            $array_datos_organizados_parametrizacion_calificacion_pcl[35] = $date;
         
             // Creamos el array con el nombre de las columnas de la tabla sigmel_informacion_parametrizaciones_clientes
             $array_tabla_parametrizaciones_cliente = ['Id_cliente','Id_proceso','F_creacion_movimiento','Servicio_asociado',
@@ -987,7 +987,7 @@ class ParametrizacionController extends Controller
             $date = date("Y-m-d", $time);
     
             
-            $array_datos_organizados_parametrizacion_juntas[29] = $date;
+            $array_datos_organizados_parametrizacion_juntas[35] = $date;
         
             // Creamos el array con el nombre de las columnas de la tabla sigmel_informacion_parametrizaciones_clientes
             $array_tabla_parametrizaciones_cliente = ['Id_cliente','Id_proceso','F_creacion_movimiento','Servicio_asociado',
