@@ -6483,7 +6483,7 @@ class CalificacionPCLController extends Controller
             $Agregar_copias = [];
             if (isset($copia_afiliado)) {
                 if($apoderado){
-                    $Agregar_copias['Afiliado'] = $Nombre_destinatario."; ".$Direccion_destinatario."; ".$Email_destinatario."; ".$Telefono_destinatario."; ".$Departamento_destinatario."; ".$Ciudad_destinatario.".";
+                    $Agregar_copias['Afiliado'] = "<b>".$Nombre_destinatario."/<b>"."; ".$Direccion_destinatario."; ".$Email_destinatario."; ".$Telefono_destinatario."; ".$Departamento_destinatario."; ".$Ciudad_destinatario.".";
                 }else{
                     $Agregar_copias['Afiliado'] = $Nombre_afiliado."; ".$Direccion_afiliado."; ".$Email_afiliado."; ".$Telefono_afiliado."; ".$Departamento_afiliado."; ".$Ciudad_afiliado.".";
                 }
@@ -6505,7 +6505,7 @@ class CalificacionPCLController extends Controller
                 $ciudad_empleador = $datos_empleador[0]->Nombre_ciudad;
                 $municipio_empleador = $datos_empleador[0]->Nombre_municipio;
 
-                $Agregar_copias['Empleador'] = $nombre_empleador."; ".$direccion_empleador."; ".$email_empleador."; ".$telefono_empleador."; ".$ciudad_empleador."; ".$municipio_empleador.".";   
+                $Agregar_copias['Empleador'] = "<b>".$nombre_empleador."</b>"."; ".$direccion_empleador."; ".$email_empleador."; ".$telefono_empleador."; ".$ciudad_empleador."; ".$municipio_empleador.".";   
             }
 
             if (isset($copia_eps)) {
@@ -6529,7 +6529,7 @@ class CalificacionPCLController extends Controller
                 $ciudad_eps = $datos_eps[0]->Nombre_ciudad;
                 $minucipio_eps = $datos_eps[0]->Nombre_municipio;
 
-                $Agregar_copias['EPS'] = $nombre_eps."; ".$direccion_eps."; ".$email_eps."; ".$telefonos_eps."; ".$ciudad_eps."; ".$minucipio_eps;
+                $Agregar_copias['EPS'] = "<b>".$nombre_eps."</b>"."; ".$direccion_eps."; ".$email_eps."; ".$telefonos_eps."; ".$ciudad_eps."; ".$minucipio_eps;
             }
 
             if (isset($copia_afp)) {
@@ -6553,7 +6553,7 @@ class CalificacionPCLController extends Controller
                 $ciudad_afp = $datos_afp[0]->Nombre_ciudad;
                 $minucipio_afp = $datos_afp[0]->Nombre_municipio;
 
-                $Agregar_copias['AFP'] = $nombre_afp."; ".$direccion_afp."; ".$email_afp."; ".$telefonos_afp."; ".$ciudad_afp."; ".$minucipio_afp;
+                $Agregar_copias['AFP'] = "<b>".$nombre_afp."</b>"."; ".$direccion_afp."; ".$email_afp."; ".$telefonos_afp."; ".$ciudad_afp."; ".$minucipio_afp;
             }
 
             if(isset($copia_arl)){
@@ -6578,7 +6578,7 @@ class CalificacionPCLController extends Controller
                 $ciudad_arl = $datos_arl[0]->Nombre_ciudad;
                 $minucipio_arl = $datos_arl[0]->Nombre_municipio;
 
-                $Agregar_copias['ARL'] = $nombre_arl."; ".$direccion_arl."; ".$email_arl."; ".$telefonos_arl."; ".$ciudad_arl."; ".$minucipio_arl;
+                $Agregar_copias['ARL'] = "<b>".$nombre_arl."</b>"."; ".$direccion_arl."; ".$email_arl."; ".$telefonos_arl."; ".$ciudad_arl."; ".$minucipio_arl;
             }
             
             if (isset($copia_afp_conocimiento)) {
