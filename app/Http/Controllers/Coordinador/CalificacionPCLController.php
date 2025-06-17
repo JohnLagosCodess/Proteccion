@@ -6485,7 +6485,7 @@ class CalificacionPCLController extends Controller
                 if($apoderado){
                     $Agregar_copias['Afiliado'] = "<b>".$Nombre_destinatario."/<b>"."; ".$Direccion_destinatario."; ".$Email_destinatario."; ".$Telefono_destinatario."; ".$Departamento_destinatario."; ".$Ciudad_destinatario.".";
                 }else{
-                    $Agregar_copias['Afiliado'] = $Nombre_afiliado."; ".$Direccion_afiliado."; ".$Email_afiliado."; ".$Telefono_afiliado."; ".$Departamento_afiliado."; ".$Ciudad_afiliado.".";
+                    $Agregar_copias['Afiliado'] = "<b>".$Nombre_afiliado."/<b>"."; ".$Direccion_afiliado."; ".$Email_afiliado."; ".$Telefono_afiliado."; ".$Departamento_afiliado."; ".$Ciudad_afiliado.".";
                 }
             }
 
