@@ -966,6 +966,7 @@ $(document).ready(function(){
      var di_silencio_pr = $('#di_silencio_pr');
 
      if (di_acuerdo_pr.prop('checked')) {
+        console.log('Clickee el acuerdo pr')
         $('#proformas_pro_pcl').removeClass('d-none');
         $('#proformas_pro_pcl').val('PDF');
         $('#btn_insertar_Nombre_afiliado').addClass('d-none')
@@ -1136,7 +1137,7 @@ $(document).ready(function(){
             $("#firmar").prop('checked', false);
 
             // Seteo ciudad Medellín
-            $("#ciudad_correspon").val('');
+            $("#ciudad_correspon").val('Medellin');
         }
         iniciarIntervalo_correspon();
     });

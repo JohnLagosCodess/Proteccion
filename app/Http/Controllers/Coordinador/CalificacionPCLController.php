@@ -2881,7 +2881,7 @@ class CalificacionPCLController extends Controller
             
             if (empty($nombre_destinatario) && empty($nit_cc) && empty($direccion_destinatario) && 
             empty($telefono_destinatario) && empty($email_destinatario)) {
-                $Nombre_destinatario = $request->nombre_destinatario_act;
+                    $Nombre_destinatario = $request->nombre_destinatario_act;
                     $Nit_cc = $request->nic_cc_editar;
                     $Direccion_destinatario = $request->direccion_destinatario_act;
                     $Telefono_destinatario = $request->telefono_destinatario_act;
@@ -2890,10 +2890,10 @@ class CalificacionPCLController extends Controller
                 }elseif(!empty($nombre_destinatario) && !empty($nit_cc) && !empty($direccion_destinatario) && 
                 isset($telefono_destinatario) && !empty($email_destinatario)){
                     $Nombre_destinatario = $nombre_destinatario;
-                $Nit_cc = $nit_cc;
-                $Direccion_destinatario = $direccion_destinatario;
-                $Telefono_destinatario = $telefono_destinatario;
-                $Email_destinatario = $email_destinatario;
+                    $Nit_cc = $nit_cc;
+                    $Direccion_destinatario = $direccion_destinatario;
+                    $Telefono_destinatario = $telefono_destinatario;
+                    $Email_destinatario = $email_destinatario;
             }
         }
         // La descarga se hace desde que se guarda el comunicado

@@ -383,7 +383,7 @@
                                             @endif
                                         </div>
                                     </div>
-                                    <div class="col-12">
+                                    <div class="col-12" id='seccion_asunto'>
                                         <div class="form-group">
                                             <label for="asunto_cali">Asunto<span style="color: red;">(*)</span></label>
                                             @if (!empty($info_pronuncia[0]->Asunto_cali))
@@ -393,7 +393,7 @@
                                             @endif
                                         </div>
                                     </div>
-                                    <div class="col-12">
+                                    <div class="col-12" id='seccion_sustentacion'>
                                         <div class="form-group">
                                             <label for="sustenta_cali">Sustentación<span style="color: red;">(*)</span></label>
                                             <br>
@@ -588,7 +588,7 @@
                                             @if (!empty($info_pronuncia[0]->Ciudad_correspon))
                                                 <input type="text" class="form-control" name="ciudad_correspon" id="ciudad_correspon" value="{{$info_pronuncia[0]->Ciudad_correspon}}" required>
                                             @else
-                                                <input type="text" class="form-control" name="ciudad_correspon" id="ciudad_correspon" required>
+                                                <input type="text" class="form-control" name="ciudad_correspon" id="ciudad_correspon" value="Medellín" required>
                                             @endif
                                         </div>
                                     </div>
@@ -882,6 +882,29 @@
         //Diagnosticos CIE10
         let arrayDatosDiagnosticos = @json($array_datos_diagnostico_motcalifi);
         $(document).ready(function(){
+            // Función para manejar el cambio en los radio buttons PBS045
+            function ValidadorCambioDeDecision() {
+                const isSilencio = $('#di_silencio_pr').is(':checked');
+                $('#asunto_cali').prop('required', !isSilencio);
+                $('label[for="asunto_cali"] span').toggle(!isSilencio);
+
+                $('#sustenta_cali').prop('required', !isSilencio);
+                $('label[for="sustenta_cali"] span').toggle(!isSilencio);
+                if(isSilencio){
+                    $('#div_doc_pronu').addClass('d-none');
+                    $('#seccion_asunto').addClass('d-none');
+                    $('#seccion_sustentacion').addClass('d-none');
+                }else{
+                    $('#div_doc_pronu').removeClass('d-none');
+                    $('#seccion_asunto').removeClass('d-none');
+                    $('#seccion_sustentacion').removeClass('d-none');
+                }
+            }
+            ValidadorCambioDeDecision();
+            // Escuchar cambios en los radio buttons
+            $('input[name="decision_pr"]').change(function() {
+                ValidadorCambioDeDecision();
+            });
             //SCRIPT PARA INSERTAR O ELIMINAR FILAS DINAMICAS DEL DATATABLES DE DIAGNOSTCO CIE10
             $(".centrar").css('text-align', 'center');
             var listado_diagnostico_cie10 = $('#listado_diagnostico_cie10').DataTable({

@@ -820,7 +820,7 @@ class PronunciamientoPCLController extends Controller
                 "parametro" => 'agregar_pronunciamiento',
                 "parametro2" => 'guardo',
                 "mensaje" => 'Información guardada satisfactoriamente.',
-                "Id_Comunicado" => $Id_Comunicado
+                "Id_Comunicado" => $request->decision_pr != 'Silencio' ? $Id_Comunicado : null
             ); 
 
             return json_decode(json_encode($mensajes, true));
