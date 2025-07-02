@@ -23,7 +23,9 @@ class sigmel_advance extends sigmel_wsController implements Api
     protected $ejecutar_validaciones = [
         "id_evento" => "required",
         'integer',
-        'id_servicio' => 'required','integer'
+        'id_servicio' => 'required','integer',
+        'activador' => 'required','enum:488,489,490,492,493,494,496,618',
+        'siniestro' => 'required'
     ];
 
     protected $modalidad_salida = 'individual';
@@ -98,7 +100,7 @@ class sigmel_advance extends sigmel_wsController implements Api
                     ],
                     "fechaNotiDictamenIps" => "",
                     "fechaFinalizacionConsolidada" => [
-                        "get_info" => ["asignacion:F_Acta_Firmeza", "id_evento"],
+                        "get_info" => ["asignacion:F_acta_firmeza", "id_evento"],
                     ],
                     "estadoSolicitudCalificacion" => [
                         "get_info" => ["desencadenador:Accion", "id_evento"],
@@ -106,7 +108,7 @@ class sigmel_advance extends sigmel_wsController implements Api
                 ],
                 "firmeza" => [
                     "dictamenEnFirme" => [
-                        "get_info" => ["advance:Dictamen_Firme", "id_evento"],
+                        "get_info" => ["advance:Firmeza", "id_evento"],
                     ],
                     "estadoFirmeza" => [
                         "get_info" => ["advance:Estado_Firmeza", "id_evento"],
@@ -136,7 +138,7 @@ class sigmel_advance extends sigmel_wsController implements Api
                     "fechaRecepcionDictamenJn" => "",
                     "fechaSolFirmeza" => "",
                     "dictamenQuedoFirme" => [
-                        "get_var" => ["&parent:dictamenEnFirme"],
+                        "get_info" => ["advance:Dictamen_Firme", "id_evento"],
                     ],
                 ]
         ],
@@ -201,7 +203,7 @@ class sigmel_advance extends sigmel_wsController implements Api
                 ],
             "firmeza" => [
                 "dictamenEnFirme" => [
-                    "get_info" => ["advance:Dictamen_Firme", "id_evento"],
+                    "get_info" => ["advance:Firmeza", "id_evento"],
                 ],
                 "estadoFirmeza" => [
                     "get_info" => ["advance:Estado_Firmeza", "id_evento"],
@@ -249,12 +251,12 @@ class sigmel_advance extends sigmel_wsController implements Api
                     "formatear" => ["date:Y-m-d"]
                 ],
                 "dictamenQuedoFirme" => [
-                    "get_var" => ["&parent:Dictamen_firme"]
+                    "get_info" => ["advance:Dictamen_Firme", "id_evento"],
                 ],
             ]
         ],
         "juntas" => [
-            "juntaRegional " => [
+            "juntaRegional" => [
                 "idEmpleador" => [
                     "get_info" => ["laboral:Nit_o_cc", "id_evento"]
                 ],
@@ -270,7 +272,7 @@ class sigmel_advance extends sigmel_wsController implements Api
                     "get_info" => ["juntas:F_envio_jrci", "id_evento"],
                     "formatear" => ["date:Y-m-d"]
                 ],
-                "junta_regional" => [
+                "juntaRegional" => [
                     "get_info" => ["entidades_juntas:Jrci_califi_invalidez", "id_evento"],
                 ],
                 "fechaRecepcionExpedienteJr" => [
@@ -387,7 +389,7 @@ class sigmel_advance extends sigmel_wsController implements Api
             ],
             "firmeza" => [
                 "dictamenEnFirme" => [
-                    "get_info" => ["advance:Dictamen_Firme", "id_evento"],
+                    "get_info" => ["advance:Firmeza", "id_evento"],
                 ],
                 "estadoFirmeza" => [
                     "get_info" => ["advance:Estado_Firmeza", "id_evento"],
@@ -419,7 +421,7 @@ class sigmel_advance extends sigmel_wsController implements Api
                     "get_info" => ["juntas:F_acta_ejecutoria_emitida_jrci", "id_evento"],
                     "formatear" => ["date:Y-m-d"]
                 ],
-                "fechaRecepcionDictamenJn" => [
+                "fechaRecepcionDictamenJnFirmeza" => [
                     "get_info" => ["juntas:F_dictamen_jnci_emitido", "id_evento"],
                     "formatear" => ["date:Y-m-d"]
                 ],
@@ -428,7 +430,7 @@ class sigmel_advance extends sigmel_wsController implements Api
                     "formatear" => ["date:Y-m-d"]
                 ],
                 "dictamenQuedoFirme" => [
-                    "get_var" => ["&parent:dictamenEnFirme"],
+                    "get_info" => ["advance:Dictamen_Firme", "id_evento"],
                 ]
             ],
         ]
@@ -451,7 +453,10 @@ class sigmel_advance extends sigmel_wsController implements Api
     public function estado_jr($campo){
         $ultima_accion = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_historial_accion_eventos as sihae')
         ->leftJoin('sigmel_gestiones.sigmel_informacion_acciones as sia', 'sia.Id_Accion', '=', 'sihae.Id_accion')
-        ->leftJoin('sigmel_gestiones.sigmel_informacion_parametrizaciones_clientes','Servicio_asociado','sihae.Id_servicio')
+        ->leftJoin('sigmel_gestiones.sigmel_informacion_parametrizaciones_clientes as sipc',function($join){
+                $join->on('sipc.Servicio_asociado', '=', 'sihae.Id_servicio')
+                ->whereColumn('sipc.Accion_ejecutar', '=', 'sihae.Id_accion');
+            })
         ->select('sihae.ID_evento', 'sihae.Id_proceso', 'sihae.Id_servicio', 'sihae.Id_accion', 'sihae.Id_Asignacion','sia.Accion','Id_parametrizacion')
         ->where([
             ['sihae.Id_Asignacion', $this->id_asignacion],
@@ -471,7 +476,10 @@ class sigmel_advance extends sigmel_wsController implements Api
     public function estado_jn($campo){
         $ultima_accion = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_historial_accion_eventos as sihae')
         ->leftJoin('sigmel_gestiones.sigmel_informacion_acciones as sia', 'sia.Id_Accion', '=', 'sihae.Id_accion')
-        ->leftJoin('sigmel_gestiones.sigmel_informacion_parametrizaciones_clientes','Servicio_asociado','sihae.Id_servicio')
+        ->leftJoin('sigmel_gestiones.sigmel_informacion_parametrizaciones_clientes as sipc',function($join){
+                $join->on('sipc.Servicio_asociado', '=', 'sihae.Id_servicio')
+                ->whereColumn('sipc.Accion_ejecutar', '=', 'sihae.Id_accion');
+            })
         ->select('sihae.ID_evento', 'sihae.Id_proceso', 'sihae.Id_servicio', 'sihae.Id_accion', 'sihae.Id_Asignacion','sia.Accion','Id_parametrizacion')
         ->where([
             ['sihae.Id_Asignacion', $this->id_asignacion],
@@ -479,13 +487,13 @@ class sigmel_advance extends sigmel_wsController implements Api
         ])->whereNotNull('Estado_Firmeza');
     
         $ultima_accion->where(function ($query) { 
-            $query->where('Motivo_descripcion_movimiento', 'not LIKE', '%SEGUINIENTO JNCI%')
-            ->orWhere('Motivo_descripcion_movimiento', 'not LIKE', '%CERRADO EN JUNTA NACIONAL%'); 
+            $query->where('Motivo_descripcion_movimiento', 'LIKE', '%SEGUINIENTO JNCI%')
+            ->orWhere('Motivo_descripcion_movimiento', 'LIKE', '%CERRADO EN JUNTA NACIONAL%'); 
         });
 
         $ultima_accion = $ultima_accion->orderBy('sihae.F_accion', 'desc')->first();
 
-        $this->request->merge([$campo => $ultima_accion->Accion ?? 'N/A']);
+        $this->request->merge([$campo => $ultima_accion->Accion ?? 'SIN INFORMACIÓN TRÁMITE JRCI']);
     }
 
     public function get_servicios($campo){
@@ -697,7 +705,7 @@ class sigmel_advance extends sigmel_wsController implements Api
         try {
 
             if ($this->estado_ejecucion == "Fallo") {
-                Log::channel('log_api')->error("Comsumo errado: ", $this->request->all());
+                //Log::channel('log_api')->error("Comsumo errado: ", $this->request->all());
                 return response()->json($this->msg_validacion);
             }
 
@@ -708,7 +716,7 @@ class sigmel_advance extends sigmel_wsController implements Api
             return $formato == 'json' ? response()->json($response) : $response;
         } catch (\Throwable $th) {
 
-            Log::channel('log_api')->error("Error inesperado: " . $th->getMessage(), [
+            Log::channel('log_api_advance')->error("Error inesperado: " . $th->getMessage(), [
                 "Archivo: " => $th->getFile(),
                 "Linea: " => $th->getLine(),
                 "Trace" => $th->getTrace()
@@ -762,9 +770,9 @@ class sigmel_advance extends sigmel_wsController implements Api
             'id_asignacion' => 'required|integer'
         ]);
         
-        $response = sigmel_informacion_registro_advance::select('id','ID_Asignacion','ID_evento','ID_servicio','Fecha_Ejecucion','Acta_firmeza','Estado_Ejecucion','Dictamen_firme')
+        $response = sigmel_informacion_registro_advance::select('id','ID_Asignacion','ID_evento','ID_servicio','Fecha_Ejecucion','Acta_firmeza','Estado_Ejecucion','Dictamen_firme','Descripcion')
         ->where([
-            ['Usuario',Auth::user()->name],
+            //['Usuario',Auth::user()->name],
             ['ID_Asignacion',$request->id_asignacion],
             ])->get();
         //->whereIn('Estado_Ejecucion',['errado','notificar'])->get();

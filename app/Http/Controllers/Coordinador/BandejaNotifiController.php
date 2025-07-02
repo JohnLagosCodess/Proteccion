@@ -407,7 +407,7 @@ class BandejaNotifiController extends Controller
     private function getEventos(Request $request){
         //Obtiene las acciones antecesoras cuya accion pertenezca a la seleccionada por el usuario
         $acciones_antesesora = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_parametrizaciones_clientes')
-        ->select('sia.Accion','Servicio_asociado')
+        ->select('sia.Accion','Servicio_asociado','Id_parametrizacion')
         ->leftJoin('sigmel_gestiones.sigmel_informacion_acciones as sia','sia.Id_Accion','Accion_antecesora') //Accion antecesora
         ->leftJoin('sigmel_gestiones.sigmel_informacion_acciones as sia2','sia2.Id_Accion','Accion_ejecutar') //Accion actual
         ->leftJoin('sigmel_gestiones.sigmel_lista_parametros as slp','sia2.Estado_accion','slp.Id_Parametro')
@@ -419,20 +419,16 @@ class BandejaNotifiController extends Controller
          //Filtra los eventos de acuerdo a las  acciones antecesoras
          $accion_antesesora = array_column($acciones_antesesora,'Accion');
          $servicios_asociados = array_column($acciones_antesesora,'Servicio_asociado');
- 
+
          if(!is_null($acciones_antesesora[0])){
             $query = DB::table(getDatabaseName('sigmel_gestiones') . 'cndatos_bandeja_eventos')
                 ->whereIn('Accion',$accion_antesesora)
                 ->whereIn('Id_Servicio',$servicios_asociados)
-                // ->where(function($query){
-                //     $query->whereNull('Enviar_bd_Notificacion')->orWhere('Enviar_bd_Notificacion', '=', 'Si');
-                // });
                 ->where(function($query) {
                     $query->where(function($q) {
                         $q->whereNull('Enviar_bd_Notificacion')
                         ->orWhere('Enviar_bd_Notificacion', '=', 'Si');
-                    });
-                    // ->where('Id_estado_gral_notifi', '=', 357);
+                    })->where('Id_estado_gral_notifi', '=', 357);
                 });
                 
 
@@ -442,7 +438,6 @@ class BandejaNotifiController extends Controller
             }
 
             $eventos = $query->get();
-            // dd($eventos);
          }
  
          $response = [

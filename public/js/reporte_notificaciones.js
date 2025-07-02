@@ -236,9 +236,9 @@ function renderizarRegistros(data, inicio, fin, reporteNotificacionesTable) {
         var datos = [
             data[a].Cons,
             data[a].ID_evento,
-            data[a].N_identificacion,
-            data[a].F_asignacion_notificaciones,
+            data[a].N_identificacion,            
             data[a].F_comunicado,
+            data[a].F_asignacion_notificaciones,
             data[a].N_radicado,
             data[a].Nombre_documento,
             data[a].Carpeta_primaria,

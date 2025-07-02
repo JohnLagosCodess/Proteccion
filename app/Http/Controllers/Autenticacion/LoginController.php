@@ -35,26 +35,16 @@ class LoginController extends Controller
             'password' => 'required',
         ]);
 
-        $info_cliente = $this->globalService->infoCliente();
-
-        // SI LA VALIDACIÓN SE CUMPLE SE PROCEDE A INICIAR SESIÓN
-        if (Auth::attempt($credentials)) {
-            Auth::logoutOtherDevices($request->password);
-            $user = User::select('*')->where('email', $request->email)->first();
-            $token =  Crypt::encryptString($user->email);
-
-            if ($user->cambiar_clave) {
-                return view('ingenieria.cambiar_clave', compact('user', 'token'));
-            } else {
-                return redirect()->route('RolPrincipal')->with('info_cliente', $info_cliente);
-            }
-        }
+        $info_cliente = $this->globalService->infoCliente();        
 
         // DE LO CONTRARIO NO SE MANDA AL LOGIN
         /* EXTRACCIÓN DEL CORREO Y PASSWORD DEL USUARIO DE LA BD */
         $email_db = DB::table('users')
-            ->select('email')
-            ->where('email', $request->email)->get();
+                    ->select('email')
+                    ->where([
+                        ['email', $request->email],
+                        ['estado', 'Activo']
+                    ])->get();
 
         $password_db = DB::table('users')
             ->select('password')
@@ -72,6 +62,19 @@ class LoginController extends Controller
             return back()->withErrors([
                 'password' => ['Contraseña incorrecta.']
             ]);
+        }
+
+        // SI LA VALIDACIÓN SE CUMPLE SE PROCEDE A INICIAR SESIÓN
+        if (Auth::attempt($credentials)) {
+            Auth::logoutOtherDevices($request->password);
+            $user = User::select('*')->where('email', $request->email)->first();
+            $token =  Crypt::encryptString($user->email);
+
+            if ($user->cambiar_clave) {
+                return view('ingenieria.cambiar_clave', compact('user', 'token'));
+            } else {
+                return redirect()->route('RolPrincipal')->with('info_cliente', $info_cliente);
+            }
         }
     }
 

@@ -83,9 +83,9 @@
                                                 <tr class="bg-info">
                                                     <th>N°</th>                                                    
                                                     <th>ID EVENTO</th>
-                                                    <th>N° DE IDENTIFICACIÓN</th>
-                                                    <th>FECHA DE ASIGNACIÓN NOTIFICACIONES</th>
+                                                    <th>N° DE IDENTIFICACIÓN</th>                                                    
                                                     <th>FECHA COMUNICADO</th>
+                                                    <th>FECHA DE ASIGNACIÓN NOTIFICACIONES</th>
                                                     <th>N° RADICADO</th>
                                                     <th>NOMBRE DOCUMENTO</th>
                                                     <th>CARPETA DE IMPRESIÓN</th>

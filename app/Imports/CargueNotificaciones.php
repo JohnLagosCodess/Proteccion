@@ -62,7 +62,7 @@ class CargueNotificaciones implements ToModel, WithHeadingRow
         $validaciones = Validator::make($row, [            
             'id_destinatario' => 'required|string',
             'tipo_destinatario' => 'required|string',
-            'n_guia' => 'nullable|numeric',
+            'n_guia' => 'nullable',
             'folios' => 'nullable|numeric',
             'f_envio' => 'nullable|date_format:Y-m-d',
             'f_notificacion' => 'nullable|date_format:Y-m-d',                        
