@@ -3,9 +3,11 @@ namespace App\Services;
 use Illuminate\Support\Facades\DB;
 use DateTime;
 use App\Models\sigmel_informacion_parametrizaciones_clientes;
+use App\Models\sigmel_informacion_alertas_automaticas_eventos;
 use App\Services\FormulaAlertas;
 use Illuminate\Support\Facades\Auth;
 use App\Contracts\Acciones;
+use Illuminate\Support\Facades\Log;
 
 class AlertasNaranjas extends Acciones{
     protected $Tiempo_alerta,$F_accionEvento,$newIdAsignacion,
@@ -13,22 +15,24 @@ class AlertasNaranjas extends Acciones{
     $newIdEvento,$Id_proceso,$Id_servicio,$id_cliente,$AccionEvento,
     $date_time,$nombre_usuario,$date;
 
-    protected $estadoOk = "Se establecio una alerta para el evento %s ya que este tiene configurada una alerta";
+    protected $estadoOk = "Se establecio una alerta para el evento %s ya que este tiene configurada una alerta para la formula %s";
 
-    protected $estadoFail = "El evento %s no cuenta con una alerta parametrizada";
+    protected $estadoFail = "No se asignaron elertas ya que el evento %s no cuenta con una alerta parametrizada";
 
     protected $status;
 
     /**
      * Inicializa las variables
      */
-    public function init($fechaAccion, $accionEvento, $idCliente, $idProceso, $idServicio, $idEvento, $idAsignacion)
+    public function init($fechaAccion, $accionEvento, $idCliente, $idProceso, $idServicio, $idEvento, $idAsignacion,$n_orden)
     {
         $this->setBasicInfo($fechaAccion, $accionEvento, $idCliente, $idProceso, $idServicio, $idEvento, $idAsignacion);
         $this->setTimeInfo();
         $this->setUserInfo();
         $status = $this->setAlertInfo();
 
+        sigmel_informacion_alertas_automaticas_eventos::on('sigmel_gestiones')->updateOrCreate(['Id_Asignacion' => $this->newIdAsignacion],['Estado_alerta_automatica' => 'Finalizada']);
+        
         if($status == 'fail'){
             return [
                 "estado" => $status,
@@ -108,18 +112,25 @@ class AlertasNaranjas extends Acciones{
             'FA' => $this->Tiempo_alerta &&  empty($this->Porcentaje_alerta_naranja) && empty($this->Porcentaje_alerta_roja), 
             'FA_AN' => $this->Tiempo_alerta && !empty($this->Porcentaje_alerta_naranja) && empty($this->Porcentaje_alerta_roja),
             'FA_AR' => $this->Tiempo_alerta &&  empty($this->Porcentaje_alerta_naranja) && !empty($this->Porcentaje_alerta_roja),
-            'FA_AR_AN' => $this->Tiempo_alerta && !empty($this->Porcentaje_alerta_naranja) && !empty($this->Porcentaje_alerta_roja),
+            'FA_AR_AN' => $this->Tiempo_alerta && !empty($this->Porcentaje_alerta_naranja) && !empty($this->Porcentaje_alerta_roja)
         ];
 
         foreach($condidiciones as $codigo => $condicion){
             if($condicion){
-                $this->{$codigo}();
-                $mensaje = sprintf($this->estadoOk, $this->newIdEvento);
+                $datos_resultado = $this->{$codigo}();
+                if(!empty($datos_resultado)){
+                    $this->ejecutar($datos_resultado);
+                } 
+                $mensaje = sprintf($this->estadoOk, $this->newIdEvento,$codigo);
                 break;
             }
         }
 
         return $mensaje;
+    }
+
+    public function ejecutar(Array $datos){
+        sigmel_informacion_alertas_automaticas_eventos::on('sigmel_gestiones')->updateOrCreate(['Id_Asignacion' => $datos['Id_Asignacion']],$datos);
     }
 
 }

@@ -38,6 +38,8 @@ abstract class FormulaAlertas{
         sigmel_informacion_asignacion_eventos::on('sigmel_gestiones')
         ->where([['Id_Asignacion', $this->newIdAsignacion]])
         ->update(['F_alerta' => $Nueva_F_AlertaEvento]);
+
+        return null;
     }
 
     /**
@@ -81,7 +83,7 @@ abstract class FormulaAlertas{
         $Nueva_F_Alerta_Naranja->modify("+$minutosAdicionales_naranja_entero minutes");
         $Nueva_F_Alerta_NaranjaEvento = $Nueva_F_Alerta_Naranja->format('Y-m-d H:i:s');
 
-        $array_info_datos_alertas_automatica = [
+        return [
             'Id_Asignacion' => $this->newIdAsignacion,
             'ID_evento' => $this->newIdEvento,
             'Id_proceso' => $this->Id_proceso,
@@ -96,8 +98,6 @@ abstract class FormulaAlertas{
             'Nombre_usuario' => $this->nombre_usuario,
             'F_registro' => $this->date,
         ];
-
-        sigmel_informacion_alertas_automaticas_eventos::on('sigmel_gestiones')->insert($array_info_datos_alertas_automatica);
     }
 
     /**
@@ -141,7 +141,7 @@ abstract class FormulaAlertas{
         $Nueva_F_Alerta_Roja->modify("+$minutosAdicionales_roja_entero minutes");
         $Nueva_F_Alerta_RojaEvento = $Nueva_F_Alerta_Roja->format('Y-m-d H:i:s');
 
-        $array_info_datos_alertas_automatica = [
+        return [
             'Id_Asignacion' => $this->newIdAsignacion,
             'ID_evento' => $this->newIdEvento,
             'Id_proceso' => $this->Id_proceso,
@@ -157,7 +157,6 @@ abstract class FormulaAlertas{
             'F_registro' => $this->date,
         ];
 
-        sigmel_informacion_alertas_automaticas_eventos::on('sigmel_gestiones')->insert($array_info_datos_alertas_automatica);   
     }
 
     /**
@@ -213,7 +212,7 @@ abstract class FormulaAlertas{
         $Nueva_F_Alerta_Roja->modify("+$minutosAdicionales_roja_entero minutes");
         $Nueva_F_Alerta_RojaEvento = $Nueva_F_Alerta_Roja->format('Y-m-d H:i:s');
 
-        $array_info_datos_alertas_automatica = [
+        return [
             'Id_Asignacion' => $this->newIdAsignacion,
             'ID_evento' => $this->newIdEvento,
             'Id_proceso' => $this->Id_proceso,
@@ -231,6 +230,6 @@ abstract class FormulaAlertas{
             'F_registro' => $this->date,
         ];
 
-        sigmel_informacion_alertas_automaticas_eventos::on('sigmel_gestiones')->insert($array_info_datos_alertas_automatica);
     }
+
 }

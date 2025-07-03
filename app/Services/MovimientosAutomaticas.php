@@ -9,6 +9,7 @@ use App\Models\sigmel_informacion_eventos;
 use App\Models\sigmel_informacion_parametrizaciones_clientes;
 use App\Models\sigmel_informacion_acciones_automaticas_eventos;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Coordinador\BandejaNotifiController;
 
 class MovimientosAutomaticas extends Acciones{
 
@@ -39,7 +40,9 @@ class MovimientosAutomaticas extends Acciones{
         "mv_4" => "La acción parametrizada %s tiene un movimiento automatico, pero dicha acción no se encuentra asociado al servicio actual %s"
     ];
 
-    public function init($fechaAccion,$AccionEvento,$idCliente,$Id_proceso,$Id_servicio,$Id_evento,$id_asignacion){
+    protected $n_orden;
+
+    public function init($fechaAccion,$AccionEvento,$idCliente,$Id_proceso,$Id_servicio,$Id_evento,$id_asignacion,$n_orden){
 //dd($fechaAccion,$AccionEvento,$idCliente,$Id_proceso,$Id_servicio,$Id_evento,$id_asignacion);
         $this->AccionEvento = $AccionEvento;
         $this->Id_proceso = $Id_proceso;
@@ -47,6 +50,15 @@ class MovimientosAutomaticas extends Acciones{
         $this->Id_evento = $Id_evento;
         $this->id_asignacion = $id_asignacion;
         $this->timestap = date("Y-m-d H:i:s");
+
+        $actualizarEstado_accion_automatica = [
+            'Estado_accion_automatica' => 'No Ejecutada'
+        ];
+
+        sigmel_informacion_acciones_automaticas_eventos::on('sigmel_gestiones')
+        ->where([
+            ['Id_Asignacion', $this->id_asignacion]
+        ])->update($actualizarEstado_accion_automatica);
     
         $idCliente = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_eventos')->select('Cliente')->where('ID_evento',$Id_evento)->first();
         
@@ -121,25 +133,16 @@ class MovimientosAutomaticas extends Acciones{
      * Funcion principal que lleva a cabo la ejecucion del movimiento
      */
     protected function ejecutar_movimiento(){
-        $info_datos_accion_automatica = DB::table(getDatabaseName('sigmel_gestiones') . 'sigmel_informacion_parametrizaciones_clientes as sipc')
-        ->leftJoin('sigmel_sys.users as u', 'u.id', '=', 'sipc.Profesional_asignado')
-        ->select('sipc.Accion_ejecutar', 'sipc.Estado', 'sipc.Profesional_asignado', 'u.name')
-        ->where([
-            ['sipc.Accion_ejecutar', $this->Accion_automatica],
-            ['sipc.Id_cliente', $this->id_cliente],
-            ['sipc.Id_proceso', $this->Id_proceso],
-            ['sipc.Servicio_asociado', $this->Id_servicio],
-            ['sipc.Status_parametrico', 'Activo']
-        ])->first();
+        $info_datos_accion_automatica = BandejaNotifiController::ingresar_notificacion($this->id_cliente,$this->Id_servicio,$this->Id_proceso,$this->Accion_automatica);
 
-        if($info_datos_accion_automatica == null){
+        if(empty($info_datos_accion_automatica)){
             return [
                 "estado" => "fail",
                 "mensaje" => sprintf($this->getMensaje('mv_4'),$this->Accion_automatica,$this->Id_servicio)
             ];
         }
-        $Accion_ejecutar_automatica = $info_datos_accion_automatica->Accion_ejecutar;
-        $Profesional_asignado_automatico = $info_datos_accion_automatica->Profesional_asignado;
+        $Accion_ejecutar_automatica = $info_datos_accion_automatica->accion_automatica;
+        $Profesional_asignado_automatico = $info_datos_accion_automatica->profesional;
         $NombreProfesional_asignado_automatico = $info_datos_accion_automatica->name;
         $Id_Estado_evento_automatico = $info_datos_accion_automatica->Estado;
 
@@ -157,13 +160,15 @@ class MovimientosAutomaticas extends Acciones{
             'Id_profesional_automatico' => $Profesional_asignado_automatico,
             'Nombre_profesional_automatico' => $NombreProfesional_asignado_automatico,
             'F_movimiento_automatico' => $F_movimiento_automatico,
+            'Enviar_a_bandeja_trabajo_destino' => empty($info_datos_accion_automatica->bandeja_destino) ? 'No' : 'Si',
+            'Bandeja_trabajo_destino' => $info_datos_accion_automatica->bandeja_destino,
+            'Estado_facturacion_automatico' => $info_datos_accion_automatica->estado_facturacion,
             'Estado_accion_automatica' => 'Pendiente',
             'Nombre_usuario' => Auth::user()->name,
             'F_registro' => date("Y-m-d", time()),
-
         ];
 
-        sigmel_informacion_acciones_automaticas_eventos::on('sigmel_gestiones')->insert($array_info_datos_accion_automatica);
+        sigmel_informacion_acciones_automaticas_eventos::on('sigmel_gestiones')->updateOrCreate(['Id_Asignacion' => $this->id_asignacion],$array_info_datos_accion_automatica);
 
         $mensaje = "la acción parametrizada tiene una Acción automática y se ejecutará en {$this->Tiempo_movimiento} día(s)";
 

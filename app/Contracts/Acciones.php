@@ -7,6 +7,6 @@ abstract class Acciones extends FormulaAlertas{
     /**
      * Metodo principal para que las acciones puedan ser invocadas
      */
-    abstract public function init($fechaAccion,$AccionEvento,$idCliente,$Id_proceso,$Id_servicio,$Id_evento,$id_asignacion);
+    abstract public function init($fechaAccion,$AccionEvento,$idCliente,$Id_proceso,$Id_servicio,$Id_evento,$id_asignacion,$n_orden);
 }
 ?>

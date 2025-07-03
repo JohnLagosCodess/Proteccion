@@ -18,6 +18,9 @@ use App\Models\sigmel_informacion_correspondencia_eventos;
 use App\Models\sigmel_informacion_historial_accion_eventos;
 use App\Models\sigmel_informacion_eventos;
 use App\Models\sigmel_informacion_accion_eventos;
+use App\Models\sigmel_auditorias_informacion_accion_eventos;
+use Illuminate\Support\Facades\Log;
+
 use App\Models\sigmel_informacion_parametrizaciones_clientes;
 use App\Models\sigmel_informacion_acciones;
 use Illuminate\Support\Facades\Validator;
@@ -460,6 +463,7 @@ class BandejaNotifiController extends Controller
 
         $nombre_usuario = Auth::user()->name;
         $estado_ejecucion = [];
+        Log::channel('bandeja_notificaciones')->info("Ejecutando accion desde bandeja \n");
 
         foreach($datosEvento as $evento => $id_asignacion){
             foreach($id_asignacion as $id => $values){
@@ -470,8 +474,8 @@ class BandejaNotifiController extends Controller
                 $servicio = $values["servicio"];
                 $id_evento = $values["id_evento"];
                 $info_accion = self::ingresar_notificacion($id_cliente->Cliente,$servicio,$proceso,$accion);
-                $f_alerta = new \DateTime($f_alerta);
-                $f_alerta = $f_alerta->format('Y-m-d H:i:s');
+                //$f_alerta = new \DateTime($f_alerta);
+                //$f_alerta = $f_alerta->format('Y-m-d H:i:s');
                 $f_accion = new \DateTime($f_accion);
                 $f_accion = $f_accion->format('Y-m-d H:i:s');
                 if(is_null($info_accion)){
@@ -497,7 +501,7 @@ class BandejaNotifiController extends Controller
                 sigmel_informacion_asignacion_eventos::on('sigmel_gestiones')
                 ->where('Id_Asignacion', $id)
                 ->update($data_asignacion_evento);
-
+                Log::channel('bandeja_notificaciones')->info("Datos actualizados en la tabla de asignacion \n",$data_asignacion_evento);
                 
                 $data_historial_accion = [
                     'Id_Asignacion' => $id,
@@ -514,39 +518,64 @@ class BandejaNotifiController extends Controller
                 ->where('Id_Asignacion', $id)
                 ->insert($data_historial_accion);
 
-                //Tabla de acciones modulo principal
-                sigmel_informacion_accion_eventos::on('sigmel_gestiones')->where('Id_Asignacion', $id)->updateOrCreate([
+                $info_datos_accion_automatica = self::ingresar_notificacion($id_cliente->Cliente,$servicio,$values["proceso"],$accion);
+
+                $data_f = [
                     'Id_Asignacion' => $id,
                     'ID_evento' => $values["id_evento"],
                     'Id_proceso' => $values["proceso"],
                     "F_accion" => $f_accion,
                     "Accion" => $accion,
                     "F_Alerta" => $f_alerta,
+                    "Descripcion_accion" => $descripcion,
+                    "Estado_Facturacion" => $info_datos_accion_automatica->estado_facturacion,
                     "Enviar" => empty($info_accion->enviarA) ? 0 : 4,
                     "Nombre_usuario" => Auth::user()->name,
                     "F_registro" => date("Y-m-d") 
-                ]);
+                ];
+                //Tabla de acciones modulo principal
+                sigmel_informacion_accion_eventos::on('sigmel_gestiones')->where('Id_Asignacion', $id)->updateOrCreate([
+                    'Id_Asignacion' => $id,
+                ],$data_f);
                 
+                $data_auditoria = [
+                    'Aud_Id_Asignacion' => $id,
+                    'Aud_ID_evento' => $values["id_evento"],
+                    'Aud_Id_proceso' => $values["proceso"],
+                    "Aud_F_accion" => $f_accion,
+                    "Aud_Accion" => $accion,
+                    "Aud_F_Alerta" => $f_alerta,
+                    "Aud_Descripcion_accion" => $descripcion,
+                    "Aud_Estado_Facturacion" => $info_datos_accion_automatica->estado_facturacion,
+                    "Aud_Enviar" => empty($info_accion->enviarA) ? 0 : 4,
+                    "Aud_Nombre_usuario" => Auth::user()->name,
+                    "Aud_F_registro" => date("Y-m-d") 
+                ];
 
+                //Tabla de auditoria acciones modulo principal
+                sigmel_auditorias_informacion_accion_eventos::on('sigmel_auditorias')->insert($data_auditoria);
+
+                $asignacion = sigmel_informacion_asignacion_eventos::on('sigmel_gestiones')->select('N_de_orden')->where('Id_Asignacion', $id)->first();
                 //Datos necesarios para la alertas y movimientos automaticos, debe mantener el siguiente orden.
-                $data = Array($f_accion,$accion,$id_cliente->Cliente,$proceso,$servicio,$id_evento,$id);
+                $data = Array($f_accion,$accion,$id_cliente->Cliente,$proceso,$servicio,$id_evento,$id,$asignacion->N_de_orden);
 
                 $acciones_automaticas = new AccionesAutomaticas();
-                    //Despacha las acciones a ejecutar
-                    $acciones_automaticas->registrarAccion([
-                        'MovimientosAutomaticos' => \App\Services\MovimientosAutomaticas::class,
-                        'AlertasNaranjas' => \App\Services\AlertasNaranjas::class,
-                    ])->with($data)->llamarAcciones();
-
-                    $estado_ejecucion[] = [
-                        'idevento' => $values["id_evento"],
-                        'idasignacion' => $id,
-                        'detalles' => $acciones_automaticas->response
-                    ];
+                //Despacha las acciones a ejecutar
+                $acciones_automaticas->registrarAccion([
+                    'MovimientosAutomaticos' => \App\Services\MovimientosAutomaticas::class,
+                    'AlertasNaranjas' => \App\Services\AlertasNaranjas::class,
+                ])->with($data)->llamarAcciones();
+                   
+                $estado_ejecucion[] = [
+                    'idevento' => $values["id_evento"],
+                    'idasignacion' => $id,
+                    'detalles' => $acciones_automaticas->response
+                ];
                     
             }
         }
 
+        Log::channel('bandeja_notificaciones')->info("Ejecucion finalizada \n",$estado_ejecucion);
         return $estado_ejecucion;
 
     }
@@ -561,7 +590,17 @@ class BandejaNotifiController extends Controller
      */
     public static function ingresar_notificacion(int $id_cliente,int $servicio,int $id_proceso,int $accion_ejecutar) {
         $estado_parametrica = DB::table(getDatabaseName('sigmel_gestiones') .'sigmel_informacion_parametrizaciones_clientes as sipc')
-        ->select('sipc.Estado', 'sipc.Enviar_a_bandeja_trabajo_destino as enviarA','sipc.Profesional_asignado as profesional')
+        ->select(
+            'sipc.Id_parametrizacion',
+            'sipc.Estado',
+            'sipc.Enviar_a_bandeja_trabajo_destino as enviarA',
+            'sipc.Bandeja_trabajo_destino as bandeja_destino',
+            'sipc.estado_facturacion',
+            'sipc.Profesional_asignado as profesional',
+            'sipc.Accion_ejecutar as accion_automatica',
+            'u.name'
+        )
+        ->leftJoin('sigmel_sys.users as u', 'u.id', '=', 'sipc.Profesional_asignado')
         ->where([
             ['sipc.Id_proceso', '=', $id_proceso],
             ['sipc.Servicio_asociado', '=', $servicio],
@@ -569,6 +608,7 @@ class BandejaNotifiController extends Controller
             ['sipc.Id_cliente','=',  $id_cliente],
             ['sipc.Status_parametrico','=',  'Activo']
         ])->first();
+    
 
         return $estado_parametrica;
 
